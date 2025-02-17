@@ -117,7 +117,7 @@
 
             <label for="lieunaissanc" class="form-label">Lieu de naissance</label>
 
-            <select class="form-select" name="lieunaissance" id="lieunaissance"
+            <select class="form-select selection" name="lieunaissance" id="lieunaissance"
 
                  data-placeholder="Sélectionner le lieu" autocomplete="on">
 
@@ -230,7 +230,7 @@
 
             <label for="lieuresidence" class="form-label">Lieu de residence <SPAN class="text-danger">*</SPAN></label>
 
-            <select class="form-select" name="lieuresidence" id="lieuresidence" data-placeholder="Sélectionner le lieu" autocomplete="on" required>
+            <select class="form-select selection" name="lieuresidence" id="lieuresidence" data-placeholder="Sélectionner le lieu" autocomplete="on" required>
 
                 <option selected value="{{ $contrat->adherent->lieuresidence ?? ''}}">{{ $contrat->adherent->lieuresidence ?? ''}}</option>
 
@@ -258,7 +258,7 @@
 
             <label for="profession" class="form-label">Profession</label>
 
-            <select class="form-select" name="profession" id="profession" autocomplete="on">
+            <select class="form-select selection" name="profession" id="profession" autocomplete="on">
 
                 <option selected value="{{ $contrat->adherent->profession ?? ''}}">{{ $contrat->adherent->profession ?? ''}}</option>
 
@@ -282,7 +282,7 @@
 
             <label for="employeur" class="form-label">Secteur d'activites</label>
 
-            <select class="form-select" name="employeur" id="employeur" autocomplete="on">
+            <select class="form-select selection" name="employeur" id="employeur" autocomplete="on">
 
                 <option selected value="{{ $contrat->adherent->employeur ?? ''}}">{{ $contrat->adherent->employeur ?? ''}}</option>
 
@@ -446,6 +446,9 @@
     <div class="row g-3 mb-3">
 
         <div class="col-12 col-lg-6">
+
+        </div>
+        <div class="col-12 col-lg-6 d-flex justify-content-end">
 
             <button type="submit" class="btn btn-success">Enregistrer</button>
 

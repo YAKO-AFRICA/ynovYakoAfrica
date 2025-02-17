@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\Admin\RdvController;
 use App\Http\Controllers\Admin\EpretController;
 use App\Http\Controllers\Setting\UserController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Setting\PartnerController;
 use App\Http\Controllers\Setting\ReseauxController;
 use App\Http\Controllers\Admin\PrestationController;
 use App\Http\Controllers\Admin\ProductionController;
+use App\Http\Controllers\Admin\ValidationController;
 use App\Http\Controllers\Admin\BeneficiairesController;
 
 /*
@@ -30,6 +32,35 @@ use App\Http\Controllers\Admin\BeneficiairesController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('storage/production/{file}', function ($file) {
+    // $path = base_path('../uploads/prestations/' . $file);
+    $path = base_path('../public_html/testenovapi/public/uploads/' . $file);
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    $fileContents = file_get_contents($path);
+    $mimeType = mime_content_type($path);
+
+    return Response::make($fileContents, 200, ['Content-Type' => $mimeType]);
+    
+})->where('file', '.*');
+
+Route::get('storage/prestations/{file}', function ($file) {
+    // $path = base_path('../public_html/upload/prestations/' . $file);
+    $path = base_path('../uploads/prestations/' . $file);
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    $fileContents = file_get_contents($path);
+    $mimeType = mime_content_type($path);
+
+    return Response::make($fileContents, 200, ['Content-Type' => $mimeType]);
+    
+})->where('file', '.*');
 
 Route::post('/save-beneficiary-session', [EpretController::class, 'saveBeneficiarySession']);
 // web.php
@@ -75,6 +106,8 @@ Route::prefix('prestation')->name('prestation.')->group(function(){
         // Route::post('prestation/getPrestations', [DemandePrestationController::class, 'getPrestations'])->name('getPrestations');
         // Route::get('prestation/mesPrestations', [PrestationController::class, 'mesPrestations'])->name('mesPrestations');
         Route::get('/create/{id}',[PrestationController::class, 'create'])->name('create');
+        Route::get('/autre/{id}',[PrestationController::class, 'createAutre'])->name('autre');
+        Route::post('/autre/add',[PrestationController::class, 'storePrestAutre'])->name('storePrestAutre');
         Route::get('show/{code}',[PrestationController::class, 'show'])->name('show');
         Route::post('/add',[PrestationController::class, 'store'])->name('store');
         // Route::post('prestation/update/{uuid}',[CustomerPrestationController::class, 'update'])->name('prestation.update');
@@ -233,13 +266,17 @@ Route::prefix('production')->name('prod.')->group(function(){
 
         Route::get('/show/bullettin/{id}', [BulletinController::class, 'show'])->name('bullettin.show');
         Route::get('/generate-bulletin/{id}', [BulletinController::class, 'generate'])->name('generate.bulletin');
+
+        // Validation route
+
+        Route::get('/validation/index', [ValidationController::class, 'index'])->name('validation.index');
+        Route::get('/traitement/prodByPartner/{code}', [ValidationController::class, 'prodByPartner'])->name('validation.prodByPartner');
+        Route::get('/traitement/proposition/show/{id}', [ValidationController::class, 'show'])->name('validation.show');
+        Route::post('/traitement/proposition/rejet/{id}', [ValidationController::class, 'rejetContrat'])->name('traitement.proposition.rejet');
+        // Route::post('/traitement/proposition/valider/{id}', [ValidationController::class, 'validerContrat'])->name('traitement.proposition.valider');
         
 
 
     });
 
 });
-
-
-
-

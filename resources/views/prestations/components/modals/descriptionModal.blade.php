@@ -31,6 +31,11 @@
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
                     <a href="{{ route('rdv.create', $typePrestation->id) }}" type="button" class="btn btn-primary">Ok, Je Continue</a>
                 </div>
+                @elseif($typePrestation->impact == 'Autre')
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+                    <a href="{{ route('prestation.autre', $typePrestation->id) }}" type="button" class="btn btn-primary">Ok, Je Continue</a>
+                </div>
             @endif
         </div>
     </div>

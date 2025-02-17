@@ -147,7 +147,7 @@ var stepperForm
 
 document.addEventListener('DOMContentLoaded', function () {
   // Sélectionner tous les steppers sur la page
-  var steppers = document.querySelectorAll('.bs-stepper');
+  var steppers = document.querySelectorAll('.productions .bs-stepper');
 
   steppers.forEach(function(stepperEl) {
       // Créer une instance de Stepper pour chaque élément

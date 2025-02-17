@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <input type="hidden" id="beneficiariesInput" name="beneficiaires">
-                    <div class="modal-footer">
+                    <div class="modal-footer d-flex justify-content-between">
                         <button type="button" class="btn border-btn" data-bs-dismiss="modal">Annuler</button>
                         <button type="button" class="btn btn-two" onclick="addBeneficiary()">Ajouter</button>
                     </div>

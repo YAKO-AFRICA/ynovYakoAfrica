@@ -1,4 +1,4 @@
-<div id="test-l-6" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger6">
+<div id="test-l-7" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger7">
 
     <h5 class="mb-1">Documents de souscription</h5>
 
@@ -165,10 +165,10 @@
                 </div>
                 <!-- Bouton précédent -->
                 <div class="col-12">
-                    <div class="d-flex align-items-center gap-3">
-                        <button onclick="event.preventDefault(); stepper1.previous()" class="btn btn-outline-secondary px-4 btn-previous-form"><i class='bx bx-left-arrow-alt me-2'></i>Previous</button>
+                    <div class="d-flex align-items-center justify-content-between gap-3">
+                        <button onclick="event.preventDefault(); stepper1.previous()" class="btn btn-outline-secondary btn-previous-form"><i class='bx bx-left-arrow-alt'></i>Previous</button>
         
-                        <button type="submit" class="btn btn-success px-4">Submit</button>
+                        <button type="submit" class="btn btn-success">Submit</button>
                     </div>
                 </div>
             </div>

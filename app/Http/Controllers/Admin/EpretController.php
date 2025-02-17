@@ -524,9 +524,10 @@ class EpretController extends Controller
                 foreach ($files as $key => $file) {
                     $imageName = $idPret . '-' . now()->timestamp . '.' . $file->getClientOriginalExtension();
         
-                    $destinationPath = public_path('documents/files');
+                    // $destinationPath = public_path('documents/files');
+                    $destinationPath = base_path('../public_html/testenovapi/public/uploads/');
                     $file->move($destinationPath, $imageName);
-                    $filePath = 'documents/files/' . $imageName;
+                    $filePath = '../public_html/testenovapi/public/uploads/' . $imageName;
 
                     TblDocument::create([
                         'codecontrat' => $idPret,

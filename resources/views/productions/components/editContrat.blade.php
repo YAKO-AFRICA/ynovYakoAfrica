@@ -53,7 +53,7 @@
 
                                 <label for="banque" class="form-label">Ma banque ou organisme de prélèvement</label>
 
-                                <select class="form-select" id="banque" name="organisme">
+                                <select class="form-select selection" id="banque" name="organisme">
 
                                     <option selected value="{{ $contrat->organisme}}">{{ $contrat->organisme ?? '--'}}</option>
 
@@ -71,7 +71,7 @@
 
                                 <label for="Agence" class="form-label">Agence</label>
 
-                                <select class="form-select" id="Agence" name="agence">
+                                <select class="form-select selection" id="Agence" name="agence">
 
                                     <option selected value="{{ $contrat->agence}}">{{ $contrat->agence ?? '--'}}</option>
 
@@ -210,7 +210,19 @@
         </div>
     </div>
 
-    <div class="cerd-footer">
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <div class="cerd-footer row g-3 mb-3">
+
+        <div class="col-12 col-lg-6">
+
+        </div>
+        <div class="col-12 col-lg-6 d-flex justify-content-end">
+
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+
+        </div>
+
     </div>
+
+    {{-- <div class=" d-flex justify-content-end">
+    </div> --}}
 </form>

@@ -73,8 +73,8 @@
                     </div>
 
                     <input type="hidden" id="contrat" name="contrat" value="{{ $contrat->id }}">
-                    <input type="hidden" id="pret_id" name="pret_id" value="{{ $pret->id }}">
-                    <div class="modal-footer">
+                    {{-- <input type="hidden" id="pret_id" name="pret_id" value="{{ $pret->id }}"> --}}
+                    <div class="modal-footer d-flex justify-content-between">
                         <button type="button" class="btn border-btn" data-bs-dismiss="modal">Annuler</button>
                         <button type="submit" class="btn btn-two">Ajouter</button>
                     </div>

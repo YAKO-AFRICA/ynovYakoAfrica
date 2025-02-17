@@ -139,9 +139,13 @@
                                 </div> 
                             </div>
                             <div class="col-12">
-                                <div class="d-flex align-items-center gap-3">
-                                    <button type="button" class="btn border-btn px-4" data-bs-dismiss="modal">Retour</button>
-                                    <button type="button" class="btn btn-two px-4" id="btn-ajouter">Ajouter</button>
+                                <div class="d-flex align-items-center justify-content-between gap-3">
+                                    <div class="">
+                                        <button type="button" class="btn border-btn" data-bs-dismiss="modal">Retour</button>
+                                    </div>
+                                    <div class="">
+                                        <button type="button" class="btn btn-two" id="btn-ajouter">Ajouter</button>
+                                    </div>
                                 </div>
                                 
                             </div> 

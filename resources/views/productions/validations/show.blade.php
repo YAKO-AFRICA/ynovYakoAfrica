@@ -5,7 +5,7 @@
 <!--breadcrumb-->
 
 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-    <div class="breadcrumb-title pe-3">eSouscription</div>
+    <div class="breadcrumb-title pe-3">Productions</div>
     <div class="ps-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 p-0">
@@ -14,88 +14,42 @@
             </ol>
         </nav>
     </div>
-    
-
-    <div class="ms-auto gx-3">
-        <div class="btn-group">
-            @if (!in_array($contrat->etape, [2, 3]))
-            <form action="{{ route('prod.transmettreContrat', $contrat->id)}}" method="post" class="submitForm">
-                @csrf
-                <button type="submit" class="btn btn-primary p-1 border-1 text-center"> Transmettre</button>
-            </form>
-            @endif
-
-            <button class="btn btn-primary mx-4 border-1 text-center" style="font-size: 12px">
-                <a class="text-decoration-none" href="{{ route('prod.generate.bulletin', $contrat->id) }}" target="_blank">
-                    <i class="bx bx-download" title="Telecharger le bulletin"></i> Print Bulletin
-                </a>
-            </button>
-        </div>
-    </div>
 </div>
 <!--end breadcrumb-->
-<div id="stepper1" class="bs-stepper">
     <div class="card">
-        <div class="card-header">
-            <div class="d-lg-flex flex-lg-row align-items-lg-center justify-content-lg-between" role="tablist">
-                <div class="step" data-target="#test-l-0">
-                    <div class="step-trigger" role="tab" id="stepper1trigger1" aria-controls="test-l-0">
-                        <div class="bs-stepper-circle">0</div>
-                        <div class="">
-                            <h5 class="mb-0 steper-title @if ($contrat->etape == 0)
-                                text-primary @endif">Saisie Inachevée</h5>
-                            <p class="mb-0 steper-sub-title">{{ $contrat->saisiele ?? ''}}</p>
-                        </div>
-                    </div>
+        <div class="card-header d-flex align-items-center justify-content-end gap-4">
+            
+            <form action="{{ route('prod.transmettreContrat', $contrat->id)}}" method="post" class="submitForm">
+                @csrf
+                <button type="button" class="btn btn-primary py-1 px-2 border-1 text-center"><i class='bx bx-check fs-4'></i>Valider</button>
+            </form>
+            
+            <button type="button" class="btn py-1 px-2 border-1 text-center" data-bs-toggle="modal" data-bs-target="#rejectModal"><i class='bx bx-x' ></i>Rejeter</button>
+        </div>
+    </div>
+    <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Rejeter la proposition N° {{ $contrat->id }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="bs-stepper-line"></div>
-                <div class="step" data-target="#test-l-1">
-                    <div class="step-trigger" role="tab" id="stepper1trigger1" aria-controls="test-l-1">
-                        <div class="bs-stepper-circle">1</div>
-                        <div class="">
-                            <h5 class="mb-0 steper-title @if ($contrat->etape == 1)
-                                text-primary @endif">En Saisie</h5>
-                            <p class="mb-0 steper-sub-title">{{ $contrat->saisiele ?? ''}}</p>
+                <form action="{{ route('prod.traitement.proposition.rejet', $contrat->id)}}" method="post" class="submitForm">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="col-12 form-group mt-3">
+                            <label for="motifrejet" class="form-label">Observations(Motif de rejet)</label>
+                            <textarea name="motifrejet" class="form-control" id="motifrejet" rows="3" required></textarea>
                         </div>
                     </div>
-                </div>
-                <div class="bs-stepper-line"></div>
-                <div class="step" data-target="#test-l-2">
-                    <div class="step-trigger" role="tab" id="stepper1trigger2" aria-controls="test-l-2">
-                    <div class="bs-stepper-circle">2</div>
-                    <div class="">
-                        <h5 class="mb-0 steper-title @if ($contrat->etape == 2)
-                                text-primary @endif">Transmission</h5>
-                        <p class="mb-0 steper-sub-title">{{ $contrat->transmisle ?? ''}}</p>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Rejeter maintenant</button>
                     </div>
-                    </div>
-                </div>
-                <div class="bs-stepper-line"></div>
-                <div class="step" data-target="#test-l-3">
-                    <div class="step-trigger" role="tab" id="stepper1trigger3" aria-controls="test-l-3">
-                        <div class="bs-stepper-circle">3</div>
-                        @if ($contrat->etape == 3)
-                        <div class="">
-                            <h5 class="mb-0 steper-title text-primary">Accepter/Migrer</h5>
-                            <p class="mb-0 steper-sub-title">{{ $contrat->acceptele ?? ''}}</p>
-                        </div>
-                        @elseif ($contrat->etape == 4)
-                        <div class="">
-                            <h5 class="mb-0 steper-title text-primary">Rejetter</h5>
-                            <p class="mb-0 steper-sub-title">{{ $contrat->annulerle ?? ''}}</p>
-                        </div>
-                        @else
-                        <div class="">
-                            <h5 class="mb-0 steper-title">Non Traité</h5>
-                            <p class="mb-0 steper-sub-title">00-00-0000</p>
-                        </div>
-                        @endif
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
 <div class="row">
     <div class="col-12 col-lg-3">
         <div class="card">
@@ -816,12 +770,6 @@
                             </div>
                         </div>
 
-                        <div class="col-12 form-group mt-3">
-                            <label for="" class="form-label">Observations(Motif de rejet)</label>
-                            <textarea name="" class="form-control" id="" rows="3" readonly>
-                                {{ $contrat->motifrejet ?? '' }}
-                            </textarea>
-                        </div>
                     </fieldset>
                 </section>
 

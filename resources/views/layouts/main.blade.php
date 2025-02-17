@@ -128,7 +128,30 @@
                 table.buttons().container()
                     .appendTo('#example2_wrapper .col-md-6:eq(0)');
             });
+            $(document).ready(function() {
+    
+
+                var table = $('#example3').DataTable({
+                    lengthChange: true,
+                    buttons: ['copy', 'excel', 'pdf', 'print'],
+                    language: {
+                        search: "Recherche :",
+                    },
+                });
+
+                table.buttons().container()
+                    .appendTo('#example3_wrapper .col-md-6:eq(0)');
+            });
         </script>
+        <script>
+            $(document).ready(function() {
+                $('.selection').select2({
+                    placeholder: "Choisir",
+                    allowClear: true,
+                    width: '100%'
+                });
+            });
+        </script>
 
         <script>
             $(document).ready(function() {

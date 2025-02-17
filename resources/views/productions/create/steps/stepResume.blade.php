@@ -1,4 +1,4 @@
-<div id="test-l-5" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger6">
+<div id="test-l-6" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger6">
     <h5 class="mb-1">Résumé des informations</h5>
     <p class="mb-4">Veuillez relire vos informations pour verifier si elles sont correctes</p>
 
@@ -218,10 +218,10 @@
         </div>
 
         <div class="col-12">
-            <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center justify-content-between gap-3">
                 <button onclick="event.preventDefault(); stepper1.previous()"
-                    class="btn border-btn px-4 btn-previous-form"><i
-                        class='bx bx-left-arrow-alt me-2'></i>Previous</button>
+                    class="btn border-btn btn-previous-form"><i
+                        class='bx bx-left-arrow-alt'></i>Previous</button>
                         
                 {{-- <button class="btn btn-success px-4" type="submit">Submit</button> --}}
 
@@ -230,8 +230,8 @@
                         class='bx bx-right-arrow-alt ms-2'></i></button> --}}
 
                 <button id="btn-next" stepper1.next()
-                    class="btn btn-two px-4 btn-next-for btn-auto-generate" type="button">Enregistrer<i
-                    class='bx bx-right-arrow-alt ms-2'></i>
+                    class="btn btn-two btn-next-for btn-auto-generate" type="button">Enregistrer<i
+                    class='bx bx-right-arrow-alt'></i>
                 </button>
 
             </div>

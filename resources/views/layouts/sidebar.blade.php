@@ -51,7 +51,7 @@
             </li>
             <strong><li class="menu-label">Production</li></strong>
             <li>
-                <a href="{{ route('prod.stepProduct')}}">
+                <a href="{{ route('prod.validation.index')}}">
                     <div class="parent-icon">
                         <i class='bx bx-home-alt'></i>
                     </div>

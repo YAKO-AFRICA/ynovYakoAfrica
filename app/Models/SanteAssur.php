@@ -10,8 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class SanteAssur extends Model
 {
     use HasFactory;
-
-    
+    protected $connection = 'mysql';
     protected $fillable = [
         'EtatSante',
         'diabete',

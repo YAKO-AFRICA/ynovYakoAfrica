@@ -92,16 +92,16 @@
     </div>
     
     <div class="row g-3">
-        <div class="col-12">
-            <div class="d-flex align-items-center gap-3">
+        {{-- <div class="col-12"> --}}
+            <div class="d-flex align-items-center justify-content-between gap-3">
                 <button onclick="event.preventDefault(); stepper1.previous()"
-                    class="btn border-btn px-4 btn-previous-form"><i
-                        class='bx bx-left-arrow-alt me-2'></i>Previous</button>
+                    class="btn border-btn btn-previous-form"><i
+                        class='bx bx-left-arrow-alt'></i>Previous</button>
                 <button onclick="event.preventDefault(); stepper1.next()"
-                    class="btn btn-two px-4 btn-next-form">Suivant<i
-                        class='bx bx-right-arrow-alt ms-2'></i></button>
+                    class="btn btn-two btn-next-form">Suivant<i
+                        class='bx bx-right-arrow-alt'></i></button>
             </div>
-        </div>
+        {{-- </div>  --}}
     </div>
 
 

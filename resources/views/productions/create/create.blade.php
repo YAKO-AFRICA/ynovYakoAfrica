@@ -22,97 +22,111 @@
 
 </style>
 
-<div id="stepper1{{ $product->CodeProduit }}" class="bs-stepper">
-    <div class="card">
-        <div class="card-header">
-            <div class="d-lg-flex flex-lg-row align-items-lg-center justify-content-lg-between" role="tablist">
-                <div class="step" data-target="#test-l-1">
-                    <div class="step-trigger etape" role="tab" id="stepper1trigger1" aria-controls="test-l-1"> 
-                        <div class="bs-stepper-circle">1</div>
-                        <div class="text-center">
-                            <p class="mb-0 steper-sub-title">Adhérent</p>
+<div class="productions">
+    <div id="stepper1{{ $product->CodeProduit }}" class="bs-stepper">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-lg-flex flex-lg-row align-items-lg-center justify-content-lg-between" role="tablist">
+                    <div class="step" data-target="#test-l-1">
+                        <div class="step-trigger etape" role="tab" id="stepper1trigger1" aria-controls="test-l-1"> 
+                            <div class="bs-stepper-circle">1</div>
+                            <div class="text-center">
+                                <p class="mb-0 steper-sub-title">Adhérent</p>
+                            </div> 
                         </div> 
-                    </div> 
-                </div>
-                <div class="bs-stepper-line align-self-center"></div>
-                <div class="step" data-target="#test-l-2">
-                    <div class="step-trigger etape" role="tab" id="stepper1trigger2" aria-controls="test-l-2">
-                        <div class="bs-stepper-circle">2</div>
-                        <div class="text-center">
-                            <p class="mb-0 steper-sub-title">Assuré(e)s</p>
+                    </div>
+                    <div class="bs-stepper-line align-self-center"></div>
+                    <div class="step" data-target="#test-l-2">
+                        <div class="step-trigger etape" role="tab" id="stepper1trigger2" aria-controls="test-l-2">
+                            <div class="bs-stepper-circle">2</div>
+                            <div class="text-center">
+                                <p class="mb-0 steper-sub-title">Assuré(e)s</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="bs-stepper-line align-self-center"></div>
-                <div class="step" data-target="#test-l-3">
-                    <div class="step-trigger etape" role="tab" id="stepper1trigger3" aria-controls="test-l-3">
-                        <div class="bs-stepper-circle">3</div>
-                        <div class="text-center">
-                            <p class="mb-0 steper-sub-title">Bénéficiaires</p>
+                    <div class="bs-stepper-line align-self-center"></div>
+                    <div class="step" data-target="#test-l-3">
+                        <div class="step-trigger etape" role="tab" id="stepper1trigger3" aria-controls="test-l-3">
+                            <div class="bs-stepper-circle">3</div>
+                            <div class="text-center">
+                                <p class="mb-0 steper-sub-title">Bénéficiaires</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="bs-stepper-line align-self-center"></div>
-                <div class="step" data-target="#test-l-4">
-                    <div class="step-trigger etape" role="tab" id="stepper1trigger4" aria-controls="test-l-4">
-                        <div class="bs-stepper-circle">4</div>
-                        <div class="text-center">
-                            <p class="mb-0 steper-sub-title">Paiement & Prériodicité</p>
+                    <div class="bs-stepper-line align-self-center"></div>
+                    <div class="step" data-target="#test-l-4">
+                        <div class="step-trigger etape" role="tab" id="stepper1trigger4" aria-controls="test-l-4">
+                            <div class="bs-stepper-circle">4</div>
+                            <div class="text-center">
+                                <p class="mb-0 steper-sub-title">Paiement & Prériodicité</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+    
+                    <div class="bs-stepper-line align-self-center"></div>
+                    <div class="step" data-target="#test-l-5">
+                        <div class="step-trigger etape" role="tab" id="stepper1trigger5" aria-controls="test-l-5">
+                            <div class="bs-stepper-circle">5</div>
+                            <div class="text-center">
+                                <p class="mb-0 steper-sub-title">Etat de santé</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bs-stepper-line align-self-center"></div>
+                    <div class="step" data-target="#test-l-6">
+                        <div class="step-trigger etape" role="tab" id="stepper1trigger6" aria-controls="test-l-6">
+                            <div class="bs-stepper-circle">6</div>
+                            <div class="text-center">
+                                <p class="mb-0 steper-sub-title">Résumé</p>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="bs-stepper-line align-self-center"></div>
-                <div class="step" data-target="#test-l-5">
-                    <div class="step-trigger etape" role="tab" id="stepper1trigger6" aria-controls="test-l-5">
-                        <div class="bs-stepper-circle">5</div>
-                        <div class="text-center">
-                            <p class="mb-0 steper-sub-title">Résumé</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bs-stepper-line align-self-center"></div>
-                <div class="step" data-target="#test-l-6">
-                    <div class="step-trigger etape" role="tab" id="stepper1trigger6" aria-controls="test-l-6">
-                        <div class="bs-stepper-circle">6</div>
-                        <div class="text-center">
-                            <p class="mb-0 steper-sub-title">Documents</p>
+                    <div class="bs-stepper-line align-self-center"></div>
+                    <div class="step" data-target="#test-l-7">
+                        <div class="step-trigger etape" role="tab" id="stepper1trigger7" aria-controls="test-l-7">
+                            <div class="bs-stepper-circle">7</div>
+                            <div class="text-center">
+                                <p class="mb-0 steper-sub-title">Documents</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="card-body">
-            <div class="bs-stepper-content">
-                {{-- <form method="POST" action="{{ route('prod.store')}}" enctype="multipart/form-data" class="submitForm form"> --}}
-                    <form id="productionForm" enctype="multipart/form-data" class="submitForm form">
-                        @csrf
-                    
-                        @include('productions.create.steps.stepAdherent', ['CodeProduit' => $product->CodeProduit])
-
-                        @include('productions.create.steps.stepAssurer', ['CodeProduit' => $product->CodeProduit])
-
-                        @include('productions.create.steps.stepBeneficiaire', ['CodeProduit' => $product->CodeProduit])
-                    
-                        <input type="hidden" id="assuresInput" name="assures">
-                        <input type="hidden" id="beneficiariesInput" name="beneficiaires">
-
-                        <input type="hidden" id="codeproduitvalue" name="codeproduit" value="{{ $product->CodeProduit }}">
-                    
-                        @include('productions.create.steps.stepPaiementPrime', ['CodeProduit' => $product->CodeProduit])
-
-                        @include('productions.create.steps.stepResume', ['CodeProduit' => $product->CodeProduit])
-
-                    </form>
-                    
-                    @include('productions.create.steps.stepDocument', ['CodeProduit' => $product->CodeProduit])
-                    
-                    
-                    
+    
+            <div class="card-body productions">
+                <div class="bs-stepper-content">
+                    {{-- <form method="POST" action="{{ route('prod.store')}}" enctype="multipart/form-data" class="submitForm form"> --}}
+                        <form id="productionForm" enctype="multipart/form-data" class="submitForm form">
+                            @csrf
+                        
+                            @include('productions.create.steps.stepAdherent', ['CodeProduit' => $product->CodeProduit])
+    
+                            @include('productions.create.steps.stepAssurer', ['CodeProduit' => $product->CodeProduit])
+    
+                            @include('productions.create.steps.stepBeneficiaire', ['CodeProduit' => $product->CodeProduit])
+                        
+                            <input type="hidden" id="assuresInput" name="assures">
+                            <input type="hidden" id="beneficiariesInput" name="beneficiaires">
+    
+                            <input type="hidden" id="codeproduitvalue" name="codeproduit" value="{{ $product->CodeProduit }}">
+                        
+                            @include('productions.create.steps.stepPaiementPrime', ['CodeProduit' => $product->CodeProduit])
+    
+                            @include('productions.create.steps.stepSante', ['CodeProduit' => $product->CodeProduit])
+                            @include('productions.create.steps.stepResume', ['CodeProduit' => $product->CodeProduit])
+    
+                        </form>
+                        
+                        @include('productions.create.steps.stepDocument', ['CodeProduit' => $product->CodeProduit])
+                        
+                        
+                        
+            </div>
         </div>
     </div>
 </div>
+
 
 <script>
     // Références aux champs de saisie et aux éléments d'affichage

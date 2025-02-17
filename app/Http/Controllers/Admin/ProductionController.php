@@ -130,6 +130,21 @@ class ProductionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+    // public function stepProduct()
+    // {
+
+    //     $productByReseau = ReseauProduct::select('CodeProduit')
+    //         ->where('codereseau', Auth::user()->membre->codereseau)
+    //         ->get();
+
+    //     $codeProduits = $productByReseau->pluck('CodeProduit')->toArray();
+
+    //     $products = Product::whereIn('CodeProduit', $codeProduits)->get();
+
+    //     // dd($products);
+    //     return view('productions.create.steps.stepProduct', compact('products'));
+    // }
+
     public function stepProduct()
     {
 
@@ -137,9 +152,16 @@ class ProductionController extends Controller
             ->where('codereseau', Auth::user()->membre->codereseau)
             ->get();
 
+        
         $codeProduits = $productByReseau->pluck('CodeProduit')->toArray();
 
-        $products = Product::whereIn('CodeProduit', $codeProduits)->get();
+        if(Auth::user()->membre->codepartenaire === "LLV"){
+            $products = Product::all();
+        }else{
+            $products = Product::whereIn('CodeProduit', $codeProduits)->get();
+        }
+
+        
 
         // dd($products);
         return view('productions.create.steps.stepProduct', compact('products'));

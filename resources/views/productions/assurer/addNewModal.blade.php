@@ -361,12 +361,13 @@
                             
                             <div class="col-12">
 
-                                <div class="d-flex align-items-center gap-3">
-
-                                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Retour</button>
-
-                                    <button type="submit" class="btn btn-success px-4">Ajouter</button>
-
+                                <div class="d-flex align-items-center justify-content-between gap-3">
+                                    <div class=""> 
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Retour</button>
+                                    </div>
+                                    <div class=""> 
+                                        <button type="submit" class="btn btn-success">Ajouter</button>
+                                    </div>
                                 </div>
 
                                 

@@ -9,7 +9,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             @if(auth()->user()->membre->branche == 'BANKASS')
-                <form action="{{ route('prestation.fetchCustomerDetails') }}" method="post">
+                <form action="{{ route('prestation.fetchCustomerDetails') }}" method="post" class="submitForm">
                     @csrf
                     <div class="modal-body">
                         <div class="card radius-10">
@@ -26,7 +26,7 @@
                     </div>
                 </form>
             @else
-                <form action="{{ route('prestation.fetchCustomerDetails') }}" method="post">
+                <form action="{{ route('prestation.fetchCustomerDetails') }}" method="post" class="submitForm">
                     @csrf
                     <div class="modal-body">
                         <div class="card radius-10">

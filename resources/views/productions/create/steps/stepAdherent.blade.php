@@ -56,7 +56,7 @@
         
         <div class="col-12 col-lg-6">
             <label for="lieunaissanc-{{ $product->CodeProduit }}" class="form-label">Lieu de naissance</label>
-            <select class="form-select" name="lieunaissance" id="lieunaissance"
+            <select class="form-select selection" name="lieunaissance" id="lieunaissance"
                 data-codeproduit="{{ $product->CodeProduit }}" data-placeholder="Sélectionner le lieu" autocomplete="on">
                 <option selected>Sélectionner le lieu</option>
 
@@ -100,7 +100,7 @@
         </div>
         <div class="col-12 col-lg-4">
             <label for="lieuresidence" class="form-label">Lieu de residence <span class="text-danger">*</span></label>
-            <select class="form-select" name="lieuresidence" id="lieuresidence" autocomplete="on" required>
+            <select class="form-select selection" name="lieuresidence" id="lieuresidence" autocomplete="on" required>
                 <option>Sélectionner le lieu</option>
 
                 @foreach($villes as $ville)
@@ -113,7 +113,7 @@
     <div class="row g-3 mb-3">
         <div class="col-12 col-lg-6">
             <label for="profession" class="form-label">Profession</label>
-            <select class="form-select" name="profession" id="profession" autocomplete="on">
+            <select class="form-select selection" name="profession" id="profession" autocomplete="on">
                 <option>Sélectionner la profession</option>
 
                 @foreach($professions as $profession)
@@ -123,7 +123,7 @@
         </div>
         <div class="col-12 col-lg-6">
             <label for="employeur" class="form-label">Secteur d'activites</label>
-            <select class="form-select" name="employeur" id="employeur" autocomplete="on">
+            <select class="form-select selection" name="employeur" id="employeur" autocomplete="on">
                 <option>Sélectionner le secteur d'activites</option>
 
                 @foreach($secteurActivites as $secteurActivite)
@@ -204,12 +204,14 @@
         </div>
     </fieldset>
 
-    <div class="row g-3 mb-3">
-        <div class="col-12 col-lg-6">
-            <button onclick="event.preventDefault(); stepper1.previous()" class="btn border-btn px-4 btn-previous-form"><i
-                class='bx bx-left-arrow-alt me-2'></i>Previous</button>
-            <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two px-4 btn-next-form">Suivant<i class='bx bx-right-arrow-alt ms-2'></i></button>
-        </div>
+    <div class="d-flex align-items-center justify-content-between g-3 mb-3">
+        {{-- <div class="col-12 col-lg-6 col-md-6"> --}}
+            <button onclick="event.preventDefault(); stepper1.previous()" class="btn border-btn btn-previous-form"><i
+                class='bx bx-left-arrow-alt'></i>Previous</button>
+        {{-- </div> --}}
+        {{-- <div class="col-12 col-lg-6 col-md-6"> --}}
+            <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i class='bx bx-right-arrow-alt'></i></button>
+        {{-- </div> --}}
     </div>
 
     <script>

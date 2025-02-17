@@ -27,7 +27,7 @@
             <div class="row">
 
                 @foreach($typePrestations as $typePrestation)
-                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mb-3">
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mb-3">
                         <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#exampleModal{{ $typePrestation->id }}" class="prestation">
                             <div class="card border rounded-4 text-center shadow-none bg-light-success">
                                 <div class="card-body">

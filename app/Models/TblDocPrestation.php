@@ -12,9 +12,9 @@ class TblDocPrestation extends Model
     protected $connection = 'mysql2';
     protected $table = 'tbl_doc_prestations';
     protected $fillable = [
-        'id',
         'idPrestation',
         'libelle',
+        'path',
         'type',
     ];
     public function prestation()
