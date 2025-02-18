@@ -16,15 +16,15 @@
                             <div class="col-12 col-lg-6">
                                 <label for="civiliteAssur" class="form-label">Civilité <span class="star">*</span></label>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="civiliteAssur" id="inlineRadio1" value="Madame" autocomplete="off" required>
+                                    <input class="form-check-input civiliteAssur" type="radio" name="civiliteAssur" id="inlineRadio1" value="Madame" autocomplete="off" required>
                                     <label class="form-check-label" for="inlineRadio1">Madame</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="civiliteAssur" id="inlineRadio2" value="Mademoiselle" autocomplete="off">
+                                    <input class="form-check-input civiliteAssur" type="radio" name="civiliteAssur" id="inlineRadio2" value="Mademoiselle" autocomplete="off">
                                     <label class="form-check-label" for="inlineRadio2">Mademoiselle</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="civiliteAssur" id="inlineRadio3" value="Monsieur" autocomplete="off">
+                                    <input class="form-check-input civiliteAssur" type="radio" name="civiliteAssur" id="inlineRadio3" value="Monsieur" autocomplete="off">
                                     <label class="form-check-label" for="inlineRadio3">Monsieur</label>
                                 </div>
                                 @error('civiliteAssur')
@@ -60,9 +60,9 @@
                                     @enderror
                                 </div>
                                 <div class="col-12 col-lg-6"> 
-                                    <label for="lieunaissanceAssur-{{ $product->CodeProduit }}" class="form-label">Lieu de naissance</label>
-                                    <select class="form-select" name="lieunaissanceAssur" id="lieunaissanceAssur-{{ $product->CodeProduit }}" data-codeproduit="{{ $product->CodeProduit }}" data-placeholder="Sélectionner le lieu">
-                                        <option value="">Sélectionner le lieu</option> <!-- Option vide pour le placeholder -->
+                                    <label for="lieunaissanceAssur" class="form-label">Lieu de naissance</label>
+                                    <select class="form-select" name="lieunaissanceAssur" id="lieunaissanceAssur" data-codeproduit="{{ $product->CodeProduit }}" data-placeholder="Sélectionner le lieu">
+                                        <option value="" selected>Sélectionner le lieu</option> <!-- Option vide pour le placeholder -->
                                         
                                         @foreach($villes as $ville)
                                             <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option> 
@@ -75,15 +75,15 @@
                                     <label for="" class="form-label">Nature de la pièce</label>
                                     <br> 
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="naturepieceAssur" id="CNIAssur" value="CNI">
+                                        <input class="form-check-input naturepieceAssur" type="radio" name="naturepieceAssur" id="CNIAssur" value="CNI">
                                         <label class="form-check-label" for="CNIAssur">CNI</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="naturepieceAssur" id="AtestationAssur" value="AT">
+                                        <input class="form-check-input naturepieceAssur" type="radio" name="naturepieceAssur" id="AtestationAssur" value="AT">
                                         <label class="form-check-label" for="AtestationAssur">Atestation</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="naturepieceAssur" id="PassportAssur" value="Passport">
+                                        <input class="form-check-input naturepieceAssur" type="radio" name="naturepieceAssur" id="PassportAssur" value="Passport">
                                         <label class="form-check-label" for="PassportAssur">Passport</label>
                                     </div> 
                                 </div>
@@ -99,7 +99,7 @@
                                 <div class="col-12 col-lg-6"> 
                                     <label for="lieuresidenceAssur" class="form-label">Lieu de residence</label>
                                     <select class="form-select" name="lieuresidenceAssur" id="lieuresidenceAssur" data-placeholder="Sélectionner le lieu">
-                                        <option selected>Sélectionner le lieu</option> <!-- Option vide pour le placeholder -->
+                                        <option selected value="">Sélectionner le lieu</option> <!-- Option vide pour le placeholder -->
                                         
                                         @foreach($villes as $ville)
                                             <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option> 
@@ -110,7 +110,7 @@
                                     <label for="lienParente" class="form-label">Lien de Parenté</label>
                                     <select class="form-select" name="lienParente" id="lienParente"
                                         aria-label="Default select example">
-                                        <option selected>Sélectionner le lien de Parenté</option>
+                                        <option selected value="">Sélectionner le lien de Parenté</option>
                                         <option value="Conjoint">Conjoint</option>
                                         <option value="Enfant">Enfant</option>
                                         <option value="Autre">Autre</option> 
@@ -121,7 +121,7 @@
                                 <div class="col-12 col-lg-6">
                                     <label class="form-label">Telephone</label><br>
                                     <div class="input-group mb-3">
-                                        <input type="text" name="mobileAssur" class="form-control" aria-label="Text input with select">
+                                        <input type="text" name="mobileAssur" id="mobileAssur" class="form-control" aria-label="Text input with select">
                                     </div>
                                     
                                     @error('mobileAssur')

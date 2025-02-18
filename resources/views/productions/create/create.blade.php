@@ -19,6 +19,9 @@
     .input-group-text select {
         width: 100px; /* Largeur ajustée pour le sélecteur */
     }
+    .is-valid {
+  border: 2px solid green;
+  }
 
 </style>
 
