@@ -12,225 +12,119 @@ aria-labelledby="stepper1trigger5">
 
     @if ($product->CodeProduit == 'PFA_IND')
     <div class="col-12">
-
-        
-
         <div class="card" style="width: 100%">
-
             <div class="card-header">
-
                 <h5 class="mb-0">Êtes-vous sous traitement médicale pour l'une de ces maladies ou souffrez-vous de l'une de ces maladies</h5>
-
             </div>
-
             <div class="card-body">
-
                 <div class="row">
-
                     <div class="card col-lg-6 col-md-6 col-sm-12">
-
                         <div class="card-body"> 
-
                             <div class="row">
-
                                 <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
-
                                     <label for="" class="form-label">Quelle est votre taille ?</label>
-
                                 </div>
-
                                 <div class="col-12 col-lg-5 col-md-6 col-sm-6">
                                     <div class="input-group">
                                         <input type="number" class="form-control" id="taille" placeholder="170" name="taille">
                                         <span class="input-group-text">CM</span>
                                     </div>
                                 </div> 
-
                             </div>
-
                         </div>
-
-
-
                     </div>
 
                     <div class="card col-lg-6 col-md-6 col-sm-12">
-
                         <div class="card-body"> 
-
                             <div class="row">
-
                                 <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
-
                                     <label for="" class="form-label">Quel est votre poids ?</label>
-
                                 </div>
-
                                 <div class="col-12 col-lg-5 col-md-6 col-sm-6">
                                     <div class="input-group">
                                         <input type="number" class="form-control" id="poids" placeholder="70" name="poids">
                                         <span class="input-group-text">KG</span>
                                     </div>
                                 </div> 
-
                             </div>
-
                         </div>
-
-
-
                     </div>
-
                     <div class="card col-lg-6 col-md-6 col-sm-12">
-
                         <div class="card-body"> 
-
                             <div class="row">
-
                                 <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
-
                                     <label for="" class="form-label">Fumez-vous ?</label>
-
                                 </div>
-
                                 <div class="col-12 col-lg-5 col-md-6 col-sm-6">
-
                                     <div class="form-check form-check-inline">
-
-                                        <input class="form-check-input" name="fume" type="radio" value="Oui" id="fumeOui">
-
+                                        <input class="form-check-input" name="smoking" type="radio" value="Oui" id="fumeOui">
                                         <label class="form-check-label" for="fumeOui">
-
                                             Oui
-
                                         </label>
-
                                     </div>
-
                                     <div class="form-check form-check-inline">
-
-                                        <input class="form-check-input" name="fume" type="radio" value="Non" id="fumeNon">
-
+                                        <input class="form-check-input" name="smoking" type="radio" value="Non" id="fumeNon">
                                         <label class="form-check-label" for="fumeNon">
-
                                             Non
-
                                         </label>
-
                                     </div>
-
                                 </div> 
-
                             </div>
-
                         </div> 
                     </div>
 
                     <div class="card col-lg-6 col-md-6 col-sm-12">
-
                         <div class="card-body"> 
-
                             <div class="row">
-
                                 <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
-
                                     <label for="" class="form-label">Buvez vous de l'alcool ?</label>
-
                                 </div>
-
                                 <div class="col-12 col-lg-5 col-md-6 col-sm-6">
-
                                     <div class="form-check form-check-inline">
-
-                                        <input class="form-check-input" name="alcool" type="radio" value="Non" id="alcoolPas">
-
+                                        <input class="form-check-input" name="alcohol" type="radio" value="Non" id="alcoolPas">
                                         <label class="form-check-label" for="alcoolPas">
-
                                             Pas du tout
-
                                         </label>
-
                                     </div>
-
                                     <div class="form-check form-check-inline">
-
-                                        <input class="form-check-input" name="alcool" type="radio" value="Partiel" id="alcoolOccasion">
-
+                                        <input class="form-check-input" name="alcohol" type="radio" value="Partiel" id="alcoolOccasion">
                                         <label class="form-check-label" for="alcoolOccasion">
-
                                             A l'ocassion
-
                                         </label>
-
                                     </div>
                                     <div class="form-check form-check-inline">
-
-                                        <input class="form-check-input" name="alcool" type="radio" value="Oui" id="alcoolRegulier">
-
+                                        <input class="form-check-input" name="alcohol" type="radio" value="Oui" id="alcoolRegulier">
                                         <label class="form-check-label" for="alcoolRegulier">
-
                                             Régulièrement (au moins une fois par semaine)
-
                                         </label>
-
                                     </div>
-
                                 </div> 
-
                             </div>
-
                         </div>
-
-
-
                     </div> 
 
                     <div class="card col-lg-6 col-md-6 col-sm-12">
-
-                        <div class="card-body"> 
-
+                        <div class="card-body">
                             <div class="row">
-
                                 <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
-
                                     <label for="" class="form-label">Etes-vous atteint d'une infirmité ?</label>
-
                                 </div>
-
                                 <div class="col-12 col-lg-5 col-md-6 col-sm-6">
-
                                     <div class="form-check form-check-inline">
-
-                                        <input class="form-check-input" name="Infirme" type="radio" value="Oui" id="infirmeOui">
-
+                                        <input class="form-check-input" name="accident" type="radio" value="Oui" id="infirmeOui">
                                         <label class="form-check-label" for="infirmeOui">
-
                                             Oui
-
                                         </label>
-
                                     </div>
-
                                     <div class="form-check form-check-inline">
-
-                                        <input class="form-check-input" name="Infirme" type="radio" value="Non" id="infirmeNon">
-
+                                        <input class="form-check-input" name="accident" type="radio" value="Non" id="infirmeNon">
                                         <label class="form-check-label" for="infirmeNon">
-
                                             Non
-
                                         </label>
-
                                     </div>
-
                                 </div> 
-
                             </div>
-
                         </div>
-
-
-
                     </div>
 
                     <div class="card col-lg-6 col-md-6 col-sm-12">
@@ -297,7 +191,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Accident" type="radio" value="Oui" id="AccidentOui">
+                                        <input class="form-check-input" name="accident" type="radio" value="Oui" id="AccidentOui">
 
                                         <label class="form-check-label" for="AccidentOui">
 
@@ -309,7 +203,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Accident" type="radio" value="Non" id="AccidentNon">
+                                        <input class="form-check-input" name="accident" type="radio" value="Non" id="AccidentNon">
 
                                         <label class="form-check-label" for="AccidentNon">
 
@@ -364,7 +258,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="SuiviTraitement" type="radio" value="Oui" id="SuiviTraitementOui">
+                                        <input class="form-check-input" name="treatment" type="radio" value="Oui" id="SuiviTraitementOui">
 
                                         <label class="form-check-label" for="SuiviTraitementOui">
 
@@ -376,7 +270,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="SuiviTraitement" type="radio" value="Non" id="SuiviTraitementNon">
+                                        <input class="form-check-input" name="treatment" type="radio" value="Non" id="SuiviTraitementNon">
 
                                         <label class="form-check-label" for="SuiviTraitementNon">
 
@@ -412,7 +306,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="transfusionSang" type="radio" value="Oui" id="transfusionSangOui">
+                                        <input class="form-check-input" name="transSang" type="radio" value="Oui" id="transfusionSangOui">
 
                                         <label class="form-check-label" for="transfusionSangOui">
 
@@ -424,7 +318,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="transfusionSang" type="radio" value="Non" id="transfusionSangNon">
+                                        <input class="form-check-input" name="transSang" type="radio" value="Non" id="transfusionSangNon">
 
                                         <label class="form-check-label" for="transfusionSangNon">
 
@@ -456,7 +350,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="interventionsChirurg" type="radio" value="Oui" id="interventionsChirurgicalesOui">
+                                        <input class="form-check-input" name="interChirugiale" type="radio" value="Oui" id="interventionsChirurgicalesOui">
 
                                         <label class="form-check-label" for="interventionsChirurgicalesOui">
 
@@ -468,7 +362,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="interventionsChirurg" type="radio" value="Non" id="interventionsChirurgicalesNon">
+                                        <input class="form-check-input" name="interChirugiale" type="radio" value="Non" id="interventionsChirurgicalesNon">
 
                                         <label class="form-check-label" for="interventionsChirurgicalesNon">
 
@@ -500,7 +394,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="subirChirurg" type="radio" value="Oui" id="subirChirurgOui">
+                                        <input class="form-check-input" name="prochaineInterChirugiale" type="radio" value="Oui" id="subirChirurgOui">
 
                                         <label class="form-check-label" for="subirChirurgOui">
 
@@ -512,7 +406,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="subirChirurg" type="radio" value="Non" id="subirChirurgNon">
+                                        <input class="form-check-input" name="prochaineInterChirugiale" type="radio" value="Non" id="subirChirurgNon">
 
                                         <label class="form-check-label" for="subirChirurgNon">
 
@@ -625,7 +519,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Diabete" type="radio" value="" id="DiabeteOui">
+                                        <input class="form-check-input" name="diabetes" type="radio" value="" id="DiabeteOui">
 
                                         <label class="form-check-label" for="DiabeteOui">
 
@@ -637,7 +531,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Diabete" type="radio" value="" id="DiabeteNon">
+                                        <input class="form-check-input" name="diabetes" type="radio" value="" id="DiabeteNon">
 
                                         <label class="form-check-label" for="DiabeteNon">
 
@@ -673,7 +567,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Hypertension" type="radio" value="" id="HypertensionOui">
+                                        <input class="form-check-input" name="hypertension" type="radio" value="" id="HypertensionOui">
 
                                         <label class="form-check-label" for="HypertensionOui">
 
@@ -685,7 +579,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Hypertension" type="radio" value="" id="HypertensionNon">
+                                        <input class="form-check-input" name="hypertension" type="radio" value="" id="HypertensionNon">
 
                                         <label class="form-check-label" for="HypertensionNon">
 
@@ -721,7 +615,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Drepanocytose" type="radio" value="" id="DrepanocytoseOui">
+                                        <input class="form-check-input" name="sickleCell" type="radio" value="" id="DrepanocytoseOui">
 
                                         <label class="form-check-label" for="DrepanocytoseOui">
 
@@ -733,7 +627,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Drepanocytose" type="radio" value="" id="DrepanocytoseNon">
+                                        <input class="form-check-input" name="sickleCell" type="radio" value="" id="DrepanocytoseNon">
 
                                         <label class="form-check-label" for="DrepanocytoseNon">
 
@@ -769,7 +663,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Cirrhose" type="radio" value="" id="CirrhoseOui">
+                                        <input class="form-check-input" name="liverCirrhosis" type="radio" value="" id="CirrhoseOui">
 
                                         <label class="form-check-label" for="CirrhoseOui">
 
@@ -781,7 +675,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Cirrhose" type="radio" value="" id="CirrhoseNon">
+                                        <input class="form-check-input" name="liverCirrhosis" type="radio" value="" id="CirrhoseNon">
 
                                         <label class="form-check-label" for="CirrhoseNon">
 
@@ -817,7 +711,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Affections" type="radio" value="" id="AffectionsOui">
+                                        <input class="form-check-input" name="lungDisease" type="radio" value="" id="AffectionsOui">
 
                                         <label class="form-check-label" for="AffectionsOui">
 
@@ -829,7 +723,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Affections" type="radio" value="" id="AffectionsNon">
+                                        <input class="form-check-input" name="lungDisease" type="radio" value="" id="AffectionsNon">
 
                                         <label class="form-check-label" for="AffectionsNon">
 
@@ -865,7 +759,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Cancer" type="radio" value="" id="CancerOui">
+                                        <input class="form-check-input" name="cancer" type="radio" value="" id="CancerOui">
 
                                         <label class="form-check-label" for="CancerOui">
 
@@ -877,7 +771,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Cancer" type="radio" value="" id="CancerNon">
+                                        <input class="form-check-input" name="cancer" type="radio" value="" id="CancerNon">
 
                                         <label class="form-check-label" for="CancerNon">
 
@@ -913,7 +807,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Anemie" type="radio" value="" id="AnemieOui">
+                                        <input class="form-check-input" name="anemia" type="radio" value="" id="AnemieOui">
 
                                         <label class="form-check-label" for="AnemieOui">
 
@@ -925,7 +819,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Anemie" type="radio" value="" id="AnemieNon">
+                                        <input class="form-check-input" name="anemia" type="radio" value="" id="AnemieNon">
 
                                         <label class="form-check-label" for="AnemieNon">
 
@@ -959,7 +853,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Insuffisance" type="radio" value="" id="InsuffisanceOui">
+                                        <input class="form-check-input" name="kidneyFailure" type="radio" value="" id="InsuffisanceOui">
 
                                         <label class="form-check-label" for="InsuffisanceOui">
 
@@ -971,7 +865,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="Insuffisance" type="radio" value="" id="InsuffisanceNon">
+                                        <input class="form-check-input" name="kidneyFailure" type="radio" value="" id="InsuffisanceNon">
 
                                         <label class="form-check-label" for="InsuffisanceNon">
 
@@ -1009,7 +903,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="AVC" type="radio" value="" id="AVCOui">
+                                        <input class="form-check-input" name="stroke" type="radio" value="" id="AVCOui">
 
                                         <label class="form-check-label" for="AVCOui">
 
@@ -1021,7 +915,7 @@ aria-labelledby="stepper1trigger5">
 
                                     <div class="form-check form-check-inline">
 
-                                        <input class="form-check-input" name="AVC" type="radio" value="" id="AVCNon">
+                                        <input class="form-check-input" name="stroke" type="radio" value="" id="AVCNon">
 
                                         <label class="form-check-label" for="AVCNon">
 
