@@ -58,7 +58,7 @@
             <label for="lieunaissanc-{{ $product->CodeProduit }}" class="form-label">Lieu de naissance</label>
             <select class="form-select selection" name="lieunaissance" id="lieunaissance"
                 data-codeproduit="{{ $product->CodeProduit }}" data-placeholder="Sélectionner le lieu" autocomplete="on">
-                <option selected>Sélectionner le lieu</option>
+                <option selected disabled value="">Sélectionner le lieu</option>
 
                 @foreach($villes as $ville)
                     <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option>
@@ -101,7 +101,7 @@
         <div class="col-12 col-lg-4">
             <label for="lieuresidence" class="form-label">Lieu de residence <span class="text-danger">*</span></label>
             <select class="form-select selection" name="lieuresidence" id="lieuresidence" autocomplete="on" required>
-                <option>Sélectionner le lieu</option>
+                <option selected disabled value="">Sélectionner le lieu</option>
 
                 @foreach($villes as $ville)
                     <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option>
@@ -114,7 +114,7 @@
         <div class="col-12 col-lg-6">
             <label for="profession" class="form-label">Profession</label>
             <select class="form-select selection" name="profession" id="profession" autocomplete="on">
-                <option>Sélectionner la profession</option>
+                <option selected disabled value="">Sélectionner la profession</option>
 
                 @foreach($professions as $profession)
                     <option value="{{ $profession->MonLibelle }}">{{ $profession->MonLibelle }}</option>
@@ -124,7 +124,7 @@
         <div class="col-12 col-lg-6">
             <label for="employeur" class="form-label">Secteur d'activites</label>
             <select class="form-select selection" name="employeur" id="employeur" autocomplete="on">
-                <option>Sélectionner le secteur d'activites</option>
+                <option selected disabled value="">Sélectionner le secteur d'activites</option>
 
                 @foreach($secteurActivites as $secteurActivite)
                     <option value="{{ $secteurActivite->MonLibelle }}">{{ $secteurActivite->MonLibelle }}</option>
@@ -192,13 +192,13 @@
 
         <div class="row g-3 mb-3">
             <div class="col-12 col-lg-8">
-                <label for="contact_nom" class="form-label">Nom et Prénoms <span class="text-danger">*</span></label>
-                <input type="text" name="personneressource2" class="form-control" id="contact_nom" placeholder="Nom et Prénoms" required>
+                <label for="contact_nom" class="form-label">Nom et Prénoms </label>
+                <input type="text" name="personneressource2" class="form-control" id="contact_nom" placeholder="Nom et Prénoms" >
             </div>
             <div class="col-12 col-lg-4">
-                <label class="form-label">Contact <span class="text-danger">*</span></label><br>
+                <label class="form-label">Contact</label><br>
                 <div class="input-group mb-3">
-                    <input type="text" name="contactpersonneressource2" class="form-control" aria-label="Text input with select" required>
+                    <input type="text" name="contactpersonneressource2" class="form-control" aria-label="Text input with select" >
                 </div>
             </div>
         </div>
@@ -207,7 +207,7 @@
     <div class="d-flex align-items-center justify-content-between g-3 mb-3">
         {{-- <div class="col-12 col-lg-6 col-md-6"> --}}
             <button onclick="event.preventDefault(); stepper1.previous()" class="btn border-btn btn-previous-form"><i
-                class='bx bx-left-arrow-alt'></i>Previous</button>
+                class='bx bx-left-arrow-alt'></i>Precedent</button>
         {{-- </div> --}}
         {{-- <div class="col-12 col-lg-6 col-md-6"> --}}
             <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i class='bx bx-right-arrow-alt'></i></button>

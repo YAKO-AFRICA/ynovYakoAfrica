@@ -133,7 +133,7 @@
                                     <div class="modal-body" style="width: 100%; height: 80vh">
 
                                         {{-- <iframe style="width: 100%; height: 100%" src="{{ asset('documents/files/'.$doc->filename) }}" frameborder="0"></iframe> --}}
-                                        <iframe style="width: 100%; height: 100%" src="{{ url('storage/production/' . $doc->filename) }}" frameborder="0"></iframe>
+                                        <iframe style="width: 100%; height: 100%" src="{{ url('storage/documents/' . $doc->filename) }}" frameborder="0"></iframe>
 
                                     </div>
 
@@ -194,17 +194,17 @@
                                             </strong>
                                            <span> 
                                                 @switch($contrat->modepaiement)
-                                                @case('Virement_bancaire') Virement bancaire @break
-                                                @case('Espece') Espèce @break
-                                                @case('Cheque') Chèque @break
+                                                @case('VIR') Virement bancaire @break
+                                                @case('ESP') Espèce @break
+                                                @case('CHK') Chèque @break
                                                 @case('Mobile_money') Mobile money @break
-                                                @case('Prelevement_source') Prélèvement à la source @break
+                                                @case('SOURCE') Prélèvement à la source @break
                                                 @default --
                                                 @endswitch
                                             </span>
                                         </div>
 
-                                        @if ($contrat->modepaiement === 'Virement_bancaire' || $contrat->modepaiement === 'Prelevement_source')
+                                        @if ($contrat->modepaiement === 'VIR' || $contrat->modepaiement === 'SOURCE')
                                             <div class="row mb-3">
                                                 <div class="col-12 mb-3">
                                                     <strong>
@@ -285,11 +285,11 @@
                                             </strong>
                                             <p class="">
                                                 @switch($contrat->periodicite)
-                                                    @case('mois') Mois @break
-                                                    @case('trimestre') Trimestre @break
-                                                    @case('semestre') Semestre @break
-                                                    @case('annee') Année @break
-                                                    @case('versement_unique') Versement unique @break
+                                                    @case('M') Mois @break
+                                                    @case('T') Trimestre @break
+                                                    @case('S') Semestre @break
+                                                    @case('A') Année @break
+                                                    @case('U') Versement unique @break
                                                     @default --
                                                 @endswitch
                                             </p>

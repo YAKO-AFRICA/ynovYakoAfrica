@@ -12,22 +12,22 @@
                     <div class=" mt-4">
                         <div class="mb-3">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" name="modepaiement" type="radio" value="Virement_bancaire" id="Virement_bancaire" 
-                                    @if ($contrat->modepaiement === 'Virement_bancaire')
+                                <input class="form-check-input" name="modepaiement" type="radio" value="VIR" id="Virement_bancaire" 
+                                    @if ($contrat->modepaiement === 'VIR')
                                         checked
                                     @endif>
                                 <label class="form-check-label" for="Virement_bancaire">Virement bancaire</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" name="modepaiement" type="radio" value="Espece" id="Espece" 
-                                    @if ($contrat->modepaiement === 'Espece')
+                                <input class="form-check-input" name="modepaiement" type="radio" value="ESP" id="Espece" 
+                                    @if ($contrat->modepaiement === 'ESP')
                                         checked
                                     @endif>
                                 <label class="form-check-label" for="Espece">Espèce</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" name="modepaiement" type="radio" value="Cheque" id="Cheque" 
-                                    @if ($contrat->modepaiement === 'Cheque')
+                                <input class="form-check-input" name="modepaiement" type="radio" value="CHK" id="Cheque" 
+                                    @if ($contrat->modepaiement === 'CHK')
                                         checked
                                     @endif>
                                 <label class="form-check-label" for="Cheque">Chèque</label>
@@ -40,8 +40,8 @@
                                 <label class="form-check-label" for="Mobile_money">Mobile money</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" name="modepaiement" type="radio" value="Prelevement_source" id="Prelevement_source" 
-                                    @if ($contrat->modepaiement === 'Prelevement_source')
+                                <input class="form-check-input" name="modepaiement" type="radio" value="SOURCE" id="Prelevement_source" 
+                                    @if ($contrat->modepaiement === 'SOURCE')
                                         checked
                                     @endif>
                                 <label class="form-check-label" for="Prelevement_source">Prélèvement à la source</label>

@@ -28,8 +28,8 @@
             </div>
             <div class="col">
                 <Label class="form-label">Duree du pret (Mois)</Label>
-                <input class="form-control" type="number" value="{{ $simulationData['duree'] ?? '-' }}" readonly>
-                <input class="form-control" type="hidden" name="duree" value="{{ $simulationData['duree'] ?? '-' }}">
+                <input class="form-control" type="number"  value="{{ $simulationData['duree'] ?? '-' }}" readonly>
+                <input class="form-control" type="hidden" id="dureeCotation" name="duree" value="{{ $simulationData['duree'] ?? '-' }}">
             </div>
         </div>
 
@@ -167,6 +167,22 @@
                 }
             });
         })
+    </script>
+
+        
+    <script>
+        const firstDateEcheance = document.getElementById("firstDateEcheance");
+        const duree = document.getElementById("dureeCotation");
+
+        firstDateEcheance.addEventListener("blur", function() {
+            const dateSaisie = new Date(firstDateEcheance.value);
+    
+            const moisAjoutes = parseInt(duree.value);
+            console.log("Mois ajoutes:", moisAjoutes);
+            const nouvelleDate = new Date(dateSaisie.setMonth(dateSaisie.getMonth() + moisAjoutes));
+            const lasLoanDateRembour = document.getElementById("lasLoanDateRembour");
+            lasLoanDateRembour.value = nouvelleDate.toISOString().split('T')[0];
+        });
     </script>
 </div>
 

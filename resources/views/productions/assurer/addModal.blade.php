@@ -16,7 +16,7 @@
                             <div class="col-12 col-lg-6">
                                 <label for="civiliteAssur" class="form-label">Civilité <span class="star">*</span></label>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="civiliteAssur" id="inlineRadio1" value="Madame" autocomplete="off">
+                                    <input class="form-check-input" type="radio" name="civiliteAssur" id="inlineRadio1" value="Madame" autocomplete="off" required>
                                     <label class="form-check-label" for="inlineRadio1">Madame</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -35,7 +35,7 @@
                                 <div class="col-12 col-lg-6">
                                     <label for="nomAssur" class="form-label">Nom de l'assuré <span class="star">*</span></label>
                                     <input type="text" name="nomAssur" class="form-control" id="nomAssur"
-                                        placeholder="Nom" autocomplete="off">
+                                        placeholder="Nom" autocomplete="off" required>
                                     @error('nomAssur')
                                         <span class="text-danger"> Veuillez remplir le champ nom</span>
                                     @enderror
@@ -43,7 +43,7 @@
                                 <div class="col-12 col-lg-6">
                                     <label for="prenomAssur" class="form-label">Prénoms de l'assuré <span class="star">*</span></label>
                                     <input type="text" name="prenomAssur" class="form-control" id="prenomAssur"
-                                        placeholder="Prénoms">
+                                        placeholder="Prénoms" required>
                                     @error('prenomAssur')
                                         <span class="text-danger"> Veuillez remplir le champ prenom </span>
                                     @enderror
@@ -53,7 +53,7 @@
                                 <div class="col-12 col-lg-6">
                                     <label for="datenaissanceAssur" class="form-label">Date de naissance <span class="star">*</span></label>
                                     <input type="date" name="datenaissanceAssur" class="form-control" id="datenaissanceAssur"
-                                        placeholder="Date de naissance">
+                                        placeholder="Date de naissance" required>
                                     
                                     @error('datenaissanceAssur')
                                         <span class="text-danger"> Veuillez remplir la date de naissance </span>

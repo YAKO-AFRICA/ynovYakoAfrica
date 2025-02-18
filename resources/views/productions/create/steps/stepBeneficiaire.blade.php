@@ -11,7 +11,7 @@
             <div class="card" style="width: 80%">
                 <div class="card-body">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="addBeneficiary" value="adherent" name="addBeneficiary">
+                        <input class="form-check-input" type="checkbox" id="addBeneficiary" value="adherent" name="addBeneficiary" required>
                         <label class="form-check-label" for="addBeneficiary" >Adherent</label>
                     </div>
                     <div class="form-check">
@@ -96,7 +96,7 @@
             <div class="d-flex align-items-center justify-content-between gap-3">
                 <button onclick="event.preventDefault(); stepper1.previous()"
                     class="btn border-btn btn-previous-form"><i
-                        class='bx bx-left-arrow-alt'></i>Previous</button>
+                        class='bx bx-left-arrow-alt'></i>Precedent</button>
                 <button onclick="event.preventDefault(); stepper1.next()"
                     class="btn btn-two btn-next-form">Suivant<i
                         class='bx bx-right-arrow-alt'></i></button>

@@ -153,12 +153,6 @@
             });
         </script>
 
-        <script>
-            $(document).ready(function() {
-                $('.js-example-basic-single').select2();
-            });
-        </script>
-
         <script src="{{ asset('assets/js/script.js')}}"></script>
         <script src="{{ asset('assets/js/app.js')}}"></script>
         <script src="{{ asset('assets/js/main.js')}}"></script>
@@ -268,7 +262,7 @@
 
                 // Gérer la visibilité des boutons
                 prevBtn.style.display = currentStep > 0 ? "inline-block" : "none";
-                prevBtn.style.display = currentStep < formSteps.length - 2 ? "inline-block" : "none";
+                prevBtn.style.display = currentStep < formSteps.length - 1 ? "inline-block" : "none";
                 nextBtn.style.display = currentStep < formSteps.length - 2 ? "inline-block" : "none";
                 submitBtn.style.display = currentStep === formSteps.length - 2 ? "inline-block" : "none";
             }

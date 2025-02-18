@@ -33,6 +33,15 @@
         </div>
 
         <div class="overflow-auto " style="height: calc(90vh - 180px)">
+            <strong><li class="menu-label">Production</li></strong>
+            <li>
+                <a href="{{ route('prod.validation.index')}}">
+                    <div class="parent-icon">
+                        <i class='bx bx-home-alt'></i>
+                    </div>
+                    <div class="menu-title">Validation</div>
+                </a>
+            </li>
             <strong><li class="menu-label">E-Souscription</li></strong>
             <li>
                 <a href="{{ route('prod.stepProduct')}}">
@@ -49,15 +58,7 @@
                     <div class="menu-title">Mes Propositions</div>
                 </a>
             </li>
-            <strong><li class="menu-label">Production</li></strong>
-            <li>
-                <a href="{{ route('prod.validation.index')}}">
-                    <div class="parent-icon">
-                        <i class='bx bx-home-alt'></i>
-                    </div>
-                    <div class="menu-title">Validation</div>
-                </a>
-            </li>
+            
             {{-- <li>
                 <a href="{{ route('prod.index')}}">
                     <div class="parent-icon"><i class="fadeIn animated bx bx-clipboard"></i>
@@ -87,6 +88,22 @@
                     <div class="parent-icon"><i class="fadeIn animated bx bx-archive-in"></i>
                     </div>
                     <div class="menu-title">Mes demandes</div>
+                </a>
+            </li>
+            <li class="menu-label">Rapport d'activité</li>
+            <li>
+                <a href="{{ route('report.eSouscription')}}">
+                    <div class="parent-icon"><i class="bx bx-line-chart"></i>
+                    </div>
+                    <div class="menu-title">Souscription</div>
+                </a>
+            </li>
+            
+            <li>
+                <a href="{{ route('report.ePret')}}">
+                    <div class="parent-icon"><i class="bx bx-map-alt"></i>
+                    </div>
+                    <div class="menu-title">Pret</div>
                 </a>
             </li>
             <li class="menu-label">E-Prestation</li>

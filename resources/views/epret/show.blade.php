@@ -168,7 +168,8 @@
 
                                     <div class="modal-body" style="width: 100%; height: 80vh">
 
-                                        <iframe style="width: 100%; height: 100%" src="{{ asset('documents/files/'.$doc->filename) }}" frameborder="0"></iframe>
+                                        <iframe style="width: 100%; height: 100%" src="{{ url('storage/documents/' . $doc->filename) }}" frameborder="0"></iframe>
+                                        
 
                                     </div>
 

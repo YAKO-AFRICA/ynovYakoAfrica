@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\EpretController;
 use App\Http\Controllers\Setting\UserController;
 use App\Http\Controllers\Setting\ZoneController;
 use App\Http\Controllers\Admin\AssurerController;
+use App\Http\Controllers\Admin\RapportController;
 use App\Http\Controllers\Admin\AdherentController;
 use App\Http\Controllers\Admin\BulletinController;
 use App\Http\Controllers\Admin\DocumentController;
@@ -30,9 +31,9 @@ use App\Http\Controllers\Admin\BeneficiairesController;
 | Here is where you can register web routes for your application. These
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
-|
+|<iframe style="width: 100%; height: 100%" src="{{ url('storage/documents/' . $doc->filename) }}" frameborder="0"></iframe>
 */
-Route::get('storage/production/{file}', function ($file) {
+Route::get('storage/documents/{file}', function ($file) {
     // $path = base_path('../uploads/prestations/' . $file);
     $path = base_path('../public_html/testenovapi/public/uploads/' . $file);
 
@@ -85,6 +86,17 @@ Route::prefix('shared')->name('shared.')->group(function(){
     Route::middleware(['auth','PreventBackHistory'])->group(function () {
         Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
         Route::post('/update/assuree/{id}', [AssurerController::class, 'updateAssur'])->name('assuree.update');
+    });
+
+});
+
+Route::prefix('report')->name('report.')->group(function(){
+    Route::middleware('guest','PreventBackHistory')->group(function(){
+
+    });
+    Route::middleware(['auth','PreventBackHistory'])->group(function () {
+        Route::get('eSouscription',[RapportController::class, 'eSouscription'])->name('eSouscription');
+        Route::get('ePret',[RapportController::class, 'ePret'])->name('ePret');
     });
 
 });

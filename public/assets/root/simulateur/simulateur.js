@@ -20,6 +20,8 @@ document.getElementById("loanSimulatorForm").addEventListener("submit", function
     const poids = parseFloat(document.getElementById("poids").value);
     const taille = parseFloat(document.getElementById("taille").value);
 
+    
+
     // Validation des âges non pris en charge
     if (age > 61) {
         document.getElementById("resultat").innerText = "Veuillez contacter Yako Africa.";
@@ -45,7 +47,7 @@ document.getElementById("loanSimulatorForm").addEventListener("submit", function
     // Déduction de l'indice de surmortalité à partir du tableau
     let indiceSurmortalite = 0;
     if (rpt <= -0.5 || rpt >= 0.8) {
-        document.getElementById("resultat").innerText = "Veuillez contacter la LOYALE VIE.";
+        document.getElementById("resultat").innerText = "Veuillez contacter la YAKO AFRICA.";
         return;
     } else if (rpt >= -0.49 && rpt <= -0.25) {
         indiceSurmortalite = 50;

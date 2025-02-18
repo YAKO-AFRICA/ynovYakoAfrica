@@ -7,24 +7,24 @@
         <div class="col-12 col-lg-6">
             <div class="card" style="width: 90%">
                 <div class="card-body">
-                    <label for="" class="form-label">Je souhaite payer mes primes par :</label>
+                    <label for="" class="form-label">Je souhaite payer mes primes par : <span class="text-danger">*</span></label>
                     <div class="mb-3">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="modepaiement" type="radio" value="Virement_bancaire"
-                                id="Virement_bancaire">
+                            <input class="form-check-input" name="modepaiement" type="radio" value="VIR"
+                                id="Virement_bancaire" required>
                             <label class="form-check-label" for="Virement_bancaire">
                                 Virement bancaire
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="modepaiement" type="radio" value="Espece"
+                            <input class="form-check-input" name="modepaiement" type="radio" value="ESP"
                                 id="Espece">
                             <label class="form-check-label" for="Espece">
                                 Espèce
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="modepaiement" type="radio" value="Cheque"
+                            <input class="form-check-input" name="modepaiement" type="radio" value="CHK"
                                 id="Cheque">
                             <label class="form-check-label" for="Cheque">
                                 Chèque
@@ -39,7 +39,7 @@
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="modepaiement" type="radio"
-                                value="Prelevement_source" id="Prelevement_source">
+                                value="SOURCE" id="Prelevement_source">
                             <label class="form-check-label" for="Prelevement_source">
                                 Prélèvement à la source
                             </label>
@@ -97,11 +97,11 @@
 
             <div class="card mx-0">
                 <div class="card-body">
-                    <label for="" class="form-label">Je souhaite payer mes primes chaque :</label>
+                    <label for="" class="form-label">Je souhaite payer mes primes chaque : <span class="text-danger">*</span></label>
                     <div class="mb-3">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="periodicite" type="radio" value="M"
-                                id="Mois">
+                                id="Mois" required>
                             <label class="form-check-label" for="Mois">
                                 Mois
                             </label>
@@ -138,14 +138,14 @@
                     <div class="row">
                         @if ($product->CodeProduit == 'PFA_IND')
                             <div class="col-12 mb-3">
-                                <label for="DateEffet" class="form-label">Mon contrat prendra effet le :</label>
-                                <input type="date" class="form-control" id="DateEffet" name="dateEffet">
+                                <label for="DateEffet" class="form-label">Mon contrat prendra effet le : <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="DateEffet" name="dateEffet" required>
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="primepricipale" class="form-label">Je souhaite payer une prime de
-                                    :</label>
+                                    : <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="primepricipale" name="primepricipale"
-                                    min="0">
+                                    min="1000" required>
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="duree" class="form-label">Durée de mes cotisations (en année, entre 6
@@ -156,8 +156,8 @@
                             </div>
                             <div class="col-12 mb-4">
                                 <label for="montantrente" class="form-label">Montant de la Rente (en FCFA) :
-                                    :</label>
-                                <select name="montantrente" id="montantrente" class="form-select">
+                                    : <span class="text-danger">*</span></label>
+                                <select name="montantrente" id="montantrente" class="form-select" required>
                                     <option value="" selected>Selectionnez le montant de la rente</option>
                                     <option value="50000">50 000</option>
                                     <option value="75000">75 000</option>
@@ -244,7 +244,7 @@
         <div class="col-12">
             <div class="d-flex align-items-center justify-content-between gap-3">
                 <button onclick="event.preventDefault(); stepper1.previous()"
-                    class="btn border-btn btn-previous-form"><i class='bx bx-left-arrow-alt'></i>Previous</button>
+                    class="btn border-btn btn-previous-form"><i class='bx bx-left-arrow-alt'></i>Precedent</button>
                 <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i
                         class='bx bx-right-arrow-alt'></i></button>
             </div>

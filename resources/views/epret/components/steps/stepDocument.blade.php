@@ -7,18 +7,17 @@
     <h5 class="mb-1">Documents de souscription</h5>
 
     <p class="mb-4">Veuillez chargez vos documents de souscription</p>
-    @php
+    {{-- @php
       $pret_id = App\Models\Pret::where('saisiepar', Auth::user()->idmembre)
         ->latest('saisiele')
         ->first()
         ->id;
-    @endphp
+    @endphp --}}
 
     <form action="{{ route('epret.addDocDefaud') }}" method="post" class="submitForm">
 
       @csrf
       <div class="row g-3">
-        <input type="hidden" name="idPret" value="{{ $pret_id }}">
           <div class="col-xl-9 mx-auto">
               <div class="card">
                   <div class="card-body">
@@ -177,7 +176,7 @@
           <div class="col-12">
               <div class=" gap-3 text-end">
   
-                  <button type="submit" class="btn btn-success px-4">Submit</button>
+                  <button type="submit" class="btn btn-success px-4">Sauvegarder</button>
               </div>
           </div>
       </div>

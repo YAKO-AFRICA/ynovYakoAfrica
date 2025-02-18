@@ -246,7 +246,7 @@ class EpretController extends Controller
                     'taille' => $request->taille,
                     'poids' => $request->poids,
 
-                    'partenaire' => Auth::user()->membre->partenaire,
+                    'partenaire' => Auth::user()->membre->codepartenaire,
                     'periodicite' => $request->periodiciterPrime,
                     'tension' => $request->tensionMin,
                     'fumezvous' => $request->smoking,
@@ -435,64 +435,6 @@ class EpretController extends Controller
         }
 
 
-        // private function generateBulletinPret($idPret)
-        // {
-        //     try {
-        //         $pret = Pret::findOrFail($idPret);
-
-        //         $options = new Options();
-        //         $options->set('isRemoteEnabled', true);
-
-        //         $pdf = PDF::loadView('epret.components.bulletin.adhesion', ['pret' => $pret]);
-        //         $bulletinDir = public_path('documents/bulletin/pret/');
-        //         if (!is_dir($bulletinDir)) {
-        //             mkdir($bulletinDir, 0777, true);
-        //         }
-
-        //         $tempBulletinPath = $bulletinDir . 'temp_bulletin_pret_' . $pret->id . '.pdf';
-        //         $pdf->save($tempBulletinPath);
-
-        //         $cguFilePath = public_path('root/cgu/CGPLanggnant.pdf');
-        //         if (!file_exists($cguFilePath)) {
-        //             throw new \Exception('Le fichier CGU est introuvable.');
-        //         }
-
-        //         $finalPdf = new Fpdi();
-        //         $finalPdf->AddPage();
-        //         $finalPdf->setSourceFile($tempBulletinPath);
-        //         $bulletinTplIdx = $finalPdf->importPage(1);
-        //         $finalPdf->useTemplate($bulletinTplIdx);
-
-        //         $cguPageCount = $finalPdf->setSourceFile($cguFilePath);
-        //         for ($pageNo = 1; $pageNo <= $cguPageCount; $pageNo++) {
-        //             $finalPdf->AddPage();
-        //             $cguTplIdx = $finalPdf->importPage($pageNo);
-        //             $finalPdf->useTemplate($cguTplIdx);
-        //         }
-
-        //         $finalBulletinPath = $bulletinDir . 'adhesion_' . $pret->id . '.pdf';
-        //         $finalPdf->Output($finalBulletinPath, 'F');
-
-        //         unlink($tempBulletinPath);
-
-        //         $fileUrl = asset("documents/bulletin/pret/adhesion_{$pret->id}.pdf");
-
-        //         // Log the generated file URL
-        //         Log::info("Bulletin generated at: " . $fileUrl);
-
-        //         return [
-        //             'success' => true,
-        //             'file_url' => $fileUrl,
-        //         ];
-        //     } catch (\Exception $e) {
-        //         Log::error("Erreur lors de la génération du bulletin : ", ['error' => $e->getMessage()]);
-        //         return [
-        //             'success' => false,
-        //             'message' => $e->getMessage(),
-        //         ];
-        //     }
-        // }
-
         public function generateBu($id)
         {
             try {
@@ -517,7 +459,11 @@ class EpretController extends Controller
         {
             try {
             DB::beginTransaction();
-                $idPret = $request->idPret;
+                $lastPret = Pret::where('saisiepar', Auth::user()->idmembre)
+                ->latest('id')
+                ->first();
+                $idPret = $lastPret->id;
+
                 $libelles = $request->input('libelles');
                 $files = $request->file('files');
              

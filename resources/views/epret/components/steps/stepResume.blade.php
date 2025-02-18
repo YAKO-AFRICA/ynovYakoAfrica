@@ -16,7 +16,7 @@
                 <div class="col-md-6"><strong>Prénoms :</strong> <span id="displayPrenom">--</span></div>
             </div>
             <div class="row">
-                <div class="col-md-6"><strong>Date de naissance :</strong> <span id="displayBirthday">--</span></div>
+                <div class="col-md-6"><strong>Date de naissance :</strong> <span id="displayBirthday">{{ $simulationData['datenaissance'] ?? '-' }}</span></div>
                 <div class="col-md-6"><strong>Age :</strong> <span>{{ $simulationData['age'] ?? '-' }}</span></div>
             </div>
             <div class="row">
@@ -47,15 +47,16 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6"><strong>Taille (cm) :</strong> <span id="displayTaille">--</span></div>
-                    <div class="col-md-6"><strong>Poids (Kg) :</strong> <span id="displayPoid">--</span></div>
+                    <div class="col-md-6"><strong>Taille (cm) :</strong> <span id="displayTaille">{{ $simulationData['taille'] ?? '-' }}</span></div>
+                    <div class="col-md-6"><strong>Poids (Kg) :</strong> <span id="displayPoid">{{ $simulationData['poids'] ?? '-' }}</span></div>
                 </div>
                 <div class="row">
                     <div class="col-md-6"><strong>Fumeur ?</strong> <span id="displayFumeur">--</span></div>
                     <div class="col-md-6"><strong>Buvez-vous l'alcool ?</strong> <span id="displayAlcool">--</span></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12"><strong>Vos distractions :</strong> <span id="displayDistraction">--</span></div>
+                    <div class="col-md-6"><strong>Vos distractions :</strong> <span id="displayDistraction">--</span></div>
+                    <div class="col-md-6"><strong>Sport :</strong> <span id="displaySport">--</span></div>
                 </div>
                 <div class="row">
                     <div class="col-md-6"><strong>Etes-vous atteint d'une infirmité ?</strong> <span id="displayAccident">--</span></div>
@@ -187,11 +188,14 @@
     </div>
 
 
-    @php
-        $benefData = session('beneficiary');
+
+    {{-- @php
+        $benefData = session('beneficiaryDefault');
+        $benefDataPartner = session('beneficiaryData');
     @endphp
 
     <!-- Bénéficiaire(s) Section -->
+    @if ($simulationData['primeObseque'] != 0)
     <div class="card">
         <div class="card-header">
             <h5>BENEFICIAIRE(S)</h5>
@@ -220,11 +224,21 @@
                         <td>{{ $benefData['emailBenef'] ?? ''}}</td>
                     </tr>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td>{{ $benefDataPartner['nom'] ?? ''}} {{ $benefDataPartner['prenom'] ?? '' }}</td>
+                        <td>{{ $benefDataPartner['dateNaissance'] ?? ''}}</td>
+                        <td>{{ $benefDataPartner['lieuNaissance'] ?? ''}}</td>
+                        <td>{{ $benefDataPartner['lieu_residence'] ?? ''}}</td>
+                        <td>500 000 Fcfa</td>
+                        <td>{{ $benefDataPartner['telephone'] ?? ''}}</td>
+                        <td>{{ $benefDataPartner['email'] ?? ''}}</td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
-
-
+    @endif --}}
 </div>
 
 <script>
@@ -243,33 +257,6 @@
         const telephoneInput = document.querySelector('input[name="telephone"]');
         const numerocompteInput = document.querySelector('input[name="numerocompte"]');
 
-            // etat de sante
-        const tailleInput = document.querySelector('input[name="taille"]');
-        const poidsInput = document.querySelector('input[name="poids"]');
-        const fumeurInput = document.querySelector('input[name="smoking"]');
-        const alcoholInput = document.querySelector('input[name="alcohol"]');
-        const distractionSelect = document.querySelector('select[name="distractions"]');
-        const accidentInput = document.querySelector('input[name="accident"]');
-
-        const treatmentInput = document.querySelector('input[name="treatment"]');
-        const transSangInput = document.querySelector('input[name="transSang"]');
-        const interChirugialeInput = document.querySelector('input[name="interChirugiale"]');
-        const prochaineInterChirugialeInput = document.querySelector('input[name="prochaineInterChirugiale"]');
-        const diabetesInput = document.querySelector('input[name="diabetes"]');
-        const hypertensionInput = document.querySelector('input[name="hypertension"]');
-        const sickleCellInput = document.querySelector('input[name="sickleCell"]');
-        const liverCirrhosisInput = document.querySelector('input[name="liverCirrhosis"]');
-        const lungDiseaseInput = document.querySelector('input[name="lungDisease"]');
-        const cancerInput = document.querySelector('input[name="cancer"]');
-        const anemiaInput = document.querySelector('input[name="anemia"]');
-        const kidneyFailureInput = document.querySelector('input[name="kidneyFailure"]');
-        const strokeInput = document.querySelector('input[name="stroke"]');
-
-        // detail pret
-        
-        const typPretInput = document.querySelector('select[name="typPret"]');
-
-
         // affichage dans le resume
         const displayCivility = document.getElementById('displayCivility');
         const displayNom = document.getElementById('displayNom');
@@ -285,32 +272,7 @@
         const displayTelephone = document.getElementById('displayTelephone');
         const displayNumerocompte = document.getElementById('displayNumerocompte');
 
-        // sante
-        const displayTaille = document.getElementById('displayTaille');
-        const displayPoid = document.getElementById('displayPoid');
-        const displayFumeur = document.getElementById('displayFumeur');
-        const displayAlcool = document.getElementById('displayAlcool');
-        const displayDistraction = document.getElementById('displayDistraction');
-        const displayAccident = document.getElementById('displayAccident');
 
-        const displayTreatment = document.getElementById('displayTreatment');
-        const displayTransSang = document.getElementById('displayTransSang');
-        const displayInterChirugiale = document.getElementById('displayInterChirugiale');
-        const displayProchaineInterChirugiale = document.getElementById('displayProchaineInterChirugiale');
-        const displayDiabetes = document.getElementById('displayDiabetes');
-        const displayHypertension = document.getElementById('displayHypertension');
-        const displaySickleCell = document.getElementById('displaySickleCell');
-        const displayLiverCirrhosis = document.getElementById('displayLiverCirrhosis');
-        const displayLungDisease = document.getElementById('displayLungDisease');
-        const displayCancer = document.getElementById('displayCancer');
-        const displayAnemia = document.getElementById('displayAnemia');
-        const displayKidneyFailure = document.getElementById('displayKidneyFailure');
-        const displayStroke = document.getElementById('displayStroke');
-
-        // detail pret
-        const displayTypPret = document.getElementById('displayTypPret');
-
-        // Mise à jour dynamique des valeurs affichées
         civiliteInputs.forEach(input => {
             input.addEventListener('change', () => {
                 displayCivility.textContent = input.checked ? input.value : 'null';
@@ -389,117 +351,64 @@
             });
         }
 
-        // sante
-        if (tailleInput) {
-            tailleInput.addEventListener('input', () => {
-                displayTaille.textContent = tailleInput.value || 'Null';
-            });
-        }
-        if (poidsInput) {
-            poidsInput.addEventListener('input', () => {
-                displayPoid.textContent = poidsInput.value || 'Null';
-            });
-        }
-        if (fumeurInput) {
-            fumeurInput.addEventListener('input', () => {
-                displayFumeur.textContent = fumeurInput.value || 'Null';
-            });
-        }
-        if (alcoholInput) {
-            alcoholInput.addEventListener('input', () => {
-                displayAlcool.textContent = alcoholInput.value || 'Null';
-            });
-        }
-        if (accidentInput) {
-            accidentInput.addEventListener('input', () => {
-                displayAccident.textContent = accidentInput.value || 'Null';
-            });
-        }
 
-        if (distractionSelect) {
-            distractionSelect.addEventListener('change', () => {
-                displayDistraction.textContent = distractionSelect.value || 'Null';
+        // etat de sante
+
+        document.querySelectorAll('input[name="smoking"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('displayFumeur').textContent = this.value;
+            });
+        });
+        document.querySelectorAll('input[name="alcohol"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('displayAlcool').textContent = this.value;
+            });
+        });
+        document.querySelectorAll('input[name="sport"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('displaySportif').textContent = this.value;
+            });
+        });
+
+
+        // Fonction pour gérer les mises à jour dynamiques des réponses
+        function updateDisplay(name, displayId) {
+            document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
+                radio.addEventListener("change", function () {
+                    document.getElementById(displayId).textContent = this.value;
+                });
             });
         }
 
-        // sante
+        // Liste des questions et des IDs correspondants
+        const questions = [
+            { name: "accident", display: "displayAccident" },
+            { name: "treatment", display: "displayMedical" }, // Correction ici
+            { name: "transSang", display: "displayTransSang" },
+            { name: "interChirugiale", display: "displayInterChirugiale" },
+            { name: "prochaineInterChirugiale", display: "displayProchaineInterChirugiale" },
+            { name: "diabetes", display: "displayDiabetes" },
+            { name: "hypertension", display: "displayHypertension" },
+            { name: "sickleCell", display: "displaySickleCell" },
+            { name: "liverCirrhosis", display: "displayLiverCirrhosis" },
+            { name: "lungDisease", display: "displayLungDisease" },
+            { name: "cancer", display: "displayCancer" },
+            { name: "anemia", display: "displayAnemia" },
+            { name: "kidneyFailure", display: "displayKidneyFailure" },
+            { name: "stroke", display: "displayStroke" }
+        ];
 
-        treatmentInput.forEach(input => {
-            input.addEventListener('change', () => {
-                displayTreatment.textContent = input.checked ? input.value : 'null';
-            });
-        });
+        // Appliquer la fonction à toutes les questions
+        questions.forEach(q => updateDisplay(q.name, q.display));
 
-        transSangInput.forEach(input => {
-            input.addEventListener('change', () => {
-                displayTransSang.textContent = input.checked ? input.value : 'null';
-            });
-        });
-        transSangInput.forEach(input => {
-            input.addEventListener('change', () => {
-                displayTransSang.textContent = input.checked ? input.value : 'null';
-            });
-        });
-        interChirugialeInput.forEach(input => {
-            input.addEventListener('change', () => {
-                displayInterChirugiale.textContent = input.checked ? input.value : 'null';
-            });
-        });
-        prochaineInterChirugialeInput.forEach(input => {
-            input.addEventListener('change', () => {
-                displayProchaineInterChirugiale.textContent = input.checked ? input.value : 'null';
-            });
-        });
-        diabetesInput.forEach(input => {
-            input.addEventListener('change', () => {
-                displayDiabetes.textContent = input.checked ? input.value : 'null';
-            });
-        });
-        hypertensionInput.forEach(input => {
-            input.addEventListener('change', () => {
-                displayHypertension.textContent = input.checked ? input.value : 'null';
-            });
-        });
-        sickleCellInput.forEach(input => {
-            input.addEventListener('change', () => {
-                displaySickleCell.textContent = input.checked ? input.value : 'null';
-            });
-        });
-        liverCirrhosisInput.forEach(input => {
-            input.addEventListener('change', () => {
-                displayLiverCirrhosis.textContent = input.checked ? input.value : 'null';
-            });
-        });
-        lungDiseaseInput.forEach(input => {
-            input.addEventListener('change', () => {
-                displayLungDisease.textContent = input.checked ? input.value : 'null';
-            });
-        });
-        cancerInput.forEach(input => {
-            input.addEventListener('change', () => {
-                displayCancer.textContent = input.checked ? input.value : 'null';
-            });
-        });
-        anemiaInput.forEach(input => {
-            input.addEventListener('change', () => {
-                displayAnemia.textContent = input.checked ? input.value : 'null';
-            });
-        });
-        kidneyFailureInput.forEach(input => {
-            input.addEventListener('change', () => {
-                displayKidneyFailure.textContent = input.checked ? input.value : 'null';
-            });
-        });
-        strokeInput.forEach(input => {
-            input.addEventListener('change', () => {
-                strokeInput.textContent = input.checked ? input.value : 'null';
-            });
+        // Gestion des champs texte (sport & distractions)
+        document.getElementById("typeSport").addEventListener("input", function () {
+            document.getElementById("displaySportif").textContent = this.value || "Null";
         });
 
-
-
-
-
+        document.getElementById("distractionsInput").addEventListener("input", function () {
+            document.getElementById("displayDistraction").textContent = this.value || "Null";
+        });
 
 
 

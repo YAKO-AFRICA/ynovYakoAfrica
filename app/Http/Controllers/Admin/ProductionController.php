@@ -22,6 +22,7 @@ use App\Models\Beneficiaire;
 use Illuminate\Http\Request;
 use App\Models\ReseauProduct;
 use App\Models\TblProfession;
+use App\Models\AssureGarantie;
 use App\Models\ProduitGarantie;
 use App\Models\TblSecteurActivite;
 use Illuminate\Support\Facades\DB;
@@ -259,6 +260,23 @@ class ProductionController extends Controller
 
                 // Récupérer les assurés du formulaire
                 $assures = json_decode($request->input('assures'), true);
+                $garanties = ProduitGarantie::where(['codeproduit'=> $request->codeproduit,'estobligatoire' => 1])->get();
+                foreach ($garanties as $garantie) {
+                    AssureGarantie::create([
+                        'codeproduitgarantie' => $garantie->codeproduitgarantie,
+                        'idproduitparantie' => $garantie->id,
+                        'monlibelle' => $garantie->libelle,
+                        'prime' => $request->primepricipale,
+                        'primetotal' => $prime,
+                        'primeaccesoire' => 0,
+                        'type' => "Mixte",
+                        'capitalgarantie' => $request->capital,
+                        'tauxinteret' => $request->tauxinteret,
+                        'codeassure' => $idAssure,
+                        'codecontrat' => $idContrat,
+                        'estmigre' => 0,
+                    ])->save();
+                }
 
                 if ($request->estAssure === "Oui") {
                     Assurer::create([
@@ -286,6 +304,26 @@ class ProductionController extends Controller
                         'saisieLe' => now(),
                         'saisiepar' => auth::user()->membre->idmembre,
                     ])->save();
+
+                    if ($request->garantieSurete === "Oui") {
+                        $garantiesurette = ProduitGarantie::where(['codeproduit'=> $request->codeproduit,'estobligatoire' => 0])->get();
+                        foreach ($garantiesurette as $garantie) {
+                            AssureGarantie::create([
+                                'codeproduitgarantie' => $garantie->codeproduitgarantie,
+                                'idproduitparantie' => $garantie->id,
+                                'monlibelle' => $garantie->libelle,
+                                'prime' => $request->primepricipale,
+                                'primetotal' => $prime,
+                                'primeaccesoire' => 0,
+                                'type' => "Mixte",
+                                'capitalgarantie' => $request->capital,
+                                'tauxinteret' => $request->tauxinteret,
+                                'codeassure' => $idAssure,
+                                'codecontrat' => $idContrat,
+                                'estmigre' => 0,
+                            ])->save();
+                        }
+                    }
                 }
 
                 if ($assures) {
@@ -314,6 +352,7 @@ class ProductionController extends Controller
                         ]);
                     }
                 }
+
 
                 // Récupérer et enregistrer les bénéficiaires
                 $beneficiaires = json_decode($request->input('beneficiaires'), true);

@@ -1,4 +1,9 @@
 
+@php
+    $valueDateNaissance = isset($simulationData['dateNaissance']) 
+    ? date('Y-m-d', strtotime($simulationData['dateNaissance'])) 
+    : '';
+@endphp
 <div class="row g-3 mb-3">
     <div class="col-12">
         <label class="form-label">Civilité <span class="star">*</span></label> <br>
@@ -44,7 +49,7 @@
     <div class="col-12 col-lg-6">
         <label for="Date_naissance" class="form-label">Date de naissance <span class="text-danger">*</span></label>
         <input type="date" name="datenaissance" class="form-control" id="Date_naissance"
-            placeholder="Date de naissance" autocomplete="on" required>
+            placeholder="Date de naissance" autocomplete="on" value="{{$valueDateNaissance}}" required readonly>
 
             <span class="text-danger date-error"></span>
 
@@ -55,9 +60,9 @@
     
     <div class="col-12 col-lg-6">
         <label for="lieunaissanc-{{ $product->CodeProduit }}" class="form-label">Lieu de naissance</label>
-        <select class="form-select" name="lieunaissance" id="lieunaissance"
+        <select class="form-select selection" name="lieunaissance" id="lieunaissance"
             data-codeproduit="{{ $product->CodeProduit }}" data-placeholder="Sélectionner le lieu" autocomplete="on">
-            <option selected>Sélectionner le lieu</option>
+            <option disabled selected value="">Sélectionner le lieu</option>
 
             @foreach($villes as $ville)
                 <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option>
@@ -105,8 +110,8 @@
 <div class="row g-3 mb-3">
     <div class="col-12 col-lg-4">
         <label for="profession" class="form-label">Profession</label>
-        <select class="form-select" name="profession" id="profession" autocomplete="on">
-            <option>Sélectionner la profession</option>
+        <select class="form-select selection" name="profession" id="profession" autocomplete="on">
+            <option disabled selected value="">Sélectionner la profession</option>
 
             @foreach($professions as $profession)
                 <option value="{{ $profession->MonLibelle }}">{{ $profession->MonLibelle }}</option>
@@ -115,8 +120,8 @@
     </div>
     <div class="col-12 col-lg-4">
         <label for="employeur" class="form-label">Secteur d'activites</label>
-        <select class="form-select" name="employeur" id="employeur" autocomplete="on">
-            <option>Sélectionner le secteur d'activites</option>
+        <select class="form-select selection" name="employeur" id="employeur" autocomplete="on">
+            <option disabled selected value="">Sélectionner le secteur d'activites</option>
 
             @foreach($secteurActivites as $secteurActivite)
                 <option value="{{ $secteurActivite->MonLibelle }}">{{ $secteurActivite->MonLibelle }}</option>
@@ -125,8 +130,8 @@
     </div>
     <div class="col-12 col-lg-4">
         <label for="lieuresidence" class="form-label">Lieu de residence</label>
-        <select class="form-select" name="lieuresidence" id="lieuresidence" autocomplete="on">
-            <option>Sélectionner le lieu</option>
+        <select class="form-select selection" name="lieuresidence" id="lieuresidence" autocomplete="on">
+            <option disabled selected value="">Sélectionner le lieu</option>
 
             @foreach($villes as $ville)
                 <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option>

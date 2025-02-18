@@ -199,7 +199,7 @@ $(".wrapper").on('submit', '.submitForm', function (e) {
 //         const modeBancaire = document.getElementById('mode_bancaire');
         
 //         // Vérifie si "Virement bancaire" ou "Prélèvement à la source" est sélectionné
-//         if (this.value === 'Virement_bancaire' || this.value === 'Prelevement_source') {
+//         if (this.value === 'Virement_bancaire' || this.value === 'Prelvement_source') {
 //             modeBancaire.style.display = 'block';
 //         } else {
 //             modeBancaire.style.display = 'none';
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Fonction pour afficher ou masquer le bloc "mode_bancaire"
     function toggleModeBancaire() {
         const selectedRadio = document.querySelector('input[name="modepaiement"]:checked');
-        if (selectedRadio && (selectedRadio.value === 'Virement_bancaire' || selectedRadio.value === 'Prelevement_source')) {
+        if (selectedRadio && (selectedRadio.value === 'VIR' || selectedRadio.value === 'SOURCE')) {
             modeBancaire.style.display = 'block';
         } else {
             modeBancaire.style.display = 'none';

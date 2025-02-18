@@ -4,9 +4,9 @@
 
     <div class="row g-3 mb-3">
         <div class="col-12 col-lg-6">
-            <label for="" class="form-label">Le souscripteur est-il l'assuré ?</label>
+            <label for="" class="form-label">Le souscripteur est-il l'assuré ? <span class="text-danger">*</span></label>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="estAssure" id="Oui" value="Oui">
+                <input class="form-check-input" type="radio" name="estAssure" id="Oui" value="Oui" required>
                 <label class="form-check-label" for="Oui">Oui</label>
             </div>
             <div class="form-check form-check-inline">
@@ -58,12 +58,12 @@
                 <td>
                     <label for="" class="form-label">Souhaitez-vous souscrire à la garantie SURETE ?</label>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="garantie" id="OuiGarantie" value="Oui">
-                        <label class="form-check-label" for="OuiGarantie">Oui</label>
+                        <input class="form-check-input" type="radio" name="garantieSurete" id="OuiGarantieSurete" value="Oui">
+                        <label class="form-check-label" for="OuiGarantieSurete">Oui</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="garantie" id="NonGarantie" value="Non">
-                        <label class="form-check-label" for="NonGarantie">Non</label>
+                        <input class="form-check-input" type="radio" name="garantieSurete" id="NonGarantieSurete" value="Non">
+                        <label class="form-check-label" for="NonGarantieSurete">Non</label>
                     </div>
                 </td>
                 
@@ -121,7 +121,7 @@
 
     const boutonAjouter = document.getElementById('btn-ajouter');
     if (boutonAjouter) {
-        console.log("Le bouton 'Ajouter' a été trouvé.");
+        // console.log("Le bouton 'Ajouter' a été trouvé.");
         boutonAjouter.addEventListener('click', ajouterAssureTemporaire);
     } else {
         console.error("Le bouton 'Ajouter' n'a pas été trouvé.");
@@ -131,9 +131,12 @@
         form.addEventListener('submit', function(event) {
             const assuresInput = document.createElement('input');
             assuresInput.type = 'hidden';
+
             assuresInput.name = 'assures';
             assuresInput.value = JSON.stringify(assures); // Convertir le tableau en JSON
+            
             form.appendChild(assuresInput);
+            form.reset();
         });
 
     function ajouterAssureTemporaire() {
@@ -166,7 +169,9 @@
             assures.push({ nom, prenom, civilite,datenaissance, lieuNaissance, naturepieceAssur, lieuresidenceAssur, lienParente, mobileAssur, emailAssur });
             console.log("Assuré ajouté :", assures);
             afficherAssures();
+            
             $('#createPropositionModal').modal('hide');
+            
         }
     }
 
