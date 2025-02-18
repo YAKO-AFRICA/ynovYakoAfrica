@@ -10,57 +10,588 @@ aria-labelledby="stepper1trigger5">
 
 <div class="g-3">
 
+    @if ($product->CodeProduit == 'PFA_IND')
     <div class="col-12">
 
         
 
         <div class="card" style="width: 100%">
 
+            <div class="card-header">
+
+                <h5 class="mb-0">Êtes-vous sous traitement médicale pour l'une de ces maladies ou souffrez-vous de l'une de ces maladies</h5>
+
+            </div>
+
             <div class="card-body">
 
                 <div class="row">
 
-                    <div class="col-12 col-lg-9 border-r">
+                    <div class="card col-lg-6 col-md-6 col-sm-12">
 
-                        <label for="" class="form-label">L'assure a t'il été hospitalisé au cours des ces 3 (trois) derniers mois ?</label>
+                        <div class="card-body"> 
+
+                            <div class="row">
+
+                                <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
+
+                                    <label for="" class="form-label">Quelle est votre taille ?</label>
+
+                                </div>
+
+                                <div class="col-12 col-lg-5 col-md-6 col-sm-6">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="taille" placeholder="170" name="taille">
+                                        <span class="input-group-text">CM</span>
+                                    </div>
+                                </div> 
+
+                            </div>
+
+                        </div>
+
+
 
                     </div>
 
-                    <div class="col-12 col-lg-3">
+                    <div class="card col-lg-6 col-md-6 col-sm-12">
 
-                        <div class="form-check form-check-inline">
+                        <div class="card-body"> 
 
-                            <input class="form-check-input" name="hospitalise" type="radio" value="" id="hospitaliseOui">
+                            <div class="row">
 
-                            <label class="form-check-label" for="hospitaliseOui">
+                                <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
 
-                                Oui
+                                    <label for="" class="form-label">Quel est votre poids ?</label>
 
-                            </label>
+                                </div>
+
+                                <div class="col-12 col-lg-5 col-md-6 col-sm-6">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="poids" placeholder="70" name="poids">
+                                        <span class="input-group-text">KG</span>
+                                    </div>
+                                </div> 
+
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="card col-lg-6 col-md-6 col-sm-12">
+
+                        <div class="card-body"> 
+
+                            <div class="row">
+
+                                <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
+
+                                    <label for="" class="form-label">Fumez-vous ?</label>
+
+                                </div>
+
+                                <div class="col-12 col-lg-5 col-md-6 col-sm-6">
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="fume" type="radio" value="Oui" id="fumeOui">
+
+                                        <label class="form-check-label" for="fumeOui">
+
+                                            Oui
+
+                                        </label>
+
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="fume" type="radio" value="Non" id="fumeNon">
+
+                                        <label class="form-check-label" for="fumeNon">
+
+                                            Non
+
+                                        </label>
+
+                                    </div>
+
+                                </div> 
+
+                            </div>
+
+                        </div> 
+                    </div>
+
+                    <div class="card col-lg-6 col-md-6 col-sm-12">
+
+                        <div class="card-body"> 
+
+                            <div class="row">
+
+                                <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
+
+                                    <label for="" class="form-label">Buvez vous de l'alcool ?</label>
+
+                                </div>
+
+                                <div class="col-12 col-lg-5 col-md-6 col-sm-6">
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="alcool" type="radio" value="Non" id="alcoolPas">
+
+                                        <label class="form-check-label" for="alcoolPas">
+
+                                            Pas du tout
+
+                                        </label>
+
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="alcool" type="radio" value="Partiel" id="alcoolOccasion">
+
+                                        <label class="form-check-label" for="alcoolOccasion">
+
+                                            A l'ocassion
+
+                                        </label>
+
+                                    </div>
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="alcool" type="radio" value="Oui" id="alcoolRegulier">
+
+                                        <label class="form-check-label" for="alcoolRegulier">
+
+                                            Régulièrement (au moins une fois par semaine)
+
+                                        </label>
+
+                                    </div>
+
+                                </div> 
+
+                            </div>
 
                         </div>
 
-                        <div class="form-check form-check-inline">
 
-                            <input class="form-check-input" name="hospitalise" type="radio" value="" id="hospitaliseNon">
-
-                            <label class="form-check-label" for="hospitaliseNon">
-
-                                Non
-
-                            </label>
-
-                        </div>
 
                     </div> 
 
-                </div>
+                    <div class="card col-lg-6 col-md-6 col-sm-12">
+
+                        <div class="card-body"> 
+
+                            <div class="row">
+
+                                <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
+
+                                    <label for="" class="form-label">Etes-vous atteint d'une infirmité ?</label>
+
+                                </div>
+
+                                <div class="col-12 col-lg-5 col-md-6 col-sm-6">
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="Infirme" type="radio" value="Oui" id="infirmeOui">
+
+                                        <label class="form-check-label" for="infirmeOui">
+
+                                            Oui
+
+                                        </label>
+
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="Infirme" type="radio" value="Non" id="infirmeNon">
+
+                                        <label class="form-check-label" for="infirmeNon">
+
+                                            Non
+
+                                        </label>
+
+                                    </div>
+
+                                </div> 
+
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="card col-lg-6 col-md-6 col-sm-12">
+
+                        <div class="card-body"> 
+
+                            <div class="row">
+
+                                <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
+
+                                    <label for="" class="form-label">Êtes-vous en arrêt de travail ?</label>
+
+                                </div>
+
+                                <div class="col-12 col-lg-5 col-md-6 col-sm-6">
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="ArretTravail" type="radio" value="Oui" id="ArretTravailOui">
+
+                                        <label class="form-check-label" for="ArretTravailOui">
+
+                                            Oui
+
+                                        </label>
+
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="ArretTravail" type="radio" value="Non" id="ArretTravailNon">
+
+                                        <label class="form-check-label" for="ArretTravailNon">
+
+                                            Non
+
+                                        </label>
+
+                                    </div>
+
+                                </div> 
+
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="card col-lg-6 col-md-6 col-sm-12">
+
+                        <div class="card-body"> 
+
+                            <div class="row">
+
+                                <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
+
+                                    <label for="" class="form-label">Avez-vous déjà été victime d'un accident ?</label>
+
+                                </div>
+
+                                <div class="col-12 col-lg-5 col-md-6 col-sm-6">
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="Accident" type="radio" value="Oui" id="AccidentOui">
+
+                                        <label class="form-check-label" for="AccidentOui">
+
+                                            Oui
+
+                                        </label>
+
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="Accident" type="radio" value="Non" id="AccidentNon">
+
+                                        <label class="form-check-label" for="AccidentNon">
+
+                                            Non
+
+                                        </label>
+
+                                    </div>
+
+                                </div> 
+
+                            </div>
+
+                        </div> 
+
+                    </div>
+
+                    <div class="card col-lg-6 col-md-6 col-sm-12">
+
+                        <div class="card-body"> 
+
+                            <div class="row">
+
+                                <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
+
+                                    <label for="" class="form-label">Quelles sont vos distractions (separer par une virgule) ?</label>
+
+                                </div>
+
+                                <div class="col-12 col-lg-5 col-md-6 col-sm-6">
+                                    <input type="text" class="form-control" id="distractions" placeholder="separer par une virgule" name="distractions">
+                                </div> 
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card col-lg-6 col-md-6 col-sm-12">
+
+                        <div class="card-body"> 
+
+                            <div class="row">
+
+                                <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
+
+                                    <label for="" class="form-label">Suivez-vous ou avez-vous suivi un traitement médical ces 6(six) derniers mois ?</label>
+
+                                </div>
+
+                                <div class="col-12 col-lg-5 col-md-6 col-sm-6">
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="SuiviTraitement" type="radio" value="Oui" id="SuiviTraitementOui">
+
+                                        <label class="form-check-label" for="SuiviTraitementOui">
+
+                                            Oui
+
+                                        </label>
+
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="SuiviTraitement" type="radio" value="Non" id="SuiviTraitementNon">
+
+                                        <label class="form-check-label" for="SuiviTraitementNon">
+
+                                            Non
+
+                                        </label>
+
+                                    </div>
+
+                                </div> 
+
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="card col-lg-6 col-md-6 col-sm-12">
+
+                        <div class="card-body"> 
+
+                            <div class="row">
+
+                                <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
+
+                                    <label for="" class="form-label">Avez-vous déjà subi une transfusion de sang ?</label>
+
+                                </div>
+
+                                <div class="col-12 col-lg-5 col-md-6 col-sm-6">
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="transfusionSang" type="radio" value="Oui" id="transfusionSangOui">
+
+                                        <label class="form-check-label" for="transfusionSangOui">
+
+                                            Oui
+
+                                        </label>
+
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="transfusionSang" type="radio" value="Non" id="transfusionSangNon">
+
+                                        <label class="form-check-label" for="transfusionSangNon">
+
+                                            Non
+
+                                        </label>
+
+                                    </div>
+
+                                </div> 
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card col-lg-6 col-md-6 col-sm-12">
+
+                        <div class="card-body"> 
+
+                            <div class="row">
+
+                                <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
+
+                                    <label for="" class="form-label">Avez-vous déjà subi des interventions chirurgicales ?</label>
+
+                                </div>
+
+                                <div class="col-12 col-lg-5 col-md-6 col-sm-6">
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="interventionsChirurg" type="radio" value="Oui" id="interventionsChirurgicalesOui">
+
+                                        <label class="form-check-label" for="interventionsChirurgicalesOui">
+
+                                            Oui
+
+                                        </label>
+
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="interventionsChirurg" type="radio" value="Non" id="interventionsChirurgicalesNon">
+
+                                        <label class="form-check-label" for="interventionsChirurgicalesNon">
+
+                                            Non
+
+                                        </label>
+
+                                    </div>
+
+                                </div> 
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card col-lg-6 col-md-6 col-sm-12">
+
+                        <div class="card-body"> 
+
+                            <div class="row">
+
+                                <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
+
+                                    <label for="" class="form-label">Devez-vous subir une intervention chirurgicale ?</label>
+
+                                </div>
+
+                                <div class="col-12 col-lg-5 col-md-6 col-sm-6">
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="subirChirurg" type="radio" value="Oui" id="subirChirurgOui">
+
+                                        <label class="form-check-label" for="subirChirurgOui">
+
+                                            Oui
+
+                                        </label>
+
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input class="form-check-input" name="subirChirurg" type="radio" value="Non" id="subirChirurgNon">
+
+                                        <label class="form-check-label" for="subirChirurgNon">
+
+                                            Non
+
+                                        </label>
+
+                                    </div>
+
+                                </div> 
+
+                            </div>
+
+                        </div>
+                    </div>
+                    
+
+                </div> 
 
             </div>
 
         </div>
 
     </div>
+    @endif
+
+    @if ($product->CodeProduit != 'PFA_IND')
+        <div class="col-12">
+
+            
+
+            <div class="card" style="width: 100%">
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-12 col-lg-9 border-r">
+
+                            <label for="" class="form-label">L'assure a t'il été hospitalisé au cours des ces 3 (trois) derniers mois ?</label>
+
+                        </div>
+
+                        <div class="col-12 col-lg-3">
+
+                            <div class="form-check form-check-inline">
+
+                                <input class="form-check-input" name="hospitalise" type="radio" value="" id="hospitaliseOui">
+
+                                <label class="form-check-label" for="hospitaliseOui">
+
+                                    Oui
+
+                                </label>
+
+                            </div>
+
+                            <div class="form-check form-check-inline">
+
+                                <input class="form-check-input" name="hospitalise" type="radio" value="" id="hospitaliseNon">
+
+                                <label class="form-check-label" for="hospitaliseNon">
+
+                                    Non
+
+                                </label>
+
+                            </div>
+
+                        </div> 
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    @endif
 
     <div class="col-12">
 
