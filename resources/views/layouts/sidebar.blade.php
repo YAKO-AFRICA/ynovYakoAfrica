@@ -204,9 +204,14 @@
                    data-bs-toggle="dropdown" 
                    aria-expanded="false">
                     <!-- User Avatar -->
-                    <img src="{{ asset('root/images/login-images/default.png') }}" 
+                    {{-- <img src="{{ asset('root/images/login-images/default.png') }}" 
                          class="user-img rounded-circle" 
-                         alt="User Avatar">
+                         alt="User Avatar"> --}}
+                    @if(Auth::user()->membre->photo != null && Auth::user()->membre->photo != '')
+                        <img src="{{ asset('images/userProfile/' . Auth::user()->membre->photo) }}" class="user-img" alt="user avatar">
+                    @else
+                        <img src="{{ asset('root/images/login-images/default.png')}}" class="user-img" alt="user avatar">
+                    @endif
                   
                     <!-- User Info -->
                     <div class="user-info text-white">
@@ -223,7 +228,7 @@
                 <ul class="dropdown-menu dropdown-menu-end shadow">
                     <!-- Profile Link -->
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
+                        <a class="dropdown-item d-flex align-items-center" href="{{ route('setting.user.profile')}}">
                             <i class="bx bx-user fs-5 me-2"></i> 
                             <span>Profil</span>
                         </a>

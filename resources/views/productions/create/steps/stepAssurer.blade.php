@@ -14,7 +14,8 @@
                 <label class="form-check-label" for="Non">Non</label>
             </div>
         </div>
-
+        
+        
 
         {{-- @if ($CodeProduit != "ASSCPTBNI" && Auth::user()->codepartenaire == "DIFIN") --}}
         <div class="col-12 col-lg-6 d-flex justify-content-center align-items-center">
@@ -48,12 +49,27 @@
                 <td id="display-nom-prenom"></td>
                 <td>
                     <ul>
-                        @foreach ($productGarantie as $item)
-                            <li>{{ $item->MonLibelle }}</li>
+                        @foreach ($productGarantie->where('estobligatoire', 1) as $item)
+                            <li>{{ $item->libelle }}</li>
                         @endforeach
                     </ul>
                 </td>
-                <td>Pas de garantie</td>
+                @if($product->CodeProduit == "PFA_IND")
+                <td>
+                    <label for="" class="form-label">Souhaitez-vous souscrire à la garantie SURETE ?</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="garantie" id="OuiGarantie" value="Oui">
+                        <label class="form-check-label" for="OuiGarantie">Oui</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="garantie" id="NonGarantie" value="Non">
+                        <label class="form-check-label" for="NonGarantie">Non</label>
+                    </div>
+                </td>
+                
+                @else
+                    <td>Pas de garantie</td> 
+                @endif
                 <td></td>
             </tr>
         </tfoot>
@@ -170,8 +186,8 @@
                 <td>${assure.nom} ${assure.prenom}</td>
                 <td>
                     <ul>
-                        @foreach ($productGarantie as $item)
-                            <li>{{ $item->MonLibelle }}</li>
+                        @foreach ($productGarantie->where('estobligatoire', 1) as $item)
+                            <li>{{ $item->libelle }}</li>
                         @endforeach
                     </ul>
                 </td>

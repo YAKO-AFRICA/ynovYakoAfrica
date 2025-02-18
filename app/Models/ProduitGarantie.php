@@ -9,47 +9,30 @@ class ProduitGarantie extends Model
 {
     use HasFactory;
 
-    protected $table = 'tblproduitgarantie';
+    protected $table = 'tblgaranties';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'IdProduitGarantie',
-        'CodeProduitGarantie',
-        'MonLibelle',
-        'CodeGarantieNature',
-        'CodeFormeGarantie',
-        'CodeGarantieModeTarif',
-        'CodeProduit',
-        'Coderisque',
-        'CodeCategorieAssure',
-        'CodeProfilAssure',
-        'CodeMethodeInterp',
-        'CodeAnnualisation',
-        'CodeExposition',
-        'CodePaiement',
-        'TauxInteret',
-        'PctInteretCouvFrais',
-        'CodeModeSoumission',
-        'CodeClassification',
-        'AgeminiAss',
-        'AgeMaxiAss',
-        'DureeMiniCouv',
-        'DureeMaxiCouv',
-        'CapitalMini',
-        'CapitalMaxi',
-        'AgeLimiteCouv',
-        'ExpFinAnneeCivile',
-        'Renouvellement',
-        'DureeAns',
-        'DureeMois',
-        'CodeAgeCalcul',
-        'PMCalculOK',
-        'CapitalAssureOK',
-        'PrimePctCapital',
-        'Commissionne',
-        'ID_Old',
-        'PrioriteEncaissement',
-        'Exceptionnel',
+        'codeproduit',
+        'codeproduitgarantie',
+        'libelle',
+        'estobligatoire',
+        'naturegarantie',
+        'type',
+        'taux',
+        'montantgarantie',
+        'agemin',
+        'agemax',
+        'dureecotisationmin',
+        'dureecotisationmax',
+        'dureecontratmin',
+        'dureecontratmax',
+        'primemin',
+        'branche',
+        'description',
+        'estunique',
+        'estcomplementaire'
     ];
+
 }

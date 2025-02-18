@@ -11,6 +11,8 @@ use App\Models\Partner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+
 ini_set('memory_limit', '1024M');
 
 class UserController extends Controller
@@ -263,5 +265,138 @@ class UserController extends Controller
             ];
         }
         return response()->json($dataResponse);
+    }
+
+
+    public function userProfile()
+    {
+        return view('settings.users.profile.index');
+    }
+    public function updateProfile(Request $request, string $id)
+    {
+        // $user = TblUsers::where('idmembre', $id)->get();
+        // dd($user);
+        DB::beginTransaction();
+        try {
+            $user = Membre::where('idmembre', $id)->first();
+            if($request->file('photo') == null){
+                $imageName = Auth::user()->membre->photo;
+            }else{
+                $photoProfile = $request->file('photo');
+                // dd($photoProfile);
+                if ($photoProfile) {
+                    $imageName = $user->idmembre .'_'.  now()->format('YmdHis'). '.' . $photoProfile->getClientOriginalExtension();
+                    $destinationPath = public_path('images/userProfile');
+                    $photoProfile->move($destinationPath, $imageName);   
+                }
+            }
+            $user->update([
+                'nom' => $request->nom,
+                'prenom' => $request->prenom,
+                'cel' => $request->cel,
+                'photo' => $imageName ?? '',           
+            ]);
+            if ($user) {
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => "back",
+                    'message' => "Modifié avec succès!",
+                    'code' => 200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollback();
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur lors de la modification",
+                    'code' => 500,
+                ];
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse =[
+                'type'=>'error',
+                'urlback'=>'',
+                'message'=>"Erreur systeme! $th",
+                'code'=>500,
+            ];
+        }
+        return response()->json($dataResponse);
+    }
+
+    public function updateMp(Request $request)
+    {
+
+        // dd($request->password);
+
+        DB::beginTransaction();
+        try {
+
+            if ($request->password) {
+                if ($request->password !== $request->confirm_password) {
+                    DB::rollback();
+                    $dataResponse = [
+                        'type' => 'error',
+                        'urlback' => '',
+                        'message' => "Les mots de passe ne correspondent pas",
+                        'code' => 400,
+                    ];
+                    return response()->json($dataResponse);
+                }
+                else{
+                    $mp = auth()->user()->update([
+                        'password' => bcrypt($request->password)
+                    ]);
+
+                    $id = auth()->user()->idmembre;
+                    $membre = Membre::where('idmembre', $id)->firstOrFail();
+                    if(!$membre){
+                        $membre->update(['pass' => bcrypt($request->password)]);
+                    }
+
+                    if ($mp) {
+                        // Déconnexion de l'utilisateur
+                        auth()->logout();
+    
+                        $dataResponse = [
+                            'type' => 'success',
+                            'urlback' => "back",
+                            'message' => "Modifié avec succès! Veuillez vous reconnecter avec votre nouveau mot de passe.",
+                            'code' => 200,
+                        ];
+                        DB::commit();
+                    } else {
+                        DB::rollback();
+                        $dataResponse = [
+                            'type' => 'error',
+                            'urlback' => '',
+                            'message' => "Erreur lors de la modification",
+                            'code' => 500,
+                        ];
+                    }
+    
+
+                }
+
+            } else {
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => 'back',
+                    'message' => "Le mot de passe ne doit pas être vide",
+                    'code' => 400,
+                ];
+            }
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse =[
+                'type'=>'error',
+                'urlback'=>'',
+                'message'=>"Erreur systeme! $th",
+                'code'=>500,
+            ];
+        }
+        return response()->json($dataResponse); 
     }
 }

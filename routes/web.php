@@ -143,6 +143,7 @@ Route::prefix('settings')->name('setting.')->group(function(){
 
     });
 
+    
     Route::middleware(['auth','PreventBackHistory'])->group(function () {
         Route::get('/index-reseaux', [ReseauxController::class, 'index'])->name('reseau.index');
         Route::post('/store-reseaux', [ReseauxController::class, 'store'])->name('reseau.store');
@@ -169,6 +170,9 @@ Route::prefix('settings')->name('setting.')->group(function(){
 
         Route::post('/update-columns', [UserController::class, 'updateColumns'])->name('updateColumns');
 
+        Route::get('/user/profile', [UserController::class, 'userProfile'])->name('user.profile');
+        Route::post('/user/profile/update/{idmembre}', [UserController::class, 'updateProfile'])->name('user.profile.update');
+        Route::post('/user/profile/updatePwd/', [UserController::class, 'updateMp'])->name('user.profile.updatePwd');
 
         // partenaires
         Route::get('/index-partners', [PartnerController::class, 'index'])->name('partner.index');

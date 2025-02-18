@@ -192,7 +192,7 @@ class ProductionController extends Controller
 
         $product = Product::where('CodeProduit', $codeProduit)->first();
 
-        $productGarantie = ProduitGarantie::where('CodeProduit',$codeProduit)->get();
+        $productGarantie = ProduitGarantie::where('codeproduit',$codeProduit)->get();
         $villes =  TblVille::select('libelleVillle')->get();
         $professions =  Profession::select('MonLibelle')->get();
         $secteurActivites =  TblSecteurActivite::select('MonLibelle')->get();

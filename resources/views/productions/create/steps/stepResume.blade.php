@@ -142,8 +142,8 @@
                                         <td>Moi-même</td>
                                         <td>
                                             <ul>
-                                                @foreach ($productGarantie as $item)
-                                                    <li>{{ $item->MonLibelle }}</li>
+                                                @foreach ($productGarantie->where('estobligatoire', 1) as $item)
+                                                    <li>{{ $item->libelle }}</li>
                                                 @endforeach
                                             </ul>
                                         </td>
@@ -163,8 +163,8 @@
                                         <td id="display-filiation">Moi-même</td>
                                         <td id="display-garanties">
                                             <ul>
-                                                @foreach ($productGarantie as $item)
-                                                    <li>{{ $item->MonLibelle }}</li>
+                                                @foreach ($productGarantie->where('estobligatoire', 1) as $item)
+                                                    <li>{{ $item->libelle }}</li>
                                                 @endforeach
                                             </ul>
                                         </td>
