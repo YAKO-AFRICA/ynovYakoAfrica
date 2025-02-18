@@ -24,6 +24,7 @@ use App\Models\ReseauProduct;
 use App\Models\TblProfession;
 use App\Models\AssureGarantie;
 use App\Models\ProduitGarantie;
+use App\Models\DeclarationSante;
 use App\Models\TblSecteurActivite;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -352,6 +353,33 @@ class ProductionController extends Controller
                         ]);
                     }
                 }
+
+                $santeData = DeclarationSante::create([
+                    'taille' => $request->taille,
+                    'poids' => $request->poids,
+                    'tensionMin' => $request->tensionMin,
+                    'tensionMax' => $request->tensionMax,
+                    'smoking' => $request->smoking,
+                    'alcohol' => $request->alcohol,
+                    'sport' => $request->sport,
+                    'typeSport' => $request->typeSport,
+                    'accident' => $request->accident,
+                    'treatment' => $request->treatment, // trantement medical 6 dernier mois
+                    'transSang' => $request->transSang, // transfusion de sang 6 dernier mois
+                    'interChirugiale' => $request->interChirugiale, // intervention chirurgicaledeja subit
+                    'prochaineInterChirugiale' => $request->prochaineInterChirugiale, // intervention chirurgicale prochaine
+                    'diabetes' => $request->diabetes,
+                    'hypertension' => $request->hypertension,
+                    'sickleCell' => $request->sickleCell,
+                    'liverCirrhosis' => $request->liverCirrhosis,
+                    'lungDisease' => $request->lungDisease,
+                    'cancer' => $request->cancer,
+                    'anemia' => $request->anemia,
+                    'kidneyFailure' => $request->kidneyFailure,
+                    'stroke' => $request->stroke,
+                    'codeContrat' => $idContrat,
+                    'created_at' => now(),
+                ]);
 
 
                 // Récupérer et enregistrer les bénéficiaires
