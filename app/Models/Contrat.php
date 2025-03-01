@@ -94,10 +94,16 @@ class Contrat extends Model
         return $this->belongsTo(User::class, 'saisiepar', 'idmembre');
     }
 
+    public function transmisPar()
+    {
+        return $this->belongsTo(User::class, 'transmispar', 'idmembre');
+    }
+
     public function adherent()
     {
         return $this->belongsTo(Adherent::class, 'codeadherent', 'id');
     }
+ 
     public function produit()
     {
         return $this->belongsTo(Product::class, 'codeproduit', 'CodeProduit');

@@ -214,6 +214,7 @@ class ProductionController extends Controller
     {
         DB::beginTransaction();
         try {
+            
                 // Gestion de la civilité pour l'adhérent et l'assuré
                 $sexe = $request->civilite === "Monsieur" ? "M" : "F";
                 $sexeassur = $request->civiliteAssur === "Monsieur" ? "M" : "F";
@@ -261,6 +262,7 @@ class ProductionController extends Controller
 
                 // Récupérer les assurés du formulaire
                 $assures = json_decode($request->input('assures'), true);
+                
                 $garanties = ProduitGarantie::where(['codeproduit'=> $request->codeproduit,'estobligatoire' => 1])->get();
                 foreach ($garanties as $garantie) {
                     AssureGarantie::create([

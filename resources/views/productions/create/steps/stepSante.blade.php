@@ -953,7 +953,7 @@ aria-labelledby="stepper1trigger5">
 
                     class="btn border-btn btn-previous-form"><i
 
-                        class='bx bx-left-arrow-alt'></i>Previous</button>
+                        class='bx bx-left-arrow-alt'></i>Precedent</button>
 
                 <button onclick="event.preventDefault(); stepper1.next()"
 

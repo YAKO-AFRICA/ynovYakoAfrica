@@ -92,6 +92,13 @@
             </li>
             <li class="menu-label">Rapport d'activité</li>
             <li>
+                <a href="{{ route('report.eValidation')}}">
+                    <div class="parent-icon"><i class="bx bx-line-chart"></i>
+                    </div>
+                    <div class="menu-title">Validation</div>
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('report.eSouscription')}}">
                     <div class="parent-icon"><i class="bx bx-line-chart"></i>
                     </div>

@@ -4,8 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Contrat;
 use App\Models\Partner;
+use App\Models\Product;
+use App\Models\TblVille;
+use App\Models\TblAgence;
+use App\Models\TblSociete;
 use Illuminate\Http\Request;
+use App\Models\TblProfession;
 use App\Models\ProduitGarantie;
+use App\Models\TblSecteurActivite;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -132,9 +138,50 @@ class ValidationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function acceptContrat(Request $request, string $id)
     {
-        //
+        DB::beginTransaction();
+        try {
+                $contrat = Contrat::find($id);
+    
+                if ($contrat) {
+                    $contrat->update(
+                        
+                        [
+                            'accepterle' => now(),
+                            'accepterpar' => Auth::user()->membre->idmembre,
+                            'etape' => 3,
+                            'estMigre' => 1,
+                            'cleintegration' => now()->format('YmdHis'),
+                        ]
+                    );
+
+                    DB::commit();
+                
+                    return response()->json([
+                        'type' => 'success',
+                        'urlback' => \route('prod.validation.prodByPartner', $contrat->partenaire),
+                        'message' => "Proposition N° " . $id . " validée avec succès!",
+                        'code' => 200,
+                    ]);
+                } else {
+                    return response()->json([
+                        'type' => 'error',
+                        'urlback' => 'back',
+                        'message' => "Erreur lors du rejet de la proposition N° " . $id . "!",
+                        'code' => 200,
+                    ]);
+                }
+       
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                return response()->json([
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur système! $th",
+                    'code' => 500,
+                ]);
+            }
     }
 
     /**
@@ -201,8 +248,22 @@ class ValidationController extends Controller
      */
     public function edit(string $id)
     {
-        //
+
+        // $contrat = Contrat::where('id', $id)->first();
+
+        $contrat = Contrat::where('id', $id)->with('adherent','produit')->first();
+        $productGarantie = ProduitGarantie::where('CodeProduit',$contrat->codeproduit)->get(); 
+        $product = Product::where('CodeProduit',$contrat->codeproduit)->first(); 
+        $villes =  TblVille::get();
+        $professions =  TblProfession::select('MonLibelle')->get();
+        $secteurActivites =  TblSecteurActivite::select('MonLibelle')->get();
+        $societes =  TblSociete::select('MonLibelle')->get();
+        $agences =  TblAgence::select('NOM_LONG')->get();
+        return view('productions.validations.edit', compact('contrat', 'product', 'villes', 'secteurActivites', 'professions','productGarantie','societes','agences'));
+
     }
+
+   
 
     /**
      * Update the specified resource in storage.

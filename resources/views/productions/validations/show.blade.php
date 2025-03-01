@@ -19,12 +19,16 @@
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-end gap-4">
             
-            <form action="{{ route('prod.transmettreContrat', $contrat->id)}}" method="post" class="submitForm">
+            <form action="{{ route('prod.traitement.proposition.valider', $contrat->id)}}" method="post" class="submitForm">
                 @csrf
-                <button type="button" class="btn btn-primary py-1 px-2 border-1 text-center"><i class='bx bx-check fs-4'></i>Valider</button>
+                <button type="submit" class="btn btn-success py-1 px-2 border-1 text-center"><i class='bx bx-check fs-4'></i>Valider</button>
             </form>
             
-            <button type="button" class="btn py-1 px-2 border-1 text-center" data-bs-toggle="modal" data-bs-target="#rejectModal"><i class='bx bx-x' ></i>Rejeter</button>
+            <button type="button" class="btn btn-danger py-1 px-2 border-1 text-center" data-bs-toggle="modal" data-bs-target="#rejectModal"><i class='bx bx-x' ></i>Rejeter</button>
+
+            <button type="button" class="border-0 btn btn-primary py-1 px-2 text-center">
+                <a href="{{ route('prod.proposition.edit', $contrat->id) }}" class="btn py-1 px-2 border-1 text-center"><i class='bx bx-edit' ></i>Modifier</a>
+            </button>
         </div>
     </div>
     <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -174,7 +178,7 @@
             <div class="card-body">
                 <section id="info-contrat" class="section-content">
                     <h5>Détails du Contrat</h5>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-sm-12 col-md-6 col-lg-6">
                             <div class="card my-3" style="width: 90%">
                                
@@ -355,6 +359,107 @@
 
                         </div>
 
+                    </div> --}}
+
+                    <div class="card p-4">
+                        <div class="row">
+                            <!-- Colonne 1 -->
+                            <div class="col-4">
+                                <dl class="mb-4">
+                                    <dt>ID du contrat</dt>
+                                    <dd>{{ $contrat->id ?? '--' }}</dd>
+                    
+                                    <dt>Mode de paiement</dt>
+                                    <dd>
+                                        @switch($contrat->modepaiement)
+                                            @case('VIR') Virement bancaire @break
+                                            @case('ESP') Espèce @break
+                                            @case('CHK') Chèque @break
+                                            @case('Mobile_money') Mobile money @break
+                                            @case('SOURCE') Prélèvement à la source @break
+                                            @default --
+                                        @endswitch
+                                    </dd>
+                    
+                                    @if ($contrat->modepaiement === 'VIR' || $contrat->modepaiement === 'SOURCE')
+                                        <dt>Banque / Organisme</dt>
+                                        <dd>{{ $contrat->organisme ?? '--' }}</dd>
+                    
+                                        <dt>Agence</dt>
+                                        <dd>{{ $contrat->agence ?? '--' }}</dd>
+                    
+                                        <dt>N° de compte (Matricule)</dt>
+                                        <dd>{{ $contrat->numerocompte ?? '--' }}</dd>
+                                    @endif
+                    
+                                    @if ($contrat->modepaiement === 'Mobile_money')
+                                        <dt>N° Mobile</dt>
+                                        <dd>{{ $contrat->numerocompte ?? '--' }}</dd>
+                                    @endif
+
+                                    <dt>Code Banque</dt>
+                                    <dd>{{ $contrat->codebanque ?? '--' }}</dd>
+                                </dl>
+                            </div>
+                    
+                            <!-- Colonne 2 -->
+                            <div class="col-4">
+                                <dl class="mb-4">
+                                    <dt>Périodicité</dt>
+                                    <dd>
+                                        @switch($contrat->periodicite)
+                                            @case('M') Mois @break
+                                            @case('T') Trimestre @break
+                                            @case('S') Semestre @break
+                                            @case('A') Année @break
+                                            @case('U') Versement unique @break
+                                            @default --
+                                        @endswitch
+                                    </dd>
+                    
+                                    <dt>Date d'effet</dt>
+                                    <dd>{{ $contrat->dateeffet ?? '--' }}</dd>
+                    
+                                    <dt>Capital</dt>
+                                    <dd>{{ number_format($contrat->capital ?? 0, 0, ',', ' ') }} FCFA</dd>
+                    
+                                    <dt>Formule</dt>
+                                    <dd>{{ $contrat->Formule ?? '--' }}</dd>
+
+                                    <dt>Code Guichet</dt>
+                                    <dd>{{ $contrat->codeguichet ?? '--' }}</dd>
+                    
+                                    <dt>Conseiller client</dt>
+                                    <dd>{{ $contrat->nomagent ?? ""}}</dd>
+
+                                    
+                                </dl>
+                            </div>
+                    
+                            <!-- Colonne 3 -->
+                            <div class="col-4">
+                                <dl class="mb-4">
+                                    <dt>Surprime</dt>
+                                    <dd>{{ number_format($contrat->surprime ?? 0, 0, ',', ' ') }} FCFA</dd>
+                    
+                                    <dt>Prime</dt>
+                                    <dd>{{ number_format($contrat->prime ?? 0, 0, ',', ' ') }} FCFA</dd>
+                    
+                                    <dt>Prime Principale</dt>
+                                    <dd>{{ number_format($contrat->primepricipale ?? 0, 0, ',', ' ') }} FCFA</dd>
+
+                                    <dt>Frais d'adhésion</dt>
+                                    <dd>{{ number_format($contrat->fraisadhesion ?? 0, 0, ',', ' ') }} FCFA</dd>
+                    
+                                    
+                    
+                                    <dt>Cle Rib</dt>
+                                    <dd>{{ $contrat->rib ?? '--' }}</dd>
+                                    <dt>Code Conseiller</dt>
+                                    <dd>{{ $contrat->codeConseiller ?? "--" }}</dd>
+                                </dl>
+                            </div>
+                        </div>
                     </div>
 
                     
@@ -736,7 +841,7 @@
                             </div>
                             <div class="div col">
                                 <strong>Transmis par</strong>
-                                <span>{{ $contrat->transmispar ?? 'Non renseigné' }}</span>
+                                <span>{{ $contrat->transmisPar->nom ?? 'Non renseigné' }}</span>
                             </div>
                         </div>
                         <div class="row my-3">
@@ -776,6 +881,8 @@
             </div>
 
         </div>
+
+        
 
     </div>
 
