@@ -116,7 +116,7 @@
                                     <div class="col-12 col-lg-6"> 
                                         <label for="lieunaissanceAssur" class="form-label">Lieu de naissance</label>
                                         <select class="form-select" name="lieunaissanceAssur" id="lieunaissanceAssur" data-placeholder="Sélectionner le lieu">
-                                            <option value="">Sélectionner le lieu</option> <!-- Option vide pour le placeholder -->
+                                            <option value="" selected>Sélectionner le lieu</option> <!-- Option vide pour le placeholder -->
                                             @foreach($villes as $ville)
                                                 <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option> 
                                             @endforeach 
@@ -172,7 +172,7 @@
 
                                         <select class="form-select" name="lieuresidenceAssur" id="lieuresidenceAssur" data-placeholder="Sélectionner le lieu">
 
-                                            <option selected>Sélectionner le lieu</option>
+                                            <option selected value="">Sélectionner le lieu</option>
                                             @foreach($villes as $ville)
                                                 <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option> 
                                             @endforeach 
@@ -187,7 +187,7 @@
 
                                             aria-label="Default select example">
 
-                                            <option selected>Sélectionner le lien de Parenté</option>
+                                            <option selected value="">Sélectionner le lien de Parenté</option>
 
                                             <option value="Conjoint">Conjoint</option>
 

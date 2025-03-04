@@ -27,7 +27,7 @@
                         <div class="col-12 col-lg-6">
                             <label for="lieunaissanceBenef" class="form-label">Lieu de naissance</label>
                             <select name="lieunaissanceBenef" class="form-select">
-                                <option>Sélectionner le lieu</option>
+                                <option selected value="">Sélectionner le lieu</option>
                                 @foreach($villes as $ville)
                                     <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option> 
                                 @endforeach 
@@ -38,7 +38,7 @@
                         <div class="col-12 col-lg-6">
                             <label for="lieuresidenceBenef" class="form-label">Lieu de residence</label>
                             <select name="lieuresidenceBenef" class="form-select">
-                                <option>Sélectionner le lieu</option>
+                                <option selected value="">Sélectionner le lieu</option>
                                 @foreach($villes as $ville)
                                     <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option> 
                                 @endforeach 
@@ -47,7 +47,7 @@
                         <div class="col-12 col-lg-6">
                             <label for="lienParente" class="form-label">Lien de Parenté</label>
                             <select name="lienParente" class="form-select">
-                                <option>Sélectionner le lien de Parenté</option>
+                                <option selected value="">Sélectionner le lien de Parenté</option>
                                 <option value="Conjoint">Conjoint</option>
                                 <option value="Enfant">Enfant</option>
                                 <option value="Autre">Autre</option>

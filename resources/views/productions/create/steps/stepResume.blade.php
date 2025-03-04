@@ -133,13 +133,13 @@
                                     </tr>
                                 </thead>
                                 <tbody id="resume-tbody-assure">
-                                    <tr>
+                                    {{-- <tr>
                                         <td id="display-nom-assure">-</td>
                                         <td id="display-prenom-assure">-</td>
                                         <td id="display-date-naissance-assure">-</td>
                                         <td id="display-lieu-naissance-assure">-</td>
                                         <td id="display-lieu-residence-assure">-</td>
-                                        <td>Moi-même</td>
+                                        <td id="display-filiation-assure">-</td>
                                         <td>
                                             <ul>
                                                 @foreach ($productGarantie->where('estobligatoire', 1) as $item)
@@ -150,7 +150,9 @@
                                         <td id="display-telephone-assure">-</td>
                                         <td id="display-email-assure">-</td>
                                         <td id="display-numeropiece-assure">-</td>
-                                    </tr>
+                                    </tr> --}}
+
+                                    {{-- affichage dynamique des assurés ici --}}
                                     
                                 </tbody>
                                 <tfoot>

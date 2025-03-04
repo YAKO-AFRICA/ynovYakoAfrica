@@ -85,7 +85,7 @@
                     <form id="PrestationForm" enctype="multipart/form-data" class="submitForm">
                         @csrf
                         @include('prestations.components.steps.stepInfosPerso')
-
+                        
                         @include('prestations.components.steps.stepInfosPrest')
 
                         @include('prestations.components.steps.resumer')
@@ -214,6 +214,7 @@
                     const lieuResidence = formulaire.querySelector('[name="lieuresidence"]')?.value || '';
 
                     // Mise à jour du résumé
+                    document.getElementById('TelOtp').value = cel;
                     document.getElementById('Prestation').textContent = typePrestation;
                     document.getElementById('Contrat').textContent = idContrat;
                     document.getElementById('montant').textContent = montantSouhaite + ' FCFA';

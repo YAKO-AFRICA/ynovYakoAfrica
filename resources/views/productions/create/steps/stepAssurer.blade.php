@@ -2,7 +2,10 @@
     <h5 class="mb-1">Informations de l'assuré(e)</h5>
     <p class="mb-4">Veuillez entrer les informations relatives à l'assuré(e) en tenant compte des champs obligatoire.
     </p>
-
+    @php
+        $GarantiesOptionnelles = $productGarantie->where('estobligatoire', 0)->all();
+        // dd($GarantiesOptionnelles);
+    @endphp
     <div class="row g-3 mb-3">
         <div class="col-12 col-lg-6">
             <label for="" class="form-label">Le souscripteur est-il l'assuré ? <span
@@ -56,22 +59,35 @@
                         @endforeach
                     </ul>
                 </td>
-                @if ($product->CodeProduit == 'PFA_IND')
+                @if (!empty($GarantiesOptionnelles))
                     <td>
-                        <label for="" class="form-label">Souhaitez-vous souscrire à la garantie SURETE ?</label>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="garantieSurete" id="OuiGarantieSurete"
-                                value="Oui">
-                            <label class="form-check-label" for="OuiGarantieSurete">Oui</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="garantieSurete" id="NonGarantieSurete"
-                                value="Non">
-                            <label class="form-check-label" for="NonGarantieSurete">Non</label>
-                        </div>
+                        <ul>
+                            @foreach ($GarantiesOptionnelles as $item)
+                                <li>
+                                    <label class="form-label">
+                                        Souhaitez-vous souscrire à la garantie {{ $item->libelle }} ?
+                                    </label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio"
+                                            name="GarantiesOptionnelles[{{ $item->id }}]"
+                                            id="OuiGarantiesOptionnelles{{ $item->id }}" value="Oui">
+                                        <label class="form-check-label"
+                                            for="OuiGarantiesOptionnelles{{ $item->id }}">Oui</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio"
+                                            name="GarantiesOptionnelles[{{ $item->id }}]"
+                                            id="NonGarantiesOptionnelles{{ $item->id }}" value="Non">
+                                        <label class="form-check-label"
+                                            for="NonGarantiesOptionnelles{{ $item->id }}">Non</label>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+
                     </td>
                 @else
-                    <td>Pas de garantie</td>
+                    <td>Pas de garantie complementaire</td>
                 @endif
                 <td></td>
             </tr>
@@ -523,16 +539,17 @@
             console.error("Le bouton 'Ajouter' n'a pas été trouvé.");
         }
 
-        const form = document.querySelector('form');
-        if (form) {
-            form.addEventListener('submit', function(event) {
-                const assuresInput = document.createElement('input');
-                assuresInput.type = 'hidden';
-                assuresInput.name = 'assures';
-                assuresInput.value = JSON.stringify(assures);
-                form.appendChild(assuresInput);
-            });
-        }
+        // const form = document.querySelector('form');
+        // if (form) {
+        //     form.addEventListener('submit', function(event) {
+        //         const assuresInput = document.createElement('input');
+        //         assuresInput.type = 'hidden';
+        //         assuresInput.name = 'assures';
+        //         assuresInput.value = JSON.stringify(assures);
+        //         console.log('Input assure', assuresInput)
+        //         form.appendChild(assuresInput);
+        //     });
+        // }
 
         function ajouterAssureTemporaire() {
             console.log("La fonction ajouterAssureTemporaire a été appelée.");
@@ -542,6 +559,7 @@
             const civiliteElementAll = [...document.querySelectorAll('.civiliteAssur')];
             const dateElement = document.getElementById('datenaissanceAssur');
             const lieuNaissanceElement = document.getElementById('lieunaissanceAssur');
+            const numeropieceAssurElement = document.getElementById('numeropieceAssur');
             const naturepieceAssurElementAll = [...document.querySelectorAll('.naturepieceAssur')];
             const lieuresidenceAssurElement = document.getElementById('lieuresidenceAssur');
             const lienParenteElement = document.getElementById('lienParente');
@@ -553,6 +571,7 @@
             const civilite = getCiviliteSelectedValue(civiliteElementAll);
             const datenaissance = dateElement.value.trim();
             const lieuNaissance = lieuNaissanceElement ? lieuNaissanceElement.value.trim() : '';
+            const numeropieceAssur = numeropieceAssurElement ? numeropieceAssurElement.value.trim() : '';
             const naturepieceAssur = getNaturePieceSelectedValue(naturepieceAssurElementAll);
             const lieuresidenceAssur = lieuresidenceAssurElement ? lieuresidenceAssurElement.value.trim() : '';
             const lienParente = lienParenteElement ? lienParenteElement.value.trim() : '';
@@ -574,6 +593,7 @@
                 civilite,
                 datenaissance,
                 lieuNaissance,
+                numeropieceAssur,
                 naturepieceAssur,
                 lieuresidenceAssur,
                 lienParente,
@@ -581,11 +601,14 @@
                 emailAssur
             });
 
+            const assuresInput = document.getElementById('assuresInput').value = JSON.stringify(assures);
+            console.log("Assurés input :", assuresInput);
+
             console.log("Assuré ajouté :", assures);
 
             // Réinitialiser le formulaire
             resetForm(nomElement, prenomElement, dateElement, lieuNaissanceElement, lieuresidenceAssurElement,
-                lienParenteElement, mobileAssurElement, emailAssurElement);
+                lienParenteElement, mobileAssurElement, emailAssurElement, numeropieceAssurElement);
             resetRadio(civiliteElementAll);
             resetRadio(naturepieceAssurElementAll);
 
@@ -654,125 +677,9 @@
             });
         }
 
-        // function ajouterAssureTemporaire() {
-        //     console.log("La fonction ajouterAssureTemporaire a été appelée.");
-
-        //     const nomElement = document.getElementById('nomAssur');
-        //     const prenomElement = document.getElementById('prenomAssur');
-        //     // const civiliteElement = document.querySelector('input[name="civiliteAssur"]:checked');
-        //     const civiliteElement = document.querySelector('input[name="civiliteAssur"]');
-        //     const civiliteElementAll = [...document.querySelectorAll('.civiliteAssur')];
-        //     const dateElement = document.getElementById('datenaissanceAssur');
-        //     const lieuNaissanceElement = document.getElementById('lieunaissanceAssur');
-        //     const naturepieceAssurElement = document.querySelector('input[name="naturepieceAssur"]:checked');
-        //     const naturepieceAssurElementAll = [...document.querySelectorAll('.naturepieceAssur')];
-        //     const lieuresidenceAssurElement = document.getElementById('lieuresidenceAssur');
-        //     const lienParenteElement = document.getElementById('lienParente');
-        //     const mobileAssurElement = document.getElementById('mobileAssur');
-        //     const emailAssurElement = document.getElementById('emailAssur');
-
-        //     let selectedCivilite = '';
-        //     let selectedNaturepieceAssur = '';
-
-        //     const nom = nomElement.value.trim();
-        //     const prenom = prenomElement.value.trim();
-        //     const civilite = getCiviliteSelectedValue(civiliteElementAll);
-        //     const datenaissance = dateElement.value.trim();
-        //     const lieuNaissance = lieuNaissanceElement ? lieuNaissanceElement.value.trim() : '';
-        //     const naturepieceAssur = getNaturePieceSelectedValue(naturepieceAssurElementAll);
-        //     const lieuresidenceAssur = lieuresidenceAssurElement ? lieuresidenceAssurElement.value.trim() : '';
-        //     const lienParente = lienParenteElement ? lienParenteElement.value.trim() : '';
-        //     const mobileAssur = mobileAssurElement ? mobileAssurElement.value.trim() : '';
-        //     const emailAssur = emailAssurElement ? emailAssurElement.value.trim() : '';
-
-        //     // Validate inputs
-        //     if (!validateField(nomElement, nom) || !validateField(prenomElement, prenom) || !validateField(dateElement, datenaissance) || !validateField(civiliteElement, civilite)) {
-        //         return; // Stop if any validation fails
-        //     }
-
-        //     assures.push({
-        //         nom,
-        //         prenom,
-        //         civilite,
-        //         datenaissance,
-        //         lieuNaissance,
-        //         naturepieceAssur,
-        //         lieuresidenceAssur,
-        //         lienParente,
-        //         mobileAssur,
-        //         emailAssur
-        //     });
-
-        //     console.log("Assuré ajouté :", assures);
-        //     resetForm(nomElement, prenomElement, dateElement, civiliteElement, lieuNaissanceElement, naturepieceAssurElement, lieuresidenceAssurElement, lienParenteElement, mobileAssurElement, emailAssurElement);
-        //     afficherAssures();
-        //     $('#createPropositionModal').modal('hide');
-        // }
-
-        // function validateField(element, value) {
-        //     if (!value) {
-        //         element.classList.add('is-invalid');
-        //         element.classList.remove('is-valid');
-        //         return false;
-        //     } else {
-        //         element.classList.remove('is-invalid');
-        //         element.classList.add('is-valid');
-        //         return true;
-        //     }
-        // }
-        // function FieldNotRequired(element, value) {
-        //     if (!value) {
-        //         element.classList.remove('is-invalid');
-        //         element.classList.add('is-valid');
-        //         return true;
-        //     } else {
-        //         element.classList.remove('is-invalid');
-        //         element.classList.add('is-valid');
-        //         return true;
-        //     }
-        // }
-
-        // function getCiviliteSelectedValue(elements) {
-        //     let selectedValue = '';
-        //     elements.forEach(function(element) {
-        //         if (element.checked) {
-        //             selectedValue = element.value;
-        //             element.classList.add('is-valid');
-        //             element.classList.remove('is-invalid');
-        //         } else {
-        //             element.classList.remove('is-valid');
-        //             element.classList.add('is-invalid');
-        //         }
-        //     });
-        //     return selectedValue;
-        // }
-        // function getNaturePieceSelectedValue(elements) {
-        //     let selectedValue = '';
-        //     elements.forEach(function(element) {
-        //         if (element.checked) {
-        //             selectedValue = element.value;
-        //             element.classList.add('is-valid');
-        //             // element.classList.remove('is-invalid');
-        //         } else {
-        //             element.classList.add('is-valid');
-        //             // element.classList.add('is-invalid');
-        //         }
-        //     });
-        //     return selectedValue;
-        // }
-
-        // function resetForm(...elements) {
-        //     elements.forEach(el => {
-        //         if (el) {
-        //             el.value = '';
-        //             el.checked = false;
-        //             el.classList.remove('is-valid', 'is-invalid');
-        //         }
-        //     });
-        // }
-
         function afficherAssures() {
             const tbody = document.querySelector('#test-l-2 tbody');
+            const tbodyResume = document.querySelector('#resume-tbody-assure');
 
             if (!tbody) {
                 console.error("Le tbody pour afficher les assurés n'a pas été trouvé.");
@@ -780,6 +687,7 @@
             }
 
             tbody.innerHTML = '';
+            tbodyResume.innerHTML = '';
 
             assures.forEach((assure, index) => {
                 const row = `
@@ -792,7 +700,7 @@
                             @endforeach
                         </ul>
                     </td>
-                    <td>Pas de garantie</td>
+                    <td>Pas de garantie complementaire</td>
                     <td>
                         <a href="#" onclick="supprimerAssure(${index})" class="text-danger">
                             <i class="fadeIn animated bx bx-x fs-4"></i>
@@ -802,43 +710,54 @@
                 tbody.innerHTML += row;
             });
             assures.forEach((assure, index) => {
-                const displayNom = document.getElementById('display-nom-assure');
-                const displayPrenom = document.getElementById('display-prenom-assure');
-                const displayDateNaissance = document.getElementById('display-date-naissance-assure');
-                const displayLieuNaissance = document.getElementById('display-lieu-naissance-assure');
-                const displayLieuResidence = document.getElementById('display-lieu-residence-assure');
-                const displayTelephone = document.getElementById('display-telephone-assure');
-                const displayEmail = document.getElementById('display-email-assure');
-                const displayNumeropiece = document.getElementById('display-numeropiece-assure');
+                // const displayNom = document.getElementById('display-nom-assure');
+                // const displayPrenom = document.getElementById('display-prenom-assure');
+                // const displayDateNaissance = document.getElementById('display-date-naissance-assure');
+                // const displayLieuNaissance = document.getElementById('display-lieu-naissance-assure');
+                // const displayLieuResidence = document.getElementById('display-lieu-residence-assure');
+                // const displayTelephone = document.getElementById('display-telephone-assure');
+                // const displayEmail = document.getElementById('display-email-assure');
+                // const displayNumeropiece = document.getElementById('display-numeropiece-assure');
+                // const displayFiliation = document.getElementById('display-filiation-assure');
 
-                displayNom.textContent = assure.nom;
-                displayPrenom.textContent = assure.prenom;
-                displayDateNaissance.textContent = assure.datenaissance;
-                displayLieuNaissance.textContent = assure.lieuNaissance || '-';
-                displayLieuResidence.textContent = assure.lieuresidenceAssur;
-                displayTelephone.textContent = assure.mobileAssur || '-';
-                displayEmail.textContent = assure.emailAssur;
-                displayNumeropiece.textContent = assure.naturepieceAssur || '-';
+                // displayNom.textContent = assure.nom;
+                // displayPrenom.textContent = assure.prenom;
+                // displayDateNaissance.textContent = assure.datenaissance;
+                // displayLieuNaissance.textContent = assure.lieuNaissance || '-';
+                // displayLieuResidence.textContent = assure.lieuresidenceAssur;
+                // displayTelephone.textContent = assure.mobileAssur || '-';
+                // displayEmail.textContent = assure.emailAssur;
+                // displayNumeropiece.textContent = assure.naturepieceAssur || '-';
+                // displayFiliation.textContent = assure.lienParente || '-';
 
-                console.log("aasssssssssssssssssssssssss", assure);
+                // console.log("aasssssssssssssssssssssssss", assure);
+                const Datarow = `
+                <tr>
+                    <td>${assure.nom || '-'}</td>
+                    <td>${assure.prenom || '-'}</td>
+                    <td>${assure.datenaissance || '-'}</td>
+                    <td>${assure.lieuNaissance || '-'}</td>
+                    <td>${assure.lieuresidenceAssur}</td>
+                    <td>${assure.lienParente || '-'}</td>
+                    <td>
+                        <ul>
+                            @foreach ($productGarantie->where('estobligatoire', 1) as $item)
+                                <li>{{ $item->libelle }}</li>
+                            @endforeach
+                        </ul>
+                    </td>
+                    <td>${assure.mobileAssur || '-'}</td>
+                    <td>${assure.emailAssur}</td>
+                    <td>${assure.numeropieceAssur || '-'}</td>
+                </tr>`;
+                tbodyResume.innerHTML += Datarow;
             });
-
-            // if (assures.length > 0) {
-            //     const dernierAssure = assures[assures.length - 1];
-
-            //     document.getElementById('display-nom-assure').textContent = dernierAssure.nom || '-';
-            //     document.getElementById('display-prenom-assure').textContent = dernierAssure.prenom || '-';
-            //     document.getElementById('display-date-naissance-assure').textContent = dernierAssure.datenaissance || '-';
-            //     document.getElementById('display-lieu-naissance-assure').textContent = dernierAssure.lieuNaissance || '-';
-            //     document.getElementById('display-lieu-residence-assure').textContent = dernierAssure.lieuresidenceAssur || '-';
-            //     document.getElementById('display-telephone-assure').textContent = dernierAssure.mobileAssur || '-';
-            //     document.getElementById('display-email-assure').textContent = dernierAssure.emailAssur || '-';
-            //     document.getElementById('display-numeropiece-assure').textContent = dernierAssure.naturepieceAssur || '-';
-            // }
         }
 
         function supprimerAssure(index) {
             assures.splice(index, 1);
+            const assuresInput = document.getElementById('assuresInput').value = JSON.stringify(assures);
+            console.log("Assurés input :", assuresInput);
             afficherAssures();
         }
 

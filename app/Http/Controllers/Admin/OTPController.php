@@ -20,9 +20,10 @@ class OTPController extends Controller
 
     public function sendOtpByInfobipAPI(Request $request)
     {
-        $cel = $request->cel;
+        $TelOtp = $request->TelOtp;
         $TelPaiement = $request->TelPaiement;
-        $phoneNumber = ($TelPaiement == null || $TelPaiement == '') ? $cel : $request->TelPaiement;
+
+        $phoneNumber = ($TelPaiement == null || $TelPaiement == '') ? $TelOtp : $TelPaiement;
         $otp = RefgenerateOTP(Tblotp::class, 'codeOTP');
 
         // Stockez l'OTP temporairement (par exemple, dans le cache)
@@ -40,10 +41,10 @@ class OTPController extends Controller
     }
     public function sendOtpByOrangeAPI(Request $request)
     {
-        $cel = $request->cel;
+        $TelOtp = $request->TelOtp;
         $TelPaiement = $request->TelPaiement;
 
-        $phoneNumber = ($TelPaiement == null || $TelPaiement == '') ? $cel : $request->TelPaiement;
+        $phoneNumber = ($TelPaiement == null || $TelPaiement == '') ? $TelOtp : $TelPaiement;
         $otp = RefgenerateOTP(Tblotp::class, 'codeOTP');
 
         // Stockez l'OTP temporairement (par exemple, dans le cache)
@@ -62,9 +63,10 @@ class OTPController extends Controller
     public function verifyOtp(Request $request)
     {
         // $phoneNumber = $request->TelPaiement;
-        $cel = $request->cel;
+        $TelOtp = $request->TelOtp;
         $TelPaiement = $request->TelPaiement;
-        $phoneNumber = ($TelPaiement == null || $TelPaiement == '') ? $cel : $request->TelPaiement;
+
+        $phoneNumber = ($TelPaiement == null || $TelPaiement == '') ? $TelOtp : $TelPaiement;
         $otp = $request->otp;
     
         // Récupérer l'OTP du cache

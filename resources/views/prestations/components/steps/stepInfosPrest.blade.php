@@ -309,7 +309,7 @@
                                         <label for="montant" class="form-label">Quel est le montant que vous
                                             souhaitez
                                             demander ? <span class="star">*</span></label>
-                                        <input type="number" class="form-control" min="0"
+                                        <input type="text" class="form-control" min="0"
                                             name="montantSouhaite" id="montantSouhaite"
                                             placeholder="Saisir le montant souhaité" required disabled>
                                         <small><i id="msgerror" class="text-danger"></i></small>
@@ -324,7 +324,7 @@
                                     </div>
                                     <div class="col-6 d-flex justify-content-end gap-3">
                                         <button type="button" class="collapsed btn btn-primary px-4" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                            data-bs-toggle="collapse" id="btnContratSuivant" data-bs-target="#collapseTwo"
                                             aria-expanded="false" aria-controls="collapseTwo">Suivant <i
                                                 class='bx bx-right-arrow-alt fs-4'></i></button>
                                     </div>
@@ -419,6 +419,9 @@
                                             recevoir le paiement <span class="star">*</span></label>
                                         <input type="text" class="form-control" name="IBAN" id="IBAN"
                                             placeholder="Veuillez saisir l'IBAN sur lequel vous souhaitez recevoir le paiement">
+                                            <small><i id="ibanMsgError" class="text-danger"></i></small>
+                                            <small><i id="ibanMsgSuccess" class="text-success"></i></small>
+                                            <input type="hidden" name="TelOtp" value="" id="TelOtp">
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <label for="ConfirmIBAN" class="form-label">Confirmer l'IBAN <span
@@ -426,17 +429,22 @@
                                         <input type="text" class="form-control" name="ConfirmIBAN"
                                             id="ConfirmIBAN"
                                             placeholder="Veuillez resaisir l'IBAN sur lequel vous souhaitez recevoir le paiement">
+                                            <small><i id="ibanConfirmMsgError" class="text-danger"></i></small>
+                                            <small><i id="ibanConfirmMsgSuccess" class="text-success"></i></small>
                                     </div>
                                     <small><span class="form-label star"><i>Veuillez saisir l'IBAN de votre compte
                                                 courant </i></span></small>
                                 </div>
                                 <div class="row g-3 mb-3" id="TelephonePaiement">
                                     <div class="col-12 col-lg-6">
+                                        
                                         <label for="TelPaiement" class="form-label">N° de téléphone sur lequel vous
                                             souhaitez recevoir le paiement <span class="star">*</span></label>
                                         <input type="number" class="form-control" name="TelPaiement"
                                             id="TelPaiement"
                                             placeholder="Veuillez saisir le N° de téléphone sur lequel vous souhaitez recevoir le paiement">
+                                            <small><i id="telMsgError" class="text-danger"></i></small>
+                                            <small><i id="telMsgSuccess" class="text-success"></i></small>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <label for="ConfirmTelPaiement" class="form-label">Confirmer le N° de
@@ -444,6 +452,8 @@
                                         <input type="number" class="form-control" name="ConfirmTelPaiement"
                                             id="ConfirmTelPaiement"
                                             placeholder="Veuillez resaisir le N° de téléphone sur lequel vous souhaitez recevoir le paiement">
+                                            <small><i id="telConfirmMsgError" class="text-danger"></i></small>
+                                            <small><i id="telConfirmMsgSuccess" class="text-success"></i></small>
                                     </div>
                                     <small><span class="form-label star"><i>N° de Telephone sans l'indicatif (ex:
                                                 <strong>0100128271</strong>) </i></span></small>
@@ -456,7 +466,12 @@
                                                 class='bx bx-left-arrow-alt me-2 fs-4'></i>Retour </button>
                                     </div>
                                     <div class="col-6 d-flex justify-content-end gap-3">
-                                        <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                                        <button class="btn btn-primary" type="button" id="btnIbanPaiementSuivant" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseThree" aria-expanded="false"
+                                            aria-controls="collapseThree">Suivant <i
+                                                class='bx bx-right-arrow-alt fs-4'></i></button>
+
+                                        <button class="btn btn-primary" type="button" id="btnTelPaiementSuivant" data-bs-toggle="collapse"
                                             data-bs-target="#collapseThree" aria-expanded="false"
                                             aria-controls="collapseThree">Suivant <i
                                                 class='bx bx-right-arrow-alt fs-4'></i></button>
@@ -512,10 +527,10 @@
                                     </div>
                                     <div class="col-6 d-flex justify-content-end gap-3">
                                         {{-- vers etape 3 --}}
-                                        <button class="btn btn-primary px-4 next-step-btn1" id="next-stepper4"
+                                        {{-- <button class="btn btn-primary px-4 next-step-btn1" id="next-stepper4"
                                             type="button">
                                             Suivant<i class='bx bx-right-arrow-alt ms-2 fs-4'></i>
-                                        </button>
+                                        </button> --}}
 
                                         {{-- vers confirmation otp --}}
                                         <button class="btn btn-primary next-btn" type="button" id="next-stepper3"

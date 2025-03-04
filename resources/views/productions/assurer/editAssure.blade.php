@@ -61,14 +61,14 @@
 
                         <ul>
                             @forelse ($productGarantie as $item)
-                                <li>{{ $item->MonLibelle }}</li>
+                                <li>{{ $item->libelle }}</li>
                             @empty
                                 <center>Pas de garantie</center>
                             @endforelse
                         </ul>
                     </td>
 
-                    <td><center>Pas de garantie</center></td>
+                    <td><center>Pas de garantie complementaires</center></td>
 
                     <td style="font-size: 10px !important">
 

@@ -191,6 +191,31 @@
             </div>
             <div class="card">
                 <div class="card-body">
+                    <div class="fm-menu">
+                        <div class="list-group list-group-flush mb-3">
+                            <span>Status de la prestation</span>
+                        </div>
+                        @if ($prestation->etape == 1)
+                            <div class="badge rounded-pill text-info bg-light-info p-2 text-uppercase px-3">
+                                <i class="bx bxs-circle me-1"></i>En attente de transmission
+                            </div>
+                        @elseif($prestation->etape == 2)
+                            <div class="badge rounded-pill text-primary bg-light-primary p-2 text-uppercase px-3">
+                                <i class="bx bxs-circle me-1"></i>Transmis pour traitement
+                            </div>
+                        @elseif($prestation->etape == 3)
+                            <div class="badge rounded-pill text-danger bg-light-danger p-2 text-uppercase px-3">
+                                <i class="bx bxs-circle me-1"></i>Demande rejétée
+                            </div>
+                        @else
+                            -
+                        @endif
+
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
                     <h5 class="mb-0 text-primary font-weight-bold">Documents joint </h5>
                     </p>
                     <div class="mt-3"></div>

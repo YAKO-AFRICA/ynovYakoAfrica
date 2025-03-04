@@ -12,7 +12,7 @@
                         {{-- {{ $product->MonLibelle }} --}}
                     </div>
                     <div class="card-body">
-                        <form action="" method="">
+                        <form action="" method="" id="AddAssureForm">
                             <div class="col-12 col-lg-6">
                                 <label for="civiliteAssur" class="form-label">Civilité <span class="star">*</span></label>
                                 <div class="form-check form-check-inline">

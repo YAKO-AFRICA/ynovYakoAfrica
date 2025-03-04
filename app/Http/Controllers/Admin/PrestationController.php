@@ -253,9 +253,13 @@ class PrestationController extends Controller
             $idOtp = $otpVerif->id ?? null;
             // Vérifier si une prestation similaire existe déjà
 
-            $Operateur = ($otp == null || $otp == '') ? null : $request->Operateur;
-            $TelPaiement = ($otp == null || $otp == '') ? null : $request->TelPaiement;
-            $IBAN = ($otp == null || $otp == '') ? $request->IBAN : null;
+            $moyenPaiement = $request->moyenPaiement;
+            $TelPaiement = ($moyenPaiement == 'Virement_Bancaire') ? null : $request->TelPaiement;
+            $IBAN = ($moyenPaiement == 'Virement_Bancaire') ? $request->IBAN : null;
+
+            // supprimer Espace en cas de $TelPaiement
+            $TelPaiement = str_replace(' ', '', $TelPaiement);
+
             // Création de la prestation
             $prestation = TblPrestation::create([
                 'code' => RefgenerateCodePrest(TblPrestation::class, 'PREST-', 'code'),
@@ -274,8 +278,8 @@ class PrestationController extends Controller
                 'msgClient' => $request->msgClient,
                 'lieuresidence' => $request->lieuresidence,
                 'montantSouhaite' => $request->montantSouhaite,
-                'moyenPaiement' => $request->moyenPaiement,
-                'Operateur' => $Operateur,
+                'moyenPaiement' => $moyenPaiement,
+                'Operateur' => $request->Operateur,
                 'telPaiement' => $TelPaiement,
                 'IBAN' => $IBAN,
                 'saisiepar' => $saisiepar,
@@ -301,7 +305,7 @@ class PrestationController extends Controller
                 $versoFile = null;
                 $prestationFiles = [];
 
-                if ($idOtp != null) {
+                if ($moyenPaiement != 'Virement_Bancaire') {
                     foreach ($request->file('libelle') as $index => $file) {
                         $fileType = $request->type[$index];
 

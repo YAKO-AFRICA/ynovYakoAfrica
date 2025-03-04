@@ -1,5 +1,8 @@
 <div class="modal fade" id="editAssureModal{{ $assure->id }}" tabindex="-1" aria-hidden="true">
 
+    @php
+        $datenaissance = date('Y-m-d', strtotime($assure->datenaissance));
+    @endphp
     <div class="modal-dialog modal-xl">
 
         <div class="modal-content">
@@ -103,7 +106,8 @@
 
                                         <label for="datenaissanceAssur" class="form-label">Date de naissance <span class="star">*</span></label>
 
-                                        <input type="date" name="datenaissanceAssur" class="form-control" id="datenaissanceAssur" value="{{ $assure->datenaissance ?? ''}}"
+                                        
+                                        <input type="date" name="datenaissanceAssur" class="form-control" id="datenaissanceAssur" value="{{ $datenaissance ?? ''}}"
 
                                             placeholder="Date de naissance" required>
 

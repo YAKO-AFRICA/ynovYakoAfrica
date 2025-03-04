@@ -75,7 +75,7 @@
 
             <div class="row">
                 <div class="col-12 d-flex justify-content-end gap-3">
-                    <button class="btn btn-primary px-4" id="prev-btnPrest1" type="button" onclick="stepper1.previous()"><i class='bx bx-left-arrow-alt me-2 fs-4'></i>étape prédédente</button>
+                    {{-- <button class="btn btn-primary px-4" id="prev-btnPrest1" type="button" onclick="stepper1.previous()"><i class='bx bx-left-arrow-alt me-2 fs-4'></i>étape prédédente</button> --}}
                     <button type="submit" class="btn btn-primary"
                         id="submit-btnPrest">Soumettre</button>
                 </div>

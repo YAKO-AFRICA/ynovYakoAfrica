@@ -1695,6 +1695,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let selectedOperateur = ""; // Variable pour stocker l'opérateur sélectionné
 
+    // // Ajouter un écouteur pour chaque input radio
+    // operateurInputs.forEach(input => {
+    //     input.addEventListener('change', function() {
+    //         let prefix = "";
+    //         selectedOperateur = this.value; // Mettre à jour l'opérateur sélectionné
+    //         switch (this.value) {
+    //             case "Orange_money":
+    //                 prefix = "07";
+    //                 break;
+    //             case "MTN_money":
+    //                 prefix = "05";
+    //                 break;
+    //             case "Moov_money":
+    //                 prefix = "01";
+    //                 break;
+    //         }
+    //         if (prefix) {
+    //             telPaiementInput.value = prefix;
+    //             confirmTelPaiementInput.value = prefix;
+    //         }
+    //     });
+    // });
+
+    desactiverChamps();
+    
+    // Fonction pour activer ou désactiver les champs de telPaiement et confirmTelPaiement
+    function activerChamps() {
+        telPaiementInput.disabled = false;
+        confirmTelPaiementInput.disabled = false;
+    }
+
+    function desactiverChamps() {
+        telPaiementInput.disabled = true;
+        confirmTelPaiementInput.disabled = true;
+    }
+
     // Ajouter un écouteur pour chaque input radio
     operateurInputs.forEach(input => {
         input.addEventListener('change', function() {
@@ -1712,11 +1748,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     break;
             }
             if (prefix) {
+                activerChamps();
                 telPaiementInput.value = prefix;
                 confirmTelPaiementInput.value = prefix;
             }
         });
-    });
+    }); 
 
     // Fonction pour vérifier le préfixe en fonction de l'opérateur
     const validatePrefix = (input) => {
@@ -2009,7 +2046,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const submitdrvButtons = document.querySelectorAll('.submitdrv-btn'); // Boutons "Next"
     const prevButtons = document.querySelectorAll('.prev-btn'); // Boutons "Prev"
     const telPaiementField = document.getElementById('TelPaiement');
-    const celField = document.getElementById('cel');
     const ibanPaiementField = document.getElementById('IBAN');
     const confirmIbanPaiementField = document.getElementById('ConfirmIBAN');
     const confirmTelPaiementField = document.getElementById('ConfirmTelPaiement');
@@ -2018,6 +2054,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const otpInputs = document.querySelectorAll('.otp-input');
     const otpTimer = document.createElement('div'); // Timer pour afficher le compte à rebours
     const montantSouhaite = document.getElementById('montantSouhaite');
+    const ibanPaiementSection = document.getElementById('IBANPaiement');
+    const telPaiementSection = document.getElementById('TelephonePaiement')
+    const telOtpField = document.getElementById('TelOtp')
+
+    const operateurInputs = document.querySelectorAll('input[name="Operateur"]');
     
 
     // Fonction pour valider les champs obligatoires dans une étape donnée
@@ -2203,11 +2244,11 @@ document.addEventListener('DOMContentLoaded', function () {
         otpExpirationTime = 5 * 60; // Réinitialiser le temps d'expiration
         clearInterval(otpInterval); // Arrêter l'ancien intervalle
         resendOtpLink.classList.add('d-none'); // Cacher le lien pendant l'envoi de l'OTP
-        const phoneNumber = null;
+        let phoneNumber = null;
         if(telPaiementField.value != null && telPaiementField.value != ''){
             phoneNumber = telPaiementField.value.trim();
         }else{
-            phoneNumber = celField.value.trim();
+            phoneNumber = telOtpField.value.trim();
         }
         const otpSent = await sendOtp(phoneNumber);
 
@@ -2220,35 +2261,214 @@ document.addEventListener('DOMContentLoaded', function () {
         // }
     });
 
+    // const montantSouhaiteField = document.getElementById('montantSouhaite');
+    // const AutresInfos = document.getElementById('AutresInfos');
+    // const capitalField = document.getElementById('Capital');
+    // const msgError = $('#msgerror');
+    // const msgSuccess = $('#msgesucces');
+    // const countError = $('#counterror');
+    // const countSuccess = $('#countesucces');
+
+    // montantSouhaiteField.addEventListener('input', function () {
+    //     const montantSouhaite = parseFloat(montantSouhaiteField.value) || 0; // Valeur saisie ou 0 si vide
+    //     const capital = parseFloat(capitalField.value) || 0; // Valeur du capital ou 0 si vide
+    //     const moitieCapital = capital / 2;
+    //     // Réinitialiser les messages à chaque changement
+    //     msgError.text('').hide();
+    //     msgSuccess.text('').hide();
+    //     countError.text('').hide();
+    //     countSuccess.text('').hide();
+
+    //     if (montantSouhaite > moitieCapital || montantSouhaite <= 0) {
+    //         msgError.text(`Le montant souhaité doit être supérieur à 0 et inferieur ou égal à ${moitieCapital} FCFA.`).show();
+    //         montantSouhaiteField.classList.add('is-invalid');
+    //         montantSouhaiteField.classList.remove('is-valid');
+    //     } else if (montantSouhaite == null || montantSouhaite == '') {
+    //         montantSouhaiteField.classList.remove('is-invalid');
+    //         montantSouhaiteField.classList.remove('is-valid');
+    //     }else if (montantSouhaite <= moitieCapital && montantSouhaite > 0) {
+    //         msgSuccess.text(`Le montant définitif sera calculé en fonction de la situation du contrat.`).show();
+    //         montantSouhaiteField.classList.remove('is-invalid');
+    //         montantSouhaiteField.classList.add('is-valid');
+    //     }
+    // });
     const montantSouhaiteField = document.getElementById('montantSouhaite');
     const AutresInfos = document.getElementById('AutresInfos');
     const capitalField = document.getElementById('Capital');
     const msgError = $('#msgerror');
     const msgSuccess = $('#msgesucces');
+    const ibanMsgError = $('#ibanMsgError');
+    const ibanMsgSuccess = $('#ibanMsgSuccess');
+    const ibanConfirmMsgError = $('#ibanConfirmMsgError');
+    const ibanConfirmMsgSuccess = $('#ibanConfirmMsgSuccess');
+    const telMsgError = $('#telMsgError');
+    const telMsgSuccess = $('#telMsgSuccess');
+    const telConfirmMsgError = $('#telConfirmMsgError');
+    const telConfirmMsgSuccess = $('#telConfirmMsgSuccess');
     const countError = $('#counterror');
     const countSuccess = $('#countesucces');
+    const btnIbanPaiementSuivant = document.getElementById('btnIbanPaiementSuivant');
+    const btnTelPaiementSuivant = document.getElementById('btnTelPaiementSuivant');
+    const btnContratSuivant = document.getElementById('btnContratSuivant');
+    btnContratSuivant.disabled = true;
+// Vérification des champs de IBAN si présents dans l'étape actuelle
+if (!ibanPaiementSection.classList.contains('d-none')) {
+    btnIbanPaiementSuivant.disabled = true;
 
-    montantSouhaiteField.addEventListener('input', function () {
-        const montantSouhaite = parseFloat(montantSouhaiteField.value) || 0; // Valeur saisie ou 0 si vide
-        const capital = parseFloat(capitalField.value) || 0; // Valeur du capital ou 0 si vide
+    ibanPaiementField.addEventListener('input', function (e) {
+        const ibanValue = e.target.value.trim();
+        
+        // Réinitialisation des messages
+        ibanMsgError.text("").hide();
+        ibanMsgSuccess.text("").hide();
+
+
+        if (ibanValue.length < 16 || ibanValue.length > 24) {
+            ibanPaiementField.classList.add('is-invalid');
+            ibanPaiementField.classList.remove('is-valid');
+            ibanMsgError.text("Le numéro IBAN doit avoir entre 16 et 24 caractères.").show();
+            btnIbanPaiementSuivant.disabled = true;
+        } else {
+            ibanPaiementField.classList.remove('is-invalid');
+            ibanPaiementField.classList.add('is-valid');
+            ibanMsgSuccess.text("Le numéro IBAN est valide.").show();
+            // btnIbanPaiementSuivant.disabled = false;
+        }
+    });
+
+    confirmIbanPaiementField.addEventListener('input', function (e) {
+        const confirmIban = e.target.value.trim();
+        const ibanValue = ibanPaiementField.value.trim();
+        ibanConfirmMsgError.text("").hide();
+        ibanConfirmMsgSuccess.text("").hide();
+
+        if (confirmIban.length < 16 || confirmIban.length > 24 || confirmIban !== ibanValue) {
+            confirmIbanPaiementField.classList.add('is-invalid');
+            confirmIbanPaiementField.classList.remove('is-valid');
+            ibanConfirmMsgError.text("Le numéro IBAN de confirmation est ne correspond pas.").show();
+            btnIbanPaiementSuivant.disabled = true;
+        } else {
+            confirmIbanPaiementField.classList.remove('is-invalid');
+            confirmIbanPaiementField.classList.add('is-valid');
+            ibanConfirmMsgSuccess.text("Le numéro IBAN de confirmation est correct.").show();
+            btnIbanPaiementSuivant.disabled = false;
+        }
+    });
+}
+
+if (!telPaiementSection.classList.contains('d-none')) {
+    btnTelPaiementSuivant.disabled = true;
+    let selectedOperateur = ""; // Variable pour stocker l'opérateur sélectionné
+    // let prefix = operateurInputs.checked 
+    // ? operateurInputs.value === 'Orange_money' ? '07' 
+    // : operateurInputs.value === 'Moov_money' ? '01' 
+    // : operateurInputs.value === 'MTN_money' ? '05' 
+    // : null 
+    // : null;
+    // Ajouter un écouteur pour chaque input radio
+    operateurInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            let prefix = "";
+            selectedOperateur = this.value; // Mettre à jour l'opérateur sélectionné
+            switch (this.value) {
+                case "Orange_money":
+                    prefix = "07";
+                    break;
+                case "MTN_money":
+                    prefix = "05";
+                    break;
+                case "Moov_money":
+                    prefix = "01";
+                    break;
+            }
+            telPaiementField.addEventListener('input', function (e) {
+                const telValue = e.target.value.trim();
+                let firstTwoDigits = telValue.substring(0, 2); // Extraire les deux premiers chiffres de phone
+                // Réinitialisation des messages
+                telMsgError.text("").hide();
+                telMsgSuccess.text("").hide();
+        
+                if (telValue.length != 10 || firstTwoDigits !== prefix) {
+                    telPaiementField.classList.add('is-invalid');
+                    telPaiementField.classList.remove('is-valid');
+                    telMsgError.text("Le numéro de téléphone doit avoir 10 caractères et doit commencer par " + prefix + ".").show();
+                    btnTelPaiementSuivant.disabled = true;
+                } else {
+                    telPaiementField.classList.remove('is-invalid');
+                    telPaiementField.classList.add('is-valid');
+                    telMsgSuccess.text("Le numéro de téléphone est valide.").show();
+                    // btnTelPaiementSuivant.disabled = false;
+                }
+            });
+
+            confirmTelPaiementField.addEventListener('input', function (e) {
+                const confirmTel = e.target.value.trim();
+                const telValue = telPaiementField.value.trim();
+                telConfirmMsgError.text("").hide();
+                telConfirmMsgSuccess.text("").hide();
+                
+                if (confirmTel !== telValue || confirmTel.length !== 10) {
+                    confirmTelPaiementField.classList.add('is-invalid');
+                    confirmTelPaiementField.classList.remove('is-valid');
+                    telConfirmMsgError.text("Le numéro de téléphone de confirmation est ne correspond pas.").show();
+                    btnTelPaiementSuivant.disabled = true;
+                } else {
+                    confirmTelPaiementField.classList.remove('is-invalid');
+                    confirmTelPaiementField.classList.add('is-valid');
+                    telConfirmMsgSuccess.text("Le numéro de téléphone de confirmation est correct.").show();
+                    btnTelPaiementSuivant.disabled = false;
+                }
+            });
+
+        });
+    }); 
+}
+    
+    montantSouhaiteField.addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/g, ''); // Supprime espaces et caractères non numériques
+        
+        if (value) {
+            e.target.value = parseInt(value, 10).toLocaleString('fr-FR'); // Formate avec séparateurs de milliers
+        } else {
+            e.target.value = ""; // Champ vide si suppression complète
+        }
+
+        // Vérifier si le montant souhaité est valide
+        const montantSouhaite = parseInt(value, 10) || 0; // Valeur saisie ou 0 si vide
+
+        const capital = parseFloat(capitalField.value.replace(/\s/g, '')) || 0; // Supprimer les espaces avant conversion
         const moitieCapital = capital / 2;
-        // Réinitialiser les messages à chaque changement
-        msgError.text('').hide();
-        msgSuccess.text('').hide();
-        countError.text('').hide();
-        countSuccess.text('').hide();
+        const moitieCapitalFormate = moitieCapital.toLocaleString('fr-FR');
+
+        // Réinitialiser les messages d'erreur et de succès
+        msgError.text("").hide();
+        msgSuccess.text("").hide();
+        countError.text("").hide();
+        countSuccess.text("").hide();
 
         if (montantSouhaite > moitieCapital || montantSouhaite <= 0) {
-            msgError.text(`Le montant souhaité doit être supérieur à 0 et inferieur ou égal à ${moitieCapital} FCFA.`).show();
+            msgError.text(`Selon les termes du contrat, le montant souhaité doit être inférieur ou égal à ${moitieCapitalFormate} FCFA.`).show();
             montantSouhaiteField.classList.add('is-invalid');
             montantSouhaiteField.classList.remove('is-valid');
-        } else if (montantSouhaite == null || montantSouhaite == '') {
+            // desactiver le bouton
+            btnContratSuivant.disabled = true;
+        } else if (montantSouhaiteField.value.trim() === "") {
             montantSouhaiteField.classList.remove('is-invalid');
             montantSouhaiteField.classList.remove('is-valid');
-        }else if (montantSouhaite <= moitieCapital && montantSouhaite > 0) {
+            // desactiver le bouton
+            btnContratSuivant.disabled = true;
+        } else if (montantSouhaite <= moitieCapital && montantSouhaite > 0) {
             msgSuccess.text(`Le montant définitif sera calculé en fonction de la situation du contrat.`).show();
             montantSouhaiteField.classList.remove('is-invalid');
             montantSouhaiteField.classList.add('is-valid');
+            // activer le bouton
+            btnContratSuivant.disabled = false;
+        }
+    });
+
+    montantSouhaiteField.addEventListener("blur", function (e) {
+        if (e.target.value.trim() !== "") {
+            e.target.value = parseInt(e.target.value.replace(/\s/g, ''), 10).toLocaleString('fr-FR');
         }
     });
     AutresInfos.addEventListener('input', function () {
@@ -2322,7 +2542,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
     
             // Vérification et envoi de l'OTP
-            if (currentContainer.contains(telPaiementField)) {
+            if (currentContainer.contains(telPaiementField) && !telPaiementSection.classList.contains('d-none')) {
                 const phoneNumber = telPaiementField.value.trim();
                 // si tous les champs required ne sont pas renseignés bloqué l'envoi de l'OTP
                if (!validateStep(currentContainer)) {
@@ -2336,7 +2556,8 @@ document.addEventListener('DOMContentLoaded', function () {
                };
                 
             }else{
-                const phoneNumber = celField.value.trim();
+                const phoneNumber = telOtpField.value.trim();
+                console.log('phoneNumber = ', phoneNumber);
                 // si tous les champs required ne sont pas renseignés bloqué l'envoi de l'OTP
                if (!validateStep(currentContainer)) {
                     return;
@@ -3070,7 +3291,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Fonction pour envoyer l'OTP au serveur pour validation
     function sendOtpVerification() {
         let otp = Array.from(otpInputs).map(input => input.value).join('');
-        let phone = document.getElementById('TelPaiement').value;
+        let telPaiementField = document.getElementById('TelPaiement');
+        let TelOtp = document.getElementById('TelOtp');
+        let phone = null;
+        if(telPaiementField.value != null && telPaiementField.value != ''){
+            phone = telPaiementField.value.trim();
+        }else{
+            phone = TelOtp.value.trim();
+        }
         let phoneNumber = '225' + phone;
 
         fetch('/api/verify-otp', {
@@ -3175,7 +3403,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Afficher les sections Mobile Money
                 operateurSection.classList.remove('d-none');
                 telPaiementSection.classList.remove('d-none');
-                otpSection.parentElement.classList.remove('d-none');
+                // otpSection.parentElement.classList.remove('d-none');
                 ibanPaiementSection.classList.add('d-none'); // Cacher IBAN
 
                 // Ajouter les attributs requis
@@ -3190,12 +3418,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 ibanPaiementSection.classList.remove('d-none');
                 operateurSection.classList.add('d-none'); // Cacher opérateur
                 telPaiementSection.classList.add('d-none'); // Cacher téléphone
-                otpSection.parentElement.classList.add('d-none'); // Cacher OTP
+                // otpSection.parentElement.classList.remove('d-none'); // Cacher OTP
 
                 // Ajouter les attributs requis
                 setRequired(['IBAN', 'ConfirmIBAN', 'RIB-file-uploa']);
                 removeRequired(['Operateur', 'TelPaiement', 'ConfirmTelPaiement', 'FicheID-file-uploa']);
-                removeRequired(['otp_1', 'otp_2', 'otp_3', 'otp_4', 'otp_5', 'otp_6']);
+                // removeRequired(['otp_1', 'otp_2', 'otp_3', 'otp_4', 'otp_5', 'otp_6']);
+                setRequired(['otp_1', 'otp_2', 'otp_3', 'otp_4', 'otp_5', 'otp_6']);
 
                 // Masquer le bouton "next" pour Mobile Money
                 nextBtn.classList.add('d-none');
@@ -3238,8 +3467,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const mobileMoneyCheckbox = document.getElementById('mobileMoney');
     const virementBancaireCheckbox = document.getElementById('virementBancaire');
     // IDs des éléments à afficher ou masquer
-    const elementsMobileMoney = ['Operateur', 'Operateur-btn', 'TelephonePaiement', 'btn-TelephonePaiement', 'OTP', 'btn-otp', 'next-stepper3', 'FicheIDNum'];
-    const elementsVirementBancaire = ['next-stepper4', 'IBANPaiement', 'btn-IBANPaiement', 'RIB-file', 'prev-btnPrest1'];
+    const elementsMobileMoney = ['Operateur', 'Operateur-btn', 'TelephonePaiement', 'btn-TelephonePaiement', 'FicheIDNum', 'btnTelPaiementSuivant'];
+    const elementsVirementBancaire = ['next-stepper4', 'IBANPaiement', 'btn-IBANPaiement', 'RIB-file', 'prev-btnPrest1', 'btnIbanPaiementSuivant'];
 
     function toggleElements() {
         // Vérifie les cases cochées
