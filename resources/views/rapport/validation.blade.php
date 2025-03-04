@@ -61,7 +61,7 @@
                 </div>
             </fieldset>
 
-            <fieldset class="col-md-6">
+            <fieldset class="col-md-4">
                 <legend class="float-none w-auto px-2">Recherche par Agent</legend>
             
                 <div class="col-sm-12">
@@ -77,7 +77,7 @@
                 </div>
             </fieldset>
 
-            <fieldset class="col-md-6">
+            <fieldset class="col-md-4">
                 <legend class="float-none w-auto px-2">Recherche par Etape</legend>
         
                 <div class="col-sm-12">
@@ -88,6 +88,19 @@
                         <option value="2" {{ request('etape') == '2' ? 'selected' : '' }}>Transmis</option>
                         <option value="3" {{ request('etape') == '3' ? 'selected' : '' }}>Accepté</option>
                         <option value="4" {{ request('etape') == '4' ? 'selected' : '' }}>Rejeté</option>
+                    </select>
+                </div>
+            </fieldset>
+            <fieldset class="col-md-4">
+                <legend class="float-none w-auto px-2">Recherche par Motif de rejet</legend>
+        
+                <div class="col-sm-12">
+                    <label for="motifrejet" class="form-label">Selectionner un motif</label>
+                    <select class="form-select selection" id="motifrejet" name="motifrejet">
+                        <option value="">Choisir un motif</option>
+                        @foreach ($motifs as $item)
+                            <option value="{{ $item->libelle }}" {{ request('motifrejet') == $item->libelle ? 'selected' : '' }}>{{ $item->libelle }}</option>
+                        @endforeach
                     </select>
                 </div>
             </fieldset>

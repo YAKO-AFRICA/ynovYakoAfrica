@@ -262,6 +262,8 @@ class ProductionController extends Controller
 
                 // Récupérer les assurés du formulaire
                 $assures = json_decode($request->input('assures'), true);
+
+                $prime = $request->primepricipale + $request->fraisadhesion + $request->surprime;
                 
                 $garanties = ProduitGarantie::where(['codeproduit'=> $request->codeproduit,'estobligatoire' => 1])->get();
                 foreach ($garanties as $garantie) {

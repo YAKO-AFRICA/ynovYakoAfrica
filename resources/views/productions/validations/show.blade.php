@@ -18,17 +18,23 @@
 <!--end breadcrumb-->
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-end gap-4">
-            
+            @can('Valider une proposition')
             <form action="{{ route('prod.traitement.proposition.valider', $contrat->id)}}" method="post" class="submitForm">
                 @csrf
                 <button type="submit" class="btn btn-success py-1 px-2 border-1 text-center"><i class='bx bx-check fs-4'></i>Valider</button>
             </form>
+            @endcan
             
-            <button type="button" class="btn btn-danger py-1 px-2 border-1 text-center" data-bs-toggle="modal" data-bs-target="#rejectModal"><i class='bx bx-x' ></i>Rejeter</button>
+            @can('Rejeter une proposition')
+                <button type="button" class="btn btn-danger py-1 px-2 border-1 text-center" data-bs-toggle="modal" data-bs-target="#rejectModal"><i class='bx bx-x' ></i>Rejeter</button>
+            @endcan
 
-            <button type="button" class="border-0 btn btn-primary py-1 px-2 text-center">
-                <a href="{{ route('prod.proposition.edit', $contrat->id) }}" class="btn py-1 px-2 border-1 text-center"><i class='bx bx-edit' ></i>Modifier</a>
-            </button>
+            @can('Modifier une proposition')
+                <button type="button" class="border-0 btn btn-primary py-1 px-2 text-center">
+                    <a href="{{ route('prod.proposition.edit', $contrat->id) }}" class="btn py-1 px-2 border-1 text-center"><i class='bx bx-edit' ></i>Modifier</a>
+                </button>
+            @endcan
+            
         </div>
     </div>
     <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -43,7 +49,14 @@
                     <div class="modal-body">
                         <div class="col-12 form-group mt-3">
                             <label for="motifrejet" class="form-label">Observations(Motif de rejet)</label>
-                            <textarea name="motifrejet" class="form-control" id="motifrejet" rows="3" required></textarea>
+
+                            <select name="motifrejet" id="motifrejet" class="form-select">
+                                <option value="">Selectionner un motif</option>
+                                @foreach ($motifs as $motif)
+                                    <option class="form-option" value="{{ $motif->libelle }}">{{ $motif->libelle }}</option>
+                                @endforeach
+                            </select>
+                            {{-- <textarea name="motifrejet" class="form-control" id="motifrejet" rows="3" required></textarea> --}}
                         </div>
                     </div>
                     <div class="modal-footer">

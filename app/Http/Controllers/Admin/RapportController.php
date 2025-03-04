@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Pret;
 use App\Models\Membre;
 use App\Models\Contrat;
+use App\Models\MotifRejet;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -174,6 +175,8 @@ class RapportController extends Controller
 
     public function eValidation(Request $request)
     {
+
+        $motifs = MotifRejet::where('etat', 'actif')->get();
         $userPartner = Auth::user()->codepartenaire;
 
         $agents = Membre::where('codepartenaire', $userPartner)->get();
@@ -196,6 +199,9 @@ class RapportController extends Controller
         // Filtrer par étape
         if ($request->filled('etape')) {
             $query->where('etape', $request->etape);
+        }
+        if ($request->filled('motifrejet')) {
+            $query->where('motifrejet', $request->motifrejet);
         }
 
         // Exécuter la requête
@@ -259,7 +265,7 @@ class RapportController extends Controller
         $selectedStatus = $request->input('etape');
 
         // Retourner la vue avec les données
-        return view('rapport.validation', compact('contrats', 'agents', 'activeColumns', 'defaultColumns', 'additionalColumns'));
+        return view('rapport.validation', compact('contrats', 'agents', 'activeColumns', 'defaultColumns', 'additionalColumns','motifs'));
     }
 
 }

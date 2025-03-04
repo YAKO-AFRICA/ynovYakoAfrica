@@ -10,6 +10,8 @@ use App\Models\Reseau;
 use App\Models\Partner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,8 +30,9 @@ class UserController extends Controller
         $zones = Zone::all();
         $equipes = Equipe::all();
         $partners = Partner::all();
+        $roles = Role::all();
         
-        return view('settings.users.index', compact('membres', 'reseaux', 'zones', 'equipes', 'partners'));
+        return view('settings.users.index', compact('membres', 'reseaux', 'zones', 'equipes', 'partners', 'roles'));
     }
 
     public function updateColumns(Request $request)
@@ -159,34 +162,44 @@ class UserController extends Controller
 
         DB::beginTransaction();
         try {
+
+            $userAssign = User::where('idmembre', $id)->first();
             $membre = Membre::where('idmembre', $id)->update([
-                'codeagent' => $request->codeagent,
+                // 'codeagent' => $request->codeagent,
                 // 'typ_membre' => 2,
-                'codereseau' => $request->codereseau,
-                'codezone' => $request->codezone,
-                'codepartenaire' => $request->codePart,
-                'codeequipe' => $request->codeequipe,
+                // 'codereseau' => $request->codereseau,
+                // 'codezone' => $request->codezone,
+                // 'codepartenaire' => $request->codePart,
+                // 'codeequipe' => $request->codeequipe,
                 'sexe' => $request->sexe,
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
                 'datenaissance' => $request->datenaissance,
                 'profession' => $request->profession,
                 'login' => $request->login,
-                'role' => $request->role,
-                'pass' => $request->pass,
+                // 'roles' => $request->role,
                 'email' => $request->email,
                 'cel' => $request->cel,
                 'tel' => $request->tel,
             ]);
 
+            Log::info($membre);
+
             if($membre){
                 $user = User::where('idmembre', $id)->update([
                     'email' => $request->email,
                     'login' => $request->login,
-                    'password' => bcrypt($request->pass),
-                    'codepartenaire' => $request->codePart,
-                    'branche' => $request->codebranche
+                    'id_role' => $request->role_id,
+                    // 'codepartenaire' => $request->codePart,
+                    // 'branche' => $request->codebranche
                 ]);
+
+                Log::info($user);
+
+                $role = Role::find($request->role_id);
+                $userAssign->assignRole($role);
+
+                $userAssign->syncRoles([$role->id]);
                 
             }
 
@@ -216,7 +229,7 @@ class UserController extends Controller
             $dataResponse =[
                 'type'=>'error',
                 'urlback'=>'',
-                'message'=>"Erreur systeme! ".$th(),
+                'message'=>"Erreur systeme! ". $th->getMessage(),
                 'code'=>500,
             ];
         }

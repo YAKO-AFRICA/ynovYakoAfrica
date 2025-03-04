@@ -51,7 +51,7 @@
         @if(count($item['contrats']) > 0)
             <div class="col-12 col-md-6 col-lg-3">
                 <a href="{{ route('prod.validation.prodByPartner', $item['partner']->code) }}">
-                    <div class="card radius-10" style="min-height: 95%; min-width: 95%; height: 95%; width: 95%;">
+                    <div class="card radius-10">
                         <div class="card-header text-center">
                             <h4 class="my-1">{{ $item['partner']->designation }}</h4>
                         </div>
@@ -60,11 +60,11 @@
                                 <div class="mx-auto mb-3">
                                     @if ($item['partner']->logo == null)
                                         <img src="{{ asset('root/images/logo_yako.jpg') }}"
-                                        style="min-height: 100%; min-width: 100%; background-color: #fff; height: 100%; width: 100%;" 
+                                        style="background-color: #fff; max-height: 250px; height: 250px; width: 100%;" 
                                         class="logo-icon img-fluid img-thumbnail" alt="logo default">
                                     @else
                                         <img src="{{ asset('logos/'. $item['partner']->logo) }}"
-                                        style="min-height: 100%; min-width: 100%; background-color: #fff; height: 100%; width: 100%;" 
+                                        style="background-color: #fff; max-height: 250px; height: 250px; width: 100%;" 
                                         class="logo-icon img-fluid img-thumbnail"
                                         alt="logo default">
                                     @endif

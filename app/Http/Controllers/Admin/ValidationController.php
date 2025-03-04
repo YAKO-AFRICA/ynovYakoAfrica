@@ -7,6 +7,7 @@ use App\Models\Partner;
 use App\Models\Product;
 use App\Models\TblVille;
 use App\Models\TblAgence;
+use App\Models\MotifRejet;
 use App\Models\TblSociete;
 use Illuminate\Http\Request;
 use App\Models\TblProfession;
@@ -193,10 +194,11 @@ class ValidationController extends Controller
         set_time_limit(300);
         $CodeProduit = Contrat::where('id', $id)->first()->codeproduit;
         $productGarantie = ProduitGarantie::where('CodeProduit',$CodeProduit)->get();
+        $motifs = MotifRejet::where('etat', 'actif')->get();
 
         $contrat = Contrat::where('id', $id)->first();
 
-        return view('productions.validations.show', compact('contrat', 'productGarantie'));
+        return view('productions.validations.show', compact('contrat', 'productGarantie', 'motifs'));
     }
 
     public function rejetContrat(Request $request, string $id)

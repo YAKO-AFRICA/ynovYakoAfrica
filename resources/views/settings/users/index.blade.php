@@ -172,9 +172,9 @@
 
                             <td>
                                 <div class="d-flex order-actions">
-                                    {{-- <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#EditUsers{{ $item->idmembre }}">
+                                    <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#EditUsers{{ $item->idmembre }}">
                                         <i class='bx bxs-edit'></i>
-                                    </a> --}}
+                                    </a>
                                     <a class="deleteConfirmation ms-3" data-uuid="{{$item->id}}"
                                         data-type="confirmation_redirect" data-placement="top"
                                         data-token="{{ csrf_token() }}"
@@ -190,7 +190,7 @@
                                 </div>
                             </td>
                         </tr>
-                        {{-- @include('settings.users.editModal') --}}
+                        @include('settings.users.editModal')
                         @empty
                         <tr>
                             <td colspan="{{ count($defaultColumns) + count($activeColumns) + 1 }}">Aucun utilisateur trouvé</td>

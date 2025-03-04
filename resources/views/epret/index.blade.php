@@ -72,17 +72,22 @@
                                         <i class='bx bxs-show'></i>
                                     </a>
 
-                                    <a href="{{ route('epret.edit', $item->id)}}" class=""><i class='bx bxs-edit'></i></a>
+                                    @can('Modifier le pret')
+                                        <a href="{{ route('epret.edit', $item->id)}}" class=""><i class='bx bxs-edit'></i></a>
+                                    @endcan
 
-                                    <a class="deleteConfirmation ms-3" data-uuid="{{$item->id}}"
-                                        data-type="confirmation_redirect" data-placement="top"
-                                        data-token="{{ csrf_token() }}"
-                                        data-url="{{route('epret.destroy',$item->id)}}"
-                                        data-title="Vous êtes sur le point de supprimer le pret  {{$item->id}} "
-                                        data-id="{{$item->id}}" data-param="0"
-                                        data-route="{{route('epret.destroy',$item->id)}}">
-                                        <i class='bx bxs-trash' style="cursor: pointer"></i>
-                                    </a>
+                                    @can('Supprimer le pret')
+                                        <a class="deleteConfirmation ms-3" data-uuid="{{$item->id}}"
+                                            data-type="confirmation_redirect" data-placement="top"
+                                            data-token="{{ csrf_token() }}"
+                                            data-url="{{route('epret.destroy',$item->id)}}"
+                                            data-title="Vous êtes sur le point de supprimer le pret  {{$item->id}} "
+                                            data-id="{{$item->id}}" data-param="0"
+                                            data-route="{{route('epret.destroy',$item->id)}}">
+                                            <i class='bx bxs-trash' style="cursor: pointer"></i>
+                                        </a>
+                                    @endcan
+                                    
 
                                     
                                 </div>

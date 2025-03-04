@@ -98,18 +98,26 @@
                                         <i class='bx bxs-show'></i>
                                     </a>
                                     @if (!in_array($item->etape, [2, 3]))
-                                    <a href="{{ route('prod.edit', $item->id)}}" class="ms-3">
-                                        <i class='bx bxs-edit'></i>
-                                    </a>
-                                    <a class="deleteConfirmation ms-3" data-uuid="{{$item->id}}"
-                                        data-type="confirmation_redirect" data-placement="top"
-                                        data-token="{{ csrf_token() }}"
-                                        data-url="{{route('setting.destroy.partner',$item->id)}}"
-                                        data-title="Vous êtes sur le point de supprimer {{$item->code}} "
-                                        data-id="{{$item->id}}" data-param="0"
-                                        data-route="{{route('setting.destroy.partner',$item->id)}}"><i
-                                            class='bx bxs-trash' style="cursor: pointer"></i>
-                                    </a>
+
+                                        @can('Modifier une souscription')
+                                            <a href="{{ route('prod.edit', $item->id)}}" class="ms-3">
+                                                <i class='bx bxs-edit'></i>
+                                            </a>
+                                        @endcan
+                                    
+
+                                        @can('Suprimer une souscription')
+                                            <a class="deleteConfirmation ms-3" data-uuid="{{$item->id}}"
+                                                data-type="confirmation_redirect" data-placement="top"
+                                                data-token="{{ csrf_token() }}"
+                                                data-url="{{route('setting.destroy.partner',$item->id)}}"
+                                                data-title="Vous êtes sur le point de supprimer {{$item->code}} "
+                                                data-id="{{$item->id}}" data-param="0"
+                                                data-route="{{route('setting.destroy.partner',$item->id)}}"><i
+                                                    class='bx bxs-trash' style="cursor: pointer"></i>
+                                            </a>
+                                        @endcan
+                                    
                                     @else
                                     <a href="javascript:;" class="ms-3 text-muted" title="Vous ne pouvez pas modifier une proposition transmise ou migrer">
                                         <i class='bx bxs-edit'></i>

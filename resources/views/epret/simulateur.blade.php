@@ -83,9 +83,12 @@
                             </div>
             
                             <!-- Boutons -->
+                            
                             <div class="col-12 d-flex justify-content-between align-items-center">
                                 <button type="submit" class="btn btn-primary text-uppercase">Évaluer la Prime</button>
-                                <a href="{{ route('epret.create')}}" class="btn btn-outline-primary text-uppercase">Démarrer une Souscription</a>
+                                @can('Initier un pret')
+                                    <a href="{{ route('epret.create')}}" class="btn btn-outline-primary text-uppercase">Démarrer une Souscription</a>
+                                @endcan
                             </div>
                         </form>
                     </div>
