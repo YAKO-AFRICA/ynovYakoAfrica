@@ -6,10 +6,12 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\Admin\RdvController;
 use App\Http\Controllers\Admin\EpretController;
+use App\Http\Controllers\setting\RoleController;
 use App\Http\Controllers\Setting\UserController;
 use App\Http\Controllers\Setting\ZoneController;
 use App\Http\Controllers\Admin\AssurerController;
 use App\Http\Controllers\Admin\RapportController;
+use App\Http\Controllers\Setting\MotifController;
 use App\Http\Controllers\Admin\AdherentController;
 use App\Http\Controllers\Admin\BulletinController;
 use App\Http\Controllers\Admin\DocumentController;
@@ -34,8 +36,7 @@ use App\Http\Controllers\Admin\BeneficiairesController;
 |<iframe style="width: 100%; height: 100%" src="{{ url('storage/documents/' . $doc->filename) }}" frameborder="0"></iframe>
 */
 Route::get('storage/documents/{file}', function ($file) {
-    // $path = base_path('../uploads/prestations/' . $file);
-    $path = base_path('../public_html/testenovapi/public/uploads/' . $file);
+    $path = base_path(env('UPLOADS_PATH') . $file);
 
     if (!file_exists($path)) {
         abort(404);
@@ -97,6 +98,7 @@ Route::prefix('report')->name('report.')->group(function(){
     Route::middleware(['auth','PreventBackHistory'])->group(function () {
         Route::get('eSouscription',[RapportController::class, 'eSouscription'])->name('eSouscription');
         Route::get('ePret',[RapportController::class, 'ePret'])->name('ePret');
+        Route::get('eValidation',[RapportController::class, 'eValidation'])->name('eValidation');
     });
 
 });
@@ -197,6 +199,23 @@ Route::prefix('settings')->name('setting.')->group(function(){
         Route::post('/store-product-by-reseau', [SettingsController::class, 'productByReseauStore'])->name('store.product.by.reseau');
         Route::post('/destroy-product-by-reseau/{id}', [SettingsController::class, 'destroy'])->name('destroy.productReseau');
 
+          // Role Permission
+          Route::get('/role', [RoleController::class, 'index'])->name('role');
+          Route::post('/role-create', [RoleController::class, 'store'])->name('role.store');
+          Route::post('/role-edit/{id}', [RoleController::class, 'update'])->name('role.edit');
+          Route::post('/role-destroy/{id}', [RoleController::class, 'destroy'])->name('role.destroy');
+          Route::get('/permission/{id}', [RoleController::class, 'permission'])->name('permission');
+          Route::post('/permission-create', [RoleController::class, 'permissionStore'])->name('permission.store');
+          Route::post('/group-create', [RoleController::class, 'groupStore'])->name('group.store');
+  
+          Route::post('/role-permission/{id}', [RoleController::class, 'rolePermissionSave'])->name('permission.save');
+
+
+          Route::get('/index-motif-rejet', [MotifController::class, 'index'])->name('motifRejet.index');
+          Route::post('/store-motif-rejet', [MotifController::class, 'store'])->name('motifRejet.store');
+          Route::post('/update-motif-rejet/{id}', [MotifController::class, 'update'])->name('motifRejet.update');
+          Route::post('/destroy-motif-rejet/{id}', [MotifController::class, 'destroy'])->name('destroy.motifRejet');
+
         
 
 
@@ -289,7 +308,8 @@ Route::prefix('production')->name('prod.')->group(function(){
         Route::get('/traitement/prodByPartner/{code}', [ValidationController::class, 'prodByPartner'])->name('validation.prodByPartner');
         Route::get('/traitement/proposition/show/{id}', [ValidationController::class, 'show'])->name('validation.show');
         Route::post('/traitement/proposition/rejet/{id}', [ValidationController::class, 'rejetContrat'])->name('traitement.proposition.rejet');
-        // Route::post('/traitement/proposition/valider/{id}', [ValidationController::class, 'validerContrat'])->name('traitement.proposition.valider');
+        Route::get('/proposition/edit{id}', [ValidationController::class, 'edit'])->name('proposition.edit');
+        Route::post('/traitement/proposition/valider/{id}', [ValidationController::class, 'acceptContrat'])->name('traitement.proposition.valider');
         
 
 

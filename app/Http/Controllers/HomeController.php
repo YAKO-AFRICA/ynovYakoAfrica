@@ -26,6 +26,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+
+//         $user = Auth::user();
+// dd($user->getAllPermissions());
         if (!Auth::check()) {
             return response()->json(['error' => 'Utilisateur non connecté'], 401);
         }

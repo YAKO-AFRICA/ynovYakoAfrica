@@ -33,7 +33,8 @@
         </div>
 
         <div class="overflow-auto " style="height: calc(90vh - 180px)">
-            <strong><li class="menu-label">Production</li></strong>
+            @can('Voir e-validation')
+            <strong><li class="menu-label">E-VALIDATION</li></strong>
             <li>
                 <a href="{{ route('prod.validation.index')}}">
                     <div class="parent-icon">
@@ -42,6 +43,9 @@
                     <div class="menu-title">Validation</div>
                 </a>
             </li>
+            @endcan
+
+            @can('Voir e-souscription')
             <strong><li class="menu-label">E-Souscription</li></strong>
             <li>
                 <a href="{{ route('prod.stepProduct')}}">
@@ -58,23 +62,12 @@
                     <div class="menu-title">Mes Propositions</div>
                 </a>
             </li>
+            @endcan
             
-            {{-- <li>
-                <a href="{{ route('prod.index')}}">
-                    <div class="parent-icon"><i class="fadeIn animated bx bx-clipboard"></i>
-                    </div>
-                    <div class="menu-title">Mes Propositions</div>
-                </a>
-            </li> --}}
+            
+                
+            @can('Voir e-pret')
             <li class="menu-label ">E-Prêt</li>
-            {{-- <li>
-                <a href="{{ route('epret.demoSimulateur')}}">
-                    <div class="parent-icon"><i class="bx bx-dollar-circle fs-5"></i>
-                    </div>
-                    <div class="menu-title">Demo</div>
-                </a>
-            </li> --}}
-            
             <li>
                 <a href="{{ route('epret.simulateur')}}">
                 {{-- <a href="{{ route('epret.create')}}"> --}}
@@ -90,37 +83,80 @@
                     <div class="menu-title">Mes demandes</div>
                 </a>
             </li>
-            <li class="menu-label">Rapport d'activité</li>
-            <li>
-                <a href="{{ route('report.eSouscription')}}">
-                    <div class="parent-icon"><i class="bx bx-line-chart"></i>
-                    </div>
-                    <div class="menu-title">Souscription</div>
-                </a>
-            </li>
+            @endcan
+
+            @can('Voir e-prestation')
+                <li class="menu-label">E-Prestation</li>
+
+                @can('Demarrer une prestation')
+                    <li>
+                        <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <div class="parent-icon"><i class="bx bx-dollar-circle fs-5"></i>
+                            </div>
+                            <div class="menu-title">Nouvelle demande</div>
+                        </a>
+                    </li>
+                
+                @endcan
+                <li>
+                    <a href="{{ route('prestation.mesPrestations')}}">
+                        <div class="parent-icon"><i class="fadeIn animated bx bx-archive-in"></i>
+                        </div>
+                        <div class="menu-title">Mes demandes</div>
+                    </a>
+                </li>
+                
+            @endcan
+
             
-            <li>
-                <a href="{{ route('report.ePret')}}">
-                    <div class="parent-icon"><i class="bx bx-map-alt"></i>
-                    </div>
-                    <div class="menu-title">Pret</div>
-                </a>
-            </li>
-            <li class="menu-label">E-Prestation</li>
-            <li>
-                <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    <div class="parent-icon"><i class="bx bx-dollar-circle fs-5"></i>
-                    </div>
-                    <div class="menu-title">Nouvelle demande</div>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('prestation.mesPrestations')}}">
-                    <div class="parent-icon"><i class="fadeIn animated bx bx-archive-in"></i>
-                    </div>
-                    <div class="menu-title">Mes demandes</div>
-                </a>
-            </li>
+
+            @can('Voir le rapport des activites')
+                <li class="menu-label">Rapport d'activité</li>
+                @can('Voir le rapport de validation')
+                    <li>
+                        <a href="{{ route('report.eValidation')}}">
+                            <div class="parent-icon"><i class="bx bx-line-chart"></i>
+                            </div>
+                            <div class="menu-title">Validation</div>
+                        </a>
+                    </li>
+                @endcan
+
+                @can('Voir le rapport de souscription')
+                    <li>
+                        <a href="{{ route('report.eSouscription')}}">
+                            <div class="parent-icon"><i class="bx bx-line-chart"></i>
+                            </div>
+                            <div class="menu-title">Souscription</div>
+                        </a>
+                    </li>
+                @endcan
+                
+                
+                @can('Voir le rapport des pret')
+                    <li>
+                        <a href="{{ route('report.ePret')}}">
+                            <div class="parent-icon"><i class="bx bx-map-alt"></i>
+                            </div>
+                            <div class="menu-title">Pret</div>
+                        </a>
+                    </li>
+                @endcan
+                
+            @endcan
+
+            
+            {{-- @endcan
+
+            @can(' 	Voir e-prestation') --}}
+                
+            
+            
+            {{-- @endcan
+
+            @can('Voir les paramettre') --}}
+                
+           @can('Voir les paramettres')
             <li class="menu-label">Paramètre</li>
             <li>
                 <a href="{{ route('setting.reseau.index')}}">
@@ -151,6 +187,13 @@
                 </a>
             </li>
             <li>
+                <a href="{{ route('setting.role')}}">
+                    <div class="parent-icon"><i class="fadeIn animated bx bx-user-check"></i>
+                    </div>
+                    <div class="menu-title">Role</div>
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('setting.partner.index')}}">
                     <div class="parent-icon"><i class="fadeIn animated bx bx-book-content"></i>
                     </div>
@@ -158,12 +201,13 @@
                 </a>
             </li>
             <li>
-                <a href="#">
-                    <div class="parent-icon"><i class="fadeIn animated bx bx-user-check"></i>
+                <a href="{{ route('setting.motifRejet.index')}}">
+                    <div class="parent-icon"><i class="lni lni-anchor"></i>
                     </div>
-                    <div class="menu-title">Roles</div>
+                    <div class="menu-title">Motif de rejet</div>
                 </a>
             </li> 
+            @endcan
         </div>
     </ul>
     <!--end navigation-->
@@ -278,3 +322,26 @@
 
 @include('prestations.components.modals.getCustomerModal')
 <!--end header -->
+
+{{-- <li>
+                <a href="{{ route('prod.index')}}">
+                    <div class="parent-icon"><i class="fadeIn animated bx bx-clipboard"></i>
+                    </div>
+                    <div class="menu-title">Mes Propositions</div>
+                </a>
+            </li> --}}
+            {{-- @can('Voir e-pret') --}}
+
+
+            {{-- <li>
+                <a href="{{ route('epret.demoSimulateur')}}">
+                    <div class="parent-icon"><i class="bx bx-dollar-circle fs-5"></i>
+                    </div>
+                    <div class="menu-title">Demo</div>
+                </a>
+            </li> --}}
+            
+            
+            {{-- @endcan
+
+            @can('Voir le rapport') --}}

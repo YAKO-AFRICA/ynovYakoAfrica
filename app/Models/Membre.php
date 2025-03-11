@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Models\Zone;
 use App\Models\Equipe;
 use App\Models\Reseau;
@@ -92,5 +93,10 @@ class Membre extends Model
     public function membreContrat()
     {
         return $this->hasMany(MembreContrat::class, 'codemembre', 'idmembre');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'idmembre', 'idmembre');
     }
 }

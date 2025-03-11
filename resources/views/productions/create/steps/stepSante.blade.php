@@ -1060,7 +1060,7 @@
 
                                     <div class="row">
 
-                                        <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
+                        class='bx bx-left-arrow-alt'></i>Precedent</button>
 
                                             <label for="" class="form-label">Hypertension artérielle</label>
 

@@ -42,7 +42,7 @@ class DocumentController extends Controller
             $imageName = $idContrat . '-' . now()->timestamp . '.' . $file->getClientOriginalExtension();
 
             // $destinationPath = public_path('documents/files');
-            $destinationPath = base_path('../public_html/testenovapi/public/uploads/');
+            $destinationPath = base_path(env('UPLOADS_PATH'));
 
             $file->move($destinationPath, $imageName);
             $filePath = '../public_html/testenovapi/public/uploads/' . $imageName;
@@ -89,7 +89,7 @@ class DocumentController extends Controller
             $imageName = $idPret . '-' . now()->timestamp . '.' . $file->getClientOriginalExtension();
 
             // $destinationPath = public_path('documents/files');
-            $destinationPath = base_path('../public_html/testenovapi/public/uploads/');
+            $destinationPath = base_path(env('UPLOADS_PATH'));
             $file->move($destinationPath, $imageName);
             $filePath = '../public_html/testenovapi/public/uploads/' . $imageName;
 
