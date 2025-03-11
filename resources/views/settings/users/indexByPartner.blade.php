@@ -9,8 +9,9 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Settings</li>
-                    <li class="breadcrumb-item active" aria-current="page">Utilisateurs</li>
+                    <li class="breadcrumb-item " aria-current="page">Settings</li>
+                    <li class="breadcrumb-item " aria-current="page"><a href="{{ route('setting.user.index') }}">Utilisateurs</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ $codepartenaire }}</li>
                 </ol>
             </nav>
         </div>
@@ -24,46 +25,14 @@
   
     <div class="card">
         <div class="card-body">
-            <div class="row">
-                @foreach ($membres as $codepartenaire => $membresParPartenaire)
-                    <div class="col-sm-12 col-md-4 mb-3">
-                        <a href="{{ route('setting.user.indexByPartenaire', $codepartenaire) }}">
-                            <div class="card partenaire-card">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">Partenaire : {{ $codepartenaire  }}</h5>
-                                    <p class="card-text">Nombre de membres : <strong>{{ $membresParPartenaire->count() }}</strong></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                @endforeach
-            </div>
-
-            <style>
-                .partenaire-card {
-                    border-radius: 10px;
-                    overflow: hidden;
-                    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                    background: linear-gradient(90deg, #f5bd08, #107722);
-                    color: white;
-                }
-
-                .partenaire-card:hover {
-                    transform: scale(1.05);
-                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                }
-
-            </style>
             
 
-            {{-- <div class="d-lg-flex align-items-center mb-4 gap-3">
+            <div class="d-lg-flex align-items-center mb-4 gap-3">
                 <div class="position-relative">
                 </div>
-              <div class="ms-auto"><a href="javascript:;" class="btn btn-primary radius-30 mt-2 mt-lg-0" data-bs-toggle="modal" data-bs-target="#addUsers"><i class="bx bxs-plus-square"></i>Ajouter un utilisateur</a></div>
+              {{-- <div class="ms-auto"><a href="javascript:;" class="btn btn-primary radius-30 mt-2 mt-lg-0" data-bs-toggle="modal" data-bs-target="#addUsers"><i class="bx bxs-plus-square"></i>Ajouter un utilisateur</a></div> --}}
             </div>
             <div class="table-responsive">
-
                 @php
                     // Colonnes par défaut
                     $defaultColumns = ['#', 'Nom complet', 'Email', 'Code', 'Type'];
@@ -145,7 +114,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($membres as $item)
+                        @forelse ($membresbypartenaire as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->nom ?? "" }} {{ $item->prenom ?? "" }}</td>
@@ -218,7 +187,7 @@
                     </div>
                 </div>
             
-            </div> --}}
+            </div>
         </div>
     </div>
     @include('settings.users.addModal')

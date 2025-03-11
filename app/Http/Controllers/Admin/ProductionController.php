@@ -157,8 +157,14 @@ class ProductionController extends Controller
 
         $codeProduits = $productByReseau->pluck('CodeProduit')->toArray();
 
+        $produitLLv = [
+            'PFA_IND',
+            'YKE_2018',
+            'CADENCE'
+        ];
+
         if (Auth::user()->membre->codepartenaire === "LLV") {
-            $products = Product::all();
+            $products = Product::whereIn('CodeProduit', $produitLLv)->get();
         } else {
             $products = Product::whereIn('CodeProduit', $codeProduits)->get();
         }

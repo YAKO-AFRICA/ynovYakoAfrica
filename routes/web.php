@@ -177,7 +177,8 @@ Route::prefix('settings')->name('setting.')->group(function(){
         Route::post('/destroy-equipe/{id}', [EquipeController::class, 'destroy'])->name('destroy.equipe');
 
         // utilisateur
-        Route::get('/index-users', [UserController::class, 'index'])->name('user.index');
+        Route::get('/index-users', [UserController::class, 'index'])->name('user.index'); // regroupe par partenaire
+        Route::get('/index-users-by-partenaire/{id}', [UserController::class, 'indexByPartenaire'])->name('user.indexByPartenaire'); // affichage des users par partenaire
         Route::post('/store-users', [UserController::class, 'store'])->name('user.store');
         Route::post('/update-users/{id}', [UserController::class, 'update'])->name('user.update');
         Route::post('/destroy-users/{id}', [UserController::class, 'destroy'])->name('destroy.user');

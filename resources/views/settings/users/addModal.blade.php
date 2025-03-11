@@ -26,7 +26,7 @@
             }
 
             .step-indicator.active {
-                background: #007bff;
+                background: #076633;
                 color: #fff;
                 font-weight: bold;
             }
@@ -51,7 +51,7 @@
                     </div>
 
                     <div id="step-1" class="step">
-                        <fieldset class="border p-3">
+                        <fieldset class="border p-3" style="width: 100%;">
 
                             <legend class="float-none w-auto px-2"><small><h5 class="mb-4">Étape 1 : Reseau</h5></small></legend>
                         
@@ -59,48 +59,50 @@
                                 <label for="codeagent" class="form-label">Code Agent <span class="text-danger">*</span></label>
                                 <input type="text" name="codeagent" id="codeagent" class="form-control" required>
                             </div>
-                            <div class="mb-3">
-                                <label for="codereseau" class="form-label">Réseau de commercialisation</label>
-                                <select name="codereseau" id="codereseau" class="form-select">
-                                    <option value="">-- Choisir une option --</option>
-                                    @foreach ($reseaux as $item)
-                                        <option class="form-control" value="{{ $item->id }}">{{ $item->libelle }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="codezone" class="form-label">Zone/Departement</label>
-                                <select name="codezone" id="codezone" class="form-select" id="">
-                                    <option value="">-- Choisir une zone --</option>
-                                    @foreach ($zones as $zone)
-                                        <option class="form-control" value="{{ $zone->id }}">{{ $zone->libellezone }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="codeequipe" class="form-label">Equipe/Agence</label>
-                                <select name="codeequipe" id="codeequipe" class="form-select" id="">
-                                    <option value="">-- Choisir une equipe --</option>
-                                    @foreach ($equipes as $equipe)
-                                        <option class="form-control" value="{{ $equipe->id }}">{{ $equipe->libelleequipe }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="codePart" class="form-label">Partenaire</label>
-                                <select name="codePart" id="codePart" class="form-select" id="">
-                                    <option value="">-- Choisir une partenaire --</option>
-                                    @foreach ($partners as $item)
-                                        <option class="form-control" value="{{ $item->code }}">{{ $item->designation }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="row">
+                                <div class="mb-3 col-sm-12 col-md-6">
+                                    <label for="codereseau" class="form-label">Réseau de commercialisation</label>
+                                    <select name="codereseau" id="codereseau" class="form-select">
+                                        <option value="">-- Choisir une option --</option>
+                                        @foreach ($reseaux as $item)
+                                            <option class="form-control" value="{{ $item->id }}">{{ $item->libelle }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-sm-12 col-md-6">
+                                    <label for="codezone" class="form-label">Zone/Departement</label>
+                                    <select name="codezone" id="codezone" class="form-select" id="">
+                                        <option value="">-- Choisir une zone --</option>
+                                        @foreach ($zones as $zone)
+                                            <option class="form-control" value="{{ $zone->id }}">{{ $zone->libellezone }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-sm-12 col-md-6">
+                                    <label for="codeequipe" class="form-label">Equipe/Agence</label>
+                                    <select name="codeequipe" id="codeequipe" class="form-select" id="">
+                                        <option value="">-- Choisir une equipe --</option>
+                                        @foreach ($equipes as $equipe)
+                                            <option class="form-control" value="{{ $equipe->id }}">{{ $equipe->libelleequipe }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-sm-12 col-md-6">
+                                    <label for="codePart" class="form-label">Partenaire</label>
+                                    <select name="codePart" id="codePart" class="form-select" id="">
+                                        <option value="">-- Choisir une partenaire --</option>
+                                        @foreach ($partners as $item)
+                                            <option class="form-control" value="{{ $item->code }}">{{ $item->designation }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
 
                         </fieldset>
                     </div>
 
                     <div id="step-2" class="step d-none">
-                        <fieldset class="border p-3">
+                        <fieldset class="border p-3" style="width: 100%;">
 
                             <legend class="float-none w-auto px-2"><small><h5 class="mb-4">Étape 2 : Informations personnelles</h5></small></legend>
                             
@@ -149,7 +151,7 @@
                     </div>
 
                     <div id="step-3" class="step d-none">
-                        <fieldset class="border p-3">
+                        <fieldset class="border p-3" style="width: 100%;">
 
                             <legend class="float-none w-auto px-2"><small><h5 class="mb-4">Étape 3 : Comptes</h5></small></legend>
                             <div class="mb-3">
@@ -169,6 +171,17 @@
                                             <option class="form-option"  value="CONSEILLER">CONSEILLER</option>
                                         </select>
 
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 form-group">
+                                        <label for="role_id" class="form-label">Role <span class="text-danger">*</span></label>
+                                        <select name="role_id" id="" class="form-control" required>
+                                            <option value="">-- Choisir une option --</option>
+                                            @foreach ($roles as $role)
+                                                <option value="{{ $role->id }}">{{ $role->name ?? "" }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -192,7 +205,7 @@
                         </fieldset>
                     </div>
                     <div id="step-4" class="step d-none">
-                        <fieldset class="border p-3">
+                        <fieldset class="border p-3" style="width: 100%;">
 
                             <legend class="float-none w-auto px-2"><small><h5 class="mb-4">Étape 4 : Contacts</h5></small></legend>
                             <div class="mb-3">

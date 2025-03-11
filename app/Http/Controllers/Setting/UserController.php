@@ -25,7 +25,14 @@ class UserController extends Controller
     public function index()
     {
 
-        $membres = Membre::orderby('idmembre', 'desc')->where('typ_membre','!=','3')->get();
+        // $membres = Membre::orderby('idmembre', 'desc')->where('typ_membre','!=','3')->get();
+
+        $membres = Membre::orderby('idmembre', 'desc')
+        ->where('typ_membre', '!=', '3')
+        ->get()
+        ->groupBy('codepartenaire');
+
+
         $reseaux = Reseau::all();
         $zones = Zone::all();
         $equipes = Equipe::all();
@@ -35,6 +42,21 @@ class UserController extends Controller
         return view('settings.users.index', compact('membres', 'reseaux', 'zones', 'equipes', 'partners', 'roles'));
     }
 
+    public function indexByPartenaire($id)
+    {
+        $membresbypartenaire = Membre::orderby('idmembre', 'desc')
+        ->where('codepartenaire', $id)->get();
+
+
+        $reseaux = Reseau::all();
+        $zones = Zone::all();
+        $equipes = Equipe::all();
+        $partners = Partner::all();
+        $roles = Role::all();
+        $codepartenaire = $id;
+
+        return view('settings.users.indexByPartner', compact('membresbypartenaire', 'reseaux', 'zones', 'equipes', 'partners', 'roles', 'codepartenaire'));
+    }
     public function updateColumns(Request $request)
     {
         // Sauvegarde des colonnes dans la session
@@ -83,7 +105,7 @@ class UserController extends Controller
                 'datenaissance' => $request->datenaissance,
                 'profession' => $request->profession,
                 'login' => $request->login,
-                'role' => $request->role,
+                // 'role' => $request->role,
                 'pass' => $request->pass,
                 'email' => $request->email,
                 'cel' => $request->cel,
@@ -95,10 +117,16 @@ class UserController extends Controller
                     'idmembre' => $id,
                     'email' => $request->email,
                     'login' => $request->login,
+                    'id_role' => $request->role_id,
                     'password' => bcrypt($request->pass),
                     'codepartenaire' => $request->codePart,
                     'branche' => $request->codebranche
                 ]);
+
+                $role = Role::find($request->role_id);
+                $user->assignRole($role);
+
+                $user->syncRoles([$role->id]);
 
                 DB::commit();
                 
@@ -162,50 +190,32 @@ class UserController extends Controller
 
         DB::beginTransaction();
         try {
+            Log::info($id);
 
             $userAssign = User::where('idmembre', $id)->first();
-            $membre = Membre::where('idmembre', $id)->update([
-                // 'codeagent' => $request->codeagent,
-                // 'typ_membre' => 2,
-                // 'codereseau' => $request->codereseau,
-                // 'codezone' => $request->codezone,
-                // 'codepartenaire' => $request->codePart,
-                // 'codeequipe' => $request->codeequipe,
-                'sexe' => $request->sexe,
-                'nom' => $request->nom,
-                'prenom' => $request->prenom,
-                'datenaissance' => $request->datenaissance,
-                'profession' => $request->profession,
-                'login' => $request->login,
-                // 'roles' => $request->role,
-                'email' => $request->email,
-                'cel' => $request->cel,
-                'tel' => $request->tel,
-            ]);
 
-            Log::info($membre);
+            Log::info($userAssign);
 
-            if($membre){
+            if($id){
                 $user = User::where('idmembre', $id)->update([
                     'email' => $request->email,
                     'login' => $request->login,
                     'id_role' => $request->role_id,
-                    // 'codepartenaire' => $request->codePart,
-                    // 'branche' => $request->codebranche
                 ]);
-
-                Log::info($user);
 
                 $role = Role::find($request->role_id);
                 $userAssign->assignRole($role);
 
                 $userAssign->syncRoles([$role->id]);
+
+                DB::commit();
                 
             }
 
+
             DB::commit();
 
-            if($membre){
+            if($id){
                 $dataResponse =[
                     'type'=>'success',
                     'urlback'=>"back",
