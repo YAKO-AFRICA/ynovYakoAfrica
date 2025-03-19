@@ -18,6 +18,7 @@ class AssureGarantie extends Model
         'idproduitparantie',
         'monlibelle',
         'prime',
+        'primetotal',
         'primeaccesoire',
         'type',
         'capitalgarantie',

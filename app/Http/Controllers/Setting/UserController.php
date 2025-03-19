@@ -8,6 +8,7 @@ use App\Models\Equipe;
 use App\Models\Membre;
 use App\Models\Reseau;
 use App\Models\Partner;
+use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
@@ -26,6 +27,7 @@ class UserController extends Controller
     {
 
         // $membres = Membre::orderby('idmembre', 'desc')->where('typ_membre','!=','3')->get();
+        
 
         $membres = Membre::orderby('idmembre', 'desc')
         ->where('typ_membre', '!=', '3')
@@ -38,13 +40,14 @@ class UserController extends Controller
         $equipes = Equipe::all();
         $partners = Partner::all();
         $roles = Role::all();
+        $profiles = Profile::all();
         
-        return view('settings.users.index', compact('membres', 'reseaux', 'zones', 'equipes', 'partners', 'roles'));
+        return view('settings.users.index', compact('membres', 'reseaux', 'zones', 'equipes', 'partners', 'roles', 'profiles'));
     }
 
     public function indexByPartenaire($id)
     {
-        $membresbypartenaire = Membre::orderby('idmembre', 'desc')
+        $membresbypartenaire = Membre::orderby('idmembre', 'desc')->with('zone', 'equipe', 'reseau')
         ->where('codepartenaire', $id)->get();
 
 
@@ -53,9 +56,10 @@ class UserController extends Controller
         $equipes = Equipe::all();
         $partners = Partner::all();
         $roles = Role::all();
+        $profiles = Profile::all();
         $codepartenaire = $id;
 
-        return view('settings.users.indexByPartner', compact('membresbypartenaire', 'reseaux', 'zones', 'equipes', 'partners', 'roles', 'codepartenaire'));
+        return view('settings.users.indexByPartner', compact('membresbypartenaire', 'reseaux', 'zones', 'equipes', 'partners', 'roles', 'codepartenaire', 'profiles'));
     }
     public function updateColumns(Request $request)
     {
@@ -86,6 +90,14 @@ class UserController extends Controller
 
         // \dd($request->all());
 
+        if ($request->codePart == "092") {
+            $partenaire = "BNI";
+            $type = null;
+        } else {
+            $partenaire = $request->codePart;
+            $type = 2;
+        }
+
         $id = Membre::max('idmembre') + 2;
 
 
@@ -94,18 +106,22 @@ class UserController extends Controller
             $membre = Membre::create([
                 'idmembre' => $id,
                 'codeagent' => $request->codeagent,
-                'typ_membre' => 2,
+                'typ_membre' => $type,
                 'codereseau' => $request->codereseau,
                 'codepartenaire' => $request->codePart,
+                'partenaire' => $partenaire,
                 'codezone' => $request->codezone,
-                'codeequipe' => $request->codeequipe,
+                'codeequipe' => $request->codeequipe, // id agence // equipe
                 'sexe' => $request->sexe,
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
                 'datenaissance' => $request->datenaissance,
                 'profession' => $request->profession,
+                'agence' => $request->equipeCode,  // equipe es une aagence // code
+                'branche' => $request->branche,
                 'login' => $request->login,
-                // 'role' => $request->role,
+                'role' => $request->profile,
+                'coderole' => $request->profile_id,
                 'pass' => $request->pass,
                 'email' => $request->email,
                 'cel' => $request->cel,
@@ -120,7 +136,7 @@ class UserController extends Controller
                     'id_role' => $request->role_id,
                     'password' => bcrypt($request->pass),
                     'codepartenaire' => $request->codePart,
-                    'branche' => $request->codebranche
+                    'branche' => $request->branche
                 ]);
 
                 $role = Role::find($request->role_id);
@@ -188,19 +204,55 @@ class UserController extends Controller
 
         // \dd($request->all());
 
+        // if ($request->codePart == "092") {
+        //     $partenaire = "BNI";
+        //     $type = null;
+        // } else {
+        //     $partenaire = $request->codePart;
+        //     $type = 2;
+        // }
+
+        // $id = Membre::max('idmembre') + 2;
+
+
         DB::beginTransaction();
         try {
-            Log::info($id);
+            $membre = Membre::where('idmembre', $id)->update([
+                // 'idmembre' => $id,
+                // 'typ_membre' => $type,
+                'codeagent' => $request->codeagent,
+                'codereseau' => $request->codereseau,
+                // 'codepartenaire' => $request->codePart,
+                // 'partenaire' => $partenaire,
+                'codezone' => $request->codezone,
+                'codeequipe' => $request->codeequipe, // id agence // equipe
+                'sexe' => $request->sexe,
+                'nom' => $request->nom,
+                'prenom' => $request->prenom,
+                'datenaissance' => $request->datenaissance,
+                'profession' => $request->profession,
+                'agence' => $request->equipeCode,  // equipe es une aagence // code
+                'branche' => $request->branche,
+                'login' => $request->login,
+                'role' => $request->profile,
+                'coderole' => $request->profile_id,
+                // 'pass' => $request->pass,
+                'email' => $request->email,
+                'cel' => $request->cel,
+                'tel' => $request->tel,
+            ]);
 
-            $userAssign = User::where('idmembre', $id)->first();
+            if($membre){
 
-            Log::info($userAssign);
-
-            if($id){
-                $user = User::where('idmembre', $id)->update([
+                $userAssign = User::where('idmembre', $id)->first();
+                $userAssign->update([
+                    // 'idmembre' => $id,
                     'email' => $request->email,
                     'login' => $request->login,
                     'id_role' => $request->role_id,
+                    // 'password' => bcrypt($request->pass),
+                    // 'codepartenaire' => $request->codePart,
+                    'branche' => $request->branche
                 ]);
 
                 $role = Role::find($request->role_id);
@@ -212,14 +264,13 @@ class UserController extends Controller
                 
             }
 
-
             DB::commit();
 
-            if($id){
+            if($membre){
                 $dataResponse =[
                     'type'=>'success',
                     'urlback'=>"back",
-                    'message'=>"Modifié avec succes!",
+                    'message'=>"Enregistré avec succes!",
                     'code'=>200,
                 ];
                 DB::commit();
@@ -227,7 +278,7 @@ class UserController extends Controller
                 $dataResponse =[
                     'type'=>'error',
                     'urlback'=>'',
-                    'message'=>"Erreur de modification !",
+                    'message'=>"Erreur d'enregistrement !",
                     'code'=>500,
                 ];
                 DB::rollBack();

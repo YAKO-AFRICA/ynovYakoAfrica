@@ -86,6 +86,14 @@
                                         <input class="form-check-input naturepieceAssur" type="radio" name="naturepieceAssur" id="PassportAssur" value="Passport">
                                         <label class="form-check-label" for="PassportAssur">Passport</label>
                                     </div> 
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="naturepieceAssur" id="carteConsulaire" value="Carte Consulaire" autocomplete="on" >
+                                        <label class="form-check-label" for="carteConsulaire">Carte Consulaire</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="naturepieceAssur" id="AutrePiece" value="Autre">
+                                        <label class="form-check-label" for="AutrePiece">Autre</label>
+                                    </div>
                                 </div>
                                 <div class="col-12 col-lg-6"> 
                                     <label for="numeropieceAssur" class="form-label">numéro de la pièce</label>
@@ -110,10 +118,12 @@
                                     <label for="lienParente" class="form-label">Lien de Parenté</label>
                                     <select class="form-select" name="lienParente" id="lienParente"
                                         aria-label="Default select example">
+
                                         <option selected value="">Sélectionner le lien de Parenté</option>
-                                        <option value="Conjoint">Conjoint</option>
-                                        <option value="Enfant">Enfant</option>
-                                        <option value="Autre">Autre</option> 
+
+                                        @foreach ($filliations as $item)
+                                            <option value="{{ $item->CodeFiliation }}">{{ $item->MonLibelle }}</option>
+                                        @endforeach
                                     </select>
                                 </div> 
                             </div>

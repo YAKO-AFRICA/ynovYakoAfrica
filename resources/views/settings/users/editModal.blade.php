@@ -1,83 +1,120 @@
 <div class="modal fade" id="EditUsers{{ $item->idmembre }}" tabindex="-1" aria-labelledby="mreModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
+        <style>
+            .steps-banner-edit {
+                position: relative;
+                border-bottom: 1px solid #ddd;
+                margin-bottom: 20px;
+            }
+
+            .step-indicators-edit {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .step-indicator-edit {
+                text-align: center;
+                flex-grow: 1;
+                font-size: 0.9rem;
+                padding: 10px;
+                background: #f9f9f9;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                margin: 0 5px;
+                color: #555;
+                transition: background 0.3s, color 0.3s;
+            }
+
+            .step-indicator-edit.active {
+                background: #076633;
+                color: #fff;
+                font-weight: bold;
+            }
+
+        </style>
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Modifié le Membre</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body{{ $item->idmembre }}">
                 <form action="{{ route('setting.user.update', $item->idmembre) }}" method="POST" class="submitForm">
                     @csrf
-                    <div>
-                        <fieldset class="border p-3">
-                            <legend class="float-none w-auto px-2"><small><h5 class="mb-4">Étape 1 : Reseau</h5></small></legend>
-                        
-                            <div class="mb-3">
-                                <label for="codeagent" class="form-label">Code Agent <span class="text-danger">*</span></label>
-                                <input type="text" name="codeagent" id="codeagent" class="form-control" value="{{ $item->codeagent }}" required readonly>
-                            </div>
-                            {{-- <div class="mb-3">
-                                <label for="codereseau" class="form-label">Réseau de commercialisation</label>
-                                <select name="codereseau" id="codereseau" class="form-select">
-                                    <option value="{{ $item->codereseau }}">{{ $item->reseau->libelle ?? '' }}</option>
-                                    @foreach ($reseaux as $reseau)
-                                        @if ($reseau->codereseau != $item->id)
-                                            <option class="form-control" value="{{ $reseau->id }}">{{ $reseau->libelle }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div> --}}
-                            {{-- <div class="mb-3">
-                                <label for="codezone" class="form-label">Zone/Departement</label>
-                                <select name="codezone" id="codezone" class="form-select" id="">
-                                    <option value="{{ $item->codezone }}">{{ $item->zone->libellezone ?? '' }}</option>
-                                    @foreach ($zones as $zone)
-                                        @if ($item->codezone != $zone->id)
-                                            
-                                            <option class="form-control" value="{{ $zone->id }}">{{ $zone->libellezone ?? '' }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="codeequipe" class="form-label">Equipe/Agence</label>
-                                <select name="codeequipe" id="codeequipe" class="form-select" id="">
-                                    <option value="{{ $item->codeequipe }}">{{ $item->equipe->libelleequipe ?? '' }}</option>
-                                    @foreach ($equipes as $equipe)
-                                        @if ($item->codeequipe != $equipe->id)
-                                            <option class="form-control" value="{{ $equipe->id }}">{{ $equipe->libelleequipe ?? '' }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div> --}}
+                    <div class="modal-body">
 
-                            {{-- <div class="mb-3">
-                                <label for="codePart" class="form-label">Partenaire</label>
-                                <select name="codePart" id="codePart" class="form-select" id="">
-                                    <option value="{{ $item->codepartenaire }}">{{ $item->partner->designation ?? '' }}</option>
-                                    @foreach ($partners as $partner)
-                                        @if ($item->codepartenaire != $partner->code)
-                                            <option class="form-control" value="{{ $partner->code }}">{{ $partner->designation ?? '' }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div> --}}
-
-                        </fieldset>
+                        <div class="steps-banner-edit mb-4">
+                            <ul class="step-indicators-edit d-flex justify-content-between list-unstyled p-0">
+                                <li id="step-edit-1" class="step-indicator-edit active">1. Réseau</li>
+                                <li id="step-edit-2" class="step-indicator-edit">2. Informations</li>
+                                <li id="step-edit-3" class="step-indicator-edit">3. Comptes</li>
+                                <li id="step-edit-4" class="step-indicator-edit">4. Contacts</li>
+                            </ul>
+                        </div>
     
-                        <div>
-                            <fieldset class="border p-3">
+                        <div id="step-group-1" class="step-edit">
+                            <fieldset class="border p-3" style="width: 100%;">
+    
+                                <legend class="float-none w-auto px-2"><small><h5 class="mb-4">Étape 1 : Reseau</h5></small></legend>
+                            
+                                <div class="mb-3">
+                                    <label for="codeagent" class="form-label">Code Agent <span class="text-danger">*</span></label>
+                                    <input type="text" name="codeagent" id="codeagent" class="form-control" value="{{ $item->codeagent }}" readonly required>
+                                </div>
+                                <div class="row">
+                                    <div class="mb-3 col-sm-12 col-md-6">
+                                        <label for="codereseau" class="form-label">Réseau de commercialisation</label>
+                                        <select name="codereseau" id="codereseau" class="form-select">
+                                            <option value="{{ $item->codereseau }}">{{ $item->reseau->libelle ?? '' }}</option>
+                                            @foreach ($reseaux as $reseau)
+                                                @if ($reseau->id != $item->codereseau)
+                                                    <option class="form-control" value="{{ $reseau->id }}">{{ $reseau->libelle }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="mb-3 col-sm-12 col-md-6">
+                                        <label for="codezone" class="form-label">Zone/Departement</label>
+                                        <select name="codezone" id="codezone" class="form-select" id="">
+                                            <option value="{{ $item->codezone }}">{{ $item->zone->libellezone ?? '' }}</option>
+                                            @foreach ($zones as $zone)
+                                                @if ($zone->id != $item->codezone)
+                                                    <option class="form-control" value="{{ $zone->id }}">{{ $zone->libellezone }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="mb-3 col-sm-12 col-md-6">
+                                        <label for="codeequipe" class="form-label">Equipe/Agence</label>
+                                        <select name="codeequipe" id="codeequipe" class="form-select">
+                                            <option value="{{ $item->codeequipe }}">{{ $item->equipe->libelleequipe ?? '' }}</option>
+                                            @foreach ($equipes as $equipe)
+                                                <option class="form-control" data-equipe-code="{{ $equipe->codeequipe }}" value="{{ $equipe->id }}">{{ $equipe->libelleequipe }}</option>
+                                            @endforeach
+                                        </select>
+                                        <input type="hidden" value="{{ $item->equipe->codeequipe ?? '' }}" name="equipeCode" id="equipeCode" class="form-control">
+                                    </div>
+                                    <div class="mb-3 col-sm-12 col-md-6">
+                                        <label for="codePart" class="form-label">Partenaire</label>
+                                        <input type="text" name="codePart" class="form-control" value="{{ $item->partenaire ?? '' }}" readonly disabled>
+                                    </div>
+                                </div>
+    
+                            </fieldset>
+                        </div>
+    
+                        <div id="step-group-2" class="step-edit d-none">
+                            <fieldset class="border p-3" style="width: 100%;">
     
                                 <legend class="float-none w-auto px-2"><small><h5 class="mb-4">Étape 2 : Informations personnelles</h5></small></legend>
                                 
                                 <div class="mb-3">
                                     <label class="form-label d-block">Sexe</label>
                                     <div class="form-check form-check-inline">
-                                        <input type="radio" id="sexeF" @checked($item->sexe == 'F') name="sexe" value="F" class="form-check-input">
+                                        <input type="radio" id="sexeF" name="sexe" value="F" class="form-check-input" {{ $item->sexe == 'F' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="sexeF">Féminin</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input type="radio" id="sexeM" @checked($item->sexe == 'M') name="sexe" value="M" class="form-check-input">
+                                        <input type="radio" id="sexeM" name="sexe" value="M" class="form-check-input" {{ $item->sexe == 'M' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="sexeM">Masculin</label>
                                     </div>
                                 </div>
@@ -86,13 +123,13 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="nom" class="form-label">Nom</label>
-                                            <input type="text" name="nom" id="nom" class="form-control" value="{{ $item->nom }}">
+                                            <input type="text" name="nom" id="nom" class="form-control" value="{{ $item->nom ?? '' }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="prenom" class="form-label">Prenoms</label>
-                                            <input type="text" name="prenom" id="prenom" class="form-control" value="{{ $item->prenom }}">
+                                            <input type="text" name="prenom" id="prenom" class="form-control" value="{{ $item->prenom ?? '' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -100,61 +137,69 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="datenaissance" class="form-label">Date de naissance</label>
-                                            <input type="date" name="datenaissance" id="datenaissance" class="form-control" value="{{ date('Y-m-d', strtotime($item->datenaissance)) }}">
+                                            <input type="date" name="datenaissance" id="datenaissance" class="form-control" value="{{ $item->datenaissance ?? '' }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="profession" class="form-label">Profession</label>
-                                            <input type="text" name="profession" id="profession" class="form-control" value="{{ $item->profession }}">
+                                            <input type="text" name="profession" id="profession" class="form-control" value="{{ $item->profession ?? '' }}">
                                         </div>
                                     </div>
                                 </div>
     
                             </fieldset>
                         </div>
-                        <div>
-                            <fieldset class="border p-3">
+    
+                        <div id="step-group-3" class="step-edit d-none">
+                            <fieldset class="border p-3" style="width: 100%;">
     
                                 <legend class="float-none w-auto px-2"><small><h5 class="mb-4">Étape 3 : Comptes</h5></small></legend>
                                 <div class="mb-3">
                                     <label for="login" class="form-label">Nom d'utilisateur (Login) <span class="text-danger">*</span></label>
-                                    <input type="text" name="login" id="login" class="form-control" required value="{{ $item->login }}">
+                                    <input type="text" name="login" id="login" class="form-control" required value="{{ $item->login ?? '' }}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="branche" class="form-label">Branche <span class="text-danger">*</span></label>
+                                    <select name="branche" class="form-select" id="">
+                                        <option value="{{ $item->branche ?? '' }}">{{ $item->branche ?? '' }}</option>
+                                        <option value="BANKASS">BANKASS</option>
+                                        <option value="COURTAGE">COURTAGE</option>
+                                        <option value="COM">COM</option>
+                                    </select>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="mb-3 form-group">
-                                            <label for="role" class="form-label">Profile <span class="text-danger">*</span></label>
-                                            <select name="role" id="" class="form-control" required>
-                                                <option value="{{ $item->role }}">{{ $item->role }}</option>
-                                                <option class="form-option"  value="ADMINISTRATEUR">ADMINISTRATEUR</option>
-                                                <option class="form-option"  value="SUPERVISEUR">SUPERVISEUR</option>
-                                                <option class="form-option"  value="RESPONSABLE">RESPONSABLE</option>
-                                                <option class="form-option"  value="MANAGER">MANAGER</option>
-                                                <option class="form-option"  value="CONSEILLER">CONSEILLER</option>
+                                            <label for="profile" class="form-label">Profile <span class="text-danger">*</span></label>
+                                            <select name="profile" id="profileSelect" class="form-control" required>
+                                                <option value="{{ $item->role ?? '' }}">{{ $item->role ?? '' }}</option>
+                                                @foreach ($profiles as $profile)
+                                                    <option class="form-option" data-id="{{ $profile->id }}" value="{{ $profile->role }}">{{ $profile->role }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+    
+                                        <input type="hidden" name="profile_id" id="profile_id" class="form-control" required value="{{ $item->coderole ?? '' }}" >
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3 form-group">
+                                            <label for="role_id" class="form-label">Role <span class="text-danger">*</span></label>
+                                            <select name="role_id" id="" class="form-control" required>
+                                                <option value="{{ $item->id_role ?? '' }}">{{ $item->role->name ?? "" }}</option>
+                                                @foreach ($roles as $role)
+                                                    <option value="{{ $role->id }}">{{ $role->name ?? "" }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="mb-3 form-group">
-                                                <label for="role" class="form-label">Role <span class="text-danger">*</span></label>
-                                                <select name="role_id" id="" class="form-control" required>
-                                                    {{-- <option value="{{ $item->user->id_role ?? ""}}">{{ $item->user->id_role?? "" }}</option> --}}
-                                                    @foreach ($roles as $role)
-                                                        <option class="form-option"  value="{{ $role->id }}">{{ $role->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
                                 
                                 {{-- <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="pass" class="form-label">Mot de passe <span class="text-danger">*</span></label>
-                                            <input type="password" name="pass" id="pass" class="form-control" value="{{ $item->pass }}">
+                                            <input type="password" name="pass" id="pass" class="form-control" >
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -165,27 +210,28 @@
                                     </div>
                                 </div> --}}
                                 
+    
                             </fieldset>
                         </div>
-                        <div>
-                            <fieldset class="border p-3">
+                        <div id="step-group-4" class="step-edit d-none">
+                            <fieldset class="border p-3" style="width: 100%;">
     
                                 <legend class="float-none w-auto px-2"><small><h5 class="mb-4">Étape 4 : Contacts</h5></small></legend>
                                 <div class="mb-3">
                                     <label for="login" class="form-label">Email  <span class="text-danger">*</span></label>
-                                    <input type="email" name="email" id="email" class="form-control" required value="{{ $item->email }}">
+                                    <input type="email" name="email" id="email" class="form-control" required value="{{ $item->email ?? '' }}">
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="cel" class="form-label">Mobile 1</label>
-                                            <input type="text" name="cel" id="cel" class="form-control" value="{{ $item->cel }}">
+                                            <input type="text" name="cel" id="cel" class="form-control" value="{{ $item->cel ?? '' }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="tel" class="form-label">Mobile 2</label>
-                                            <input type="tel" name="tel" id="tel" class="form-control" value="{{ $item->tel }}">
+                                            <input type="tel" name="tel" id="tel" class="form-control" value="{{ $item->tel ?? '' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -194,13 +240,51 @@
                             </fieldset>
                         </div>
                     </div>
-    
+
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary">Précédent</button>
-                        <button type="submit" class="btn btn-success ">Terminer</button>
+                        <button type="button" class="btn btn-secondary prev-edit-step d-none">Précédent</button>
+                        <button type="button" class="btn btn-primary next-edit-step">Suivant</button>
+                        <button type="submit" class="btn btn-success d-none finish-edit-step">Terminer</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+        let currentStepEdit = 1;
+
+        const showStepEdit = (step) => {
+            // Show the correct step
+            document.querySelectorAll('.step-edit').forEach(el => el.classList.add('d-none'));
+            document.querySelector(`#step-group-${step}`).classList.remove('d-none');
+            
+            // Update buttons
+            document.querySelector('.prev-edit-step').classList.toggle('d-none', step === 1);
+            document.querySelector('.next-edit-step').classList.toggle('d-none', step === 4);
+            document.querySelector('.finish-edit-step').classList.toggle('d-none', step !== 4);
+
+            // Update the step indicator
+            document.querySelectorAll('.step-indicator-edit').forEach((indicator, index) => {
+                indicator.classList.toggle('active', index + 1 === step);
+            });
+        };
+
+    document.querySelector('.next-edit-step').addEventListener('click', () => {
+        if (currentStepEdit < 4) {
+            currentStepEdit++;
+            showStepEdit(currentStepEdit);
+        }
+    });
+
+    document.querySelector('.prev-edit-step').addEventListener('click', () => {
+        if (currentStepEdit > 1) {
+            currentStepEdit--;
+            showStepEdit(currentStepEdit);
+        }
+    });
+
+    // Initialize with the first step
+    showStepEdit(currentStepEdit);
+    </script>
 </div>

@@ -76,12 +76,20 @@
                 <label class="form-check-label" for="CNI">CNI</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="naturepiece" id="Atestation" value="AT" autocomplete="on" required>
+                <input class="form-check-input" type="radio" name="naturepiece" id="Atestation" value="AT" autocomplete="on" >
                 <label class="form-check-label" for="Atestation">Atestation</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="naturepiece" id="Passport" value="Passport" autocomplete="on" required>
+                <input class="form-check-input" type="radio" name="naturepiece" id="Passport" value="Passport" autocomplete="on" >
                 <label class="form-check-label" for="Passport">Passport</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="naturepiece" id="carteConsulaire" value="Carte Consulaire" autocomplete="on" >
+                <label class="form-check-label" for="carteConsulaire">Carte Consulaire</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="naturepiece" id="AutrePiece" value="Autre">
+                <label class="form-check-label" for="AutrePiece">Autre</label>
             </div>
 
             @error('naturepiece')
@@ -135,7 +143,7 @@
     </div>
     <div class="row g-3 mb-3">
         <div class="col-12">
-            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+            <label for="email" class="form-label">Email </label>
             <input type="email" name="email" class="form-control" id="email" placeholder="Email" autocomplete="on" >
 
             @error('email')
@@ -149,9 +157,8 @@
         <div class="col-12 col-lg-4">
             <label class="form-label">Mobile <span class="text-danger">*</span></label><br>
             <div class="input-group mb-3">
-                <input type="text" name="mobile" class="form-control" autocomplete="on">
+                <input type="number" name="mobile" class="form-control" autocomplete="on" required oninput="limitLength(this, 10)">
             </div>
-
             @error('mobile')
                 <span class="text-danger"> Veuillez remplir votre numéro de mobile </span>
             @enderror
@@ -161,14 +168,14 @@
         <div class="col-12 col-lg-4">
             <label class="form-label">Mobile 2</label><br>
             <div class="input-group mb-3">
-                <input type="text" name="mobile1" class="form-control" autocomplete="on">
+                <input type="number" name="mobile1" class="form-control" autocomplete="on" maxlength="10" oninput="limitLength(this, 10)">
             </div>
         </div>
         <div class="col-12 col-lg-4">
 
             <label class="form-label">Telephone</label><br>
             <div class="input-group mb-3">
-                <input type="text" name="telephone" class="form-control" autocomplete="on">
+                <input type="number" name="telephone" class="form-control" autocomplete="on" maxlength="10" oninput="limitLength(this, 10)">
             </div>
             </select>
         </div>
@@ -185,7 +192,7 @@
             <div class="col-12 col-lg-4">
                 <label class="form-label">Contact <span class="text-danger">*</span></label><br>
                 <div class="input-group mb-3">
-                    <input type="text" name="contactpersonneressource" class="form-control" aria-label="Text input with select" required>
+                    <input type="number" name="contactpersonneressource" class="form-control" aria-label="Text input with select" maxlength="10" required oninput="limitLength(this, 10)">
                 </div>
             </div>
         </div>
@@ -198,7 +205,7 @@
             <div class="col-12 col-lg-4">
                 <label class="form-label">Contact</label><br>
                 <div class="input-group mb-3">
-                    <input type="text" name="contactpersonneressource2" class="form-control" aria-label="Text input with select" >
+                    <input type="number" name="contactpersonneressource2" class="form-control" aria-label="Text input with select" oninput="limitLength(this, 10)">
                 </div>
             </div>
         </div>
@@ -280,6 +287,15 @@
             });
         });
     </script>
+
+    <script>
+        function limitLength(element, maxLength) {
+            if (element.value.length > maxLength) {
+                element.value = element.value.slice(0, maxLength);
+            }
+        }
+    </script>
+
 
 
 

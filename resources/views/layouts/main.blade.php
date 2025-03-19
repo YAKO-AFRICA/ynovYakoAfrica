@@ -82,6 +82,7 @@
         {{-- js custome file --}}
         <script src="{{ asset('assets/js/custom.js')}}"></script>
         <script src="{{ asset('assets/root/simulateur/simulateur.js')}}"></script>
+        <script src="{{ asset('assets/root/simulateur/primes.js')}}"></script>
         <!-- Bootstrap JS -->
         <script src="{{ asset('assets/js/bootstrap.bundle.min.js')}}"></script>
         <!--plugins-->
@@ -110,6 +111,8 @@
 
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         {{-- <script src="{{ mix('js/app.js') }}"></script> --}}
+
+        <script type="module" src="{{ asset('api/request.js') }}"></script>
 
 
 
@@ -152,6 +155,8 @@
                 });
             });
         </script>
+
+        
 
         <script src="{{ asset('assets/js/script.js')}}"></script>
         <script src="{{ asset('assets/js/app.js')}}"></script>
@@ -236,6 +241,9 @@
             });
 
         </script>
+
+    
+
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>

@@ -4,8 +4,8 @@
         des champs obligatoire.</p>
 
     <div class="row g-3">
-        <div class="col-12 col-lg-6">
-            <div class="card" style="width: 90%">
+        <div class="col-12 col-lg-8">
+            <div class="card">
                 <div class="card-body">
                     <label for="" class="form-label">Je souhaite payer mes primes par : <span class="text-danger">*</span></label>
                     <div class="mb-3">
@@ -93,7 +93,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-lg-6">
+        <div class="col-12 col-lg-4">
 
             <div class="card mx-0">
                 <div class="card-body">
@@ -135,6 +135,7 @@
                             </label>
                         </div>
                     </div>
+                    
                     <div class="row">
                         @if ($product->CodeProduit == 'PFA_IND' || $product->CodeProduit == 'CADENCE')
                             <div class="col-12 mb-3">
@@ -267,12 +268,46 @@
                                 <label for="fraisadhesion" class="form-label">Fraie d'adhesion :</label>
                                 <input type="number" class="form-control" id="fraisadhesion" name="fraisadhesion">
                             </div> --}}
+
+                        @else
+                        <div class="col-12 mb-3">
+                            <label for="DateEffet" class="form-label">Mon contrat prendra effet le :</label>
+                            <input type="date" class="form-control" id="DateEffet" name="dateEffet">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="primepricipale" class="form-label">Je souhaite payer une prime de
+                                :</label>
+                            <input type="number" class="form-control" id="primepricipale" name="primepricipale"
+                                min="0" required>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="capital" class="form-label">Capital souscrit :</label>
+                            {{-- <input type="number" class="form-control" id="capital" name="capital"
+                                min="0"> --}}
+                                <select name="capital" id="capital" class="form-select" required>
+                                    <option value="" selected>Selectionnez le capital souscrit</option>
+                                    <option value="300000">300 000</option>
+                                    <option value="500000">500 000</option>
+                                    <option value="750000">750 000</option>
+                                    <option value="1000000">1 000 000</option>
+                                    <option value="1250000">1 250 000</option>
+                                    <option value="1500000">1 500 000</option>
+                                    <option value="2000000">2 000 000</option>
+                                </select>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="duree" class="form-label">Durée de mes cotisations :</label>
+                            <input type="number" class="form-control" id="duree" name="duree" min="0"> 
+                        </div>
+
                         @endif
 
                     </div>
                 </div>
             </div>
         </div>
+
+        <input type="hidden" id="produitCode" name="produitCode" value="{{ $product->CodeProduit ?? '' }}">
 
 
         <div class="col-12">

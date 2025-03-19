@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Zone;
 use App\Models\Equipe;
 use App\Models\Reseau;
+use App\Models\Partner;
 use App\Models\MembreContrat;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -77,13 +78,18 @@ class Membre extends Model
 
     public $timestamps = false;
 
+    public function partenaire()
+    {
+        return $this->belongsTo(Partner::class, 'codepartenaire');
+    }
+
     public function reseau()
     {
         return $this->belongsTo(Reseau::class, 'codereseau');
     }
     public function equipe()
     {
-        return $this->belongsTo(Equipe::class, 'codeequipe');
+        return $this->belongsTo(Equipe::class, 'codeequipe', 'id');
     }
 
     public function zone()

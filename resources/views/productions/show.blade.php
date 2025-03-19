@@ -211,7 +211,7 @@
                     <div class="card p-4">
                         <div class="row">
                             <!-- Colonne 1 -->
-                            <div class="col-4">
+                            <div class="col-sm-12 col-md-6 col-lg-4">
                                 <dl class="mb-4">
                                     <dt>ID du contrat</dt>
                                     <dd>{{ $contrat->id ?? '--' }}</dd>
@@ -250,7 +250,7 @@
                             </div>
                     
                             <!-- Colonne 2 -->
-                            <div class="col-4">
+                            <div class="col-sm-12 col-md-6 col-lg-4">
                                 <dl class="mb-4">
                                     <dt>Périodicité</dt>
                                     <dd>
@@ -284,7 +284,7 @@
                             </div>
                     
                             <!-- Colonne 3 -->
-                            <div class="col-4">
+                            <div class="col-sm-12 col-md-6 col-lg-4">
                                 <dl class="mb-4">
                                     <dt>Surprime</dt>
                                     <dd>{{ number_format($contrat->surprime ?? 0, 0, ',', ' ') }} FCFA</dd>

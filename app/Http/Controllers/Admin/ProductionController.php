@@ -16,6 +16,7 @@ use App\Models\Adherent;
 use App\Models\Document;
 use App\Models\TblVille;
 use App\Models\TblAgence;
+use App\Models\Filliation;
 use App\Models\Profession;
 use App\Models\TblSociete;
 use Illuminate\Support\Str;
@@ -129,23 +130,7 @@ class ProductionController extends Controller
         return view('productions.index', ['datas' => $datas, 'activeColumns' => $activeColumns, 'defaultColumns' => $defaultColumns, 'additionalColumns' => $additionalColumns]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    // public function stepProduct()
-    // {
 
-    //     $productByReseau = ReseauProduct::select('CodeProduit')
-    //         ->where('codereseau', Auth::user()->membre->codereseau)
-    //         ->get();
-
-    //     $codeProduits = $productByReseau->pluck('CodeProduit')->toArray();
-
-    //     $products = Product::whereIn('CodeProduit', $codeProduits)->get();
-
-    //     // dd($products);
-    //     return view('productions.create.steps.stepProduct', compact('products'));
-    // }
 
     public function stepProduct()
     {
@@ -206,9 +191,26 @@ class ProductionController extends Controller
         $secteurActivites =  TblSecteurActivite::select('MonLibelle')->get();
         $societes =  TblSociete::select('MonLibelle')->get();
         $agences =  TblAgence::select('NOM_LONG')->get();
+        $filliations =  Filliation::select('MonLibelle')->get();
+
+        // dd($filliations);
 
 
-        return view('productions.create.create', compact('product', 'villes', 'secteurActivites', 'professions', 'productGarantie', 'societes', 'agences'));
+        return view('productions.create.create', compact('product', 'villes', 'secteurActivites', 'professions', 'productGarantie', 'societes', 'agences','filliations'));
+    }
+
+    public function ykePrime(Request $request)
+    {
+        $ykeGar = ProduitGarantie::where(['codeproduit' => 'YKE_2018', 'branche' => 'IND'])->get();
+
+        $ykePer = $request->input('periodicite');
+        $ykeProd = "YKE_2018";
+
+        foreach ($ykeGar as $gar) {
+            $gar->prime = $request->input('prime' . $gar->id);
+        }
+
+        return response()->json($ykeGar);
     }
 
 
@@ -312,10 +314,18 @@ class ProductionController extends Controller
                 
                     foreach ($request->GarantiesOptionnelles as $idGarantie => $value) {
                         Log::info("ID de la garantie : $idGarantie - Valeur: $value");
-                
+
                         if ($value == "Oui") {
                             // Rechercher la garantie par son ID
                             $garantie = $GarantiesOptionnelles->firstWhere('id', $idGarantie);
+
+                            $codeGarantie = $garantie->codeproduitgarantie;
+                            $primeGarantie = 0;
+                            if ($codeGarantie == "SUR") {
+                                $primeGarantie = 0;
+                            }else{
+                                $primeGarantie = $request->primepricipale;
+                            }
                 
                             if ($garantie) {
                                 Log::info("Garantie sélectionnée: ", (array) $garantie);
@@ -324,8 +334,8 @@ class ProductionController extends Controller
                                     'codeproduitgarantie' => $garantie->codeproduitgarantie,
                                     'idproduitparantie' => $garantie->id,
                                     'monlibelle' => $garantie->libelle,
-                                    'prime' => $request->primepricipale,
-                                    'primetotal' => $prime,
+                                    'prime' => $primeGarantie,
+                                    'primetotal' => $primeGarantie,
                                     'primeaccesoire' => 0,
                                     'type' => "Mixte",
                                     'capitalgarantie' => $request->capital,
@@ -342,14 +352,27 @@ class ProductionController extends Controller
                     }
                 }
                 
-
                 foreach ($garantiesRequises as $garantie) {
+                    $codeGarantie = $garantie->codeproduitgarantie;
+
+                    $primeGarantie = 0;
+
+                    if ($codeGarantie == "PERF") {
+                        $primeGarantie = $request->garantiesperf;
+                    }else if ($codeGarantie == "SECU") {
+                        $primeGarantie = $request->garantiessecu;
+                    }else{
+                        $primeGarantie = $request->primepricipale;
+                    }
+
+                    Log::info("code garantie:". $primeGarantie);
+
                     AssureGarantie::create([
                         'codeproduitgarantie' => $garantie->codeproduitgarantie,
                         'idproduitparantie' => $garantie->id,
                         'monlibelle' => $garantie->libelle,
-                        'prime' => $request->primepricipale,
-                        'primetotal' => $prime,
+                        'prime' => $primeGarantie,
+                        'primetotal' => $primeGarantie,
                         'primeaccesoire' => 0,
                         'type' => "Mixte",
                         'capitalgarantie' => $request->capital,
@@ -512,8 +535,6 @@ class ProductionController extends Controller
                 'codeConseiller' => Auth::user()->membre->codeagent,
                 'nomagent' => Auth::user()->membre->nom . ' ' . Auth::user()->membre->prenom,
 
-                // 'prime' => $request->prime,
-
                 'primepricipale' => number_format($request->primepricipale, 2, ".", ""),
                 'prime' => $request->primepricipale,
                 'fraisadhesion' => $request->fraisadhesion,
@@ -540,9 +561,9 @@ class ProductionController extends Controller
                 // 'modifierpar' => null,
                 // 'motifrejet' => null,
                 'libelleproduit' => $product->MonLibelle,
-                // 'montantrente' => $request->montantrente,
-                // 'periodiciterente' => $request->periodiciterente,
-                // 'dureerente' => $request->dureerente,
+                'montantrente' => $request->montantrente,
+                'periodiciterente' => $request->periodiciterente,
+                'dureerente' => $request->dureerente,
 
                 'personneressource' => $request->personneressource,
                 'contactpersonneressource' => $request->contactpersonneressource,
@@ -615,7 +636,7 @@ class ProductionController extends Controller
             $options->set('isRemoteEnabled', true);
 
             // Génération du bulletin PDF temporaire
-            $pdf = PDF::loadView('productions.components.bullettin.basicBulletin', [
+            $pdf = PDF::loadView('productions.components.bullettin.ykeBulletin', [
                 'contrat' => $contrat,
             ]);
 
@@ -628,7 +649,7 @@ class ProductionController extends Controller
             $pdf->save($tempBulletinPath);
 
             // Chemin vers le fichier CGU
-            $cguFilePath = public_path('root/cgu/CGPLanggnant.pdf');
+            $cguFilePath = public_path('root/cgu/cg_yke.pdf');
 
             // Initialiser FPDI pour fusionner les fichiers
             $finalPdf = new Fpdi();
@@ -648,14 +669,14 @@ class ProductionController extends Controller
             }
 
             // Nom final du fichier fusionné
-            $finalBulletinPath = $bulletinDir . 'basic_bulletin_' . $contrat->id . '.pdf';
+            $finalBulletinPath = $bulletinDir . 'YKE_bulletin_' . $contrat->id . '.pdf';
             $finalPdf->Output($finalBulletinPath, 'F');
 
             // Supprimer le fichier temporaire du bulletin
             unlink($tempBulletinPath);
 
             // Définir l'URL publique pour le fichier final
-            $fileUrl = asset("documents/bulletin/basic_bulletin_{$contrat->id}.pdf");
+            $fileUrl = asset("documents/bulletin/YKE_bulletin_{$contrat->id}.pdf");
 
             return [
                 'success' => true,
@@ -724,8 +745,9 @@ class ProductionController extends Controller
         $productGarantie = ProduitGarantie::where('CodeProduit', $CodeProduit)->get();
 
         $contrat = Contrat::where('id', $id)->first();
+        $filliations =  Filliation::select('MonLibelle')->get();
 
-        return view('productions.show', compact('contrat', 'productGarantie'));
+        return view('productions.show', compact('contrat', 'productGarantie','filliations'));
     }
 
     /**
@@ -741,7 +763,8 @@ class ProductionController extends Controller
         $secteurActivites =  TblSecteurActivite::select('MonLibelle')->get();
         $societes =  TblSociete::select('MonLibelle')->get();
         $agences =  TblAgence::select('NOM_LONG')->get();
-        return view('productions.edit', compact('contrat', 'product', 'villes', 'secteurActivites', 'professions', 'productGarantie', 'societes', 'agences'));
+        $filliations =  Filliation::select('MonLibelle')->get();
+        return view('productions.edit', compact('contrat', 'product', 'villes', 'secteurActivites', 'professions', 'productGarantie', 'societes', 'agences','filliations'));
     }
 
     /**

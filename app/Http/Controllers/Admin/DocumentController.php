@@ -38,6 +38,7 @@ class DocumentController extends Controller
         $libelles = $request->input('libelles');
         $files = $request->file('files');
          
+       if($files != null) {
         foreach ($files as $key => $file) {
             $imageName = $idContrat . '-' . now()->timestamp . '.' . $file->getClientOriginalExtension();
 
@@ -58,6 +59,7 @@ class DocumentController extends Controller
                 'source' => "ES",
             ]);
         }
+       }
 
         DB::commit();
     

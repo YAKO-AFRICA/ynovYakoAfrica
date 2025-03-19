@@ -80,12 +80,13 @@
                                 </div>
                                 <div class="mb-3 col-sm-12 col-md-6">
                                     <label for="codeequipe" class="form-label">Equipe/Agence</label>
-                                    <select name="codeequipe" id="codeequipe" class="form-select" id="">
+                                    <select name="codeequipe" id="codeequipe" class="form-select">
                                         <option value="">-- Choisir une equipe --</option>
                                         @foreach ($equipes as $equipe)
-                                            <option class="form-control" value="{{ $equipe->id }}">{{ $equipe->libelleequipe }}</option>
+                                            <option class="form-control" data-equipe-code="{{ $equipe->codeequipe }}" value="{{ $equipe->id }}">{{ $equipe->libelleequipe }}</option>
                                         @endforeach
                                     </select>
+                                    <input type="hidden" name="equipeCode" id="equipeCode" class="form-control">
                                 </div>
                                 <div class="mb-3 col-sm-12 col-md-6">
                                     <label for="codePart" class="form-label">Partenaire</label>
@@ -158,20 +159,29 @@
                                 <label for="login" class="form-label">Nom d'utilisateur (Login) <span class="text-danger">*</span></label>
                                 <input type="text" name="login" id="login" class="form-control" required>
                             </div>
+                            <div class="mb-3">
+                                <label for="branche" class="form-label">Branche <span class="text-danger">*</span></label>
+                                <select name="branche" class="form-select" id="">
+                                    <option value="">-- Choisir une option --</option>
+                                    <option value="BANKASS">BANKASS</option>
+                                    <option value="COURTAGE">COURTAGE</option>
+                                    <option value="COM">COM</option>
+
+                                </select>
+                            </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3 form-group">
-                                        <label for="role" class="form-label">Profile <span class="text-danger">*</span></label>
-                                        <select name="role" id="" class="form-control" required>
+                                        <label for="profile" class="form-label">Profile <span class="text-danger">*</span></label>
+                                        <select name="profile" id="profileSelect" class="form-control" required>
                                             <option value="">-- Choisir une option --</option>
-                                            <option class="form-option"  value="ADMINISTRATEUR">ADMINISTRATEUR</option>
-                                            <option class="form-option"  value="SUPERVISEUR">SUPERVISEUR</option>
-                                            <option class="form-option"  value="RESPONSABLE">RESPONSABLE</option>
-                                            <option class="form-option"  value="MANAGER">MANAGER</option>
-                                            <option class="form-option"  value="CONSEILLER">CONSEILLER</option>
+                                            @foreach ($profiles as $profile)
+                                                <option class="form-option" data-id="{{ $profile->id }}" value="{{ $profile->role }}">{{ $profile->role }}</option>
+                                            @endforeach
                                         </select>
-
                                     </div>
+
+                                    <input type="hidden" name="profile_id" id="profile_id" class="form-control" required value="" >
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3 form-group">
@@ -245,19 +255,47 @@
 <script>
     let currentStep = 1;
 
-    const showStep = (step) => {
+    document.addEventListener("DOMContentLoaded", function() {
+        const profileSelect = document.getElementById("profileSelect");
+        const profileIdInput = document.getElementById("profile_id");
+
+        profileSelect.addEventListener("change", function() {
+            const selectedOption = profileSelect.options[profileSelect.selectedIndex];
+            const profileId = selectedOption.getAttribute("data-id") || "";
+
+            console.log("Selected Profile ID:", profileId);
+            profileIdInput.value = profileId;
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const equipeSelect = document.getElementById("codeequipe");
+        const equipeCode = document.getElementById("equipeCode");
+
+        equipeSelect.addEventListener("change", function() {
+            const selectedOption = equipeSelect.options[equipeSelect.selectedIndex];
+            const equipeCodeValue = selectedOption.getAttribute("data-equipe-code") || "";
+
+            console.log("Selected Equipe Code:", equipeCodeValue);
+            equipeCode.value = equipeCodeValue;
+        });
+    })
+
+
+
+    const showStep = (stepAdd) => {
         // Show the correct step
         document.querySelectorAll('.step').forEach(el => el.classList.add('d-none'));
-        document.querySelector(`#step-${step}`).classList.remove('d-none');
+        document.querySelector(`#step-${stepAdd}`).classList.remove('d-none');
         
         // Update buttons
-        document.querySelector('.prev-step').classList.toggle('d-none', step === 1);
-        document.querySelector('.next-step').classList.toggle('d-none', step === 4);
-        document.querySelector('.finish-step').classList.toggle('d-none', step !== 4);
+        document.querySelector('.prev-step').classList.toggle('d-none', stepAdd === 1);
+        document.querySelector('.next-step').classList.toggle('d-none', stepAdd === 4);
+        document.querySelector('.finish-step').classList.toggle('d-none', stepAdd !== 4);
 
         // Update the step indicator
         document.querySelectorAll('.step-indicator').forEach((indicator, index) => {
-            indicator.classList.toggle('active', index + 1 === step);
+            indicator.classList.toggle('active', index + 1 === stepAdd);
         });
     };
 

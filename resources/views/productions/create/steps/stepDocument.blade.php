@@ -166,9 +166,9 @@
                 <!-- Bouton précédent -->
                 <div class="col-12">
                     <div class="d-flex align-items-center justify-content-between gap-3">
-                        <button onclick="event.preventDefault(); stepper1.previous()" class="btn btn-outline-secondary btn-previous-form"><i class='bx bx-left-arrow-alt'></i>Previous</button>
+                        <button onclick="event.preventDefault(); stepper1.previous()" class="btn btn-outline-secondary btn-previous-form"><i class='bx bx-left-arrow-alt'></i>Retour</button>
         
-                        <button type="submit" class="btn btn-success">Submit</button>
+                        <button type="submit" class="btn btn-success">Soumettre</button>
                     </div>
                 </div>
             </div>

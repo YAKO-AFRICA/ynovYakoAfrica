@@ -12,6 +12,7 @@ use setasign\Fpdi\Fpdi;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 class BulletinController extends Controller
@@ -19,6 +20,28 @@ class BulletinController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+     public function demoBulletin(request $request)
+     {
+        try {
+
+            $contrat = Contrat::where('id', 5)->first();
+
+            // Chargement de la vue avec les données
+            $pdf = Pdf::loadView('productions.components.bullettin.ykeBulletin', [
+                'contrat' => $contrat
+            ]);
+
+            // Option 1 : Retourner directement le PDF pour téléchargement
+            return $pdf->stream('bulletin_adhesion.pdf');
+
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
     public function index()
     {
         //
@@ -52,7 +75,7 @@ class BulletinController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function generate(request $request, $id)
+    public function generate(Request $request, $id)
     {
         DB::beginTransaction();
         try {
@@ -64,7 +87,7 @@ class BulletinController extends Controller
                 $options->set('isRemoteEnabled', true);
             
                 // Générer le bulletin PDF avec Dompdf
-                $pdf = Pdf::loadView('productions.components.bullettin.basicBulletin', [
+                $pdf = Pdf::loadView('productions.components.bullettin.ykeBulletin', [
                     'contrat' => $contrat
                 ]);
             
@@ -78,7 +101,8 @@ class BulletinController extends Controller
                 $pdf->save($bulletinFileName);
             
                 // Chemin vers le fichier CGU
-                $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
+                // $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
+                $cguFile = public_path('root/cgu/cg_yke.pdf');
             
                 // Fusionner les PDF avec FPDI
                 $finalPdf = new Fpdi();
@@ -98,7 +122,7 @@ class BulletinController extends Controller
                 }
             
                 // Nom final du fichier
-                $finalFileName = $bulletinDir . 'basic_bulletin_' . $contrat->id . '.pdf';
+                $finalFileName = $bulletinDir . 'assurcompte_' . $contrat->id . '.pdf';
             
                 // Enregistrer le PDF final
                 $finalPdf->Output($finalFileName, 'F');
@@ -137,6 +161,7 @@ class BulletinController extends Controller
         }
 
     }
+    
 
  
 

@@ -4,9 +4,9 @@
 
     <div class="row">
 
-        <div class="col-sm-12 col-md-6 col-lg-6">
+        <div class="col-sm-12 col-md-6 col-lg-8">
 
-            <div class="card my-3" style="width: 90%">
+            <div class="card my-3" >
                 <div class="card-body ">
                     <label for="" class="form-label">Je souhaite payer mes primes par :</label>
                     <div class=" mt-4">
@@ -85,6 +85,23 @@
 
                             </div>
 
+                            <div class="row">
+                                <div class="col-6 mb-3">
+
+                                    <label for="codeguichet" class="form-label">Code Guichet</label>
+    
+                                    <input type="text" class="form-control" value="{{ $contrat->codeguichet ?? '--'}}" id="codeguichet" name="codeguichet">
+    
+                                </div>
+                                <div class="col-6 mb-3">
+
+                                    <label for="rib" class="form-label">Rib</label>
+    
+                                    <input type="text" class="form-control" value="{{ $contrat->rib ?? '--'}}" id="rib" name="rib">
+    
+                                </div>
+                            </div>
+
                             <div class="col-12 mb-3">
 
                                 <label for="Matricule" class="form-label">Mon N° de compte (Matricule)</label>
@@ -108,13 +125,13 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-12 col-md-8 col-lg-8">
-                                <label for="Conseiller" class="form-label">Votre conseiller client</label>
-                                <input type="text" class="form-control" id="Conseiller" name="Conseiller" disabled value="{{ Auth::user()->membre->nom ?? ""}} {{ Auth::user()->membre->prenom ?? ""}}">
+                                <label for="nomagent" class="form-label">Votre conseiller client</label>
+                                <input type="text" class="form-control" id="nomagent" name="nomagent" disabled placeholder="{{ $contrat->nomagent ?? ""}}">
                             </div>
 
                             <div class="col-sm-12 col-md-4 col-lg-4">
                                 <label for="CodeConseiller" class="form-label">Code</label>
-                                <input type="text" class="form-control" id="CodeConseiller" name="codeConseiller" disabled value="{{ Auth::user()->membre->codeagent ?? ""}}">
+                                <input type="text" class="form-control" id="CodeConseiller" disabled value="{{ $contrat->codeConseiller ?? ""}}">
                             </div>
 
                         </div>
@@ -123,7 +140,7 @@
             </div>
         </div>
 
-        <div class="col-sm-12 col-md-6 col-lg-6">
+        <div class="col-sm-12 col-md-6 col-lg-4">
             <div class="card mx-0">
                 <div class="card-body">
                     <label class="form-label">Je souhaite payer mes primes chaque :</label>
@@ -179,22 +196,19 @@
                         <div class="row">
 
                             <div class="col-12 mb-3">
-
                                 <label for="DateEffet" class="form-label">Mon contrat prendra effet le :</label>
-
                                 <input type="date" class="form-control" value="{{ $contrat->dateeffet ?? '--'}}" id="DateEffet" name="dateEffet">
-
                             </div>
 
                             <div class="col-12 mb-3">
                                 <label for="primepricipale" class="form-label">Je souhaite payer une prime de :</label>
-                                <input type="number" class="form-control" id="primepricipale" name="primepricipale" min="1000" value="{{ $contrat->primepricipale ?? '--'}}"  placeholder="{{ $contrat->primepricipale ?? '--'}}">
+                                <input type="number" class="form-control" id="primepricipale" name="primepricipale" min="1000" value="{{ $contrat->primepricipale ?? '--'}}"  placeholder="{{ $contrat->primepricipale ?? '--'}}" readonly>
                                 {{-- <span id="primepricipale-error" class="text-danger" style="display: none;">Le montant de la prime doit être au moins de 1 000 000.</span> --}}
                             </div>
 
                             <div class="col-12 mb-3">
                                 <label for="capital" class="form-label">Capital souscrit :</label>
-                                <input type="number" class="form-control" id="capital" name="capital" min="0" value="{{ $contrat->capital ?? '--'}}"  placeholder="{{ $contrat->capital ?? '--'}}">
+                                <input type="number" class="form-control" id="capital" name="capital" min="0" value="{{ $contrat->capital ?? '--'}}"  placeholder="{{ $contrat->capital ?? '--'}}" readonly>
                             </div>
 
                             
@@ -211,16 +225,11 @@
     </div>
 
     <div class="cerd-footer row g-3 mb-3">
-
         <div class="col-12 col-lg-6">
-
         </div>
         <div class="col-12 col-lg-6 d-flex justify-content-end">
-
             <button type="submit" class="btn btn-primary">Enregistrer</button>
-
         </div>
-
     </div>
 
     {{-- <div class=" d-flex justify-content-end">

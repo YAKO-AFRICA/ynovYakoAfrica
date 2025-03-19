@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\Admin\RdvController;
+use App\Http\Controllers\Admin\TestController;
 use App\Http\Controllers\Admin\EpretController;
 use App\Http\Controllers\setting\RoleController;
 use App\Http\Controllers\Setting\UserController;
@@ -66,6 +67,8 @@ Route::get('storage/prestations/{file}', function ($file) {
 
 Route::post('/save-beneficiary-session', [EpretController::class, 'saveBeneficiarySession']);
 // web.php
+
+Route::get('/generate-demoBulletin', [BulletinController::class, 'demoBulletin'])->name('demoBulletin');
 
 
 Route::get('/', function () {
@@ -317,3 +320,6 @@ Route::prefix('production')->name('prod.')->group(function(){
     });
 
 });
+
+
+Route::get('/test-api-local', [TestController::class, 'testApi'])->name('testApi');

@@ -181,6 +181,56 @@
                 </div>
             </div>
         </div>
+        <input type="hidden" id="garantiesperf" name="garantiesperf" value="">
+        <input type="hidden" id="garantiessecu" name="garantiessecu" value="">
+        <div class="col-12">
+            <div class="card" style="width: 100%">
+                <div class="card-header">
+                    <h4>Garanties</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 overflow-auto overflow-scroll">
+                            <table class="table mb-0 table-striped table-responsive table-bordered">
+                                <thead class="fw-bold">
+                                    <tr>
+                                        <th scope="col">Garantie</th>
+                                        <th scope="col">Code garantie</th>
+                                        <th scope="col">Prime principal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if ($product->CodeProduit == 'PFA_IND')
+                                        <tr>
+                                            <td>SECURITE</td>
+                                            <td>SECU</td>
+                                            <td id="display-prime-garantie-secu"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>PERFORMANCE</td>
+                                            <td>PERF</td>
+                                            <td id="display-prime-garantie-PERF"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>SURETE</td>
+                                            <td>SUR</td>
+                                            <td>0</td>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="2" class="text-end fw-bold">Prime Finale</th> 
+                                        <th id="display-prime-final" class="text-end fw-bold"></th> 
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-12">
             <div class="card" style="width: 100%">
                 <div class="card-header">
