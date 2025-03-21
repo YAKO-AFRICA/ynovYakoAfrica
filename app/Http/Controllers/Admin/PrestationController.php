@@ -258,7 +258,7 @@ class PrestationController extends Controller
             $IBAN = ($moyenPaiement == 'Virement_Bancaire') ? $request->IBAN : null;
 
             // supprimer Espace en cas de $TelPaiement
-            $TelPaiement = str_replace(' ', '', $TelPaiement);
+            $montantSouhaite = preg_replace('/\s+/u', '', $request->montantSouhaite);
 
             // Création de la prestation
             $prestation = TblPrestation::create([
@@ -277,7 +277,7 @@ class PrestationController extends Controller
                 'email' => $request->email,
                 'msgClient' => $request->msgClient,
                 'lieuresidence' => $request->lieuresidence,
-                'montantSouhaite' => $request->montantSouhaite,
+                'montantSouhaite' => $montantSouhaite,
                 'moyenPaiement' => $moyenPaiement,
                 'Operateur' => $request->Operateur,
                 'telPaiement' => $TelPaiement,
@@ -293,7 +293,7 @@ class PrestationController extends Controller
             }
 
             // Chemin externe pour stocker les fichiers
-            $externalUploadDir = base_path('../uploads/prestations/');
+            $externalUploadDir = base_path(env('UPLOAD_PRESTATION_FILE'));
             if (!is_dir($externalUploadDir)) {
                 mkdir($externalUploadDir, 0777, true);
             }
@@ -414,7 +414,7 @@ class PrestationController extends Controller
     private function generatePrestationPdf($prestation)
     {
         try {
-            $externalUploadDir = base_path('../uploads/prestations/');
+            $externalUploadDir = base_path(env('UPLOAD_PRESTATION_FILE'));
             if (!is_dir($externalUploadDir)) {
                 mkdir($externalUploadDir, 0777, true);
             }
@@ -467,6 +467,7 @@ class PrestationController extends Controller
         }
     }
 
+    
     public function storePrestAutre(Request $request)
 {
     DB::beginTransaction();
@@ -529,7 +530,7 @@ class PrestationController extends Controller
                 }
 
                 // Chemin externe pour stocker les fichiers
-                $externalUploadDir = base_path('../uploads/prestations/');
+                $externalUploadDir = base_path(env('UPLOAD_PRESTATION_FILE'));
                 if (!is_dir($externalUploadDir)) {
                     mkdir($externalUploadDir, 0777, true);
                 }
@@ -656,9 +657,10 @@ class PrestationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $code)
     {
-        //
+        $prestation = TblPrestation::where('code', $code)->first();
+        return view('prestations.edit', compact('prestation'));
     }
 
     /**
@@ -672,8 +674,40 @@ class PrestationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $code)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $isDeleted = TblPrestation::where('code', $code)->delete();
+
+            if ($isDeleted) {
+
+                $dataResponse =[
+                    'type'=>'success',
+                    'urlback'=>"back",
+                    'message'=>"Prestation supprimée avec succès!",
+                    'code'=>200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollback();
+                $dataResponse =[
+                    'type'=>'error',
+                    'urlback'=>'',
+                    'message'=>"Erreur lors de la suppression!",
+                    'code'=>500,
+                ];
+            }
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse =[
+                'type'=>'error',
+                'urlback'=>'',
+                'message'=>"Erreur systeme! $th",
+                'code'=>500,
+            ];
+        }
+        return response()->json($dataResponse);
     }
 }

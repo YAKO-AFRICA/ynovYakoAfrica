@@ -41,6 +41,8 @@
         @endforeach
     </div>
 
+    <a href="{{ route('prod.bullettin.test') }}" target="_blank" class="btn">PRINT</a>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

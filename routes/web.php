@@ -127,8 +127,9 @@ Route::prefix('prestation')->name('prestation.')->group(function(){
         Route::post('/autre/add',[PrestationController::class, 'storePrestAutre'])->name('storePrestAutre');
         Route::get('show/{code}',[PrestationController::class, 'show'])->name('show');
         Route::post('/add',[PrestationController::class, 'store'])->name('store');
-        // Route::post('prestation/update/{uuid}',[CustomerPrestationController::class, 'update'])->name('prestation.update');
-        // Route::post('prestation/destroy/{uuid}',[CustomerPrestationController::class, 'destroy'])->name('prestation.destroy');
+        Route::get('/edit/{code}',[PrestationController::class, 'edit'])->name('edit');
+        Route::post('/update/{code}',[PrestationController::class, 'update'])->name('update');
+        Route::post('/destroy/{code}',[PrestationController::class, 'destroy'])->name('destroy');
         
     });
 
@@ -302,6 +303,8 @@ Route::prefix('production')->name('prod.')->group(function(){
 
 
         // bulletin
+
+        Route::get('/show/bullettin/test', [BulletinController::class, 'printBulletin'])->name('bullettin.test');
 
         Route::get('/show/bullettin/{id}', [BulletinController::class, 'show'])->name('bullettin.show');
         Route::get('/generate-bulletin/{id}', [BulletinController::class, 'generate'])->name('generate.bulletin');

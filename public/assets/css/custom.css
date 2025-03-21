@@ -204,8 +204,27 @@ a {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre légère */
   transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   }
-  
-  .otp-input:focus {
+  .rib-container{
+    /* display: flex;
+    align-items: center;
+    justify-content: center; */
+    gap: 7px; /* Espacement entre les cases */
+    padding: 7px;
+    /* background-color: #f5faf6;  */
+}
+.rib-input {
+    width: 32px; /* Largeur des cases */
+    height: 32px; /* Hauteur des cases */
+    text-align: center;
+    font-size: 18px; /* Taille du texte */
+    border: 1px solid #a0d1b9; /* Bordure */
+    border-radius: 8px; /* Coins arrondis */
+    background-color: #f5faf6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre légère */
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+  .otp-input:focus,
+  .rib-input:focus {
   border-color: #058a5d; /* Couleur de la bordure au focus */
   box-shadow: 0 4px 8px rgba(0, 128, 0, 0.2); /* Ombre au focus */
   outline: none; /* Supprime la bordure par défaut */

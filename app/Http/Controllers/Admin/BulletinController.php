@@ -42,6 +42,19 @@ class BulletinController extends Controller
             ];
         }
     }
+
+    public function printBulletin()
+    {
+        // $prestation = TblPrestation::where('id', $id)->first();
+        // Génération de QR Code en base64
+
+        // $pdf = Pdf::loadView('productions.components.bullettin.ykeBulletin');
+        // $pdf = Pdf::loadView('productions.components.bullettin.basicBulletin');
+        $pdf = Pdf::loadView('productions.components.bullettin.pfaINDbulletin');
+
+        $fileName = 'pfaINDbulletin.pdf';
+        return $pdf->stream($fileName);
+    }
     public function index()
     {
         //
