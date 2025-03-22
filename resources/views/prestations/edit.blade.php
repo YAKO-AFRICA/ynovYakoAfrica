@@ -1,47 +1,70 @@
 @extends('layouts.main')
 
 @section('content')
+<style>
+    input[readonly],
+        textarea[readonly],
+        select[readonly] {
+            background-color: #f0f0f0;
+            /* Couleur de fond gris pour les champs en readonly */
+            border: 1px solid #ccc;
+            /* Bordure gris clair */
+            /* cursor: not-allowed;        Curseur indiquant que l'action est interdite */
+            cursor: no-drop;
+            /* pointer-events: none; */
+            /* Empêche toute interaction avec ces éléments */
+        }
+
+        /* Remplacer le curseur par l'emoji 🚫 lors du survol des champs readonly */
+        input[readonly]:hover,
+        textarea[readonly]:hover,
+        select[readonly]:hover {
+            cursor: no-drop;
+            /* cursor: wait; */
+        }
+</style>
     <div class="row">
         <div class="col-12 col-lg-3">
             <div class="card">
-                <div class="card-body">
-                    <div class="fm-menu">
-                        <div class="list-group list-group-flush">
-                            <a href="javascript:;" class="list-group-item py-1" data-target="info-contrat">
-                                <i class='bx bx-folder me-2'></i><span>Detail sur la prestation</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <div class="fm-menu">
-                        <div class="list-group list-group-flush mb-3">
-                            <span>Status de la prestation</span>
-                        </div>
-                        @if ($prestation->etape == 0)
-                            <div class="badge rounded-pill text-info bg-light-info p-2 text-uppercase px-3">
-                                <i class="bx bxs-circle me-1"></i>En attente de transmission
-                            </div>
-                        @elseif($prestation->etape == 1)
-                            <div class="badge rounded-pill text-primary bg-light-primary p-2 text-uppercase px-3">
-                                <i class="bx bxs-circle me-1"></i>Demande transmise
-                            </div>
-                        @elseif($prestation->etape == 2)
-                            <div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
-                                <i class="bx bxs-circle me-1"></i>Demande acceptée
-                            </div>
-                        @elseif($prestation->etape == 3)
-                            <div class="badge rounded-pill text-danger bg-light-danger p-2 text-uppercase px-3">
-                                <i class="bx bxs-circle me-1"></i>Demande rejétée
-                            </div>
-                        @else
-                            -
-                        @endif
 
+                <center>
+                    <div class="card-header">
+                        <p>
+                            <strong>Code de la prestation :</strong> <span>{{ $prestation->code ?? ''}}</span>
+                        </p>
+                        
+                        <p>
+                            <center>Status : 
+                                @if ($prestation->etape == 0)
+                                    <span class="badge rounded-pill text-info bg-light-info p-2 text-uppercase px-3">
+                                        <i class="bx bxs-circle me-1"></i>En attente de transmission
+                                    </span>
+                                @elseif ($prestation->etape == 1)
+                                    <span class="badge rounded-pill text-primary bg-light-primary p-2 text-uppercase px-3">
+                                        <i class="bx bxs-circle me-1"></i>Demande transmise
+                                    </span>
+                                @elseif ($prestation->etape == 2)
+                                    <span class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
+                                        <i class="bx bxs-circle me-1"></i>Demande acceptée
+                                    </span>
+                                @elseif ($prestation->etape == 3)
+                                    <span class="badge rounded-pill text-danger bg-light-danger p-2 text-uppercase px-3">
+                                        <i class="bx bxs-circle me-1"></i>Demande rejétée
+                                    </span>
+                                @elseif ($prestation->etape == 4)
+                                    --
+                                @endif
+                            </center>
+                        </p>
                     </div>
+                </center>
+    
+                <div class="card-body">
+    
+                    <h5 class="my-3 text-center text-uppercase">Editer la prestation</h5>
+    
                 </div>
+    
             </div>
             <div class="card">
                 <div class="card-body">
@@ -155,123 +178,193 @@
             <div class="card">
                 <div class="card-body">
                     <section id="info-contrat" class="section-content">
-                        @if ($prestation && $prestation->membre != null && $prestation->membre->typ_membre !== 3)
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="mt-4 row">
-                                                <dl class="row col-md-6">
-                                                    <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-5">Saisie par :</dt>
-                                                    <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-7">
-                                                        {{ $prestation->membre->prenom ?? '' }}
-                                                        {{ $prestation->membre->nom ?? '' }} </dd>
-                                                </dl>
-                                                <dl class="row col-md-6">
-
-                                                </dl>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
                         <div class="row">
-                            <div class="col-sm-12 col-md-6 col-lg-6">
-                                <div class="card" style="width: 90%">
-                                    <div class="card-body">
-                                        <h3>Prestation</h3>
-                                        @if ($prestation)
-                                            <div class="mt-4">
-                                                <dl class="row">
-                                                    <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-7">Type de prestation:
-                                                    </dt>
-                                                    <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-5">
-                                                        {{ $prestation->typeprestation ?? 'Non renseigné' }} </dd>
-                                                    <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-7">ID du contrat :</dt>
-                                                    <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-5">
-                                                        {{ $prestation->idcontrat ?? 'Non renseigné' }} </dd>
-                                                    <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-7">Montant souhaité :</dt>
-                                                    <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-5">
-                                                        {{ $prestation->montantSouhaite ?? 'Non renseigné' }} FCFA</dd>
-                                                    <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-7">Moyen de paiement :
-                                                    </dt>
-                                                    <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-5">
-                                                        {{ $prestation->moyenPaiement == 'Virement_Bancaire' ? 'Virement Bancaire' : 'Mobile Money' ?? 'Non renseigné' }}
-                                                    </dd>
-                                                    @if ($prestation->moyenPaiement == 'Mobile_Money')
-                                                        <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-7">Opérateur :</dt>
-                                                        <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-5">
-                                                            {{ $prestation->Operateur == 'Orange_money'
-                                                                ? 'Orange Money'
-                                                                : ($prestation->Operateur == 'MTN_Money'
-                                                                        ? 'MTN Money'
-                                                                        : ($prestation->Operateur == 'Moov_Money'
-                                                                            ? 'Moov Money'
-                                                                            : 'Non renseigné')) ?? 'Non renseigné' }}
-                                                        </dd>
-                                                        <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-7">Numéro de paiement
-                                                            :</dt>
-                                                        <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-5">
-                                                            {{ $prestation->telPaiement ?? 'Non renseigné' }} </dd>
-                                                    @elseif($prestation->moyenPaiement == 'Virement_Bancaire')
-                                                        <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-7">IBAN du compte :
-                                                        </dt>
-                                                        <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-5">
-                                                            {{ $prestation->IBAN ?? 'Non renseigné' }} </dd>
-                                                    @endif
-                                                    <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-7">Date de demande :</dt>
-                                                    <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-5">
-                                                        {{ $prestation->created_at?->format('d-m-Y à H:i') ?? 'Non renseigné' }}
-                                                    </dd>
-                                                </dl>
-                                            </div>
-                                        @else
-                                            <p class="text-secondary">Aucune prestation trouvée</p>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-6 col-lg-6">
+                            <div class="col-12">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h3>Client</h3>
-                                        <div class="mt-4">
-                                            <dl class="row">
-                                                <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-5">Nom :</dt>
+                                        <div class="row">
+                                            <dl class="row col-md-4">
+                                                @if ($prestation && $prestation->membre != null && $prestation->membre->typ_membre !== 3)
+                                                <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-5">Saisie par :</dt>
                                                 <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-7">
-                                                    {{ $prestation->membreClient->nom ?? ($prestation->nom ?? 'Non renseigné') }}
-                                                </dd>
-                                                <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-5">Prénom :</dt>
-                                                <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-7">
-                                                    {{ $prestation->membreClient->prenom ?? ($prestation->prenom ?? 'Non renseigné') }}
-                                                </dd>
-                                                <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-5">Date de naissance:</dt>
-                                                <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-7">
-                                                    {{ $prestation->membreClient->datenaissance ?? ($prestation->datenaissance ?? 'Non renseigné') }}
-                                                </dd>
-                                                <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-5">Sexe :</dt>
-                                                <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-7">
-                                                    {{ $prestation->membreClient->sexe ?? ($prestation->sexe ?? 'Non renseigné') }}
-                                                </dd>
-                                                <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-5">Teléphone :</dt>
-                                                <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-7">
-                                                    {{ $prestation->membreClient->cel ?? ($prestation->cel ?? 'Non renseigné') }}
-                                                </dd>
-                                                <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-5">Email :</dt>
-                                                <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-7">
-                                                    {{ $prestation->membreClient->email ?? ($prestation->email ?? 'Non renseigné') }}
-                                                </dd>
-                                                <dt class="col-xs-12 col-sm-6 col-md-5 col-lg-5">Lieu de residence:</dt>
-                                                <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-7">
-                                                    {{ $prestation->membreClient->lieuresidence ?? ($prestation->lieuresidence ?? 'Non renseigné') }}
-                                                </dd>
+                                                    {{ $prestation->membre->prenom ?? '' }}
+                                                    {{ $prestation->membre->nom ?? '' }} </dd>
+                                                @endif
+                                            </dl>
+                                            <dl class="row col-md-8">
+                                                @if ($prestation && $prestation->etape == 0)
+                                                <form action="{{ route('prestation.transmettrePrest', $prestation->code)}}" method="post" class="submitForm d-flex justify-content-end">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-primary p-1 px-3  text-center"> Transmettre</button>
+                                                </form>
+                                                @endif
                                             </dl>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <form action="{{ route('prestation.update', $prestation->code)}}" method="post" class="submitForm">
+                            @csrf
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                    <div class="card" style="width: 90%">
+                                        <div class="card-body">
+                                            <h3>Prestation</h3>
+                                            @if ($prestation)
+                                                <div class="mt-4">
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6">
+                                                            <label for="" class="form-label">Type de prestation</label>
+                                                            <input type="text" name="typeprestation" value="{{ $prestation->typeprestation ?? '' }}" readonly class="form-control">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="" class="form-label">ID du contrat</label>
+                                                            <input type="text" name="idcontrat" value="{{ $prestation->idcontrat ?? '' }}" readonly class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6">
+                                                            <label for="" class="form-label">Montant souhaité</label>
+                                                            <input type="text" name="montantSouhaite" value="{{ $prestation->montantSouhaite ?? '' }}" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="" class="form-label"> Moyen de paiement</label>
+                                                            <div class="mb-3">
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" name="moyenPaiement" type="radio" disabled value="Virement_Bancaire" id="Virement_Bancaire" 
+                                                                        @if ($prestation->moyenPaiement === 'Virement_Bancaire')
+                                                                                checked
+                                                                        @endif>
+                                                                    <label class="form-check-label" for="Virement_Bancaire">Virement Bancaire</label>
+                                                                </div>
+                                    
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" name="moyenPaiement" type="radio" disabled value="Mobile_Money" id="Mobile_Money" 
+                                                                        @if ($prestation->moyenPaiement === 'Mobile_Money')
+                                                                                checked
+                                                                        @endif>
+                                                                    <label class="form-check-label" for="Mobile_Money">Mobile Money</label>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @if ($prestation->moyenPaiement == 'Mobile_Money')
+                                                    
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-12">
+                                                            <label for="" class="form-label"> Moyen de paiement</label>
+                                                            <div class="mb-3">
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" name="Operateur" type="radio" disabled value="Orange_money" id="Orange_money" 
+                                                                        @if ($prestation->Operateur === 'Orange_money')
+                                                                                checked
+                                                                        @endif>
+                                                                    <label class="form-check-label" for="Orange_money">Orange Money</label>
+                                                                </div>
+                                    
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" name="Operateur" type="radio" disabled value="Moov_Money" id="Moov_Money" 
+                                                                        @if ($prestation->Operateur === 'Moov_Money')
+                                                                                checked
+                                                                        @endif>
+                                                                    <label class="form-check-label" for="Moov_Money">Moov Money</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" name="Operateur" type="radio" disabled value="MTN_Money" id="MTN_Money" 
+                                                                        @if ($prestation->Operateur === 'MTN_Money')
+                                                                                checked
+                                                                        @endif>
+                                                                    <label class="form-check-label" for="MTN_Money">MTN Money</label>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-12">
+                                                            <label for="" class="form-label">N° de paiement</label>
+                                                            <input type="number" name="telPaiement" value="{{ $prestation->telPaiement ?? '' }}" readonly class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    @elseif ($prestation->moyenPaiement == 'Virement_Bancaire')
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-12">
+                                                            <label for="" class="form-label">RIB</label>
+                                                            <input type="text" name="IBAN" value="{{ $prestation->IBAN ?? '' }}" maxlength="24" minlength="24" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    @endif
+    
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-12">
+                                                            <textarea name="msgClient" class="form-control" id="" cols="30" rows="5">{{ $prestation->msgClient ?? '' }}</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <p class="text-secondary">Aucune prestation trouvée</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h3>Client</h3>
+                                            <div class="mt-4">
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="" class="form-label">Nom</label>
+                                                        <input type="text" name="nom" value="{{ $prestation->membreClient->nom ?? ($prestation->nom ?? '') }}" readonly class="form-control">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="" class="form-label">Prenom</label>
+                                                        <input type="text" name="prenom" value="{{ $prestation->membreClient->prenom ?? ($prestation->prenom ?? '') }}" readonly class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="" class="form-label">Date de naissance</label>
+                                                        <input type="datetime" name="datenaissance" value="{{ $prestation->membreClient->datenaissance ?? ($prestation->datenaissance ?? '') }}" readonly class="form-control">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="" class="form-label">Genre</label>
+                                                        <input type="text" name="sexe" value="{{ $prestation->membreClient->sexe ?? ($prestation->sexe ?? '') }}" readonly class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="" class="form-label">N° de téléphone</label>
+                                                        <input type="datetime" name="cel" value="{{ $prestation->membreClient->cel ?? ($prestation->cel ?? '') }}" class="form-control">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="" class="form-label">Tel WhatsApp</label>
+                                                        <input type="text" name="tel" value="{{ $prestation->membreClient->tel ?? ($prestation->tel ?? '') }}" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="" class="form-label">E-mail</label>
+                                                        <input type="datetime" name="email" value="{{ $prestation->membreClient->email ?? ($prestation->email ?? '') }}" class="form-control">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="" class="form-label">Lieu de residence</label>
+                                                        <input type="text" name="lieuderesidence" value="{{ $prestation->membreClient->lieuresidence ?? ($prestation->lieuresidence ?? '') }}" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                </div>
+                            </div>
+                        </form>
                     </section>
                 </div>
             </div>

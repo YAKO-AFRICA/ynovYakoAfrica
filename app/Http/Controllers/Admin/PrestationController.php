@@ -666,9 +666,147 @@ class PrestationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $code)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $isUpdated = TblPrestation::where('code', $code)->first();
+            $isUpdated->update([
+                'montantSouhaite' => $request->montantSouhaite,
+                'IBAN' => $request->IBAN,
+                'msgClient' => $request->msgClient,
+                'cel' => $request->cel,
+                'tel' => $request->tel,
+                'email' => $request->email,
+                'lieuresidence' => $request->lieuresidence
+            ]);
+            if ($isUpdated) {
+                $prestationPdfUrl = $this->updatePrestationPdf($isUpdated);
+                $dataResponse =[
+                    'type'=>'success',
+                    'urlback'=> 'back',
+                    'message'=>"Prestation modifiée avec succès!",
+                    'code'=>200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollback();
+                $dataResponse =[
+                    'type'=>'error',
+                    'urlback'=>'',
+                    'message'=>"Erreur lors de la transmission!",
+                    'code'=>500,
+                ];
+            }
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse =[
+                'type'=>'error',
+                'urlback'=>'',
+                'message'=>"Erreur systeme! $th",
+                'code'=>500,
+            ];
+        }
+        return response()->json($dataResponse);
+    }
+
+    private function updatePrestationPdf($prestation)
+    {
+        try {
+            $externalUploadDir = base_path(env('UPLOAD_PRESTATION_FILE'));
+            if (!is_dir($externalUploadDir)) {
+                mkdir($externalUploadDir, 0777, true);
+            }
+            // Génération du QR code et du fichier PDF pour la prestation
+            $qrcode = base64_encode(QrCode::format('svg')->size(80)->generate(url('prestation/getInfoPrestation/' . $prestation->id)));
+            $pdf = Pdf::loadView('prestations.fiches.prestation', compact('qrcode', 'prestation'))
+                ->setPaper('a4', 'portrait')
+                ->setOptions([
+                    'isHtml5ParserEnabled' => true,
+                    'isRemoteEnabled' => true,
+                    'margin-left' => 0,
+                    'margin-right' => 0,
+                    'margin-top' => 0,
+                    'margin-bottom' => 0,
+                ]);
+
+            // Dossier pour enregistrer l'état de la prestation
+            $etatPrestationDir = $externalUploadDir . 'etatPrestations/';
+            if (!is_dir($etatPrestationDir)) {
+                mkdir($etatPrestationDir, 0777, true);
+            }
+
+            $fileName = 'Prestation_' . $prestation->code . '.pdf';
+            $filePath = $etatPrestationDir . $fileName;
+            $pdf->save($filePath);
+            
+            $docName = TblDocPrestation::where(['idPrestation' => $prestation->id, 'type' => 'etatPrestation'])->first();
+            if ($docName) {
+                $docName->delete();
+            }
+            // Enregistrer le fichier dans la base de données
+            TblDocPrestation::create([
+                'idPrestation' => $prestation->id,
+                'libelle' => $fileName,
+                'path' => 'storage/prestations/etatPrestations/' . $fileName,
+                'type' => 'etatPrestation',
+            ]);
+
+            DB::commit();
+
+            // Retourner l'URL complète du fichier PDF
+            // $pdfUrl = url('storage/prestations/etatPrestations/' . $fileName);
+            return [
+                'success' => true,
+                // 'redirect_url' => route('prestation.show', $prestation->code),
+            ];
+        } catch (\Exception $e) {
+            Log::error("Erreur lors de la génération du bulletin : ", ['error' => $e]);
+            return [
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+    public function transmettrePrest(string $code)
+    {
+        DB::beginTransaction();
+        try {
+            $isTransmitted = TblPrestation::where('code', $code)->first();
+            $isTransmitted->update([
+                'etape' => 1
+            ]);
+            if ($isTransmitted) {
+
+                $dataResponse =[
+                    'type'=>'success',
+                    'urlback'=> route('prestation.mesPrestations'),
+                    'message'=>"Prestation transmise avec succès!",
+                    'code'=>200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollback();
+                $dataResponse =[
+                    'type'=>'error',
+                    'urlback'=>'',
+                    'message'=>"Erreur lors de la transmission!",
+                    'code'=>500,
+                ];
+            }
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse =[
+                'type'=>'error',
+                'urlback'=>'',
+                'message'=>"Erreur systeme! $th",
+                'code'=>500,
+            ];
+        }
+        return response()->json($dataResponse);
+    
     }
 
     /**

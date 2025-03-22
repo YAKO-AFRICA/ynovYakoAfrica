@@ -52,7 +52,7 @@ Route::get('storage/documents/{file}', function ($file) {
 
 Route::get('storage/prestations/{file}', function ($file) {
     // $path = base_path('../public_html/upload/prestations/' . $file);
-    $path = base_path('../uploads/prestations/' . $file);
+    $path = base_path(env('UPLOAD_PRESTATION_FILE') . $file);
 
     if (!file_exists($path)) {
         abort(404);
@@ -128,6 +128,7 @@ Route::prefix('prestation')->name('prestation.')->group(function(){
         Route::get('show/{code}',[PrestationController::class, 'show'])->name('show');
         Route::post('/add',[PrestationController::class, 'store'])->name('store');
         Route::get('/edit/{code}',[PrestationController::class, 'edit'])->name('edit');
+        Route::post('/transmettrePrest/{code}',[PrestationController::class, 'transmettrePrest'])->name('transmettrePrest');
         Route::post('/update/{code}',[PrestationController::class, 'update'])->name('update');
         Route::post('/destroy/{code}',[PrestationController::class, 'destroy'])->name('destroy');
         
@@ -263,6 +264,7 @@ Route::prefix('production')->name('prod.')->group(function(){
     Route::middleware('guest','PreventBackHistory')->group(function(){
 
         // formule by product reseau 
+        Route::get('/show/bullettin/test', [BulletinController::class, 'printBulletin'])->name('bullettin.test');
 
     });
     Route::middleware(['auth'])->group(function () {
@@ -303,8 +305,6 @@ Route::prefix('production')->name('prod.')->group(function(){
 
 
         // bulletin
-
-        Route::get('/show/bullettin/test', [BulletinController::class, 'printBulletin'])->name('bullettin.test');
 
         Route::get('/show/bullettin/{id}', [BulletinController::class, 'show'])->name('bullettin.show');
         Route::get('/generate-bulletin/{id}', [BulletinController::class, 'generate'])->name('generate.bulletin');
