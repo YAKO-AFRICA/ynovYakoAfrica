@@ -81,6 +81,7 @@
 
         {{-- js custome file --}}
         <script src="{{ asset('assets/js/custom.js')}}"></script>
+        {{-- <script src="{{ asset('root/resume.js')}}"></script> --}}
         <script src="{{ asset('assets/root/simulateur/simulateur.js')}}"></script>
         <script src="{{ asset('assets/root/simulateur/primes.js')}}"></script>
         <!-- Bootstrap JS -->

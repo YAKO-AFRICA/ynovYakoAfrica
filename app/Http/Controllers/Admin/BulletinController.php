@@ -25,7 +25,7 @@ class BulletinController extends Controller
      {
         try {
 
-            $contrat = Contrat::where('id', 5)->first();
+            $contrat = Contrat::where('id', 89)->first();
 
             // Chargement de la vue avec les données
             $pdf = Pdf::loadView('productions.components.bullettin.ykeBulletin', [

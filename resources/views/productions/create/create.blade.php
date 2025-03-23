@@ -96,6 +96,8 @@
                     </div>
                 </div>
             </div>
+        </div>
+        
     
             <div class="card-body productions">
                 <div class="bs-stepper-content">
@@ -129,6 +131,126 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    let garantiesData = sessionStorage.getItem("garantiesData");
+    let tbody = document.getElementById("garantiesTableBody");
+    let primeTotalFooter = document.getElementById("primeTotalFooter");
+
+    if (garantiesData) {
+        garantiesData = JSON.parse(garantiesData);
+        let totalPrime = 0;
+        let tableContent = "";
+
+        garantiesData.forEach(garantie => {
+            tableContent += `
+                <tr>
+                    <td>${garantie.codeGarantie}</td>
+                    <td>${garantie.codeGarantie}</td>
+                    <td>${parseInt(garantie.prime).toLocaleString()}</td>
+                </tr>
+            `;
+            totalPrime += parseInt(garantie.prime) || 0;
+        });
+
+        tbody.innerHTML = tableContent;
+        primeTotalFooter.textContent = totalPrime.toLocaleString();
+    } else {
+        tbody.innerHTML = `<tr><td colspan="3" class="text-center">Aucune donnée disponible</td></tr>`;
+    }
+});
+
+</script>
+
+<script>
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     let garantiesData = sessionStorage.getItem("garantiesData");
+
+    //     if (garantiesData) {
+    //         garantiesData = JSON.parse(garantiesData);
+
+    //         totalPrime = 0;
+
+            
+
+    //         console.log("Données chargées depuis la session :", garantiesData);
+
+    //         if (garantiesData.length > 0) {
+    //             let garantie = garantiesData[0]; // On prend la première garantie comme référence
+
+    //             totalPrime += parseInt(garantie.prime) || 0;
+                
+
+    //             // Mise à jour des champs s'ils existent dans le DOM
+    //             let dateEffetInput = document.getElementById("DateEffetYKE_2008");
+    //             if (dateEffetInput) dateEffetInput.value = garantie.dateEffet;
+
+    //             let DatenaissanceInput = document.getElementById("Date_naissance");
+    //             if (DatenaissanceInput) DatenaissanceInput.value = garantie.dateNaisssance;
+
+    //             let primeInput = document.getElementById("primepricipaleYKE_2008");
+    //             if (primeInput) primeInput.value = totalPrime;
+
+    //             let capitalInput = document.getElementById("capitalYKE_2008");
+    //             if (capitalInput) capitalInput.value = garantie.capitalSouscrit;
+
+    //             let dureeInput = document.getElementById("dureeYKE_2008");
+    //             if (dureeInput) dureeInput.value = garantie.duree;
+
+    //             let periodiciteInput = document.querySelector("[name='periodicite'][value='" + garantie.codePeriodicite + "']");
+    //             if (periodiciteInput) {
+    //                 periodiciteInput.checked = true;
+    //             }
+    //         }
+    //     }
+
+
+        
+    // });
+
+    document.addEventListener("DOMContentLoaded", function () {
+    let garantiesData = sessionStorage.getItem("garantiesData");
+
+    if (garantiesData) {
+        garantiesData = JSON.parse(garantiesData);
+        let totalPrime = 0; // Initialisation correcte
+
+        console.log("Données chargées depuis la session :", garantiesData);
+
+        garantiesData.forEach(garantie => { // Boucle sur toutes les garanties
+            totalPrime += parseInt(garantie.prime) || 0;
+        });
+
+        // Mise à jour des champs s'ils existent dans le DOM
+        if (garantiesData.length > 0) {
+            let garantie = garantiesData[0]; // On prend la première garantie pour récupérer les autres infos
+
+            let dateEffetInput = document.getElementById("DateEffetYKE_2008");
+            if (dateEffetInput) dateEffetInput.value = garantie.dateEffet;
+
+            let DatenaissanceInput = document.getElementById("Date_naissance");
+            if (DatenaissanceInput) DatenaissanceInput.value = garantie.dateNaisssance;
+
+            let primeInput = document.getElementById("primepricipaleYKE_2008");
+            if (primeInput) primeInput.value = totalPrime; // Maintenant le total est bien cumulé
+
+            let capitalInput = document.getElementById("capitalYKE_2008");
+            if (capitalInput) capitalInput.value = garantie.capitalSouscrit;
+
+            let dureeInput = document.getElementById("dureeYKE_2008");
+            if (dureeInput) dureeInput.value = garantie.duree;
+
+            let periodiciteInput = document.querySelector("[name='periodicite'][value='" + garantie.codePeriodicite + "']");
+            if (periodiciteInput) {
+                periodiciteInput.checked = true;
+            }
+        }
+    }
+});
+
+
+</script>
 
 
 <script>

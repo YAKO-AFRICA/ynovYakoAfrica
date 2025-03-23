@@ -26,15 +26,29 @@
                             </dl>
                         </p>	
                     </div>
-                    @can('Demarrer une souscription')
-                    <div class="card-footer text-center">
-                        <a href="{{ route('prod.create', $product->CodeProduit) }}" class="btn-prime btn-prime-two d-block">Souscrire</a>
-                    </div>
+                    @if ($product->CodeProduit == 'YKE_2018')
+                        @can('Demarrer une souscription')
+                        <div class="card-footer text-center">
+                            <a href="{{ route('prod.createYke', $product->CodeProduit) }}" class="btn-prime btn-prime-two d-block">Souscrire</a>
+                        </div>
+                        @else
+                        <div class="card-footer text-center">
+                            <a href="#" class="btn-prime btn-prime-two d-block text-danger">Vous n'etes pas autorisé</a>
+                        </div>
+                        @endcan
                     @else
-                    <div class="card-footer text-center">
-                        <a href="#" class="btn-prime btn-prime-two d-block text-danger">Vous n'etes pas autorisé</a>
-                    </div>
-                    @endcan
+                        @can('Demarrer une souscription')
+                        <div class="card-footer text-center">
+                            <a href="{{ route('prod.create', $product->CodeProduit) }}" class="btn-prime btn-prime-two d-block">Souscrire</a>
+                        </div>
+                        @else
+                        <div class="card-footer text-center">
+                            <a href="#" class="btn-prime btn-prime-two d-block text-danger">Vous n'etes pas autorisé</a>
+                        </div>
+                        @endcan
+                    @endif
+                    
+                    
                     
                 </div>
             </div>

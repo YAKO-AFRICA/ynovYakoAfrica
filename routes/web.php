@@ -36,6 +36,10 @@ use App\Http\Controllers\Admin\BeneficiairesController;
 | be assigned to the "web" middleware group. Make something great!
 |<iframe style="width: 100%; height: 100%" src="{{ url('storage/documents/' . $doc->filename) }}" frameborder="0"></iframe>
 */
+
+
+
+
 Route::get('storage/documents/{file}', function ($file) {
     $path = base_path(env('UPLOADS_PATH') . $file);
 
@@ -73,6 +77,9 @@ Route::get('/generate-demoBulletin', [BulletinController::class, 'demoBulletin']
 
 Route::get('/', function () {
     return view('auth.login');
+});
+Route::get('/prime', function () {
+    return view('welcome');
 });
 
 route::get('/generate-bulletin-demo', [EpretController::class, 'generateBu'])->name('generateBul');
@@ -272,6 +279,7 @@ Route::prefix('production')->name('prod.')->group(function(){
         Route::post('/update/{id}', [ProductionController::class, 'update'])->name('contrat.update');
         Route::get('/create/stepProduct', [ProductionController::class, 'stepProduct'])->name('stepProduct');
         Route::get('/create/add/{codeproduit}', [ProductionController::class, 'create'])->name('create');
+        Route::get('/createYke/add/{codeproduit}', [ProductionController::class, 'createYke'])->name('createYke');
         Route::post('/store', [ProductionController::class, 'store'])->name('store');
         Route::post('/upload-documents', [ProductionController::class, 'upload'])->name('upload.documents');
 
@@ -314,12 +322,19 @@ Route::prefix('production')->name('prod.')->group(function(){
         Route::post('/traitement/proposition/rejet/{id}', [ValidationController::class, 'rejetContrat'])->name('traitement.proposition.rejet');
         Route::get('/proposition/edit{id}', [ValidationController::class, 'edit'])->name('proposition.edit');
         Route::post('/traitement/proposition/valider/{id}', [ValidationController::class, 'acceptContrat'])->name('traitement.proposition.valider');
+
+        
+
+
         
 
 
     });
 
 });
+
+// donnée de calcule des prime yke 
+Route::post('/storeSimulationPrime', [ProductionController::class, 'storeSimulationPrime'])->name('storeSimulationPrime');
 
 
 Route::get('/test-api-local', [TestController::class, 'testApi'])->name('testApi');

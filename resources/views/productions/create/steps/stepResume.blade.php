@@ -199,8 +199,9 @@
                                         <th scope="col">Prime principal</th>
                                     </tr>
                                 </thead>
+                                @if ($product->CodeProduit == 'PFA_IND')
                                 <tbody>
-                                    @if ($product->CodeProduit == 'PFA_IND')
+                                    
                                         <tr>
                                             <td>SECURITE</td>
                                             <td>SECU</td>
@@ -216,7 +217,7 @@
                                             <td>SUR</td>
                                             <td>0</td>
                                         </tr>
-                                    @endif
+                                   
                                 </tbody>
                                 <tfoot>
                                     <tr>
@@ -224,7 +225,19 @@
                                         <th id="display-prime-final" class="text-end fw-bold"></th> 
                                     </tr>
                                 </tfoot>
+                                @elseif($product->CodeProduit == 'YKE_2018')
+                                
+                                    <tbody id="garantiesTableBody"></tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="2" class="text-end">Total Prime :</th>
+                                            <th id="primeTotalFooter">0</th>
+                                        </tr>
+                                    </tfoot>
+                                
+                                @endif
                             </table>
+                            
                             
                         </div>
                     </div>
