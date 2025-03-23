@@ -24,6 +24,14 @@
             cursor: no-drop;
             /* cursor: wait; */
         }
+        @media (min-width: 992px) { /* lg breakpoint */
+        .w-lg-20 {
+            max-width: 20%;
+        }
+        .w-lg-15 {
+            max-width: 25% !important;
+        }
+    }
     </style>
     <!--start stepper one-->
     <!--breadcrumb-->
@@ -135,33 +143,7 @@
         });
     </script>
     <script>
-        // document.querySelector('form').addEventListener('submit', function (event) {
-        //     event.preventDefault(); // Empêcher le rechargement par défaut du formulaire
-
-        //     let formData = new FormData(this);
-
-        //     fetch(this.action, {
-        //         method: this.method,
-        //         body: formData,
-        //         headers: {
-        //             'X-Requested-With': 'XMLHttpRequest',
-        //         }
-        //     })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         if (data.type === 'success') {
-        //             // Ouvrir le PDF dans un nouvel onglet
-        //             window.open(data.urlback, '_blank');
-        //         } else {
-        //             alert(data.message);
-        //         }
-        //     })
-        //     .catch(error => {
-        //         console.error('Erreur:', error);
-        //         alert('Erreur système. Veuillez réessayer.');
-        //     });
-        // });
-
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Récupérer les éléments nécessaires
             const typeFileSelect = document.getElementById('typeFile');
@@ -255,5 +237,70 @@
                 }
             }
         });
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const otpInputs = document.querySelectorAll('.otp-input');
+            const ribInputs = document.querySelectorAll('.rib-input');
+            function handleInput(inputArray, event, index) {
+                const input = event.target;
+                const nextInput = inputArray[index + 1];
+                const prevInput = inputArray[index - 1];
+
+                // Empêcher les entrées multiples (ex: copier-coller)
+                if (input.value.length > 1) {
+                    input.value = input.value.charAt(0);
+                }
+
+                // Passage automatique au champ suivant
+                if (input.value.length === 1 && nextInput) {
+                    nextInput.focus();
+                }
+            }
+
+            function handleKeyDown(inputArray, event, index) {
+                const input = event.target;
+                const prevInput = inputArray[index - 1];
+                const nextInput = inputArray[index + 1];
+
+                // Gestion du retour arrière (Backspace)
+                if (event.key === 'Backspace' && input.value === '' && prevInput) {
+                    prevInput.focus();
+                }
+
+                // Permettre la navigation avec les flèches gauche et droite
+                if (event.key === 'ArrowLeft' && prevInput) {
+                    prevInput.focus();
+                } else if (event.key === 'ArrowRight' && nextInput) {
+                    nextInput.focus();
+                }
+            }
+
+            function handlePaste(event) {
+                event.preventDefault(); // Empêcher le collage multiple
+            }
+
+            // Gestion des OTP inputs
+            otpInputs.forEach((input, index) => {
+                input.addEventListener('input', (event) => handleInput(otpInputs, event, index));
+                input.addEventListener('keydown', (event) => handleKeyDown(otpInputs, event, index));
+                input.addEventListener('paste', handlePaste);
+            });
+
+            // Gestion des RIB inputs (avec validation)
+            ribInputs.forEach((input, index) => {
+                input.addEventListener('input', function (event) {
+                    this.value = this.value.replace(/[^a-zA-Z0-9]/g, ''); // Autoriser uniquement lettres et chiffres
+                    handleInput(ribInputs, event, index);
+                });
+
+                input.addEventListener('keydown', (event) => handleKeyDown(ribInputs, event, index));
+                input.addEventListener('paste', handlePaste);
+            });
+        });
     </script>
+
+
+
+@include('prestations.components.modals.detailContratModal')
 @endsection

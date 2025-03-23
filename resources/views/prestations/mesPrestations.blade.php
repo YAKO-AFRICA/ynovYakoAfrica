@@ -1,6 +1,13 @@
 @extends('layouts.main')
 
 @section('content')
+<style>
+    .disabled-link {
+        pointer-events: none;
+        opacity: 0.6; /* Rendre visuellement inactif */
+        cursor: not-allowed;
+    }
+</style>
     <!--breadcrumb-->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
         <div class="breadcrumb-title pe-3">Prestations</div>
@@ -41,7 +48,7 @@
             <div class="tab-content py-3">
                 <div class="tab-pane fade show active" id="successhome" role="tabpanel">
                     <div class="table-responsive">
-                        <table id="example2" class="table mes-prestations table-striped table-bordered">
+                        <table id="example2" class="table mes-prestations table-stripe table-bordere">
                             <thead class="table-light">
                                 <tr>
                                     <th>Code de la demande</th>
@@ -65,15 +72,20 @@
                                         <td>{{ $prestation->email }}</td>
                                         <td>{{ $prestation->montantSouhaite }}</td>
                                         <td>
-                                            @if ($prestation->etape == 1)
+                                            @if ($prestation->etape == 0)
                                                 <div
                                                     class="badge rounded-pill text-info bg-light-info p-2 text-uppercase px-3">
                                                     <i class="bx bxs-circle me-1"></i>En attente de transmission
                                                 </div>
-                                            @elseif($prestation->etape == 2)
+                                            @elseif($prestation->etape == 1)
                                                 <div
                                                     class="badge rounded-pill text-primary bg-light-primary p-2 text-uppercase px-3">
-                                                    <i class="bx bxs-circle me-1"></i>Transmis pour traitement
+                                                    <i class="bx bxs-circle me-1"></i> Demande transmise
+                                                </div>
+                                            @elseif($prestation->etape == 2)
+                                                <div
+                                                    class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
+                                                    <i class="bx bxs-circle me-1"></i> Demande acceptée
                                                 </div>
                                             @elseif($prestation->etape == 3)
                                                 <div
@@ -89,6 +101,23 @@
                                             <div class="d-flex order-actions">
                                                 <a href="{{ route('prestation.show', $prestation->code) }}"
                                                     class="ms-2 border"><i class='bx bxs-show'></i></a>
+                                                    
+                                                    
+                                                     <a href="{{ route('prestation.edit', $prestation->code) }}" class="ms-3 border {{ $prestation->etape == 1 ? 'disabled-link' : '' }}" 
+                                                        data-bs-toggle="tooltip" data-bs-placement="top" 
+                                                        title="{{ $prestation->etape == 1 ? 'Impossible de modifier la demande une fois transmise' : '' }}">
+                                                         <i class='bx bxs-edit'></i>
+                                                     </a>
+                                                    <a href="javascript:;" class="deleteConfirmation border ms-3 {{$prestation->etape == 1 ? 'disabled-link' : ''}}" data-uuid="{{$prestation->code}}"
+                                                        data-type="confirmation_redirect" data-placement="top"
+                                                        data-token="{{ csrf_token() }}" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                                        title="{{ $prestation->etape == 1 ? 'Impossible de supprimer la demande une fois transmise' : '' }}"
+                                                        data-url="{{route('prestation.destroy',$prestation->code)}}"
+                                                        data-title="Vous êtes sur le point de supprimer {{$prestation->code}} "
+                                                        data-id="{{$prestation->code}}" data-param="0"
+                                                        data-route="{{route('prestation.destroy',$prestation->code)}}" ><i
+                                                            class='bx bxs-trash' style="cursor: pointer"></i>
+                                                    </a>
                                             </div>
                                         </td>
                                     </tr>
@@ -147,6 +176,22 @@
                                                 <a href="javascript:void(0)" data-bs-toggle="modal"
                                                     data-bs-target="#exampleModal{{ $prestation->code }}"
                                                     class="ms-2 border"><i class='bx bxs-show'></i></a>
+
+                                                    <a href="{{ route('prestation.edit', $prestation->code) }}" class="ms-3 border {{ $prestation->etape == 1 ? 'disabled-link' : '' }}" 
+                                                        data-bs-toggle="tooltip" data-bs-placement="top" 
+                                                        title="{{ $prestation->etape == 1 ? 'Impossible de modifier la demande une fois transmise' : '' }}">
+                                                         <i class='bx bxs-edit'></i>
+                                                     </a>
+                                                    <a href="javascript:;" class="deleteConfirmation border ms-3 {{$prestation->etape == 1 ? 'disabled-link' : ''}}" data-uuid="{{$prestation->code}}"
+                                                        data-type="confirmation_redirect" data-placement="top"
+                                                        data-token="{{ csrf_token() }}" data-bs-toggle="tooltip" data-bs-placement="top" 
+                                                        title="{{ $prestation->etape == 1 ? 'Impossible de supprimer la demande une fois transmise' : '' }}"
+                                                        data-url="{{route('prestation.destroy',$prestation->code)}}"
+                                                        data-title="Vous êtes sur le point de supprimer la prestation {{$prestation->code}} "
+                                                        data-id="{{$prestation->code}}" data-param="0"
+                                                        data-route="{{route('prestation.destroy', $prestation->code)}}" ><i
+                                                            class='bx bxs-trash' style="cursor: pointer"></i>
+                                                    </a>
                                             </div>
                                         </td>
                                     </tr>
@@ -193,4 +238,18 @@
 
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            // Empêcher le clic sans désactiver le survol
+        // document.querySelectorAll('.disabled-link').forEach(function(link) {
+        //     link.addEventListener('click', function(event) {
+        //         event.preventDefault(); // Bloque l'action du lien
+        //     });
+        // });
+        });
+    </script>
 @endsection

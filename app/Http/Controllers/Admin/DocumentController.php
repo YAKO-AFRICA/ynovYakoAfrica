@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\TblDocument;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -16,9 +17,10 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
+    
     /**
      * Show the form for creating a new resource.
      */

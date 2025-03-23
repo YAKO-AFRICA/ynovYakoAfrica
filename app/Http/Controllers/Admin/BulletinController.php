@@ -42,6 +42,20 @@ class BulletinController extends Controller
             ];
         }
     }
+
+    public function printBulletin()
+    {
+        // $prestation = TblPrestation::where('id', $id)->first();
+        // Génération de QR Code en base64
+
+        // $pdf = Pdf::loadView('productions.components.bullettin.ykeBulletin');
+        // $pdf = Pdf::loadView('productions.components.bullettin.basicBulletin');
+        // $pdf = Pdf::loadView('productions.components.bullettin.pfaINDbulletin');
+        $pdf = Pdf::loadView('productions.components.bullettin.Cadencebulletin');
+
+        $fileName = 'cadencebulletin.pdf';
+        return $pdf->stream($fileName);
+    }
     public function index()
     {
         //
@@ -144,7 +158,7 @@ class BulletinController extends Controller
                 return response()->json([
                     'type' => 'error',
                     'urlback' => '',
-                    'message' => "Erreur lors de la generation du bullettin! $th",
+                    'message' => "Erreur lors de la generation du bullettin!",
                     'code' => 500,
                 ]);
             }

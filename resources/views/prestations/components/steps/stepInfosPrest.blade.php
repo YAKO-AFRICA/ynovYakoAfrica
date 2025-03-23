@@ -298,11 +298,15 @@
                                                 {{ $contractDetails['IdProposition'] ?? '' }}</option>
                                         </select>
                                         <input type="hidden" id="Capital" name="Capital" value="">
-                                        <h3 id="CapitalTotal"></h3>
+                                        {{-- <h3 id="CapitalTotal"></h3> --}}
                                         <div id="spinner" style="display: none;">
                                             <div class="spinner-border" style="color: #076633;" role="status">
                                                 <span class="visually-hidden">Chargement...</span>
                                             </div>
+                                        </div>
+                                        <div class="row">
+                                            <h5 id="CapitalTotal" class="mt-2 col-lg-6 col-md-6 col-12 text-start"></h5>
+                                            <p class="col-lg-6 col-md-6 col-12 text-end mt-2"><a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#detailContratModal" title="Voir plus de détails" class="" id="DetailContratBtn"><i class='bx bxs-show py-1 px-2 fs-5 border border-secondary rounded bg-light'></i></a></p>
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
@@ -413,7 +417,7 @@
                                         <span id="clearChoise" class="">Supprimer mon choix</span>
                                     </div>
                                 </div>
-                                <div class="row g-3 mb-3" id="IBANPaiement">
+                                {{-- <div class="row g-3 mb-3" id="IBANPaiement">
                                     <div class="col-12 col-lg-6">
                                         <label for="IBAN" class="form-label">IBAN sur lequel vous souhaitez
                                             recevoir le paiement <span class="star">*</span></label>
@@ -434,7 +438,59 @@
                                     </div>
                                     <small><span class="form-label star"><i>Veuillez saisir l'IBAN de votre compte
                                                 courant </i></span></small>
+                                </div> --}}
+                                <div class="row mb-3" id="IBANPaiement">
+                                    <div class="col-12 px-0">
+                                        <label for="IBAN" class="form-label">Quel est votre RIB sur lequel vous souhaitez
+                                            recevoir le paiement <span class="star">*</span></label>
+                                        <div class="rib-container row">
+                                            <div class="col-lg-3 col-12 mb-3 w-lg-20 text-center">
+                                                <label for="codebanque" class="form-label">Code Banque</label><br>
+                                                <input type="text" class="rib-input" name="rib_1" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_2" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_3" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_4" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_5" maxlength="1">
+                                            </div>
+                                            <div class="col-lg-3 col-12 mb-3 w-lg-20 text-center">
+                                                <label for="codeagence" class="form-label">Code Agence</label><br>
+                                                <input type="text" class="rib-input" name="rib_6" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_7" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_8" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_9" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_10" maxlength="1">
+                                            </div>
+                                            <div class="col-lg-5 col-12 mb-3 text-center">
+                                                <label for="numcompte" class="form-label">N° de Compte</label><br>
+                                                <input type="text" class="rib-input" name="rib_11" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_12" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_13" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_14" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_15" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_16" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_17" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_18" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_19" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_20" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_21" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_22" maxlength="1">
+                                            </div>
+                                            <div class="col-lg-1 col-12 mb-3 w-lg-15 text-center">
+                                                <label for="clerib" class="form-label">Clé RIB</label><br>
+                                                <input type="text" class="rib-input" name="rib_23" maxlength="1">
+                                                <input type="text" class="rib-input" name="rib_24" maxlength="1">
+                                            </div>
+                                            <span class="text-center"><i id="ibanMsgError" class="text-danger"></i></span>
+                                            <span class="text-center"><i id="ibanMsgSuccess" class="text-success"></i></span>
+                                        </div>
+                                        <input type="hidden" class="form-control" name="IBAN" id="IBAN">
+                                            
+                                        <input type="hidden" name="TelOtp" value="" id="TelOtp">
+                                    </div>
+                                    <small class="text-center"><span class="form-label star"><i>Veuillez saisir le RIB de votre compte
+                                                courant </i></span></small>
                                 </div>
+                                
                                 <div class="row g-3 mb-3" id="TelephonePaiement">
                                     <div class="col-12 col-lg-6">
                                         

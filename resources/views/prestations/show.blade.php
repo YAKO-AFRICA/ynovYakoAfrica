@@ -195,13 +195,17 @@
                         <div class="list-group list-group-flush mb-3">
                             <span>Status de la prestation</span>
                         </div>
-                        @if ($prestation->etape == 1)
+                        @if ($prestation->etape == 0)
                             <div class="badge rounded-pill text-info bg-light-info p-2 text-uppercase px-3">
                                 <i class="bx bxs-circle me-1"></i>En attente de transmission
                             </div>
-                        @elseif($prestation->etape == 2)
+                        @elseif($prestation->etape == 1)
                             <div class="badge rounded-pill text-primary bg-light-primary p-2 text-uppercase px-3">
-                                <i class="bx bxs-circle me-1"></i>Transmis pour traitement
+                                <i class="bx bxs-circle me-1"></i>Demande transmise
+                            </div>
+                        @elseif($prestation->etape == 2)
+                            <div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
+                                <i class="bx bxs-circle me-1"></i>Demande acceptée
                             </div>
                         @elseif($prestation->etape == 3)
                             <div class="badge rounded-pill text-danger bg-light-danger p-2 text-uppercase px-3">
