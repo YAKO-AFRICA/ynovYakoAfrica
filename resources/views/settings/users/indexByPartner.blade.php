@@ -147,12 +147,16 @@
                                 </div>
                             </td>
                         </tr>
-                        @include('settings.users.editModal')
+                        {{-- @include('settings.users.editModal') --}}
                         @empty
                         <tr>
                             <td colspan="{{ count($defaultColumns) + count($activeColumns) + 1 }}">Aucun utilisateur trouvé</td>
                         </tr>
                         @endforelse
+
+                        @foreach ($membresbypartenaire as $item)
+                            @include('settings.users.editModal', ['item' => $item])
+                        @endforeach
                     </tbody>
                 </table>
 

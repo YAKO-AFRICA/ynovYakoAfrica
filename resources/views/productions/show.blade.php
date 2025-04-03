@@ -270,8 +270,8 @@
                                     <dt>Capital</dt>
                                     <dd>{{ number_format($contrat->capital ?? 0, 0, ',', ' ') }} FCFA</dd>
                     
-                                    <dt>Formule</dt>
-                                    <dd>{{ $contrat->Formule ?? '--' }}</dd>
+                                    <dt>Rente</dt>
+                                    <dd>{{ number_format($contrat->montantrente ?? 0, 0, ',', ' ') }} Fcfa</dd>
 
                                     <dt>Code Guichet</dt>
                                     <dd>{{ $contrat->codeguichet ?? '--' }}</dd>
@@ -556,8 +556,8 @@
                                             <td>{{ $assure->nom ?? '-' }} {{ $assure->prenom ?? '-' }}</td>
                                             <td>
                                                 <ul>
-                                                    @foreach ($productGarantie as $item)
-                                                        <li>{{ $item->MonLibelle }}</li>
+                                                    @foreach ($assure->garanties as $item)
+                                                        <li>{{ $item->monlibelle ?? 'Aucune garantie'}}</li>
                                                     @endforeach
                                                 </ul>
                                             </td>

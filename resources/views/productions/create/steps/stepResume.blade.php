@@ -181,6 +181,7 @@
                 </div>
             </div>
         </div>
+  
         <input type="hidden" id="garantiesperf" name="garantiesperf" value="">
         <input type="hidden" id="garantiessecu" name="garantiessecu" value="">
         <div class="col-12">

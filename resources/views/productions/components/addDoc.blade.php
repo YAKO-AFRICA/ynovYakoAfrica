@@ -210,9 +210,9 @@
 
                 <div class="modal-footer">
 
-                    <button type="submit" class="btn btn-success px-4">Submit</button>
+                    <button type="submit" class="btn btn-success px-4">Soumettre</button>
 
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
 
                 </div>
 

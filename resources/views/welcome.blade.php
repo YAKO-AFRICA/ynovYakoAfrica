@@ -1,6 +1,54 @@
 @extends('layouts.main')
 
 @section('content')
+
+<div class="container">
+    <form action="{{ route('postDemo') }}" method="post">
+        @csrf
+
+        <div>
+            <select name="test" id="">
+                <option value="test">test</option>
+                <option value="test2">test2</option>
+            </select>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-12 text-end">
+                <button type="button" onclick="addPrestation()" class="btn btn-primary">Ajouter une prestation</button>
+            </div>
+        </div>
+        
+        <div id="prestationsContainer">
+            <div class="row mb-3 prestation-item">
+                <div class="input-group">
+                    <select name="prestations[]" class="form-select" required>
+                        <option value="" selected>Choisir une prestation associée</option>
+                        @foreach ($prestation as $item)
+                            <option value="{{ $item->id }}">{{ $item->libelle }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn" type="submit">
+            Soumettre
+        </button>
+        
+        <script>
+            function addPrestation() {
+                const container = document.getElementById('prestationsContainer');
+                const template = document.querySelector('.prestation-item');
+                const newItem = template.cloneNode(true);
+                
+                // Réinitialiser la valeur du select cloné
+                newItem.querySelector('select').selectedIndex = 0;
+                
+                container.appendChild(newItem);
+            }
+        </script>
+    </form>
+</div>
 <div class="container">
     <h3>Calcul de la Prime de Garantie</h3>
 

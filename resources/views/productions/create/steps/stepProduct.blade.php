@@ -36,6 +36,16 @@
                             <a href="#" class="btn-prime btn-prime-two d-block text-danger">Vous n'etes pas autorisé</a>
                         </div>
                         @endcan
+                    @elseif ($product->CodeProduit == 'CADENCE')
+                        @can('Demarrer une souscription')
+                        <div class="card-footer text-center">
+                            <a href="{{ route('prod.createKds', $product->CodeProduit) }}" class="btn-prime btn-prime-two d-block">Souscrire</a>
+                        </div>
+                        @else
+                        <div class="card-footer text-center">
+                            <a href="#" class="btn-prime btn-prime-two d-block text-danger">Vous n'etes pas autorisé</a>
+                        </div>
+                        @endcan
                     @else
                         @can('Demarrer une souscription')
                         <div class="card-footer text-center">
@@ -55,7 +65,6 @@
         @endforeach
     </div>
 
-    <a href="{{ route('prod.bullettin.test') }}" target="_blank" class="btn">PRINT</a>
 
 
     <script>

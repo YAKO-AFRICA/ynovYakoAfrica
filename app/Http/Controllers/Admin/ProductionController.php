@@ -54,7 +54,7 @@ class ProductionController extends Controller
         // $allPropoRejet = Contrat::where('etape', 4)->get();
         // \dd($allPropoAccepter);
 
-        $defaultColumns = ['#', 'Produit', 'Date Effet', 'Prime', 'Capital', 'Saisir Par', 'Status'];
+        $defaultColumns = ['#', 'Produit', 'Date Effet', 'Prime', 'Capital', 'Montant Rente', 'Saisir Par', 'Status'];
 
         $additionalColumns = [
             'Mode de Paiement' => 'modepaiement',
@@ -192,6 +192,7 @@ class ProductionController extends Controller
         $agences = TblAgence::select('NOM_LONG')->get();
         $filliations = Filliation::select('MonLibelle')->get();
 
+
         return view('productions.create.create', compact('product', 'villes', 'secteurActivites', 'professions', 'productGarantie', 'societes', 'agences', 'filliations'));
     }
 
@@ -205,6 +206,16 @@ class ProductionController extends Controller
 
 
         return view('productions.create.simulateur.ykeSimulateur', compact('product', 'productGarantie'));
+    }
+    public function createKds($codeProduit)
+    {
+
+        $product = Product::where('CodeProduit', $codeProduit)->first();
+        $productGarantie = ProduitGarantie::where(['codeproduit' => $codeProduit, 'branche' => 'IND'])->get();
+
+
+
+        return view('productions.create.simulateur.kdsSimulateur', compact('product', 'productGarantie'));
     }
 
 
@@ -307,7 +318,7 @@ class ProductionController extends Controller
             Log::info("garanties requises  du produit " . $garantiesRequises);
             $GarantiesOptionnelles = ProduitGarantie::where(['codeproduit' => $request->codeproduit, 'estobligatoire' => 0, 'branche' => 'IND'])->get();
 
-            Log::info('assures dans le controller'. $assures);
+            // Log::info('assures dans le controller'. $assures);
 
             if ($request->estAssure === "Oui") {
 
@@ -316,6 +327,7 @@ class ProductionController extends Controller
                     'civilite' => $request->civilite,
                     'nom' => $request->nom,
                     'prenom' => $request->prenom,
+                    'filiation' => "souscripteur",
                     'datenaissance' => $datenaissance,
                     'lieunaissance' => $request->lieunaissance,
                     'codecontrat' => $idContrat,
@@ -335,7 +347,30 @@ class ProductionController extends Controller
                     'mobile1' => $request->mobile1,
                     'saisieLe' => now(),
                     'saisiepar' => auth::user()->membre->idmembre,
-                ])->save();
+                ]);
+
+                // foreach ($garantiesRequises as $garantie) {
+
+                //     if ($Assurer) {
+                //         AssureGarantie::create([
+                //             'codeproduitgarantie' => $garantie->codeproduitgarantie,
+                //             'idproduitparantie' => $garantie->id,
+                //             'monlibelle' => $garantie->libelle,
+                //             'prime' => $request->primepricipale,
+                //             'primetotal' => $request->primepricipale,
+                //             'primeaccesoire' => 0,
+                //             'type' => "Mixte",
+                //             'capitalgarantie' => $request->capital,
+                //             'tauxinteret' => $request->tauxinteret,
+                //             'codeassure' => $idAssureInsert,
+                //             'codecontrat' => $idContrat,
+                //             'refcontratsource' => '123456789',
+                //             'estmigre' => 0,
+                //         ])->save();
+                //     }
+                // }
+
+                
 
                 if ($request->codeproduit === "YKE_2018")
                 {
@@ -485,12 +520,13 @@ class ProductionController extends Controller
                     ]);
                     // $idAssureInsert = ($Assurer)? $Assurer->id + 1 : Assurer::max('id') + 1;
                     foreach ($garantiesRequises as $garantie) {
+
                         AssureGarantie::create([
                             'codeproduitgarantie' => $garantie->codeproduitgarantie,
                             'idproduitparantie' => $garantie->id,
                             'monlibelle' => $garantie->libelle,
                             'prime' => $request->primepricipale,
-                            'primetotal' => $prime,
+                            'primetotal' => $request->primepricipale,
                             'primeaccesoire' => 0,
                             'type' => "Mixte",
                             'capitalgarantie' => $request->capital,
@@ -645,9 +681,9 @@ class ProductionController extends Controller
                 // 'transmispar' => $request->saisiepar,
                 'personneressource2' => $request->personneressource2,
                 'contactpersonneressource2' => $request->contactpersonneressource2,
-                // 'codebanque' => now(),
-                // 'codeguichet' => now(),
-                // 'rib' => now(),
+                'codebanque' => $request->codebanque,
+                'codeguichet' => $request->codeguichet,
+                'rib' => $request->rib,
                 // 'idproposition' => now(),
                 // 'codeproposition' => now(),
                 'branche' => Auth::user()->membre->branche,
@@ -780,9 +816,32 @@ class ProductionController extends Controller
             $options->set('isRemoteEnabled', true);
 
             // Génération du bulletin PDF temporaire
-            $pdf = PDF::loadView('productions.components.bullettin.ykeBulletin', [
-                'contrat' => $contrat,
-            ]);
+
+            if($contrat->codeproduit == "YKE_2018"){
+                $pdf = PDF::loadView('productions.components.bullettin.ykeBulletin', [
+                    'contrat' => $contrat,
+                ]);
+                $cguFile = public_path('root/cgu/cg_yke.pdf');
+
+            }else if($contrat->codeproduit == "PFA_IND"){
+                $pdf = PDF::loadView('productions.components.bullettin.pfaINDbulletin', [
+                    'contrat' => $contrat,
+                ]);
+                $cguFile = public_path('root/cgu/cg_yke.pdf');
+                
+            }else if($contrat->codeproduit == "CADENCE")
+            {
+                $pdf = PDF::loadView('productions.components.bullettin.Cadencebulletin', [
+                    'contrat' => $contrat,
+                ]);
+                $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
+            }else{
+                $pdf = PDF::loadView('productions.components.bullettin.basicBulletin', [
+                    'contrat' => $contrat,
+                ]);
+                $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
+            }
+            
 
             $bulletinDir = public_path('documents/bulletin/');
             if (!is_dir($bulletinDir)) {
@@ -795,32 +854,36 @@ class ProductionController extends Controller
             // Chemin vers le fichier CGU
             $cguFilePath = public_path('root/cgu/cg_yke.pdf');
 
+       
+
             // Initialiser FPDI pour fusionner les fichiers
             $finalPdf = new Fpdi();
 
-            // Ajouter le bulletin au PDF final
-            $finalPdf->AddPage();
-            $finalPdf->setSourceFile($tempBulletinPath);
-            $bulletinTplIdx = $finalPdf->importPage(1);
-            $finalPdf->useTemplate($bulletinTplIdx);
-
-            // Ajouter les pages du fichier CGU
-            $cguPageCount = $finalPdf->setSourceFile($cguFilePath);
+            // Ajouter toutes les pages du bulletin
+            $bulletinPageCount = $finalPdf->setSourceFile($tempBulletinPath);
+            for ($pageNo = 1; $pageNo <= $bulletinPageCount; $pageNo++) {
+                $finalPdf->AddPage();
+                $tplIdx = $finalPdf->importPage($pageNo);
+                $finalPdf->useTemplate($tplIdx);
+            }
+        
+            // Ajouter toutes les pages du fichier CGU
+            $cguPageCount = $finalPdf->setSourceFile($cguFile);
             for ($pageNo = 1; $pageNo <= $cguPageCount; $pageNo++) {
                 $finalPdf->AddPage();
-                $cguTplIdx = $finalPdf->importPage($pageNo);
-                $finalPdf->useTemplate($cguTplIdx);
+                $tplIdx = $finalPdf->importPage($pageNo);
+                $finalPdf->useTemplate($tplIdx);
             }
 
             // Nom final du fichier fusionné
-            $finalBulletinPath = $bulletinDir . 'YKE_bulletin_' . $contrat->id . '.pdf';
+            $finalBulletinPath = $bulletinDir . 'bulletin_' . $contrat->id . '.pdf';
             $finalPdf->Output($finalBulletinPath, 'F');
 
             // Supprimer le fichier temporaire du bulletin
             unlink($tempBulletinPath);
 
             // Définir l'URL publique pour le fichier final
-            $fileUrl = asset("documents/bulletin/YKE_bulletin_{$contrat->id}.pdf");
+            $fileUrl = asset("documents/bulletin/bulletin_{$contrat->id}.pdf");
 
             return [
                 'success' => true,
@@ -953,6 +1016,9 @@ class ProductionController extends Controller
                 'contactpersonneressource' => $request->contactpersonneressource,
                 'personneressource2' => $request->personneressource2,
                 'contactpersonneressource2' => $request->contactpersonneressource2,
+                'codebanque' => $request->codebanque,
+                'codeguichet' => $request->codeguichet,
+                'rib' => $request->rib,
 
                 // 'transmisle' => now(),
                 // 'annulerle' => null,

@@ -242,27 +242,27 @@ class UserController extends Controller
                 'tel' => $request->tel,
             ]);
 
-            if($membre){
+            // if($membre){
 
-                $userAssign = User::where('idmembre', $id)->first();
-                $userAssign->update([
-                    // 'idmembre' => $id,
-                    'email' => $request->email,
-                    'login' => $request->login,
-                    'id_role' => $request->role_id,
-                    // 'password' => bcrypt($request->pass),
-                    // 'codepartenaire' => $request->codePart,
-                    'branche' => $request->branche
-                ]);
+            //     $userAssign = User::where('idmembre', $id)->first();
+            //     User::where('idmembre', $id)->update([
+            //         // 'idmembre' => $id,
+            //         'email' => $request->email,
+            //         'login' => $request->login,
+            //         'id_role' => $request->role_id,
+            //         // 'password' => bcrypt($request->pass),
+            //         // 'codepartenaire' => $request->codePart,
+            //         'branche' => $request->branche
+            //     ]);
 
-                $role = Role::find($request->role_id);
-                $userAssign->assignRole($role);
+            //     // $role = Role::find($request->role_id);
+            //     // $userAssign->assignRole($role);
 
-                $userAssign->syncRoles([$role->id]);
+            //     // $userAssign->syncRoles([$role->id]);
 
-                DB::commit();
+            //     DB::commit();
                 
-            }
+            // }
 
             DB::commit();
 

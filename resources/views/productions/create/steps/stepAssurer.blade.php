@@ -63,7 +63,7 @@
                     @if (!empty($GarantiesOptionnelles))
                         <td>
                             <ul>
-                                @foreach ($GarantiesOptionnelles as $item)
+                                {{-- @foreach ($GarantiesOptionnelles as $item)
                                     <li>
                                         <label class="form-label">
                                             Souhaitez-vous souscrire à la garantie {{ $item->libelle }} ?
@@ -71,19 +71,69 @@
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio"
                                                 name="GarantiesOptionnelles[{{ $item->id }}]"
-                                                id="OuiGarantiesOptionnelles{{ $item->id }}" value="Oui">
+                                                id="OuiGarantiesOptionnelles{{ $item->id }}" data-gar-value="{{ $item->codeproduitgarantie }}" value="Oui">
                                             <label class="form-check-label"
                                                 for="OuiGarantiesOptionnelles{{ $item->id }}">Oui</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio"
                                                 name="GarantiesOptionnelles[{{ $item->id }}]"
-                                                id="NonGarantiesOptionnelles{{ $item->id }}" value="Non">
+                                                id="NonGarantiesOptionnelles{{ $item->id }}" data-gar-value="{{ $item->codeproduitgarantie }}" value="Non">
+                                            <label class="form-check-label"
+                                                for="NonGarantiesOptionnelles{{ $item->id }}">Non</label>
+                                        </div>
+                                    </li>
+                                @endforeach --}}
+                                @foreach ($GarantiesOptionnelles as $item)
+                                    <li>
+                                        <label class="form-label">
+                                            Souhaitez-vous souscrire à la garantie {{ $item->libelle }} ?
+                                        </label>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input garantie-optionnelle" type="radio"
+                                                name="GarantiesOptionnelles[{{ $item->id }}]"
+                                                id="OuiGarantiesOptionnelles{{ $item->id }}" 
+                                                data-gar-value="{{ $item->codeproduitgarantie }}" 
+                                                value="Oui">
+                                            <label class="form-check-label"
+                                                for="OuiGarantiesOptionnelles{{ $item->id }}">Oui</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input garantie-optionnelle" type="radio"
+                                                name="GarantiesOptionnelles[{{ $item->id }}]"
+                                                id="NonGarantiesOptionnelles{{ $item->id }}" 
+                                                data-gar-value="{{ $item->codeproduitgarantie }}" 
+                                                value="Non">
                                             <label class="form-check-label"
                                                 for="NonGarantiesOptionnelles{{ $item->id }}">Non</label>
                                         </div>
                                     </li>
                                 @endforeach
+
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        // Récupérer les données de simulation depuis le sessionStorage
+                                        const simulationData = JSON.parse(sessionStorage.getItem('garantiesData'));
+                                        
+                                        // Parcourir toutes les options de garanties optionnelles
+                                        document.querySelectorAll('.garantie-optionnelle').forEach(radio => {
+                                            const garValue = radio.getAttribute('data-gar-value');
+                                        
+                                            if (garValue === 'SENIOR' && simulationData) {
+                                                const hasSenior = simulationData.some(item => item.codeGarantie === 'SENIOR');
+                                                
+                                                if (hasSenior) {
+                                                    if (radio.value === 'Oui') {
+                                                        radio.checked = true;
+                                                    }
+                                                    // Rendre tous les boutons radio en lecture seule
+                                                    radio.readOnly = true;
+                                                    radio.parentElement.style.opacity = '0.7';
+                                                }
+                                            }
+                                        });
+                                    });
+                                </script>
                             </ul>
     
                         </td>

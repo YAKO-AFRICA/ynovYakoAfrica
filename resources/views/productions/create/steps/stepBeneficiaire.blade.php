@@ -21,13 +21,13 @@
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Enfants nés et à naissance" id="enfants">
+                        <input class="form-check-input" type="checkbox" value="Enfants nés et à naitre" id="enfants">
                         <label class="form-check-label" for="enfants1">
                             Les enfants nés et à naître
                         </label>
                     </div>
                     <div class="form-check" data-bs-toggle="modal" data-bs-target="#addBenefModal">
-                        <input class="form-check-input" type="checkbox" value="" id="Autres1" data-situation="terme-contrat">
+                        <input class="form-check-input" type="checkbox" value="autre" id="Autres1" data-situation="terme-contrat">
                         <label class="form-check-label" for="Autres1">
                             Autres, Préciser
                         </label>

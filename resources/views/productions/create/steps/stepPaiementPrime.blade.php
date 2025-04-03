@@ -140,7 +140,7 @@
                     </div>
                     
                     <div class="row">
-                        @if ($product->CodeProduit == 'PFA_IND' || $product->CodeProduit == 'CADENCE')
+                        @if ($product->CodeProduit == 'PFA_IND')
                             <div class="col-12 mb-3">
                                 <label for="DateEffet" class="form-label">Mon contrat prendra effet le : <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control" id="DateEffet" name="dateEffet" required>
@@ -245,7 +245,7 @@
                                 <label for="primepricipale" class="form-label">Je souhaite payer une prime de
                                     :</label>
                                 <input type="number" class="form-control" id="primepricipaleYKE_2008" name="primepricipale"
-                                    min="0" requiredreadonly>
+                                    min="0" required readonly>
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="capital" class="form-label">Capital souscrit :</label>
@@ -258,10 +258,26 @@
                                 <input type="number" class="form-control" id="dureeYKE_2008" name="duree" min="0"> 
                             </div>
 
-                            {{-- <div class="col-12 mb-3">
+                            <div class="col-12 mb-3">
                                 <label for="fraisadhesion" class="form-label">Fraie d'adhesion :</label>
-                                <input type="number" class="form-control" id="fraisadhesion" name="fraisadhesion">
-                            </div> --}}
+                                <input type="number" class="form-control" id="fraisadhesion" value="7500" name="fraisadhesion" readonly>
+                            </div>
+                        @elseif ($product->CodeProduit == 'CADENCE')
+                        <div class="col-12 mb-3">
+                            <label for="DateEffet" class="form-label">Mon contrat prendra effet le :</label>
+                            <input type="date" class="form-control" id="DateEffet" name="dateEffet">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="primepricipale" class="form-label">Je souhaite payer une prime de
+                                :</label>
+                            <input type="number" class="form-control primeCalcule" id="primepricipale" name="primepricipale"
+                                min="0" required>
+                        </div>
+                        
+                        <div class="col-12 mb-3">
+                            <label for="duree" class="form-label">Durée de mes cotisations :</label>
+                            <input type="number" class="form-control" id="duree" name="duree" min="0"> 
+                        </div>
 
                         @else
                         <div class="col-12 mb-3">

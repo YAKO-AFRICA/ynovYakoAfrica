@@ -100,37 +100,38 @@
         
     
             <div class="card-body productions">
-                <div class="bs-stepper-content">
+                <div class="bs-stepper-content card p-3">
                     {{-- <form method="POST" action="{{ route('prod.store')}}" enctype="multipart/form-data" class="submitForm form"> --}}
-                        <form id="productionForm" enctype="multipart/form-data" class="submitForm form">
-                            @csrf
-                        
-                            @include('productions.create.steps.stepAdherent', ['CodeProduit' => $product->CodeProduit])
-    
-                            @include('productions.create.steps.stepAssurer', ['CodeProduit' => $product->CodeProduit])
-    
-                            @include('productions.create.steps.stepBeneficiaire', ['CodeProduit' => $product->CodeProduit])
-                        
-                            <input type="hidden" id="assuresInput" name="assures">
-                            <input type="hidden" id="beneficiariesInput" name="beneficiaires">
-    
-                            <input type="hidden" id="codeproduitvalue" name="codeproduit" value="{{ $product->CodeProduit }}">
-                        
-                            @include('productions.create.steps.stepPaiementPrime', ['CodeProduit' => $product->CodeProduit])
-    
-                            @include('productions.create.steps.stepSante', ['CodeProduit' => $product->CodeProduit])
-                            @include('productions.create.steps.stepResume', ['CodeProduit' => $product->CodeProduit])
-    
-                        </form>
-                        
-                        @include('productions.create.steps.stepDocument', ['CodeProduit' => $product->CodeProduit])
-                        
-                        
-                        
+                    <form id="productionForm" enctype="multipart/form-data" class="submitForm form">
+                        @csrf
+                    
+                        @include('productions.create.steps.stepAdherent', ['CodeProduit' => $product->CodeProduit])
+
+                        @include('productions.create.steps.stepAssurer', ['CodeProduit' => $product->CodeProduit])
+
+                        @include('productions.create.steps.stepBeneficiaire', ['CodeProduit' => $product->CodeProduit])
+                    
+                        <input type="hidden" id="assuresInput" name="assures">
+                        <input type="hidden" id="beneficiariesInput" name="beneficiaires">
+
+                        <input type="hidden" id="codeproduitvalue" name="codeproduit" value="{{ $product->CodeProduit }}">
+                    
+                        @include('productions.create.steps.stepPaiementPrime', ['CodeProduit' => $product->CodeProduit])
+
+                        @include('productions.create.steps.stepSante', ['CodeProduit' => $product->CodeProduit])
+                        @include('productions.create.steps.stepResume', ['CodeProduit' => $product->CodeProduit])
+
+                    </form>
+                    @include('productions.create.steps.stepDocument', ['CodeProduit' => $product->CodeProduit])
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    let garantiesProduct = @json($productGarantie);
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

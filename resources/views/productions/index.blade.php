@@ -73,7 +73,8 @@
                             <td>{{ $item->libelleproduit ?? "" }}</td>
                             <td>{{ $item->dateeffet ?? "" }}</td>
                             <td>{{ $item->prime ?? "" }}</td>
-                            <td>{{ $item->capital ?? "" }}</td>
+                            <td>{{ $item->capital ?? 0 }}</td>
+                            <td>{{ $item->montantrente ?? 0 }}</td>
                             <td>{{ $item->user->membre->nom ?? "" }} {{ $item->user->membre->prenom ?? "" }}</td>
                             <td>
                                 @if ($item->etape == '0')
