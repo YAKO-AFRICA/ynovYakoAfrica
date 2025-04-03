@@ -53,7 +53,6 @@ Route::get('storage/documents/{file}', function ($file) {
 Route::get('storage/prestations/{file}', function ($file) {
     // $path = base_path('../public_html/upload/prestations/' . $file);
     $path = base_path(env('UPLOAD_PRESTATION_FILE') . $file);
-
     if (!file_exists($path)) {
         abort(404);
     }
@@ -131,6 +130,8 @@ Route::prefix('prestation')->name('prestation.')->group(function(){
         Route::post('/transmettrePrest/{code}',[PrestationController::class, 'transmettrePrest'])->name('transmettrePrest');
         Route::post('/update/{code}',[PrestationController::class, 'update'])->name('update');
         Route::post('/destroy/{code}',[PrestationController::class, 'destroy'])->name('destroy');
+        Route::post('/addDocPrest',[PrestationController::class, 'addDocPrest'])->name('add.docPrest');
+        Route::post('/destroyDoc/{id}',[PrestationController::class, 'destroyDoc'])->name('destroyDoc');
         
     });
 
@@ -205,24 +206,27 @@ Route::prefix('settings')->name('setting.')->group(function(){
         Route::post('/store-product-by-reseau', [SettingsController::class, 'productByReseauStore'])->name('store.product.by.reseau');
         Route::post('/destroy-product-by-reseau/{id}', [SettingsController::class, 'destroy'])->name('destroy.productReseau');
 
-          // Role Permission
-          Route::get('/role', [RoleController::class, 'index'])->name('role');
-          Route::post('/role-create', [RoleController::class, 'store'])->name('role.store');
-          Route::post('/role-edit/{id}', [RoleController::class, 'update'])->name('role.edit');
-          Route::post('/role-destroy/{id}', [RoleController::class, 'destroy'])->name('role.destroy');
-          Route::get('/permission/{id}', [RoleController::class, 'permission'])->name('permission');
-          Route::post('/permission-create', [RoleController::class, 'permissionStore'])->name('permission.store');
-          Route::post('/group-create', [RoleController::class, 'groupStore'])->name('group.store');
-  
-          Route::post('/role-permission/{id}', [RoleController::class, 'rolePermissionSave'])->name('permission.save');
+        //store prestation by product
+        Route::get('/index-prestation-by-product', [SettingsController::class, 'indexPrestationProduct'])->name('prestation_product.index');
+        Route::get('/add-prestation-by-product-form/{codeProduit}', [SettingsController::class, 'PrestationProductform'])->name('prestation_product.form');
+        Route::post('/add-prestation-by-product', [SettingsController::class, 'PrestationProductStore'])->name('prestation_product.store');
+        Route::post('/destroy-prestation-by-product/{id}', [SettingsController::class, 'PrestationProductDestroy'])->name('prestation_product.destroy');
+        // Role Permission
+        Route::get('/role', [RoleController::class, 'index'])->name('role');
+        Route::post('/role-create', [RoleController::class, 'store'])->name('role.store');
+        Route::post('/role-edit/{id}', [RoleController::class, 'update'])->name('role.edit');
+        Route::post('/role-destroy/{id}', [RoleController::class, 'destroy'])->name('role.destroy');
+        Route::get('/permission/{id}', [RoleController::class, 'permission'])->name('permission');
+        Route::post('/permission-create', [RoleController::class, 'permissionStore'])->name('permission.store');
+        Route::post('/group-create', [RoleController::class, 'groupStore'])->name('group.store');
+
+        Route::post('/role-permission/{id}', [RoleController::class, 'rolePermissionSave'])->name('permission.save');
 
 
-          Route::get('/index-motif-rejet', [MotifController::class, 'index'])->name('motifRejet.index');
-          Route::post('/store-motif-rejet', [MotifController::class, 'store'])->name('motifRejet.store');
-          Route::post('/update-motif-rejet/{id}', [MotifController::class, 'update'])->name('motifRejet.update');
-          Route::post('/destroy-motif-rejet/{id}', [MotifController::class, 'destroy'])->name('destroy.motifRejet');
-
-        
+        Route::get('/index-motif-rejet', [MotifController::class, 'index'])->name('motifRejet.index');
+        Route::post('/store-motif-rejet', [MotifController::class, 'store'])->name('motifRejet.store');
+        Route::post('/update-motif-rejet/{id}', [MotifController::class, 'update'])->name('motifRejet.update');
+        Route::post('/destroy-motif-rejet/{id}', [MotifController::class, 'destroy'])->name('destroy.motifRejet');
 
 
 

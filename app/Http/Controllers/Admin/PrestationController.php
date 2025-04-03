@@ -39,19 +39,6 @@ class PrestationController extends Controller
         // dd($contractDetails, $membreDetails);
         return view('prestations.selectPrestation', compact('typePrestations', 'contractDetails'));
     }
-    // $cMembre   = MembreContrat::where('idcontrat', 2259833)->first();
-    // $membre = Membre::where('idmembre', $cMembre->codemembre)->first();
-    // dd($membre);
-
-    // dd($membre);
-    // $membreContrat = MembreContrat::where('idcontrat', 2259833)->with('membre')->first();
-
-    // if ($membreContrat) {
-    //     $membre = $membreContrat->membre;
-    //     dd($membre); // Vérifiez les données du membre
-    // } else {
-    //     dd('Aucun contrat trouvé.');
-    // }
 
     /**
      * Show the form for creating a new resource.
@@ -147,12 +134,11 @@ class PrestationController extends Controller
         $contractDetails = $contract['details'][0] ?? [];
         $membreDetails   = $contract['membre'] ?? [];
         $response = Http::withOptions(['timeout' => 60])
-        ->post('https://api.laloyalevie.com/enov/op-type-operation-list', [
-            'type' => 'AVT',
-        ]);
+            ->post('https://api.laloyalevie.com/enov/op-type-operation-list', [
+                'type' => 'AVT',
+            ]);
         if ($response->successful()) {
             $typeOperation = $response->json();
-            
         }
         return view('prestations.createAutre', compact('typePrestation', 'typeOperation', 'contractDetails', 'membreDetails'));
     }
@@ -176,7 +162,7 @@ class PrestationController extends Controller
                 ->post('https://api.yakoafricassur.com/oldweb/encaissement-bis', [
                     'idContrat' => $idcontrat,
                 ]);
-                
+
             $contractMembre   = MembreContrat::where('idcontrat', $idcontrat)->with('membre')->first();
 
             if ($response->successful()) {
@@ -232,14 +218,6 @@ class PrestationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    // public function generate () {
-
-    // 	# 2. On génère un QR code de taille 200 x 200 px
-    // 	$qrcode = QrCode::size(150)->generate("Je suis un QR Code");
-
-    // 	# 3. On envoie le QR code généré à la vue "simple-qrcode"
-    // 	return view("users.espace_client.services.fiches.qrcode", compact('qrcode'));
-    // }
     public function store(Request $request)
     {
 
@@ -283,6 +261,7 @@ class PrestationController extends Controller
                 'telPaiement' => $TelPaiement,
                 'IBAN' => $IBAN,
                 'saisiepar' => $saisiepar,
+                'etape' => 0,
                 // 'villedeclaration' => $request->villedeclaration,
                 // 'mailtraitement' => $request->mailtraitement,
             ]);
@@ -393,12 +372,11 @@ class PrestationController extends Controller
             $prestationPdfUrl = $this->generatePrestationPdf($prestation);
             return response()->json([
                 'type' => 'success',
-                'urlback' => route('prestation.show', $prestation->code),
+                'urlback' => route('prestation.edit', $prestation->code),
                 'url' => $prestationPdfUrl['file_url'],
-                'message' => "Enregistré avec succès !",
+                'message' => "Demande Enregistré avec succès !",
                 'code' => 200,
             ]);
-            
         } catch (\Throwable $th) {
             DB::rollBack();
 
@@ -467,10 +445,10 @@ class PrestationController extends Controller
         }
     }
 
-    
+
     public function storePrestAutre(Request $request)
-{
-    DB::beginTransaction();
+    {
+        DB::beginTransaction();
         try {
             $saisiepar = auth()->user()->idmembre;
             $otp = $request->otp_1 . $request->otp_2 . $request->otp_3 . $request->otp_4 . $request->otp_5 . $request->otp_6;
@@ -480,7 +458,7 @@ class PrestationController extends Controller
             // if ($otpVerif) {
             $idOtp = $otpVerif->id ?? null;
             // Vérifier si une prestation similaire existe déjà
-            
+
             $Operateur = ($otp == null || $otp == '') ? null : $request->Operateur;
             $TelPaiement = ($otp == null || $otp == '') ? null : $request->TelPaiement;
             $IBAN = ($otp == null || $otp == '') ? $request->IBAN : null;
@@ -544,13 +522,12 @@ class PrestationController extends Controller
 
                     foreach ($request->file('libelle') as $index => $file) {
                         $fileType = $request->type[$index];
-                    
+
                         if ($fileType === 'CNIrecto') {
                             $rectoFile = $file;
                         } elseif ($fileType === 'CNIverso') {
                             $versoFile = $file;
-                        } 
-                        
+                        }
                     }
                     // Si les fichiers recto et verso sont présents, fusionner en un fichier PDF
                     if ($rectoFile && $versoFile) {
@@ -585,7 +562,7 @@ class PrestationController extends Controller
                         TblDocPrestation::create($fileData);
                     }
                 }
-                
+
                 DB::commit();
                 return response()->json([
                     'type' => 'success',
@@ -593,7 +570,7 @@ class PrestationController extends Controller
                     'message' => "Enregistré avec succès!",
                 ]);
             }
-        }catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             DB::rollBack();
 
             return response()->json([
@@ -603,14 +580,7 @@ class PrestationController extends Controller
                 'code' => 500,
             ]);
         }
-    
-}
-
-    /**
-     * Display the specified resource.
-     */
-
-
+    }
 
     public function mesPrestations()
     {
@@ -660,7 +630,25 @@ class PrestationController extends Controller
     public function edit(string $code)
     {
         $prestation = TblPrestation::where('code', $code)->first();
-        return view('prestations.edit', compact('prestation'));
+        $documents = TblDocPrestation::where('idPrestation', $prestation->id)->get();
+
+        $types = [
+            'Police' => null,
+            'bulletin' => null,
+            'AttestationPerteContrat' => null,
+            'CNI' => null,
+            'FicheIDNum' => null,
+            'RIB' => null,
+            'Signature' => null,
+        ];
+
+        foreach ($documents as $doc) {
+            if (array_key_exists($doc->type, $types)) {
+                $types[$doc->type] = $doc->type; // Stocke la valeur si elle existe
+            }
+        }
+        // dd($types);
+        return view('prestations.edit', compact('prestation', 'types'));
     }
 
     /**
@@ -682,35 +670,281 @@ class PrestationController extends Controller
             ]);
             if ($isUpdated) {
                 $prestationPdfUrl = $this->updatePrestationPdf($isUpdated);
-                $dataResponse =[
-                    'type'=>'success',
-                    'urlback'=> 'back',
-                    'message'=>"Prestation modifiée avec succès!",
-                    'code'=>200,
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => 'back',
+                    'message' => "Prestation modifiée avec succès!",
+                    'code' => 200,
                 ];
                 DB::commit();
             } else {
                 DB::rollback();
-                $dataResponse =[
-                    'type'=>'error',
-                    'urlback'=>'',
-                    'message'=>"Erreur lors de la transmission!",
-                    'code'=>500,
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur lors de la transmission!",
+                    'code' => 500,
                 ];
             }
-
         } catch (\Throwable $th) {
             DB::rollBack();
-            $dataResponse =[
-                'type'=>'error',
-                'urlback'=>'',
-                'message'=>"Erreur systeme! $th",
-                'code'=>500,
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! $th",
+                'code' => 500,
             ];
         }
         return response()->json($dataResponse);
     }
 
+    public function addDocPrest(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $prestation = TblPrestation::where('code', $request->code)->first();
+            // Chemin externe pour stocker les fichiers
+            $externalUploadDir = base_path(env('UPLOAD_PRESTATION_FILE'));
+            if (!is_dir($externalUploadDir)) {
+                mkdir($externalUploadDir, 0777, true);
+            }
+
+            // Gestion des fichiers uploadés
+            if ($request->hasFile('libelle')) {
+                $contrat = $request->idcontrat;
+                $rectoFile = null;
+                $versoFile = null;
+                $prestationFiles = [];
+
+                foreach ($request->file('libelle') as $index => $file) {
+                    $fileType = $request->type[$index]; // Utilisation de l'index pour obtenir le type
+
+                    if ($fileType === 'CNIrecto') {
+                        $rectoFile = $file;
+                    } elseif ($fileType === 'CNIverso') {
+                        $versoFile = $file;
+                    } else {
+                        $fileName = Carbon::now()->format('Ymd_His') . '_' . $contrat . '_' . $fileType . '.' . $file->extension();
+                        $file->move($externalUploadDir . 'docsPrestation/', $fileName);
+                        $prestationFiles[] = [
+                            'idPrestation' => $prestation->id,
+                            'libelle' => $fileName,
+                            'path' => 'storage/prestations/docsPrestation/' . $fileName,
+                            'type' => $fileType,
+                        ];
+                    }
+                }
+                
+
+
+                // Si les fichiers recto et verso sont présents, fusionner en un fichier PDF
+                if ($rectoFile && $versoFile) {
+                    $mergedFileName = Carbon::now()->format('Ymd_His') . '_CNI_' . $contrat . '.pdf';
+                    $mergedFilePath = $externalUploadDir . 'docsPrestation/' . $mergedFileName;
+
+                    // Charger les fichiers recto et verso
+                    $rectoContent = file_get_contents($rectoFile->getPathname());
+                    $versoContent = file_get_contents($versoFile->getPathname());
+
+                    // Créer une vue HTML pour le PDF
+                    $html = view('prestations.fiches.cni', [
+                        'rectoContent' => base64_encode($rectoContent),
+                        'versoContent' => base64_encode($versoContent)
+                    ])->render();
+
+                    // Générer le PDF
+                    $pdf = Pdf::loadHTML($html)->setPaper('a4', 'portrait');
+                    $pdf->save($mergedFilePath);
+
+                    // Enregistrer dans la base de données
+                    $prestationFiles[] = [
+                        'idPrestation' => $prestation->id,
+                        'libelle' => $mergedFileName,
+                        'path' => 'storage/prestations/docsPrestation/' . $mergedFileName,
+                        'type' => 'CNI',
+                    ];
+                }
+                // dd($prestationFiles);
+                // Enregistrer tous les fichiers
+                foreach ($prestationFiles as $fileData) {
+                    TblDocPrestation::create($fileData);
+                }
+            }
+            $this->updatePrestationPdf($prestation);
+            DB::commit();
+            $dataResponse = [
+                'type' => 'success',
+                'urlback' => 'back',
+                'message' => "Document ajouté avec succès!",
+                'code' => 200,
+            ];
+            
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! $th",
+                'code' => 500,
+            ];
+        }
+        return response()->json($dataResponse);
+    }
+    
+
+    public function transmettrePrest(string $code)
+    {
+        DB::beginTransaction();
+        try {
+            $isTransmitted = TblPrestation::where('code', $code)->first();
+            $documents = TblDocPrestation::where('idPrestation', $isTransmitted->id)->get();
+
+            $types = [
+                'Police' => null,
+                'bulletin' => null,
+                'AttestationPerteContrat' => null,
+                'CNI' => null,
+                'FicheIDNum' => null,
+                'RIB' => null,
+                'Signature' => null,
+            ];
+
+            foreach ($documents as $doc) {
+                if (array_key_exists($doc->type, $types)) {
+                    $types[$doc->type] = $doc->type; // Stocke la valeur si elle existe
+                }
+            }
+            if ($types['Signature'] == null && $types['RIB'] == null && $types['FicheIDNum'] == null && $types['CNI'] == null && ($types['AttestationPerteContrat'] == null || $types['bulletin'] == null || $types['Police'] == null)) {
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Veuillez fournir tous les documents!",
+                    'code' => 500,
+                ];
+                return response()->json($dataResponse);
+            }else {
+                $isTransmitted->update([
+                    'etape' => 1
+                ]);
+            }
+            if ($isTransmitted) {
+
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => route('prestation.mesPrestations'),
+                    'message' => "Prestation transmise avec succès!",
+                    'code' => 200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollback();
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur lors de la transmission!",
+                    'code' => 500,
+                ];
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! $th",
+                'code' => 500,
+            ];
+        }
+        return response()->json($dataResponse);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $code)
+    {
+        DB::beginTransaction();
+        try {
+            $isDeleted = TblPrestation::where('code', $code)->first();
+            $isDeletedDocs = TblDocPrestation::where('idPrestation', $isDeleted->id)->get();
+            if ($isDeleted) {
+                foreach ($isDeletedDocs as $doc) {
+                    $this->destroyDoc($doc->id);
+                }
+                $isDeleted->delete();
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => "back",
+                    'message' => "Prestation supprimée avec succès!",
+                    'code' => 200,
+                ];
+                DB::commit();
+            } else {
+                DB::rollback();
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur lors de la suppression!",
+                    'code' => 500,
+                ];
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! $th",
+                'code' => 500,
+            ];
+        }
+        return response()->json($dataResponse);
+    }
+
+    public function destroyDoc(string $id)
+    {
+        DB::beginTransaction();
+        try {
+            $doc = TblDocPrestation::where('id', $id)->first();
+            if ($doc) {
+                $prestation = TblPrestation::where('id', $doc->idPrestation)->first();
+                // Chemin du fichier stocké
+                $filePath = base_path(env('UPLOAD_PRESTATION_FILE')) . 'docsPrestation/' . $doc->libelle;
+                $filePathe = base_path(env('UPLOAD_PRESTATION_FILE')) . 'etatPrestations/' . $doc->libelle;
+
+                // Vérifie si le fichier existe avant de le supprimer
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
+                // Vérifie si le fichier existe avant de le supprimer
+                if (file_exists($filePathe)) {
+                    unlink($filePathe);
+                }
+
+                // Supprime l'entrée de la base de données
+                $doc->delete();
+
+                $this->updatePrestationPdf($prestation);
+            }
+            DB::commit();
+            $dataResponse = [
+                'type' => 'success',
+                'urlback' => 'back',
+                'message' => "Document supprimé avec succès!",
+                'code' => 200,
+            ];
+            
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur système! $th",
+                'code' => 500,
+            ];
+        }
+        return response()->json($dataResponse);
+    }
+
+    
     private function updatePrestationPdf($prestation)
     {
         try {
@@ -740,7 +974,7 @@ class PrestationController extends Controller
             $fileName = 'Prestation_' . $prestation->code . '.pdf';
             $filePath = $etatPrestationDir . $fileName;
             $pdf->save($filePath);
-            
+
             $docName = TblDocPrestation::where(['idPrestation' => $prestation->id, 'type' => 'etatPrestation'])->first();
             if ($docName) {
                 $docName->delete();
@@ -768,84 +1002,5 @@ class PrestationController extends Controller
                 'message' => $e->getMessage(),
             ];
         }
-    }
-    public function transmettrePrest(string $code)
-    {
-        DB::beginTransaction();
-        try {
-            $isTransmitted = TblPrestation::where('code', $code)->first();
-            $isTransmitted->update([
-                'etape' => 1
-            ]);
-            if ($isTransmitted) {
-
-                $dataResponse =[
-                    'type'=>'success',
-                    'urlback'=> route('prestation.mesPrestations'),
-                    'message'=>"Prestation transmise avec succès!",
-                    'code'=>200,
-                ];
-                DB::commit();
-            } else {
-                DB::rollback();
-                $dataResponse =[
-                    'type'=>'error',
-                    'urlback'=>'',
-                    'message'=>"Erreur lors de la transmission!",
-                    'code'=>500,
-                ];
-            }
-
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            $dataResponse =[
-                'type'=>'error',
-                'urlback'=>'',
-                'message'=>"Erreur systeme! $th",
-                'code'=>500,
-            ];
-        }
-        return response()->json($dataResponse);
-    
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $code)
-    {
-        DB::beginTransaction();
-        try {
-            $isDeleted = TblPrestation::where('code', $code)->delete();
-
-            if ($isDeleted) {
-
-                $dataResponse =[
-                    'type'=>'success',
-                    'urlback'=>"back",
-                    'message'=>"Prestation supprimée avec succès!",
-                    'code'=>200,
-                ];
-                DB::commit();
-            } else {
-                DB::rollback();
-                $dataResponse =[
-                    'type'=>'error',
-                    'urlback'=>'',
-                    'message'=>"Erreur lors de la suppression!",
-                    'code'=>500,
-                ];
-            }
-
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            $dataResponse =[
-                'type'=>'error',
-                'urlback'=>'',
-                'message'=>"Erreur systeme! $th",
-                'code'=>500,
-            ];
-        }
-        return response()->json($dataResponse);
     }
 }

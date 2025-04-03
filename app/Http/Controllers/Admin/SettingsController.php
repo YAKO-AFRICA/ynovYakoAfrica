@@ -6,9 +6,12 @@ use App\Models\Reseau;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\ReseauProduct;
+use App\Models\TblPrestation;
 use App\Models\ProductFormule;
+use App\Models\TblTypePrestation;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\TblProductPrestation;
 
 class SettingsController extends Controller
 {
@@ -19,6 +22,94 @@ class SettingsController extends Controller
         $products = Product::orderBy('id', 'desc')->get();
         $formules = ProductFormule::all();
         return view('admin.settings.productByReseau', compact('reseaux', 'products', 'formules'));
+    }
+
+    public function indexPrestationProduct()
+    {
+        $products = Product::with('typePrestations')->get();
+
+        // dd($products);
+        $typeprestations = TblTypePrestation::where('etat', 'Actif')->get();
+        return view('settings.PrestationByProduct.index', compact('products', 'typeprestations'));
+    }
+
+    public function PrestationProductform($codeProduit)
+    {
+        $product = Product::where('CodeProduit', $codeProduit)->first();
+        $typeprestations = TblTypePrestation::where('etat', 'Actif')->where('impact', '!=', 'Autre')->get();
+        return view('settings.PrestationByProduct.addPrestation', compact('codeProduit', 'typeprestations', 'product'));
+    }
+    public function PrestationProductStore(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            // Enregistrement des prestations pour le produit
+            // Récupérer correctement les prestations en tableau
+            $prestations = $request->input('prestations', []);
+
+            foreach ($prestations as $prestationId) {
+                $ProductPrestation = TblProductPrestation::where('product_id', $request->codeproduit)
+                    ->where('prestation_id', $prestationId)
+                    ->first();
+                if ($ProductPrestation) {
+                    $ProductPrestation->delete();
+                }
+                $saving = TblProductPrestation::create([
+                    'product_id' => $request->codeproduit,
+                    'product_type' => $request->product_type,
+                    'prestation_id' => $prestationId,
+                ]);
+                if ($saving) {
+                    $dataResponse = [
+                        'type' => 'success',
+                        'urlback' => route('setting.prestation_product.index'),
+                        'message' => "Enregistré avec succes !",
+                        'code' => 200,
+                    ];
+                    DB::commit();
+                } else {
+                    $dataResponse = [
+                        'type' => 'error',
+                        'urlback' => '',
+                        'message' => "Erreur d'enregistrement !",
+                        'code' => 500,
+                    ];
+                    DB::rollBack();
+                }
+            }
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! " . $th->getMessage(),
+                'code' => 500,
+            ];
+        }
+        return response()->json($dataResponse);
+    }
+
+    public function PrestationProductDestroy($id)
+    {
+        $saving = TblProductPrestation::where(['id' => $id])->delete();
+        if ($saving) {
+            $dataResponse = [
+                'type' => 'success',
+                'urlback' => "back",
+                'message' => "Supprimé avec succes!",
+                'code' => 200,
+            ];
+        } else {
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur lors de la suppression!",
+                'code' => 500,
+            ];
+        }
+        return response()->json($dataResponse);
     }
 
     public function getFormulesByProduct($codeProduit)
@@ -45,31 +136,30 @@ class SettingsController extends Controller
 
             DB::commit();
 
-            if($equipe){
-                $dataResponse =[
-                    'type'=>'success',
-                    'urlback'=>"back",
-                    'message'=>"Enregistré avec succes!",
-                    'code'=>200,
+            if ($equipe) {
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => "back",
+                    'message' => "Enregistré avec succes!",
+                    'code' => 200,
                 ];
                 DB::commit();
-            }else{
-                $dataResponse =[
-                    'type'=>'error',
-                    'urlback'=>'',
-                    'message'=>"Erreur d'enregistrement !",
-                    'code'=>500,
+            } else {
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur d'enregistrement !",
+                    'code' => 500,
                 ];
                 DB::rollBack();
             }
-        
         } catch (\Throwable $th) {
             DB::rollBack();
-            $dataResponse =[
-                'type'=>'error',
-                'urlback'=>'',
-                'message'=>"Erreur systeme! ".$th->getMessage(),
-                'code'=>500,
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! " . $th->getMessage(),
+                'code' => 500,
             ];
         }
         return response()->json($dataResponse);
@@ -81,37 +171,35 @@ class SettingsController extends Controller
         DB::beginTransaction();
         try {
 
-            $saving= ReseauProduct::where(['id'=>$id])->delete();
+            $saving = ReseauProduct::where(['id' => $id])->delete();
 
             if ($saving) {
 
-                $dataResponse =[
-                    'type'=>'success',
-                    'urlback'=>"back",
-                    'message'=>"Supprimé avec succes!",
-                    'code'=>200,
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => "back",
+                    'message' => "Supprimé avec succes!",
+                    'code' => 200,
                 ];
                 DB::commit();
             } else {
                 DB::rollback();
-                $dataResponse =[
-                    'type'=>'error',
-                    'urlback'=>'',
-                    'message'=>"Erreur lors de la suppression!",
-                    'code'=>500,
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur lors de la suppression!",
+                    'code' => 500,
                 ];
             }
-
         } catch (\Throwable $th) {
             DB::rollBack();
-            $dataResponse =[
-                'type'=>'error',
-                'urlback'=>'',
-                'message'=>"Erreur systeme! $th",
-                'code'=>500,
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! $th",
+                'code' => 500,
             ];
         }
         return response()->json($dataResponse);
     }
-
 }

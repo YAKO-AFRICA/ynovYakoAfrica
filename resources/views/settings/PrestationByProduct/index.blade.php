@@ -1,0 +1,137 @@
+@extends('layouts.main')
+
+@section('content')
+    <div class="page-content">
+        <!--breadcrumb-->
+        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div class="breadcrumb-title pe-3"><a href="/shared/home"><i class="bx bx-home-alt"></i></a></div>
+            <div class="ps-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 p-0">
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Settings</li>
+                        <li class="breadcrumb-item active" aria-current="page">Produits & Prestations</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="ms-auto">
+                <div class="btn-group">
+                    {{-- <button type="button" class="btn btn-primary">Settings</button>
+                <button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
+                    <a class="dropdown-item" href="javascript:;">Another action</a>
+                    <a class="dropdown-item" href="javascript:;">Something else here</a>
+                    <div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
+                </div> --}}
+                </div>
+            </div>
+        </div>
+        <!--end breadcrumb-->
+
+
+        <div class="card">
+            <div class="card-body">
+                {{-- <div class="d-lg-flex align-items-center mb-4 gap-3">
+                <div class="position-relative">
+                </div>
+              <div class="ms-auto"><a href="javascript:;" class="btn btn-primary radius-30 mt-2 mt-lg-0" data-bs-toggle="modal" data-bs-target="#addnewReseau"><i class="bx bxs-plus-square"></i>Ajouter un reseau</a></div>
+            </div> --}}
+                
+
+                <div class="table-responsive">
+                    <table class="table mb-0" id="example2">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#ID</th>
+                                <th>Code Produit</th>
+                                <th>Libelle</th>
+                                <th>Prestations possibles</th>
+                                <th>Date création</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($products as $item)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $item->CodeProduit ?? '' }}</td>
+                                    <td>{{ $item->MonLibelle ?? '' }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div>{{ $item->typePrestations->count() }}</div>
+                                            <div class="ms-2">
+                                                <h6 class="mb-0 font-18 text-success" data-bs-toggle="modal"
+                                                    data-bs-target="#showPrestationModal{{ $item->CodeProduit }}"
+                                                    style="cursor: pointer">
+                                                    <i class="bx bx-show"></i>
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ $item->DateProduit ?? '' }}</td>
+                                    <td>
+                                        <div class="d-flex order-actions">
+                                            <a href="{{ route('setting.prestation_product.form', $item->CodeProduit) }}" class="ms-3">
+                                                <i class="bx bx-dots-horizontal-rounded"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @include('settings.prestationByproduct.showPrestationModal', [
+                                    'CodeProduit' => $item->CodeProduit,
+                                ])
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center">Aucun produit</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    
+    {{-- <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function addPrestation(event) {
+                // Trouver le modal le plus proche du bouton cliqué
+                const button = event.target;
+                const modal = button.closest('.modal');
+                if (!modal) return;
+    
+                // Sélectionner le container de prestations et le modèle à cloner
+                const container = modal.querySelector('#prestationsContainer');
+                const template = modal.querySelector('.prestation-item');
+    
+                if (!container || !template) return;
+    
+                // Cloner l'élément prestation
+                const newItem = template.cloneNode(true);
+                newItem.style.display = "block"; // Rendre visible la nouvelle ligne clonée
+    
+                // Réinitialiser la valeur du select cloné
+                const select = newItem.querySelector('select');
+                if (select) {
+                    select.selectedIndex = 0;
+                    select.name = "prestations[]"; // Assurer que le name est bien présent
+                }
+    
+                // Ajouter le nouvel élément au container
+                container.appendChild(newItem);
+            }
+    
+            // Attacher la fonction au bouton d'ajout avec la délégation d'événements
+            document.addEventListener('click', function (event) {
+                if (event.target.classList.contains('btn-add-prestation')) {
+                    addPrestation(event);
+                }
+            });
+        });
+    </script> --}}
+    
+@endsection
+

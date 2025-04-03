@@ -227,7 +227,7 @@
                         $prestation &&
                             $prestation->docPrestation &&
                             $prestation->docPrestation->where('idPrestation', $prestation->id)->count() > 0)
-                        @forelse ($prestation->docPrestation->where('idPrestation', $prestation->id) as $doc)
+                        @forelse ($prestation->docPrestation->where('idPrestation', $prestation->id)->where('type', '!=', 'Signature') as $doc)
                             <div class="d-flex align-items-center mt-3">
                                 <div class="fm-file-box text-success"><i class='bx bxs-file-doc'></i>
                                 </div>

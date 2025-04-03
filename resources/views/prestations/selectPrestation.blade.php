@@ -27,6 +27,17 @@
             <div class="row">
 
                 @foreach($typePrestations as $typePrestation)
+                @if($typePrestation->impact == 'Autre')
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mb-3">
+                        <a href="{{ route('prestation.autre', $typePrestation->id) }}" class="prestation">
+                            <div class="card border rounded-4 text-center shadow-none bg-light-success">
+                                <div class="card-body">
+                                    <p class="mb-0 fs-5 text-success">{{ $typePrestation->libelle ?? 'Non renseigné' }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                @else
                     <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mb-3">
                         <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#exampleModal{{ $typePrestation->id }}" class="prestation">
                             <div class="card border rounded-4 text-center shadow-none bg-light-success">
@@ -36,6 +47,7 @@
                             </div>
                         </a>
                     </div>
+                @endif
                     @include('prestations.components.modals.descriptionModal', ['id' => $typePrestation->id])
                 @endforeach
             </div><!--end row-->

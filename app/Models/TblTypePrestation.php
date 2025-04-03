@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TblTypePrestation extends Model
 {
@@ -17,4 +18,9 @@ class TblTypePrestation extends Model
         'impact',
         'etat',
     ];
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'tbl_product_prestations', 'prestation_id', 'product_id');
+    }
 }

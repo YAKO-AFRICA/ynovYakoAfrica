@@ -225,6 +225,33 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+
+                        <div class="card">
+
+                            <div class="card-body">
+
+                                <div class="mb-3">
+
+                                    <label class="form-label">Signature (Veuillez signer une feuille blanche
+                                        précédé de la mention <span class="text-danger">"LU et APPROUVE"</span>
+                                        ) et joindre la photo</label>
+
+                                    <div class="input-group">
+
+                                        <input type="file" name="libelle[]" class="form-control"
+                                            accept=".jpg, .png, image/jpeg, image/png" required>
+
+                                        <input type="hidden" name="type[]" value="Signature">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
                     </div> 
                 </div>
             </div>

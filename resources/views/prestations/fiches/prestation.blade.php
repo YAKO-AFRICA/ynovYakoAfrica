@@ -561,6 +561,7 @@
                     @php
                         $user = Auth::user()->idmembre;
                         $membre = App\Models\Membre::where('idmembre', $user)->with('zone')->first();
+                        $Signature = $prestation->docPrestation->where('idPrestation', $prestation->id)->where('type', 'Signature')->first();
                     @endphp
                     <div class="Signature">
                         <h6>Signature du déclarant</h6><small><p style="font-size: 0.56em; margin-top: -98px; margin-left:130px">Contrôle éffectué par OTP du {{ ($prestation->moyenPaiement !== 'Virement_Bancaire') ? $prestation->otp->created_at->format('d/m/Y à H:i:s') : $prestation->created_at->format('d/m/Y à H:i:s') ?? '.' }}</p></small>
@@ -590,6 +591,10 @@
                             
                         </div>
                     </div>
+                    <label for="qrcode" style="position: absolute; top: 310px; left: 200px; max-height: 65px; max-width: 65px;">
+                        
+                        <img src="data:image/jpg;base64,{{ base64_encode(file_get_contents(asset($Signature->path))) }}" alt="Yako Africa Logo" style="height: 65px; width: 65px" class="logo">
+                    </label>
                 </section>
             </div>
             <section class="section-documents" style="background-color: #E7F0EB; padding: 10px 20px; height: 230px;">

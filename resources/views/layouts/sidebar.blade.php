@@ -207,6 +207,13 @@
                     <div class="menu-title">Motif de rejet</div>
                 </a>
             </li> 
+            <li>
+                <a href="{{ route('setting.prestation_product.index')}}">
+                    <div class="parent-icon"><i class='bx bx-network-chart'></i>
+                    </div>
+                    <div class="menu-title">Produit</div>
+                </a>
+            </li>
             @endcan
         </div>
     </ul>

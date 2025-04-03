@@ -50,9 +50,10 @@ use Illuminate\Support\Facades\Http;
 class SMSService
 {
 
-    private $clientId = 'xjxWRml44RnoZ5dvMFIfQl3e18rGA7tv';
-    private $clientSecret = 'wQkC6YbNdM5AMXig';
-    private $sender = '225123456789'; // Sender ID configuré dans Orange SMS API
+    // private $clientId = 'xjxWRml44RnoZ5dvMFIfQl3e18rGA7tv';
+    private $clientId = 'nHGG0L8hBadaSPud8yja2MjYfmS183kh';
+    private $clientSecret = 'Zc7RUVp7pBPBH4iS';
+    private $sender = '701280'; // Sender ID configuré dans Orange SMS API
     private $tokenUrl = 'https://api.orange.com/oauth/v3/token';
     private $smsUrl = 'https://api.orange.com/smsmessaging/v1/outbound';
 
@@ -64,6 +65,8 @@ class SMSService
         try {
             $response = Http::asForm()
                 ->withHeaders([
+                    // 'Authorization' => 'Basic ' . "eGp4V1JtbDQ0Um5vWjVkdk1GSWZRbDNlMThyR0E3dHY6d1FrQzZZYk5kTTVBTVhpZw==",
+                    // 'Authorization' => "Basic bkhHRzBMOGhCYWRhU1B1ZDh5amEyTWpZZm1TMTgza2g6WmM3UlVWcDdwQlBCSDRpUw==",
                     'Authorization' => 'Basic ' . base64_encode("$this->clientId:$this->clientSecret"),
                 ])
                 ->post($this->tokenUrl, [
@@ -92,10 +95,12 @@ class SMSService
         // }
 
         // $smsUrl = "{$this->smsUrl}/tel%3A%2B" . urlencode($this->sender) . "/requests";
+        // // $smsUrl = "{$this->smsUrl}/tel%3A%2B" . urlencode($this->sender) . "/requests";
 
         // $body = [
         //     'outboundSMSMessageRequest' => [
         //         'address' => "tel:+{$phoneNumber}",
+        //         // 'senderAddress' => "tel:+{$phoneNumber}",
         //         'senderAddress' => "tel:+{$this->sender}",
         //         'outboundSMSTextMessage' => [
         //             'message' => "Votre code de confirmation est : $otp",
