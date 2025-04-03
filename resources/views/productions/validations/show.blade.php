@@ -722,8 +722,8 @@
                                             <td>{{ $assure->nom ?? '-' }} {{ $assure->prenom ?? '-' }}</td>
                                             <td>
                                                 <ul>
-                                                    @foreach ($productGarantie as $item)
-                                                        <li>{{ $item->MonLibelle }}</li>
+                                                    @foreach ($assure->garanties as $item)
+                                                        <li>{{ $item->monlibelle ?? 'Aucune garantie'}}</li>
                                                     @endforeach
                                                 </ul>
                                             </td>

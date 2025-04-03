@@ -56,84 +56,84 @@ class ValidationController extends Controller
      * Show the form for creating a new resource.
      */
     public function prodByPartner(Request $request, $code)
-{
-    set_time_limit(300);
+    {
+        set_time_limit(300);
 
-    $partners = Partner::where('code', $code)->first();
-    
-    // Récupération des contrats du partenaire
-    $allPropositions = Contrat::where('partenaire', $code)->with('user')->get();
-    // dd($allPropositions);
-    $acceptedPropositions = Contrat::where(['partenaire' => $code, 'estMigre' => 1, 'etape' => 3])->get();
-    $contratsEtape2Today = Contrat::where(['etape' => 2, 'partenaire' => $code])
-    ->whereDate('saisiele', now()->toDateString()) // Filtre pour aujourd'hui
-    ->count();
-    $defaultColumns = ['#', 'Produit', 'Date Effet', 'Prime', 'Capital', 'Saisir Par', 'Status'];
+        $partners = Partner::where('code', $code)->first();
+        
+        // Récupération des contrats du partenaire
+        $allPropositions = Contrat::where('partenaire', $code)->with('user')->get();
+        // dd($allPropositions);
+        $acceptedPropositions = Contrat::where(['partenaire' => $code, 'estMigre' => 1, 'etape' => 3])->get();
+        $contratsEtape2Today = Contrat::where(['etape' => 2, 'partenaire' => $code])
+        ->whereDate('saisiele', now()->toDateString()) // Filtre pour aujourd'hui
+        ->count();
+        $defaultColumns = ['#', 'Produit', 'Date Effet', 'Prime', 'Capital', 'Saisir Par', 'Status'];
 
-    $additionalColumns = [
-        'Mode de Paiement' => 'modepaiement',
-        'Organisme' => 'organisme',
-        'Prime' => 'prime',
-        'Prime Principale' => 'primepricipale',
-        'Capital' => 'capital',
-        'Surprime' => 'surprime',
-        'Date Effet' => 'dateeffet',
-        'N° Compte' => 'numerocompte',
-        'Agence' => 'agence',
-        'Saisie Le' => 'saisiele',
-        'Code Conseiller' => 'codeConseiller',
-        'Nom Agent' => 'nomagent',
-        'Duree' => 'duree',
-        'Periodicite' => 'periodicite',
-        'Code Adherent' => 'codeadherent',
-        'Est Migre' => 'estMigre',
-        'Transmis Le' => 'transmisle',
-        'Annuler Le' => 'annulerle',
-        'Accepter Le' => 'accepterle',
-        'Modifier Le' => 'modifierle',
-        'Modifier Par' => 'modifierpar',
-        'Libelle Produit' => 'libelleproduit',
-        'Personne Ressourource' => 'personneressource',
-        'Contact Ressourource' => 'contactpersonneressource',
-        'Beneficiaire Auterme' => 'beneficiaireauterme',
-        'Beneficiaire Audeces' => 'beneficiaireaudeces',
-        'Accepter Par' => 'accepterpar',
-        'Rejeter Par' => 'rejeterpar',
-        'Transmis Par' => 'transmispar',
-        'Personne Ressource 2' => 'personneressource2',
-        'Contact Ressource 2' => 'contactpersonneressource2',
-        'Code Banque' => 'codebanque',
-        'Code Guichet' => 'codeguichet',
-        'Rib' => 'rib',
-        'Id Proposition' => 'idproposition',
-        'Code Proposition' => 'codeproposition',
-        'Branche' => 'branche',
-        'Partenaire' => 'partenaire',
-        'Nom Accepter Par' => 'nomaccepterpar',
-        'Ref Contrat Source' => 'refcontratsource',
-        'Cle Integration' => 'cleintegration',
-        'Code Operation' => 'codeoperation',
-        'N° Police' => 'numeropolice',
-        'Frais Adhesion' => 'fraisadhesion',
-        'Est Paye' => 'estpaye',
-        'Pret Connexe' => 'pretconnexe',
-        'Details' => 'details',
-    ];
+        $additionalColumns = [
+            'Mode de Paiement' => 'modepaiement',
+            'Organisme' => 'organisme',
+            'Prime' => 'prime',
+            'Prime Principale' => 'primepricipale',
+            'Capital' => 'capital',
+            'Surprime' => 'surprime',
+            'Date Effet' => 'dateeffet',
+            'N° Compte' => 'numerocompte',
+            'Agence' => 'agence',
+            'Saisie Le' => 'saisiele',
+            'Code Conseiller' => 'codeConseiller',
+            'Nom Agent' => 'nomagent',
+            'Duree' => 'duree',
+            'Periodicite' => 'periodicite',
+            'Code Adherent' => 'codeadherent',
+            'Est Migre' => 'estMigre',
+            'Transmis Le' => 'transmisle',
+            'Annuler Le' => 'annulerle',
+            'Accepter Le' => 'accepterle',
+            'Modifier Le' => 'modifierle',
+            'Modifier Par' => 'modifierpar',
+            'Libelle Produit' => 'libelleproduit',
+            'Personne Ressourource' => 'personneressource',
+            'Contact Ressourource' => 'contactpersonneressource',
+            'Beneficiaire Auterme' => 'beneficiaireauterme',
+            'Beneficiaire Audeces' => 'beneficiaireaudeces',
+            'Accepter Par' => 'accepterpar',
+            'Rejeter Par' => 'rejeterpar',
+            'Transmis Par' => 'transmispar',
+            'Personne Ressource 2' => 'personneressource2',
+            'Contact Ressource 2' => 'contactpersonneressource2',
+            'Code Banque' => 'codebanque',
+            'Code Guichet' => 'codeguichet',
+            'Rib' => 'rib',
+            'Id Proposition' => 'idproposition',
+            'Code Proposition' => 'codeproposition',
+            'Branche' => 'branche',
+            'Partenaire' => 'partenaire',
+            'Nom Accepter Par' => 'nomaccepterpar',
+            'Ref Contrat Source' => 'refcontratsource',
+            'Cle Integration' => 'cleintegration',
+            'Code Operation' => 'codeoperation',
+            'N° Police' => 'numeropolice',
+            'Frais Adhesion' => 'fraisadhesion',
+            'Est Paye' => 'estpaye',
+            'Pret Connexe' => 'pretconnexe',
+            'Details' => 'details',
+        ];
 
-    $activeColumns = session('activeColumns', []);
+        $activeColumns = session('activeColumns', []);
 
-    return view('productions.validations.prodByPartner', [
-        'datas' => collect([
-            'allPropositions' => $allPropositions,
-            'contratsEtape2Today' => $contratsEtape2Today,
-            'acceptedPropositions' => $acceptedPropositions,
-            'partners' => $partners
-        ]),
-        'activeColumns' => $activeColumns,
-        'defaultColumns' => $defaultColumns,
-        'additionalColumns' => $additionalColumns
-    ]);
-}
+        return view('productions.validations.prodByPartner', [
+            'datas' => collect([
+                'allPropositions' => $allPropositions,
+                'contratsEtape2Today' => $contratsEtape2Today,
+                'acceptedPropositions' => $acceptedPropositions,
+                'partners' => $partners
+            ]),
+            'activeColumns' => $activeColumns,
+            'defaultColumns' => $defaultColumns,
+            'additionalColumns' => $additionalColumns
+        ]);
+    }
 
 
     /**

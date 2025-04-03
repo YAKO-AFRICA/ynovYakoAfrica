@@ -210,6 +210,10 @@
                                 <label for="capital" class="form-label">Capital souscrit :</label>
                                 <input type="number" class="form-control" id="capital" name="capital" min="0" value="{{ $contrat->capital ?? '--'}}"  placeholder="{{ $contrat->capital ?? '--'}}" readonly>
                             </div>
+                            <div class="col-12 mb-3">
+                                <label for="rente" class="form-label">Montant de la Rente :</label>
+                                <input type="number" class="form-control" id="rente" name="rente" min="0" value="{{ $contrat->montantrente ?? '--'}}"  placeholder="{{ $contrat->montantrente ?? '--'}}" readonly>
+                            </div>
 
                             
                             <div class="col-12 mb-3">

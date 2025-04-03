@@ -95,6 +95,8 @@
         </div>
         <div class="col-12 col-lg-4">
 
+          
+
             <div class="card mx-0">
                 <div class="card-body">
                     <label for="" class="form-label">Je souhaite payer mes primes chaque : <span class="text-danger">*</span></label>
@@ -113,6 +115,7 @@
                                 Trimestre
                             </label>
                         </div>
+                        
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="periodicite" type="radio" value="S"
                                 id="Semestre">
@@ -137,7 +140,7 @@
                     </div>
                     
                     <div class="row">
-                        @if ($product->CodeProduit == 'PFA_IND' || $product->CodeProduit == 'CADENCE')
+                        @if ($product->CodeProduit == 'PFA_IND')
                             <div class="col-12 mb-3">
                                 <label for="DateEffet" class="form-label">Mon contrat prendra effet le : <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control" id="DateEffet" name="dateEffet" required>
@@ -233,41 +236,48 @@
                                     </select>
                                 </div>
                             @endif
-                        @elseif($product->CodeProduit == 'YKE_2008')
+                        @elseif($product->CodeProduit == 'YKE_2008' || $product->CodeProduit == 'YKE_2018')
                             <div class="col-12 mb-3">
                                 <label for="DateEffet" class="form-label">Mon contrat prendra effet le :</label>
-                                <input type="date" class="form-control" id="DateEffet" name="dateEffet">
+                                <input type="date" class="form-control" id="DateEffetYKE_2008" name="dateEffet" readonly>
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="primepricipale" class="form-label">Je souhaite payer une prime de
                                     :</label>
-                                <input type="number" class="form-control" id="primepricipale" name="primepricipale"
-                                    min="0" required>
+                                <input type="number" class="form-control" id="primepricipaleYKE_2008" name="primepricipale"
+                                    min="0" required readonly>
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="capital" class="form-label">Capital souscrit :</label>
-                                {{-- <input type="number" class="form-control" id="capital" name="capital"
-                                    min="0"> --}}
-                                    <select name="capital" id="capital" class="form-select" required>
-                                        <option value="" selected>Selectionnez le capital souscrit</option>
-                                        <option value="300000">300 000</option>
-                                        <option value="500000">500 000</option>
-                                        <option value="750000">750 000</option>
-                                        <option value="1000000">1 000 000</option>
-                                        <option value="1250000">1 250 000</option>
-                                        <option value="1500000">1 500 000</option>
-                                        <option value="2000000">2 000 000</option>
-                                    </select>
+                                <input type="number" class="form-control" id="capitalYKE_2008" name="capital"
+                                    min="0" readonly>
+                                    
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="duree" class="form-label">Durée de mes cotisations :</label>
-                                <input type="number" class="form-control" id="duree" name="duree" min="0"> 
+                                <input type="number" class="form-control" id="dureeYKE_2008" name="duree" min="0"> 
                             </div>
 
-                            {{-- <div class="col-12 mb-3">
+                            <div class="col-12 mb-3">
                                 <label for="fraisadhesion" class="form-label">Fraie d'adhesion :</label>
-                                <input type="number" class="form-control" id="fraisadhesion" name="fraisadhesion">
-                            </div> --}}
+                                <input type="number" class="form-control" id="fraisadhesion" value="7500" name="fraisadhesion" readonly>
+                            </div>
+                        @elseif ($product->CodeProduit == 'CADENCE')
+                        <div class="col-12 mb-3">
+                            <label for="DateEffet" class="form-label">Mon contrat prendra effet le :</label>
+                            <input type="date" class="form-control" id="DateEffet" name="dateEffet">
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="primepricipale" class="form-label">Je souhaite payer une prime de
+                                :</label>
+                            <input type="number" class="form-control primeCalcule" id="primepricipale" name="primepricipale"
+                                min="0" required>
+                        </div>
+                        
+                        <div class="col-12 mb-3">
+                            <label for="duree" class="form-label">Durée de mes cotisations :</label>
+                            <input type="number" class="form-control" id="duree" name="duree" min="0"> 
+                        </div>
 
                         @else
                         <div class="col-12 mb-3">
@@ -333,5 +343,9 @@
             }
         });
     </script> --}}
+
+    
+
+
 
 </div>

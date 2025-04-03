@@ -2,6 +2,7 @@
     <h5 class="mb-1">Informations personnelles de l'adhérent</h5>
     <p class="mb-4">Veuillez entrer vos informations personnelles pour commencer l'adhésion en tenant compte des champs
         obligatoire (<span class="star">*</span>).</p>
+
     <div class="row g-3 mb-3">
         <div class="col-12">
             <label class="form-label">Civilité <span class="star">*</span></label> <br>
@@ -42,6 +43,7 @@
     </div>
     <!---end row-->
     <div class="row g-3 mb-3">
+
         <div class="col-12 col-lg-6">
             <label for="Date_naissance" class="form-label">Date de naissance <span class="text-danger">*</span></label>
             <input type="date" name="datenaissance" class="form-control" id="Date_naissance"
@@ -53,6 +55,7 @@
                 <span class="text-danger"> Veuillez remplir la date de naissance </span>
             @enderror
         </div>
+        
         
         <div class="col-12 col-lg-6">
             <label for="lieunaissanc-{{ $product->CodeProduit }}" class="form-label">Lieu de naissance</label>

@@ -9,6 +9,8 @@ use App\Models\Product;
 use App\Models\Adherent;
 use App\Models\Document;
 use App\Models\Beneficiaire;
+use App\Models\AgenceByParter;
+use App\Models\AssureGarantie;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -94,16 +96,10 @@ class Contrat extends Model
         return $this->belongsTo(User::class, 'saisiepar', 'idmembre');
     }
 
-    public function transmisPar()
-    {
-        return $this->belongsTo(User::class, 'transmispar', 'idmembre');
-    }
-
     public function adherent()
     {
         return $this->belongsTo(Adherent::class, 'codeadherent', 'id');
     }
- 
     public function produit()
     {
         return $this->belongsTo(Product::class, 'codeproduit', 'CodeProduit');
@@ -120,5 +116,20 @@ class Contrat extends Model
     public function documents()
     {
         return $this->hasMany(Document::class, 'codecontrat', 'id');
+    }
+
+    public function agenceBanque()
+    {
+        return $this->belongsTo(AgenceByParter::class, 'partenaire', 'codePartner');
+    }
+
+    public function agenceData()
+    {
+        return $this->belongsTo(AgenceByParter::class, 'agence', 'id');
+    }
+
+    public function garanties()
+    {
+        return $this->hasMany(AssureGarantie::class, 'codecontrat', 'id');
     }
 }

@@ -60,11 +60,9 @@
                     <td>
 
                         <ul>
-                            @forelse ($productGarantie as $item)
-                                <li>{{ $item->libelle }}</li>
-                            @empty
-                                <center>Pas de garantie</center>
-                            @endforelse
+                            @foreach ($assure->garanties as $item)
+                                <li>{{ $item->monlibelle ?? 'Aucune garantie'}}</li>
+                            @endforeach
                         </ul>
                     </td>
 

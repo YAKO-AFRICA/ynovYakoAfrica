@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Contrat;
+use App\Models\AssureGarantie;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -52,6 +53,11 @@ class Assurer extends Model
     public function contrat()
     {
         return $this->belongsTo(Contrat::class, 'codecontrat', 'id');
+    }
+
+    public function garanties()
+    {
+        return $this->hasMany(AssureGarantie::class, 'codeassure', 'id');
     }
 
     // public function sante()

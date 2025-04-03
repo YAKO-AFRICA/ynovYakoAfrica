@@ -1,4 +1,4 @@
-<div class="modal fade" id="EditUsers{{ $item->idmembre }}" tabindex="-1" aria-labelledby="mreModalLabel" aria-hidden="true">
+<div class="modal fade" id="EditUsers{{ $item->idmembre }}" tabindex="-1" aria-labelledby="editModalLabel{{ $item->idmembre }}" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <style>
             .steps-banner-edit {
@@ -252,39 +252,49 @@
     </div>
 
     <script>
-        let currentStepEdit = 1;
-
-        const showStepEdit = (step) => {
-            // Show the correct step
-            document.querySelectorAll('.step-edit').forEach(el => el.classList.add('d-none'));
-            document.querySelector(`#step-group-${step}`).classList.remove('d-none');
-            
-            // Update buttons
-            document.querySelector('.prev-edit-step').classList.toggle('d-none', step === 1);
-            document.querySelector('.next-edit-step').classList.toggle('d-none', step === 4);
-            document.querySelector('.finish-edit-step').classList.toggle('d-none', step !== 4);
-
-            // Update the step indicator
-            document.querySelectorAll('.step-indicator-edit').forEach((indicator, index) => {
-                indicator.classList.toggle('active', index + 1 === step);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion des étapes pour tous les modals
+            $('.modal').on('shown.bs.modal', function() {
+                const modal = $(this);
+                let currentStep = 1;
+                
+                modal.find('.next-edit-step').click(function() {
+                    if (currentStep < 4) {
+                        currentStep++;
+                        updateStepDisplay(modal, currentStep);
+                    }
+                });
+                
+                modal.find('.prev-edit-step').click(function() {
+                    if (currentStep > 1) {
+                        currentStep--;
+                        updateStepDisplay(modal, currentStep);
+                    }
+                });
+                
+                function updateStepDisplay(modal, step) {
+                    modal.find('.step-edit').addClass('d-none');
+                    modal.find(`#step-group-${step}`).removeClass('d-none');
+                    
+                    modal.find('.step-indicator-edit').removeClass('active');
+                    modal.find(`#step-edit-${step}`).addClass('active');
+                    
+                    if (step === 1) {
+                        modal.find('.prev-edit-step').addClass('d-none');
+                    } else {
+                        modal.find('.prev-edit-step').removeClass('d-none');
+                    }
+                    
+                    if (step === 4) {
+                        modal.find('.next-edit-step').addClass('d-none');
+                        modal.find('.finish-edit-step').removeClass('d-none');
+                    } else {
+                        modal.find('.next-edit-step').removeClass('d-none');
+                        modal.find('.finish-edit-step').addClass('d-none');
+                    }
+                }
             });
-        };
+        });
+        </script>>
 
-    document.querySelector('.next-edit-step').addEventListener('click', () => {
-        if (currentStepEdit < 4) {
-            currentStepEdit++;
-            showStepEdit(currentStepEdit);
-        }
-    });
-
-    document.querySelector('.prev-edit-step').addEventListener('click', () => {
-        if (currentStepEdit > 1) {
-            currentStepEdit--;
-            showStepEdit(currentStepEdit);
-        }
-    });
-
-    // Initialize with the first step
-    showStepEdit(currentStepEdit);
-    </script>
 </div>

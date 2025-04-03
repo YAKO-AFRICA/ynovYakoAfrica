@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class ProductionController extends Controller
 {
@@ -53,7 +54,7 @@ class ProductionController extends Controller
         // $allPropoRejet = Contrat::where('etape', 4)->get();
         // \dd($allPropoAccepter);
 
-        $defaultColumns = ['#', 'Produit', 'Date Effet', 'Prime', 'Capital', 'Saisir Par', 'Status'];
+        $defaultColumns = ['#', 'Produit', 'Date Effet', 'Prime', 'Capital', 'Montant Rente', 'Saisir Par', 'Status'];
 
         $additionalColumns = [
             'Mode de Paiement' => 'modepaiement',
@@ -182,22 +183,60 @@ class ProductionController extends Controller
 
     public function create($codeProduit)
     {
+        $product = Product::where('CodeProduit', $codeProduit)->first();
+        $productGarantie = ProduitGarantie::where(['codeproduit' => $codeProduit, 'branche' => 'IND'])->get();
+        $villes = TblVille::select('libelleVillle')->get();
+        $professions = Profession::select('MonLibelle')->get();
+        $secteurActivites = TblSecteurActivite::select('MonLibelle')->get();
+        $societes = TblSociete::select('MonLibelle')->get();
+        $agences = TblAgence::select('NOM_LONG')->get();
+        $filliations = Filliation::select('MonLibelle')->get();
+
+
+        return view('productions.create.create', compact('product', 'villes', 'secteurActivites', 'professions', 'productGarantie', 'societes', 'agences', 'filliations'));
+    }
+
+ 
+    public function createYke($codeProduit)
+    {
 
         $product = Product::where('CodeProduit', $codeProduit)->first();
-
         $productGarantie = ProduitGarantie::where(['codeproduit' => $codeProduit, 'branche' => 'IND'])->get();
-        $villes =  TblVille::select('libelleVillle')->get();
-        $professions =  Profession::select('MonLibelle')->get();
-        $secteurActivites =  TblSecteurActivite::select('MonLibelle')->get();
-        $societes =  TblSociete::select('MonLibelle')->get();
-        $agences =  TblAgence::select('NOM_LONG')->get();
-        $filliations =  Filliation::select('MonLibelle')->get();
-
-        // dd($filliations);
 
 
-        return view('productions.create.create', compact('product', 'villes', 'secteurActivites', 'professions', 'productGarantie', 'societes', 'agences','filliations'));
+
+        return view('productions.create.simulateur.ykeSimulateur', compact('product', 'productGarantie'));
     }
+    public function createKds($codeProduit)
+    {
+
+        $product = Product::where('CodeProduit', $codeProduit)->first();
+        $productGarantie = ProduitGarantie::where(['codeproduit' => $codeProduit, 'branche' => 'IND'])->get();
+
+
+
+        return view('productions.create.simulateur.kdsSimulateur', compact('product', 'productGarantie'));
+    }
+
+
+
+
+    public function storeSimulationPrime(Request $request)
+    {
+        // Vérification des données reçues
+        $garanties = $request->json()->all();  // Assure de récupérer un JSON valide
+
+        if (empty($garanties)) {
+            return response()->json(['error' => 'Aucune donnée reçue.'], 400);
+        }
+
+        // Stocker dans la session Laravel
+        Session::put('simulation_primes', $garanties);
+
+        return response()->json(['message' => 'Données enregistrées en session avec succès.', 'data' => $garanties], 200);
+    }
+
+    
 
     public function ykePrime(Request $request)
     {
@@ -227,6 +266,10 @@ class ProductionController extends Controller
             $sexeassur = $request->civiliteAssur === "Monsieur" ? "M" : "F";
             $prime = $request->primepricipale + $request->surprime + $request->fraisadhesion;
             $datenaissance = Carbon::parse($request->datenaissance)->format('Y-m-d H:i:s');
+
+            $age = Carbon::parse($datenaissance)->diffInYears(Carbon::now());
+
+
 
             // creation id 
             $idAdherent = Adherent::max('id') + 1;
@@ -275,14 +318,16 @@ class ProductionController extends Controller
             Log::info("garanties requises  du produit " . $garantiesRequises);
             $GarantiesOptionnelles = ProduitGarantie::where(['codeproduit' => $request->codeproduit, 'estobligatoire' => 0, 'branche' => 'IND'])->get();
 
-            // Log::info('assures dans le controller', $assures);
+            // Log::info('assures dans le controller'. $assures);
 
             if ($request->estAssure === "Oui") {
+
                 $Assurer = Assurer::create([
                     'id' => $idAssure,
                     'civilite' => $request->civilite,
                     'nom' => $request->nom,
                     'prenom' => $request->prenom,
+                    'filiation' => "souscripteur",
                     'datenaissance' => $datenaissance,
                     'lieunaissance' => $request->lieunaissance,
                     'codecontrat' => $idContrat,
@@ -302,89 +347,150 @@ class ProductionController extends Controller
                     'mobile1' => $request->mobile1,
                     'saisieLe' => now(),
                     'saisiepar' => auth::user()->membre->idmembre,
-                ])->save();
-                if ($request->has('GarantiesOptionnelles')) {
-                    Log::info("Champs garanties optionnelles trouvées : ", $request->GarantiesOptionnelles);
-                } else {
-                    Log::info("Champs garanties optionnelles non trouvées");
-                }
+                ]);
 
-                if ($request->has('GarantiesOptionnelles')) {
-                    Log::info("Liste des garanties optionnelles:", $GarantiesOptionnelles->toArray());
+                // foreach ($garantiesRequises as $garantie) {
+
+                //     if ($Assurer) {
+                //         AssureGarantie::create([
+                //             'codeproduitgarantie' => $garantie->codeproduitgarantie,
+                //             'idproduitparantie' => $garantie->id,
+                //             'monlibelle' => $garantie->libelle,
+                //             'prime' => $request->primepricipale,
+                //             'primetotal' => $request->primepricipale,
+                //             'primeaccesoire' => 0,
+                //             'type' => "Mixte",
+                //             'capitalgarantie' => $request->capital,
+                //             'tauxinteret' => $request->tauxinteret,
+                //             'codeassure' => $idAssureInsert,
+                //             'codecontrat' => $idContrat,
+                //             'refcontratsource' => '123456789',
+                //             'estmigre' => 0,
+                //         ])->save();
+                //     }
+                // }
+
                 
-                    foreach ($request->GarantiesOptionnelles as $idGarantie => $value) {
-                        Log::info("ID de la garantie : $idGarantie - Valeur: $value");
 
-                        if ($value == "Oui") {
-                            // Rechercher la garantie par son ID
-                            $garantie = $GarantiesOptionnelles->firstWhere('id', $idGarantie);
+                if ($request->codeproduit === "YKE_2018")
+                {
+                    $resultData = session()->get('simulation_primes');
+                    Log::info("resultData",$resultData);
 
-                            $codeGarantie = $garantie->codeproduitgarantie;
-                            $primeGarantie = 0;
-                            if ($codeGarantie == "SUR") {
+                    foreach ($resultData as $garantie) {
+
+                        Log::info("garantie",$garantie);
+                     
+                        
+                        if ($resultData) {
+                            // Insérer dans la base de données
+                            AssureGarantie::create([
+                                'codeproduitgarantie' => $garantie['codeGarantie'],
+                                'idproduitparantie'   => "100",
+                                'monlibelle'          => $garantie['codeGarantie'],
+                                'prime'               => $garantie['prime'],
+                                'primetotal'          => $garantie['prime'],
+                                'primeaccesoire'      => 0,
+                                'type'                => "Mixte",
+                                'capitalgarantie'     => $garantie['capitalSouscrit'],
+                                'tauxinteret'         => $request->tauxinteret,
+                                'codeassure'          => $idAssure,
+                                'codecontrat'         => $idContrat,
+                                'refcontratsource'    => 'qarty',
+                                'estmigre'            => 0,
+                            ]);
+                        } else {
+                            // Stocker l'erreur si l'API n'a pas retourné les données attendues
+                            $results[$garantie->codeproduitgarantie] = [
+                                'error'   => true,
+                                'message' => 'Erreur lors de l\'appel API ou données manquantes'
+                            ];
+                        }
+                    }
+                    
+                }else{
+                    if ($request->has('GarantiesOptionnelles')) {
+                        Log::info("Champs garanties optionnelles trouvées : ", $request->GarantiesOptionnelles);
+                    } else {
+                        Log::info("Champs garanties optionnelles non trouvées");
+                    }
+
+                    if ($request->has('GarantiesOptionnelles')) {
+                        Log::info("Liste des garanties optionnelles:", $GarantiesOptionnelles->toArray());
+                    
+                        foreach ($request->GarantiesOptionnelles as $idGarantie => $value) {
+                            Log::info("ID de la garantie : $idGarantie - Valeur: $value");
+
+                            if ($value == "Oui") {
+                                // Rechercher la garantie par son ID
+                                $garantie = $GarantiesOptionnelles->firstWhere('id', $idGarantie);
+
+                                $codeGarantie = $garantie->codeproduitgarantie;
                                 $primeGarantie = 0;
-                            }else{
-                                $primeGarantie = $request->primepricipale;
-                            }
-                
-                            if ($garantie) {
-                                Log::info("Garantie sélectionnée: ", (array) $garantie);
-                
-                                AssureGarantie::create([
-                                    'codeproduitgarantie' => $garantie->codeproduitgarantie,
-                                    'idproduitparantie' => $garantie->id,
-                                    'monlibelle' => $garantie->libelle,
-                                    'prime' => $primeGarantie,
-                                    'primetotal' => $primeGarantie,
-                                    'primeaccesoire' => 0,
-                                    'type' => "Mixte",
-                                    'capitalgarantie' => $request->capital,
-                                    'tauxinteret' => $request->tauxinteret,
-                                    'codeassure' => $idAssure,
-                                    'codecontrat' => $idContrat,
-                                    'refcontratsource' => 'qarty',
-                                    'estmigre' => 0,
-                                ]);
-                            } else {
-                                Log::warning("Aucune garantie trouvée pour l'ID : $idGarantie");
+                                if ($codeGarantie == "SUR") {
+                                    $primeGarantie = 0;
+                                }else{
+                                    $primeGarantie = $request->primepricipale;
+                                }
+                    
+                                if ($garantie) {
+                                    Log::info("Garantie sélectionnée: ", (array) $garantie);
+                    
+                                    AssureGarantie::create([
+                                        'codeproduitgarantie' => $garantie->codeproduitgarantie,
+                                        'idproduitparantie' => $garantie->id,
+                                        'monlibelle' => $garantie->libelle,
+                                        'prime' => $primeGarantie,
+                                        'primetotal' => $primeGarantie,
+                                        'primeaccesoire' => 0,
+                                        'type' => "Mixte",
+                                        'capitalgarantie' => $request->capital,
+                                        'tauxinteret' => $request->tauxinteret,
+                                        'codeassure' => $idAssure,
+                                        'codecontrat' => $idContrat,
+                                        'refcontratsource' => 'qarty',
+                                        'estmigre' => 0,
+                                    ]);
+                                } else {
+                                    Log::warning("Aucune garantie trouvée pour l'ID : $idGarantie");
+                                }
                             }
                         }
                     }
-                }
-                
-                foreach ($garantiesRequises as $garantie) {
-                    $codeGarantie = $garantie->codeproduitgarantie;
+                    
+                    foreach ($garantiesRequises as $garantie) {
+                        $codeGarantie = $garantie->codeproduitgarantie;
 
-                    $primeGarantie = 0;
+                        $primeGarantie = 0;
 
-                    if ($codeGarantie == "PERF") {
-                        $primeGarantie = $request->garantiesperf;
-                    }else if ($codeGarantie == "SECU") {
-                        $primeGarantie = $request->garantiessecu;
-                    }else{
-                        $primeGarantie = $request->primepricipale;
+                        if ($codeGarantie == "PERF") {
+                            $primeGarantie = $request->garantiesperf;
+                        }else if ($codeGarantie == "SECU") {
+                            $primeGarantie = $request->garantiessecu;
+                        }else{
+                            $primeGarantie = $request->primepricipale;
+                        }
+
+                        Log::info("code garantie:". $primeGarantie);
+
+                        AssureGarantie::create([
+                            'codeproduitgarantie' => $garantie->codeproduitgarantie,
+                            'idproduitparantie' => $garantie->id,
+                            'monlibelle' => $garantie->libelle,
+                            'prime' => $primeGarantie,
+                            'primetotal' => $primeGarantie,
+                            'primeaccesoire' => 0,
+                            'type' => "Mixte",
+                            'capitalgarantie' => $request->capital,
+                            'tauxinteret' => $request->tauxinteret,
+                            'codeassure' => $idAssure,
+                            'codecontrat' => $idContrat,
+                            'refcontratsource' => 'azerty',
+                            'estmigre' => 0,
+                        ])->save();
                     }
-
-                    Log::info("code garantie:". $primeGarantie);
-
-                    AssureGarantie::create([
-                        'codeproduitgarantie' => $garantie->codeproduitgarantie,
-                        'idproduitparantie' => $garantie->id,
-                        'monlibelle' => $garantie->libelle,
-                        'prime' => $primeGarantie,
-                        'primetotal' => $primeGarantie,
-                        'primeaccesoire' => 0,
-                        'type' => "Mixte",
-                        'capitalgarantie' => $request->capital,
-                        'tauxinteret' => $request->tauxinteret,
-                        'codeassure' => $idAssure,
-                        'codecontrat' => $idContrat,
-                        'refcontratsource' => 'azerty',
-                        'estmigre' => 0,
-                    ])->save();
                 }
             }
-
 
             if ($assures) {
                 foreach ($assures as $assure) {
@@ -414,12 +520,13 @@ class ProductionController extends Controller
                     ]);
                     // $idAssureInsert = ($Assurer)? $Assurer->id + 1 : Assurer::max('id') + 1;
                     foreach ($garantiesRequises as $garantie) {
+
                         AssureGarantie::create([
                             'codeproduitgarantie' => $garantie->codeproduitgarantie,
                             'idproduitparantie' => $garantie->id,
                             'monlibelle' => $garantie->libelle,
                             'prime' => $request->primepricipale,
-                            'primetotal' => $prime,
+                            'primetotal' => $request->primepricipale,
                             'primeaccesoire' => 0,
                             'type' => "Mixte",
                             'capitalgarantie' => $request->capital,
@@ -574,9 +681,9 @@ class ProductionController extends Controller
                 // 'transmispar' => $request->saisiepar,
                 'personneressource2' => $request->personneressource2,
                 'contactpersonneressource2' => $request->contactpersonneressource2,
-                // 'codebanque' => now(),
-                // 'codeguichet' => now(),
-                // 'rib' => now(),
+                'codebanque' => $request->codebanque,
+                'codeguichet' => $request->codeguichet,
+                'rib' => $request->rib,
                 // 'idproposition' => now(),
                 // 'codeproposition' => now(),
                 'branche' => Auth::user()->membre->branche,
@@ -625,6 +732,79 @@ class ProductionController extends Controller
         }
     }
 
+    private function calculeprimeYke($request, $GarantiesOptionnelles, $idAssure, $idContrat)
+    {
+        $results = [];
+
+        foreach ($GarantiesOptionnelles as $garantie) {
+           
+            $postData = [
+                'codeProduit'      => $request->codeProduit,
+                'codeGarantie'     => $garantie->codeproduitgarantie,
+                'codePeriodicite'  => $request->codePeriodicite,
+                'dureeCotisation'  => $request->duree,
+                'capitalSouscrit'  => $request->capitalSouscrit,
+                'age'              => $request->age,
+                'dateEffet'        => $request->dateEffet
+            ];
+
+            $response = $this->callApi('https://api.yakoafricassur.com/enov/prime-garantie', $postData);
+            $resultData = json_decode($response, true);
+
+            Log::info("resultData", ['resultData' => $resultData]);
+
+            // Vérifier si l'API a bien retourné des données
+            if ($resultData && isset($resultData['prime']) && isset($resultData['capitalGarantie'])) {
+                // Insérer dans la base de données
+                AssureGarantie::create([
+                    'codeproduitgarantie' => $garantie->codeproduitgarantie,
+                    'idproduitparantie'   => $garantie->id,
+                    'monlibelle'          => $garantie->libelle,
+                    'prime'               => $resultData['prime'],  // Valeur retournée par l'API
+                    'primetotal'          => $resultData['prime'],  // Valeur retournée par l'API (ajuster si nécessaire)
+                    'primeaccesoire'      => 0,
+                    'type'                => "Mixte",
+                    'capitalgarantie'     => $resultData['capitalGarantie'], // Valeur retournée par l'API
+                    'tauxinteret'         => $request->tauxinteret,
+                    'codeassure'          => $idAssure,
+                    'codecontrat'         => $idContrat,
+                    'refcontratsource'    => 'qarty',
+                    'estmigre'            => 0,
+                ]);
+            } else {
+                // Stocker l'erreur si l'API n'a pas retourné les données attendues
+                $results[$garantie->codeproduitgarantie] = [
+                    'error'   => true,
+                    'message' => 'Erreur lors de l\'appel API ou données manquantes'
+                ];
+            }
+        }
+
+        return $results;
+    }
+
+
+    // Fonction pour appeler l'API avec cURL
+    private function callApi($url, $postData)
+    {
+        $ch = curl_init($url);
+        
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json'
+        ]);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+
+        return ($httpCode == 200) ? $response : null;
+    }
+
+
     private function generateBulletin($idContrat)
     {
         try {
@@ -636,9 +816,32 @@ class ProductionController extends Controller
             $options->set('isRemoteEnabled', true);
 
             // Génération du bulletin PDF temporaire
-            $pdf = PDF::loadView('productions.components.bullettin.ykeBulletin', [
-                'contrat' => $contrat,
-            ]);
+
+            if($contrat->codeproduit == "YKE_2018"){
+                $pdf = PDF::loadView('productions.components.bullettin.ykeBulletin', [
+                    'contrat' => $contrat,
+                ]);
+                $cguFile = public_path('root/cgu/cg_yke.pdf');
+
+            }else if($contrat->codeproduit == "PFA_IND"){
+                $pdf = PDF::loadView('productions.components.bullettin.pfaINDbulletin', [
+                    'contrat' => $contrat,
+                ]);
+                $cguFile = public_path('root/cgu/cg_yke.pdf');
+                
+            }else if($contrat->codeproduit == "CADENCE")
+            {
+                $pdf = PDF::loadView('productions.components.bullettin.Cadencebulletin', [
+                    'contrat' => $contrat,
+                ]);
+                $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
+            }else{
+                $pdf = PDF::loadView('productions.components.bullettin.basicBulletin', [
+                    'contrat' => $contrat,
+                ]);
+                $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
+            }
+            
 
             $bulletinDir = public_path('documents/bulletin/');
             if (!is_dir($bulletinDir)) {
@@ -651,32 +854,36 @@ class ProductionController extends Controller
             // Chemin vers le fichier CGU
             $cguFilePath = public_path('root/cgu/cg_yke.pdf');
 
+       
+
             // Initialiser FPDI pour fusionner les fichiers
             $finalPdf = new Fpdi();
 
-            // Ajouter le bulletin au PDF final
-            $finalPdf->AddPage();
-            $finalPdf->setSourceFile($tempBulletinPath);
-            $bulletinTplIdx = $finalPdf->importPage(1);
-            $finalPdf->useTemplate($bulletinTplIdx);
-
-            // Ajouter les pages du fichier CGU
-            $cguPageCount = $finalPdf->setSourceFile($cguFilePath);
+            // Ajouter toutes les pages du bulletin
+            $bulletinPageCount = $finalPdf->setSourceFile($tempBulletinPath);
+            for ($pageNo = 1; $pageNo <= $bulletinPageCount; $pageNo++) {
+                $finalPdf->AddPage();
+                $tplIdx = $finalPdf->importPage($pageNo);
+                $finalPdf->useTemplate($tplIdx);
+            }
+        
+            // Ajouter toutes les pages du fichier CGU
+            $cguPageCount = $finalPdf->setSourceFile($cguFile);
             for ($pageNo = 1; $pageNo <= $cguPageCount; $pageNo++) {
                 $finalPdf->AddPage();
-                $cguTplIdx = $finalPdf->importPage($pageNo);
-                $finalPdf->useTemplate($cguTplIdx);
+                $tplIdx = $finalPdf->importPage($pageNo);
+                $finalPdf->useTemplate($tplIdx);
             }
 
             // Nom final du fichier fusionné
-            $finalBulletinPath = $bulletinDir . 'YKE_bulletin_' . $contrat->id . '.pdf';
+            $finalBulletinPath = $bulletinDir . 'bulletin_' . $contrat->id . '.pdf';
             $finalPdf->Output($finalBulletinPath, 'F');
 
             // Supprimer le fichier temporaire du bulletin
             unlink($tempBulletinPath);
 
             // Définir l'URL publique pour le fichier final
-            $fileUrl = asset("documents/bulletin/YKE_bulletin_{$contrat->id}.pdf");
+            $fileUrl = asset("documents/bulletin/bulletin_{$contrat->id}.pdf");
 
             return [
                 'success' => true,
@@ -809,6 +1016,9 @@ class ProductionController extends Controller
                 'contactpersonneressource' => $request->contactpersonneressource,
                 'personneressource2' => $request->personneressource2,
                 'contactpersonneressource2' => $request->contactpersonneressource2,
+                'codebanque' => $request->codebanque,
+                'codeguichet' => $request->codeguichet,
+                'rib' => $request->rib,
 
                 // 'transmisle' => now(),
                 // 'annulerle' => null,
