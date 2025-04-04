@@ -441,12 +441,7 @@
 
                 <div class="card-body">
                     <div class="container">
-                        <table class="table">
-                            <tr>
-                                <td><strong class="text-uppercase">Frais d'adhésion</strong></td>
-                                <td>{{ number_format(7500, 0, ',', ' ')}} FCFA</td>
-                            </tr>
-                        </table>
+                        
                         <table class="table table-bordered table-striped">
                             <thead class="table-light">
                                 <tr>
@@ -458,7 +453,18 @@
                             <tbody id="result">
                                 
                             </tbody>
-                            
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2" class="text-end fw-bold">Prime principale :</td>
+                                    <td id="primePrincip" class="fw-bold">0</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <table class="table">
+                            <tr>
+                                <td><strong class="text-uppercase">Frais d'adhésion</strong></td>
+                                <td><span class="text-success fs-6">+</span> <strong> {{ number_format(7500, 0, ',', ' ')}}</strong> FCFA</td>
+                            </tr>
                         </table>
                         <div class="ribbon">Prime Totale</div>
 
@@ -508,6 +514,7 @@
             const fraieadhesion = 7500;
             let formData = new FormData(this);
             let totalPrime = fraieadhesion;
+            let totalPurePrime = 0;
             let garantiesData = [];
             let garantieFinal = [];
             let garanties = @json($productGarantie);
@@ -548,7 +555,9 @@
                             }
 
                             totalPrime += parseInt(prime);
+                            totalPurePrime += parseInt(prime);
                             document.getElementById("primeTotal").textContent = totalPrime.toLocaleString();
+                            document.getElementById("primePrincip").textContent = totalPurePrime.toLocaleString();
 
                             resultDiv.innerHTML += `
                                 <tr>
@@ -577,7 +586,7 @@
 
                             // Si la case est cochée et que c'est la dernière garantie, ajouter la garantie senior
                             if (garantieSeniorCheck.checked && garantie === garanties[garanties.length - 1]) {
-                                addSeniorGarantie(formData, totalPrime, resultDiv, garantieFinal);
+                                addSeniorGarantie(formData, totalPrime, resultDiv, garantieFinal,totalPurePrime);
                             } else {
                                 finishProcess(garantieFinal, totalPrime);
                             }
@@ -593,16 +602,19 @@
         });
 
         // Fonction pour ajouter la garantie senior
-        function addSeniorGarantie(formData, totalPrime, resultDiv, garantieFinal) {
+        function addSeniorGarantie(formData, totalPrime, resultDiv, garantieFinal, totalPurePrime) {
             // La prime senior est égale à la prime hommage
 
             let seniorPrime = hommagePrime;
             let seniorCapital = 500000;
             
             let newTotalPrime = totalPrime + parseInt(seniorPrime);
+            let newTotalPrimePru = totalPurePrime + parseInt(seniorPrime);
+            console.log(newTotalPrimePru);
 
             console.log("newTotalPrime", newTotalPrime)
             document.getElementById("primeTotal").textContent = newTotalPrime.toLocaleString();
+            document.getElementById("primePrincip").textContent = newTotalPrimePru.toLocaleString();
 
             resultDiv.innerHTML += `
                 <tr>
@@ -617,6 +629,7 @@
                 prime: seniorPrime,
                 capital: seniorCapital,
                 primeFinal: newTotalPrime,
+                primeFinalPur: newTotalPrimePru,
                 codeProduit: formData.get("CodeProduit"),
                 codePeriodicite: formData.get("codePeriodicite"),
                 duree: formData.get("duree"),
@@ -627,11 +640,11 @@
             };
 
             garantieFinal.push(garantieItem);
-            finishProcess(garantieFinal, newTotalPrime);
+            finishProcess(garantieFinal, newTotalPrime, newTotalPrimePru);
         }
 
         // Fonction pour finaliser le processus
-        function finishProcess(garantieFinal, totalPrime) {
+        function finishProcess(garantieFinal, totalPrime, newTotalPrimePru) {
             sessionStorage.setItem("garantiesData", JSON.stringify(garantieFinal));
 
             let returnDataSession = sessionStorage.getItem("garantiesData");
