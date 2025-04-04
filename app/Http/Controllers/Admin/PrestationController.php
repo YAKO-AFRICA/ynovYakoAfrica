@@ -147,7 +147,7 @@ class PrestationController extends Controller
         $rdv = Tblrdv::where(['police'=> $idcontrat, 'motifrdv' => $typePrestation->libelle, 'etat' => 1])->first();
 
         // detruis la session apres utilisation
-       session()->forget('contratDetails');
+       session()->forget('contractDetails');
        if ($prestation) {
             return redirect()->back()->with('fail','Une prestation de type "' . $typePrestation->libelle . '" pour le contrat ' . $idcontrat . ' est déja en cours. N° de prestation : ' . $prestation->code);
         }else{
