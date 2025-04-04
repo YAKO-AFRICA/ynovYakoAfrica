@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-prime btn-prime-two" data-bs-dismiss="modal">OK </button>
+                <button type="button" class="btn" data-bs-dismiss="modal">OK </button>
             </div>
         </div>
     </div>

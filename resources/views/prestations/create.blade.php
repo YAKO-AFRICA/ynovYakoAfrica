@@ -88,7 +88,7 @@
                 </div>
             </div>
             <div class="card-body">
-
+                {{-- @dd($TotalEncaissement) --}}
                 <div class="bs-stepper-content">
                     <form id="PrestationForm" enctype="multipart/form-data" class="submitForm">
                         @csrf

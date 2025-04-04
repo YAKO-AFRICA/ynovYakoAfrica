@@ -26,23 +26,28 @@ class RdvController extends Controller
      */
     public function create(string $id)
     {
-        $typePrestation = TblTypePrestation::where('id', $id)->first();
-        $villes = TblVille::all();
-        $villeReseaux = TblVilleReseau::select('idVilleBureau', 'libelleVilleBureau')
-        ->whereHas('optionRdv') // Vérifie que la relation 'optionRdv' existe
-        ->with('optionRdv') // Charge les options de rendez-vous pour chaque ville réseau
-        ->get();
-        $contract = session('contractDetails', []);
-        $contractDetails = $contract['details'][0] ?? [];
-        $membreDetails   = $contract['membre'] ?? [];
-        // dd($contractDetails);
-        // $membreDetails = session('membreDetails', []);
-
-        // dd($contractDetails, $membreDetails);
-        if (empty($contract)) {
-            return redirect()->back()->withErrors('Les détails du contrat sont introuvables.');
+        $idcontrat = session('idcontrat');
+        if (!session()->has('contractDetails')) {
+            return redirect()->route('prestation.index');
+        }else{
+            
+            $typePrestation = TblTypePrestation::where('id', $id)->first();
+            $villes = TblVille::all();
+            $villeReseaux = TblVilleReseau::select('idVilleBureau', 'libelleVilleBureau')
+            ->whereHas('optionRdv') // Vérifie que la relation 'optionRdv' existe
+            ->with('optionRdv') // Charge les options de rendez-vous pour chaque ville réseau
+            ->get();
+            $contract = session('contractDetails', []);
+            $contractDetails = $contract['details'][0] ?? [];
+            $membreDetails   = $contract['membre'] ?? [];
+            $rdv = Tblrdv::where(['police'=> $idcontrat, 'motifrdv' => $typePrestation->libelle, 'etat' => 1])->first();
+            session()->forget('contractDetails');
         }
-        return view('rdv.create', compact('typePrestation', 'villes', 'villeReseaux', 'contractDetails', 'membreDetails'));
+        if ($rdv) {
+            return redirect()->back()->with('fail','Une prestation de type "' . $typePrestation->libelle . '" pour le contrat ' . $idcontrat . ' est déja en cours. N° de prestation : ' . $rdv->codedmd.' cette prestation est a débouchée sur une prise de rendez-vous.'); 
+        }else{
+            return view('rdv.create', compact('typePrestation', 'villes', 'villeReseaux', 'contractDetails', 'membreDetails'));
+        }
     }
     public function getOptionRdv(string $id)
     {
@@ -92,26 +97,6 @@ class RdvController extends Controller
     }
 }
 
-
-
-
-    // public function getOptionRdv($id, $dateRdv)
-    // {
-    //     $villeReseaux = TblVilleReseau::where('idVilleBureau', $id)
-    //         ->whereHas('rdv', function ($query) use ($dateRdv) {
-    //             $query->where('daterdv', $dateRdv); // Filtrer les rdv par date
-    //         })
-    //         ->with(['rdv' => function ($query) use ($dateRdv) {
-    //             $query->where('daterdv', $dateRdv); // Charger uniquement les rdv de la date
-    //         }, 'optionRdv']) // Charger également les options de rendez-vous
-    //         ->get();
-    //         // dd($villeReseaux);
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'data' => $villeReseaux
-    //     ]);
-    // }
-    
     /**
      * Store a newly created resource in storage.
      */

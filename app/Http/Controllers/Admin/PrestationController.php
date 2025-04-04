@@ -15,6 +15,7 @@ use App\Models\TblTypePrestation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Models\TblProductPrestation;
 use Illuminate\Support\Facades\Http;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -32,12 +33,25 @@ class PrestationController extends Controller
 
     public function selectPrestation()
     {
-        $typePrestations = TblTypePrestation::where('etat', 'Actif')->get();
-        $contract = session('contractDetails', []);
-        $contractDetails = $contract['details'][0] ?? [];
-        $membreDetails   = $contract['membre'] ?? [];
+        // $typePrestations = TblTypePrestation::where('etat', 'Actif')->get();
         // dd($contractDetails, $membreDetails);
-        return view('prestations.selectPrestation', compact('typePrestations', 'contractDetails'));
+        if (!session()->has('contractDetails')) {
+            return redirect()->route('prestation.index');
+        }else{
+            $contract = session('contractDetails', []);
+            $contractDetails = $contract['details'][0] ?? [];
+            $membreDetails   = $contract['membre'] ?? [];
+            $NbrencConfirmer = session('NbrencConfirmer', 0);
+            // $contratDetails = session('contractDetails', null);
+            $cumulCotisationTerme = session('cumulCotisationTerme', 0);
+            $contisationPourcentage = session('contisationPourcentage', 0);
+            $TotalEncaissement = session('TotalEncaissement', 0);
+            $ProductPrestations = TblProductPrestation::where('product_id', $contractDetails['codeProduit'])->get();
+            // Utilisation de pluck() si la relation est une simple clé étrangère
+            $typePrestations = $ProductPrestations->pluck('prestation');
+            $typePrestationAutre = TblTypePrestation::where('impact', 'Autre')->where('etat', 'Actif')->first();
+        }
+        return view('prestations.selectPrestation', compact('typePrestations', 'contractDetails', 'membreDetails', 'typePrestationAutre', 'NbrencConfirmer', 'cumulCotisationTerme', 'contisationPourcentage', 'TotalEncaissement'));
     }
 
     /**
@@ -108,45 +122,137 @@ class PrestationController extends Controller
             ], 500);
         }
     }
+
+    
     public function create(string $id)
     {
-        $typePrestation = TblTypePrestation::where('id', $id)->first();
-        $typePrestationAutre = TblTypePrestation::where('impact', 'Autre')->where('etat', 'Actif')->first();
-        $contract = session('contractDetails', []);
-        $contractDetails = $contract['details'][0] ?? [];
-        $membreDetails   = $contract['membre'] ?? [];
-
         // dd($contractDetails);
         // $membreDetails = session('membreDetails', []);
 
         // dd($contractDetails, $membreDetails);
-        if (empty($contract)) {
-            return redirect()->back()->withErrors('Les détails du contrat sont introuvables.');
+        $idcontrat = session('idcontrat');
+        if (!session()->has('contractDetails')) {
+            return redirect()->route('prestation.index');
         }
+        $typePrestation = TblTypePrestation::where('id', $id)->first();
+        $typePrestationAutre = TblTypePrestation::where('impact', 'Autre')->where('etat', 'Actif')->first();
+        $TotalEncaissement = session('TotalEncaissement', 0);
+        // dd($TotalEncaissement);
+        $contract = session('contractDetails', []);
+        $contractDetails = $contract['details'][0] ?? [];
+        $membreDetails   = $contract['membre'] ?? [];
 
-        return view('prestations.create', compact('typePrestation', 'contractDetails', 'membreDetails', 'typePrestationAutre'));
+        $prestation = TblPrestation::where(['idcontrat'=> $idcontrat, 'typeprestation' => $typePrestation->libelle, 'etape' => 1])->first();
+        
+        $rdv = Tblrdv::where(['police'=> $idcontrat, 'motifrdv' => $typePrestation->libelle, 'etat' => 1])->first();
+
+        // detruis la session apres utilisation
+       session()->forget('contratDetails');
+       if ($prestation) {
+            return redirect()->back()->with('fail','Une prestation de type "' . $typePrestation->libelle . '" pour le contrat ' . $idcontrat . ' est déja en cours. N° de prestation : ' . $prestation->code);
+        }else{
+            return view('prestations.create', compact('typePrestation', 'contractDetails', 'membreDetails', 'typePrestationAutre', 'TotalEncaissement'));
+        }
+        
     }
 
     public function createAutre(string $id)
     {
+        if (!session()->has('contractDetails')) {
+            return redirect()->route('prestation.index');
+        }
         $typePrestation = TblTypePrestation::where('id', $id)->first();
         $contract = session('contractDetails', []);
         $contractDetails = $contract['details'][0] ?? [];
         $membreDetails   = $contract['membre'] ?? [];
         $response = Http::withOptions(['timeout' => 60])
-            ->post('https://api.laloyalevie.com/enov/op-type-operation-list', [
-                'type' => 'AVT',
-            ]);
+        ->post('https://api.laloyalevie.com/enov/op-type-operation-list', [
+            'type' => 'AVT',
+        ]);
         if ($response->successful()) {
             $typeOperation = $response->json();
+            
         }
+        session()->forget('contractDetails');
         return view('prestations.createAutre', compact('typePrestation', 'typeOperation', 'contractDetails', 'membreDetails'));
     }
 
+    // public function fetchCustomerDetails(Request $request)
+    // {
+    //     $idcontrat = $request->input('idcontrat');
+
+    //     if (!$idcontrat) {
+    //         // retourner une erreur ou un message d'erreur approprié en json
+    //         return response()->json([
+    //             'type' => 'error',
+    //             'urlback' => '', // URL du PDF
+    //             'message' => "Aucun ID de contrat fourni.",
+    //             'code' => 400,
+    //         ]);
+    //     }
+
+    //     try {
+    //         $response = Http::withOptions(['timeout' => 60])
+    //             ->post('https://api.yakoafricassur.com/oldweb/encaissement-bis', [
+    //                 'idContrat' => $idcontrat,
+    //             ]);
+
+    //         $contractMembre   = MembreContrat::where('idcontrat', $idcontrat)->with('membre')->first();
+
+    //         if ($response->successful()) {
+    //             $data = $response->json();
+    //             $data['membre'] = $contractMembre->membre ?? [];
+    //             if (!empty($data['details'])) {
+    //                 // Stocker les informations dans la session pour l'utiliser après redirection
+    //                 session(['contractDetails' => $data]);
+    //                 // session(['membreDetails' => $data['membre']]);
+    //                 // dd($data);
+    //                 // dd($data['details']);
+    //                 // return redirect()->route('prestation.selectPrestation');
+    //                 if ($data['details'][0]['OnStdbyOff'] != "1") {
+    //                     return response()->json([
+    //                         'type' => 'error',
+    //                         'urlback' => '', // URL du PDF
+    //                         'message' => 'Ce contrat est arreté ou en veille.',
+    //                         'code' => 400,
+    //                     ]);
+    //                 } else {
+    //                     return response()->json([
+    //                         'type' => 'success',
+    //                         'urlback' => route('prestation.selectPrestation'), // URL du PDF
+    //                         'message' => 'Détails du contrat trouvé avec succès.',
+    //                         'code' => 200,
+    //                     ]);
+    //                 }
+    //             }
+
+    //             return response()->json([
+    //                 'type' => 'error',
+    //                 'urlback' => '', // URL du PDF
+    //                 'message' => 'Aucun détail trouvé pour ce contrat.',
+    //                 'code' => 400,
+    //             ]);
+    //         }
+
+    //         return response()->json([
+    //             'type' => 'error',
+    //             'urlback' => '', // URL du PDF
+    //             'message' => "Erreur : Impossible de récupérer les informations du contrat.",
+    //             'code' => 400,
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'type' => 'error',
+    //             'urlback' => '', // URL du PDF
+    //             'message' => 'Une erreur s\'est produite : ' . $e->getMessage(),
+    //             'code' => 400,
+    //         ]);
+    //     }
+    // }
     public function fetchCustomerDetails(Request $request)
     {
         $idcontrat = $request->input('idcontrat');
-
+        session(['idcontrat' => $idcontrat]);
         if (!$idcontrat) {
             // retourner une erreur ou un message d'erreur approprié en json
             return response()->json([
@@ -168,9 +274,50 @@ class PrestationController extends Controller
             if ($response->successful()) {
                 $data = $response->json();
                 $data['membre'] = $contractMembre->membre ?? [];
-                if (!empty($data['details'])) {
+                if (!empty($data['details']) && !empty($data['enc']['confirmer'])) {
                     // Stocker les informations dans la session pour l'utiliser après redirection
                     session(['contractDetails' => $data]);
+                    // session(['contractDetails' => $data['details'][0]]);
+                    session(['encConfirmer' => $data['enc']['confirmer']]);
+                    session(['NbrencConfirmer' => count($data['enc']['confirmer'])]);
+                    $NbrencConfirmer = session('NbrencConfirmer', 0);
+                    $prime = (float) $data['details'][0]['TotalPrime'];
+                    // $TotalEncaissement = 0
+                    $TotalEncaissement = array_sum(array_map(function ($item) {
+                        return isset($item['RegltMontant']) ? (float) $item['RegltMontant'] : 0;
+                    }, $data['enc']['confirmer']));
+                    
+                    // $TotalEncaissement = (float) $NbrencConfirmer * $prime;
+                    $DureeCotisationMois = ((float) $data['details'][0]['DureeCotisationAns'] * 12);
+
+                    switch ($data['details'][0]['periodicite']) {
+                        case "M":
+                            $Duree = $DureeCotisationMois;
+                            break;
+                        case "T":
+                            $Duree = $DureeCotisationMois / 3; // Trimestriel = tous les 3 mois
+                            break;
+                        case "S":
+                            $Duree = $DureeCotisationMois / 6; // Semestriel = tous les 6 mois
+                            break;
+                        case "A":
+                            $Duree = $DureeCotisationMois / 12; // Annuel = tous les 12 mois
+                            break;
+                        case "U":
+                            $Duree = $NbrencConfirmer; // Annuel = tous les 12 mois
+                            break;
+                        default:
+                            $Duree = 0; // Gérer les cas non définis
+                            break;
+                    }
+                    
+                    // calculer le cumul des Cotisation à Terme du contrat
+                    $cumulCotisationTerme = $Duree * $prime;
+                    // calculer 15% du cumul des Cotisation à Terme du contrat
+                    $contisationPourcentage = $cumulCotisationTerme * 0.15;
+                    session(['contisationPourcentage' => $contisationPourcentage]);
+                    session(['cumulCotisationTerme' => $cumulCotisationTerme]);
+                    session(['TotalEncaissement' => $TotalEncaissement]);
                     // session(['membreDetails' => $data['membre']]);
                     // dd($data);
                     // dd($data['details']);
@@ -185,8 +332,8 @@ class PrestationController extends Controller
                     } else {
                         return response()->json([
                             'type' => 'success',
-                            'urlback' => route('prestation.selectPrestation'), // URL du PDF
-                            'message' => 'Détails du contrat trouvé avec succès.',
+                            'urlback' =>route('prestation.selectPrestation'), // URL du PDF
+                            'message' => 'Détails du contrat trouvé.',
                             'code' => 200,
                         ]);
                     }
@@ -646,9 +793,17 @@ class PrestationController extends Controller
             if (array_key_exists($doc->type, $types)) {
                 $types[$doc->type] = $doc->type; // Stocke la valeur si elle existe
             }
+
         }
-        // dd($types);
-        return view('prestations.edit', compact('prestation', 'types'));
+        // Vérification des conditions obligatoires
+        $conditionsInvalides = (
+            is_null($types['Signature']) || 
+            is_null($types['CNI']) || 
+            (is_null($types['Police']) && is_null($types['AttestationPerteContrat']) && is_null($types['bulletin'])) || 
+            (is_null($types['RIB']) && is_null($types['FicheIDNum']))
+        );
+        // dd($types, $conditionsInvalides);
+        return view('prestations.edit', compact('prestation', 'types', 'conditionsInvalides'));
     }
 
     /**
@@ -814,7 +969,14 @@ class PrestationController extends Controller
                     $types[$doc->type] = $doc->type; // Stocke la valeur si elle existe
                 }
             }
-            if ($types['Signature'] == null && $types['RIB'] == null && $types['FicheIDNum'] == null && $types['CNI'] == null && ($types['AttestationPerteContrat'] == null || $types['bulletin'] == null || $types['Police'] == null)) {
+            // Vérification des conditions obligatoires
+            $conditionsInvalides = (
+                is_null($types['Signature']) || 
+                is_null($types['CNI']) || 
+                (is_null($types['Police']) && is_null($types['AttestationPerteContrat']) && is_null($types['bulletin'])) || 
+                (is_null($types['RIB']) && is_null($types['FicheIDNum']))
+            );
+            if ($conditionsInvalides) {
                 $dataResponse = [
                     'type' => 'error',
                     'urlback' => '',

@@ -176,6 +176,17 @@
             </div>
         </div>	
     </div> --}}
+    <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+        <div class="breadcrumb-title pe-3">Prestations</div>
+        <div class="ps-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 p-0">
+                    <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Detail sur la prestation</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12 col-lg-3">
             <div class="card">
@@ -379,9 +390,9 @@
                                                         <dd class="col-xs-12 col-sm-6 col-md-7 col-lg-5">
                                                             {{ $prestation->Operateur == 'Orange_money'
                                                                 ? 'Orange Money'
-                                                                : ($prestation->Operateur == 'MTN_Money'
+                                                                : ($prestation->Operateur == 'MTN_money'
                                                                         ? 'MTN Money'
-                                                                        : ($prestation->Operateur == 'Moov_Money'
+                                                                        : ($prestation->Operateur == 'Moov_money'
                                                                             ? 'Moov Money'
                                                                             : 'Non renseigné')) ?? 'Non renseigné' }}
                                                         </dd>

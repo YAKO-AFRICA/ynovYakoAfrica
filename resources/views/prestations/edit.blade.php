@@ -23,6 +23,17 @@
             /* cursor: wait; */
         }
     </style>
+    <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+        <div class="breadcrumb-title pe-3">Prestations</div>
+        <div class="ps-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 p-0">
+                    <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Editer la prestation</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12 col-lg-3">
             <div class="card">
@@ -30,7 +41,7 @@
                 <center>
                     <div class="card-header">
                         <p>
-                            <strong>Code de la prestation :</strong> <span>{{ $prestation->code ?? '' }}</span>
+                            <strong>Code de la prestation :</strong> <br> <span>{{ $prestation->code ?? '' }}</span>
                         </p>
 
                         <p>
@@ -59,11 +70,11 @@
                     </div>
                 </center>
 
-                <div class="card-body">
+                {{-- <div class="card-body">
 
                     <h5 class="my-3 text-center text-uppercase">Editer la prestation</h5>
 
-                </div>
+                </div> --}}
 
             </div>
             <div class="card">
@@ -227,7 +238,7 @@
                             @csrf
                             <div class="row">
                                 <div class="col-sm-12 col-md-6 col-lg-6">
-                                    <div class="card" style="width: 90%">
+                                    <div class="card">
                                         <div class="card-body">
                                             <h3>Prestation</h3>
                                             @if ($prestation)
@@ -297,17 +308,17 @@
 
                                                                     <div class="form-check form-check-inline">
                                                                         <input class="form-check-input" name="Operateur"
-                                                                            type="radio" disabled value="Moov_Money"
+                                                                            type="radio" disabled value="Moov_money"
                                                                             id="Moov_Money"
-                                                                            @if ($prestation->Operateur === 'Moov_Money') checked @endif>
+                                                                            @if ($prestation->Operateur === 'Moov_money') checked @endif>
                                                                         <label class="form-check-label"
                                                                             for="Moov_Money">Moov Money</label>
                                                                     </div>
                                                                     <div class="form-check form-check-inline">
                                                                         <input class="form-check-input" name="Operateur"
-                                                                            type="radio" disabled value="MTN_Money"
+                                                                            type="radio" disabled value="MTN_money"
                                                                             id="MTN_Money"
-                                                                            @if ($prestation->Operateur === 'MTN_Money') checked @endif>
+                                                                            @if ($prestation->Operateur === 'MTN_money') checked @endif>
                                                                         <label class="form-check-label"
                                                                             for="MTN_Money">MTN Money</label>
                                                                     </div>

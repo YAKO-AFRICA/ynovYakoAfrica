@@ -48,16 +48,30 @@ function RefgenerateCodePrest($table, $init, $key)
     return $code;
 } 
 
+// function RefgenerateOTP($table, $key)
+// {
+//     $latest = $table::orderBy('id', 'desc')->first();
+//     if (!$latest) {
+//         $code = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 6);
+//         return $code;
+//     }
+
+//     $string = preg_replace("/[^0-9\.]/", '', $latest->$key);
+//     $code = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 6);
+
+    
+//     return $code;
+// }
 function RefgenerateOTP($table, $key)
 {
     $latest = $table::orderBy('id', 'desc')->first();
     if (!$latest) {
-        $code = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 6);
+        $code = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 6);
         return $code;
     }
 
     $string = preg_replace("/[^0-9\.]/", '', $latest->$key);
-    $code = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 6);
+    $code = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 6);
 
     
     return $code;
