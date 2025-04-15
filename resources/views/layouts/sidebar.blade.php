@@ -63,6 +63,25 @@
                 </a>
             </li>
             @endcan
+
+            {{-- module de gestion de prospection --}}
+
+            <strong><li class="menu-label">E-Prospection</li></strong>
+            <li>
+                <a href="{{ route('prospect.index')}}">
+                    <div class="parent-icon">
+                        <i class='bx bx-home-alt'></i>
+                    </div>
+                    <div class="menu-title">Nouvelle Prospection</div>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('prospect.suivies')}}">
+                    <div class="parent-icon"><i class="fadeIn animated bx bx-clipboard"></i>
+                    </div>
+                    <div class="menu-title">Suivie Prospection</div>
+                </a>
+            </li>
             
             
                 

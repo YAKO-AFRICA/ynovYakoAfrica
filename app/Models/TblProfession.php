@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TblProfession extends Model
 {
     use HasFactory;
+    protected $connection = 'mysql';
 
     protected $table = 'tblprofession';
 }

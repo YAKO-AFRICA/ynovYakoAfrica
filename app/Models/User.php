@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Membre;
+use Illuminate\Support\Str;
+use BaconQrCode\Encoder\QrCode;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
@@ -61,5 +63,23 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class, 'id_role', 'id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($user) {
+            if ($user->hasRole('commercial')) {
+                $user->update([
+                    'qr_code_token' => Str::random(40)
+                ]);
+            }
+        });
+    }
+
+    public function generateQrCode()
+    {
+        return QrCode::size(300)->generate(route('prospect.store', $this->qr_code_token));
     }
 }

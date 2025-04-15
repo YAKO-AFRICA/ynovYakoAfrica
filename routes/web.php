@@ -17,6 +17,7 @@ use App\Http\Controllers\Setting\MotifController;
 use App\Http\Controllers\Admin\AdherentController;
 use App\Http\Controllers\Admin\BulletinController;
 use App\Http\Controllers\Admin\DocumentController;
+use App\Http\Controllers\Admin\ProspectController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Setting\EquipCcontroller;
 use App\Http\Controllers\Setting\EquipeController;
@@ -347,6 +348,43 @@ Route::prefix('production')->name('prod.')->group(function(){
     });
 
 });
+
+Route::prefix('prospect')->name('prospect.')->group(function(){
+    Route::middleware('guest','PreventBackHistory')->group(function(){
+
+        // formule by product reseau 
+
+    });
+    Route::middleware(['auth','PreventBackHistory'])->group(function () {
+        Route::get('/index', [ProspectController::class, 'index'])->name('index');
+        Route::get('/suivies', [ProspectController::class, 'suivies'])->name('suivies');
+        Route::get('/show/{id}', [ProspectController::class, 'show'])->name('show');
+
+        Route::post('/followups/store/{uuid}', [ProspectController::class, 'storeFollowup'])->name('followup.store');
+
+        Route::get('/edit/{uuid}', [ProspectController::class, 'edit'])->name('edit');
+        Route::put('/update/{uuid}', [ProspectController::class, 'update'])->name('update');
+
+        Route::post('/prospects/{uuid}/convert', [ProspectController::class, 'convertToClient'])->name('convert');
+
+        Route::post('/store', [ProspectController::class, 'store']);
+
+        Route::delete('/{prospectId}/products/{productId}', [ProspectController::class, 'destroy'])->name('delete');
+    });
+
+});
+
+
+// routes/web.php
+Route::get('/prospection/{token}', [ProspectController::class, 'showForm'])->name('prospection.form');
+
+
+Route::post('/prospection/{token}', [ProspectController::class, 'storeProspect']);
+
+Route::get('/prospection/download', [ProspectController::class, 'downloadQrCode'])
+    ->name('prospection.download')->middleware('auth');
+
+
 
 // donnée de calcule des prime yke 
 Route::post('/storeSimulationPrime', [ProductionController::class, 'storeSimulationPrime'])->name('storeSimulationPrime');
