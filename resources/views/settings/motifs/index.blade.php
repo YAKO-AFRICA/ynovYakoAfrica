@@ -23,55 +23,47 @@
   
     <div class="card">
         <div class="card-body">
-            <div class="d-lg-flex align-items-center mb-4 gap-3">
-                <div class="position-relative">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-sm-12 col-md-4 mb-3">
+                    <a href="{{ route('setting.motifRejetProposition.index') }}">
+                        <div class="card partenaire-card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Motif rejet Proposition</h5>
+                                <p class="card-text">Nombre total des motifs  : <strong> {{ $MotifRejet['Proposition']->count() }}</strong></p>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-              <div class="ms-auto"><a href="javascript:;" class="btn btn-primary radius-30 mt-2 mt-lg-0" data-bs-toggle="modal" data-bs-target="#addNewMotif"><i class="bx bxs-plus-square"></i>Ajouter un Motif</a></div>
+                <div class="col-sm-12 col-md-4 mb-3">
+                    <a href="{{ route('setting.motifRejetPrestation.index') }}">
+                        <div class="card partenaire-card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Motif rejet Prestation</h5>
+                                <p class="card-text">Nombre total des motifs  : <strong>{{ $MotifRejet['Prestation']->count() }}</strong></p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
-            <div class="table-responsive">
-                <table class="table mb-0" id="example2">
-                    <thead class="table-light">
-                        <tr>
-                            <th>#</th>
-                            <th>Libelle</th>
-                            <th>Etat</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($motifs as $item)
-                        <tr>
-                            <td>
-                                {{ $item->id }}
-                            </td>
-                            <td>{{ $item->libelle ?? ""}}</td>
-                            <td>{{ $item->etat ?? ""}}</td>
-                            <td>
-                                <div class="d-flex order-actions">
-                                    <a href="javascript:;" class="" data-bs-toggle="modal" data-bs-target="#EditMotif{{ $item->id}}"><i class='bx bxs-edit'></i></a>
-                                    <a class="deleteConfirmation ms-3" data-uuid="{{$item->id}}"
-                                        data-type="confirmation_redirect" data-placement="top"
-                                        data-token="{{ csrf_token() }}"
-                                        data-url="{{route('setting.destroy.motifRejet',$item->id)}}"
-                                        data-title="Vous êtes sur le point de supprimer {{$item->libelle}} "
-                                        data-id="{{$item->id}}" data-param="0"
-                                        data-route="{{route('setting.destroy.motifRejet',$item->id)}}"><i
-                                            class='bx bxs-trash' style="cursor: pointer"></i>
-                                        </a>
-                                </div>
-                            </td>
-                        </tr>
-                        @include('settings.motifs.editModal', ['item' => $item])
-                        @empty
-                            <div class="collapse col-8">Aucun motif</div>
-                        @endforelse
-                        
-                    </tbody>
-                </table>
-            </div>
+
+            <style>
+                .partenaire-card {
+                    border-radius: 10px;
+                    overflow: hidden;
+                    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    background: linear-gradient(90deg, #f5bd08, #107722);
+                    color: white;
+                }
+
+                .partenaire-card:hover {
+                    transform: scale(1.05);
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                }
+
+            </style>
         </div>
     </div>
-    @include('settings.motifs.addModal')
 
 </div>
 @endsection

@@ -122,10 +122,10 @@ class SMSService
         // } catch (\Exception $e) {
         //     return ['error' => $e->getMessage()];
         // }
-        // $url = "https://wp2e3q.api.infobip.com/sms/2/text/advanced";
-        // $cleApi = "ca9b1e97d87d27dc425b2d598aa83c46-cbbd83f5-f0af-49ae-9bc0-02ba090ecac3";
-        $url = "https://z32vrw.api.infobip.com/sms/2/text/advanced";
-        $cleApi = "7e23a940f0227d7a9555890da2569aa2-80288480-49fb-47d5-bf44-fe05699acfbc";
+        $url = "https://wp2e3q.api.infobip.com/sms/2/text/advanced";
+        $cleApi = "ca9b1e97d87d27dc425b2d598aa83c46-cbbd83f5-f0af-49ae-9bc0-02ba090ecac3";
+        // $url = "https://z32vrw.api.infobip.com/sms/2/text/advanced";
+        // $cleApi = "7e23a940f0227d7a9555890da2569aa2-80288480-49fb-47d5-bf44-fe05699acfbc";
         $headers = [
                     'Authorization' => "App $cleApi",
                     'Content-Type' => 'application/json',
@@ -195,10 +195,10 @@ class SMSService
 
     public function sendOtpByInfobipAPI($phoneNumber, $otp, $from="YAKO AFRICA")
     {
-        // $url = "https://wp2e3q.api.infobip.com/sms/2/text/advanced";
-        // $cleApi = "ca9b1e97d87d27dc425b2d598aa83c46-cbbd83f5-f0af-49ae-9bc0-02ba090ecac3";
-        $url = "https://z32vrw.api.infobip.com/sms/2/text/advanced";
-        $cleApi = "7e23a940f0227d7a9555890da2569aa2-80288480-49fb-47d5-bf44-fe05699acfbc";
+        $url = "https://wp2e3q.api.infobip.com/sms/2/text/advanced";
+        $cleApi = "ca9b1e97d87d27dc425b2d598aa83c46-cbbd83f5-f0af-49ae-9bc0-02ba090ecac3";
+        // $url = "https://z32vrw.api.infobip.com/sms/2/text/advanced";
+        // $cleApi = "7e23a940f0227d7a9555890da2569aa2-80288480-49fb-47d5-bf44-fe05699acfbc";
         $headers = [
                     'Authorization' => "App $cleApi",
                     'Content-Type' => 'application/json',

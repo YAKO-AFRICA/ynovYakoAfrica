@@ -70,12 +70,6 @@
                     </div>
                 </center>
 
-                {{-- <div class="card-body">
-
-                    <h5 class="my-3 text-center text-uppercase">Editer la prestation</h5>
-
-                </div> --}}
-
             </div>
             <div class="card">
                 <div class="card-body">
@@ -217,7 +211,7 @@
                                                 @endif
                                             </dl>
                                             <dl class="row col-md-8">
-                                                @if ($prestation && $prestation->etape == 0)
+                                                @if ($prestation && $prestation->etape == 0 || $prestation->etape == 3)
                                                     <form
                                                         action="{{ route('prestation.transmettrePrest', $prestation->code) }}"
                                                         method="post" class="submitForm d-flex justify-content-end">
@@ -267,11 +261,11 @@
                                                                 class="form-control" readonly>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <label for="" class="form-label"> Moyen de
+                                                            <label for="" class="form-label"> Dode de
                                                                 paiement</label>
                                                             <div class="mb-3">
                                                                 <div class="form-check form-check-inline">
-                                                                    <input class="form-check-input" name="moyenPaiement"
+                                                                    <input class="form-check-input" name="moyen"
                                                                         type="radio" disabled value="Virement_Bancaire"
                                                                         id="Virement_Bancaire"
                                                                         @if ($prestation->moyenPaiement === 'Virement_Bancaire') checked @endif>
@@ -280,7 +274,7 @@
                                                                 </div>
 
                                                                 <div class="form-check form-check-inline">
-                                                                    <input class="form-check-input" name="moyenPaiement"
+                                                                    <input class="form-check-input" name="moyen"
                                                                         type="radio" disabled value="Mobile_Money"
                                                                         id="Mobile_Money"
                                                                         @if ($prestation->moyenPaiement === 'Mobile_Money') checked @endif>
@@ -298,7 +292,7 @@
                                                                     paiement</label>
                                                                 <div class="mb-3">
                                                                     <div class="form-check form-check-inline">
-                                                                        <input class="form-check-input" name="Operateur"
+                                                                        <input class="form-check-input" name="Operateurs"
                                                                             type="radio" disabled value="Orange_money"
                                                                             id="Orange_money"
                                                                             @if ($prestation->Operateur === 'Orange_money') checked @endif>
@@ -307,7 +301,7 @@
                                                                     </div>
 
                                                                     <div class="form-check form-check-inline">
-                                                                        <input class="form-check-input" name="Operateur"
+                                                                        <input class="form-check-input" name="Operateurs"
                                                                             type="radio" disabled value="Moov_money"
                                                                             id="Moov_Money"
                                                                             @if ($prestation->Operateur === 'Moov_money') checked @endif>
@@ -315,7 +309,7 @@
                                                                             for="Moov_Money">Moov Money</label>
                                                                     </div>
                                                                     <div class="form-check form-check-inline">
-                                                                        <input class="form-check-input" name="Operateur"
+                                                                        <input class="form-check-input" name="Operateurs"
                                                                             type="radio" disabled value="MTN_money"
                                                                             id="MTN_Money"
                                                                             @if ($prestation->Operateur === 'MTN_money') checked @endif>
@@ -333,22 +327,72 @@
                                                                 <input type="number" name="telPaiement"
                                                                     value="{{ $prestation->telPaiement ?? '' }}" readonly
                                                                     class="form-control">
+                                                                    
                                                             </div>
                                                         </div>
                                                     @elseif ($prestation->moyenPaiement == 'Virement_Bancaire')
                                                         <div class="row mb-3">
                                                             <div class="col-md-12">
                                                                 <label for="" class="form-label">RIB</label>
-                                                                <input type="text" name="IBAN"
-                                                                    value="{{ $prestation->IBAN ?? '' }}" maxlength="24"
-                                                                    minlength="24" class="form-control">
+                                                                {{-- <input type="text" name="IBAN"
+                                                                    value="{{ $prestation->IBAN ?? '' }}" readonly maxlength="24"
+                                                                    minlength="24" class="form-control"> --}}
+                                                                    @php
+                                                                        $codeBanque = $prestation->codeBanque ?? ''; // Récupère la valeur depuis la base de données
+                                                                        $codeGuichet = $prestation->codeGuichet ?? ''; // Récupère la valeur depuis la base de données
+                                                                        $numCompte = $prestation->numCompte ?? ''; // Récupère la valeur depuis la base de données
+                                                                        $cleRIB = $prestation->cleRIB ?? ''; // Récupère la valeur depuis la base de données
+                                                                        // @dd($cleRIB);
+                                                                    @endphp
+                                                                    <div class="rib-container">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-6 col-12 mb-3 text-center">
+                                                                                <label for="codebanque" class="form-label">Code Banque</label><br>
+                                                                                <input type="text" class="rib-input" value="{{ $codeBanque[0] ?? '' }}" name="rib_1" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $codeBanque[1] ?? '' }}" name="rib_2" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $codeBanque[2] ?? '' }}" name="rib_3" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $codeBanque[3] ?? '' }}" name="rib_4" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $codeBanque[4] ?? '' }}" name="rib_5" required maxlength="1">
+                                                                            </div>
+                                                                            <div class="col-lg-6 col-12 mb-3 text-center">
+                                                                                <label for="codeagence" class="form-label">Code Agence</label><br>
+                                                                                <input type="text" class="rib-input" value="{{ $codeGuichet[0] }}" name="rib_6" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $codeGuichet[1] }}" name="rib_7" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $codeGuichet[2] }}" name="rib_8" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $codeGuichet[3] }}" name="rib_9" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $codeGuichet[4] }}" name="rib_10" required maxlength="1">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row"> 
+                                                                            <div class="col-lg-7 col-12 mb-3 text-center">
+                                                                                <label for="numcompte" class="form-label">N° de Compte</label><br>
+                                                                                <input type="text" class="rib-input" value="{{ $numCompte[0] ?? '' }}" name="rib_11" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $numCompte[1] ?? '' }}" name="rib_12" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $numCompte[2] ?? '' }}" name="rib_13" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $numCompte[3] ?? '' }}" name="rib_14" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $numCompte[4] ?? '' }}" name="rib_15" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $numCompte[5] ?? '' }}" name="rib_16" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $numCompte[6] ?? '' }}" name="rib_17" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $numCompte[7] ?? '' }}" name="rib_18" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $numCompte[8] ?? '' }}" name="rib_19" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $numCompte[9] ?? '' }}" name="rib_20" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $numCompte[10] ?? '' }}" name="rib_21" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $numCompte[11] ?? '' }}" name="rib_22" required maxlength="1">
+                                                                            </div>
+                                                                            <div class="col-lg-3 col-12 mb-3 w-lg-15 text-center">
+                                                                                <label for="clerib" class="form-label">Clé RIB</label><br>
+                                                                                <input type="text" class="rib-input" value="{{ $cleRIB[0] ?? '' }}" name="rib_23" required maxlength="1">
+                                                                                <input type="text" class="rib-input" value="{{ $cleRIB[1] ?? '' }}" name="rib_24" required maxlength="1">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                             </div>
                                                         </div>
                                                     @endif
 
                                                     <div class="row mb-3">
                                                         <div class="col-md-12">
-                                                            <textarea name="msgClient" class="form-control" id="" cols="30" rows="5">{{ $prestation->msgClient ?? '' }}</textarea>
+                                                            <textarea name="msgClient" class="form-control" id="" placeholder="Informations suplementaires" cols="30" rows="5">{{ $prestation->msgClient ?? '' }}</textarea>
                                                         </div>
                                                     </div>
                                                 </div>

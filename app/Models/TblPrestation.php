@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\Membre;
 use App\Models\Tblotp;
 use App\Models\TblDocPrestation;
+use App\Models\TblMotifrejetbyprestat;
+use App\Models\TblMotifrejetprestation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -33,6 +35,10 @@ class TblPrestation extends Model
         'moyenPaiement',
         'Operateur',
         'telPaiement',
+        'codeBanque',
+        'codeGuichet',
+        'numCompte',
+        'cleRIB',
         'IBAN',
         'saisiepar',
         'traiterpar',
@@ -40,6 +46,7 @@ class TblPrestation extends Model
         'estMigree',
         'envoimail',
         'villedeclaration',
+        'codemotifrejet',
         'mailtraitement',
         'etape',
         'etat'
@@ -64,5 +71,9 @@ class TblPrestation extends Model
     public function membreClient()
     {
         return $this->belongsTo(Membre::class, 'idclient', 'idmembre');
+    }
+    public function motifrejet()
+    {
+        return $this->hasMany(TblMotifrejetbyprestat::class, 'codeprestation', 'code');
     }
 }

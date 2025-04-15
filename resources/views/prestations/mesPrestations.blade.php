@@ -57,7 +57,8 @@
                                     <th>Telephone associé</th>
                                     <th>Email associé</th>
                                     <th>Montant souhaité</th>
-                                    <th>Etape</th>
+                                    <th>Statut</th>
+                                    <th>Motif rejet</th>
                                     <th>Date de demande</th>
                                     <th>Actions</th>
                                 </tr>
@@ -96,22 +97,52 @@
                                                 -
                                             @endif
                                         </td>
+                                        <td>
+                                            @if($prestation->etape == 3)
+                                                <div class="d-flex align-items-center">
+                                                    <div>{{ $prestation->motifrejet->count() }} motif(s)</div>
+                                                    <div class="ms-2">
+                                                        <h5 class="mb-0 font-18 text-success p-1 border rounded bg-light" data-bs-toggle="modal"
+                                                            data-bs-target="#showMotifRejetModal{{ $prestation->code }}"
+                                                            style="cursor: pointer">
+                                                            <i class="bx bx-show"></i>
+                                                        </h5>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
                                         <td>{{ $prestation->created_at->format('d/m/Y à H:i') }}</td>
                                         <td>
                                             <div class="d-flex order-actions">
                                                 <a href="{{ route('prestation.show', $prestation->code) }}"
                                                     class="ms-2 border"><i class='bx bxs-show'></i></a>
                                                     
-                                                    
-                                                     <a href="{{ route('prestation.edit', $prestation->code) }}" class="ms-3 border {{ $prestation->etape == 1 ? 'disabled-link' : '' }}" 
+                                                    @php
+                                                        $isEditable = $prestation->etape == 0 || $prestation->etape == 3;
+                                                        $editRoute = $prestation->etape == 3 
+                                                            ? route('prestation.editAfterRejet', $prestation->code) 
+                                                            : route('prestation.edit', $prestation->code);
+                                                        $tooltipText = $isEditable ? 'Modifier la demande' : 'Impossible de modifier la demande une fois transmise';
+                                                    @endphp
+
+                                                    <a href="{{ $editRoute }}" 
+                                                    class="ms-3 border {{ !$isEditable ? 'disabled-link' : '' }}" 
+                                                    data-bs-toggle="tooltip" 
+                                                    data-bs-placement="top" 
+                                                    title="{{ $tooltipText }}">
+                                                    <i class='bx bxs-edit'></i>
+                                                    </a>
+                                                     {{-- <a href="{{ route('prestation.edit', $prestation->code) }}" class="ms-3 border {{ $prestation->etape != 0 && $prestation->etape != 3 ? 'disabled-link' : '' }}" 
                                                         data-bs-toggle="tooltip" data-bs-placement="top" 
-                                                        title="{{ $prestation->etape == 1 ? 'Impossible de modifier la demande une fois transmise' : '' }}">
+                                                        title="{{ $prestation->etape != 0 && $prestation->etape != 3 ? 'Impossible de modifier la demande une fois transmise' : '' }}">
                                                          <i class='bx bxs-edit'></i>
-                                                     </a>
-                                                    <a href="javascript:;" class="deleteConfirmation border ms-3 {{$prestation->etape == 1 ? 'disabled-link' : ''}}" data-uuid="{{$prestation->code}}"
+                                                     </a> --}}
+                                                    <a href="javascript:;" class="deleteConfirmation border ms-3 {{$prestation->etape != 0 && $prestation->etape != 3 ? 'disabled-link' : ''}}" data-uuid="{{$prestation->code}}"
                                                         data-type="confirmation_redirect" data-placement="top"
                                                         data-token="{{ csrf_token() }}" data-bs-toggle="tooltip" data-bs-placement="top" 
-                                                        title="{{ $prestation->etape == 1 ? 'Impossible de supprimer la demande une fois transmise' : '' }}"
+                                                        title="{{ $prestation->etape != 0 && $prestation->etape != 3 ? 'Impossible de supprimer la demande une fois transmise' : '' }}"
                                                         data-url="{{route('prestation.destroy',$prestation->code)}}"
                                                         data-title="Vous êtes sur le point de supprimer {{$prestation->code}} "
                                                         data-id="{{$prestation->code}}" data-param="0"
@@ -121,6 +152,7 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    @include('prestations.components.modals.showMotifModal' , ['code' => $prestation->code])
                                 @endforeach
                             </tbody>
                         </table>
@@ -128,7 +160,7 @@
                 </div>
                 <div class="tab-pane fade" id="successcontact" role="tabpanel">
                     <div class="table-responsive">
-                        <table id="example3" class="table mes-prestations table-striped table-bordered">
+                        <table id="example3" class="table mes-prestations">
                             <thead class="table-light">
                                 <tr>
                                     <th>Code de la demande</th>
@@ -136,7 +168,8 @@
                                     <th>Type de prestation</th>
                                     <th>Telephone associé</th>
                                     <th>Email associé</th>
-                                    <th>Etape</th>
+                                    <th>Statut</th>
+                                    <th>Motif de rejet</th>
                                     <th>Date de demande</th>
                                     <th>Actions</th>
                                 </tr>
@@ -152,18 +185,34 @@
                                         <td>
                                             @if ($prestation->etape == 1)
                                                 <div
-                                                    class="badge rounded-pill text-info bg-light-info p-2 text-uppercase px-3">
-                                                    <i class="bx bxs-circle me-1"></i>En attente de transmission
+                                                    class="badge rounded-pill text-primary bg-light-primary p-2 text-uppercase px-3">
+                                                    <i class="bx bxs-circle me-1"></i>Transmis pour traitement
                                                 </div>
                                             @elseif($prestation->etape == 2)
                                                 <div
-                                                    class="badge rounded-pill text-primary bg-light-primary p-2 text-uppercase px-3">
-                                                    <i class="bx bxs-circle me-1"></i>Transmis pour traitement
+                                                    class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
+                                                    <i class="bx bxs-circle me-1"></i>Demande acceptée
                                                 </div>
                                             @elseif($prestation->etape == 3)
                                                 <div
                                                     class="badge rounded-pill text-danger bg-light-danger p-2 text-uppercase px-3">
                                                     <i class="bx bxs-circle me-1"></i>Demande rejétée
+                                                </div>
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($prestation->etape == 3)
+                                                <div class="d-flex align-items-center">
+                                                    <div>{{ $prestation->motifrejet->count() }} motif(s)</div>
+                                                    <div class="ms-2">
+                                                        <h5 class="mb-0 font-18 text-success p-1 border rounded bg-light" data-bs-toggle="modal"
+                                                            data-bs-target="#showMotifRejetModal{{ $prestation->code }}"
+                                                            style="cursor: pointer">
+                                                            <i class="bx bx-show"></i>
+                                                        </h5>
+                                                    </div>
                                                 </div>
                                             @else
                                                 -
@@ -177,15 +226,15 @@
                                                     data-bs-target="#exampleModal{{ $prestation->code }}"
                                                     class="ms-2 border"><i class='bx bxs-show'></i></a>
 
-                                                    <a href="{{ route('prestation.edit', $prestation->code) }}" class="ms-3 border {{ $prestation->etape == 1 ? 'disabled-link' : '' }}" 
+                                                    <a href="{{ route('prestation.edit', $prestation->code) }}" class="ms-3 border {{ $prestation->etape != 0 ? 'disabled-link' : '' }}" 
                                                         data-bs-toggle="tooltip" data-bs-placement="top" 
-                                                        title="{{ $prestation->etape == 1 ? 'Impossible de modifier la demande une fois transmise' : '' }}">
+                                                        title="{{ $prestation->etape != 0 ? 'Impossible de modifier la demande une fois transmise' : '' }}">
                                                          <i class='bx bxs-edit'></i>
                                                      </a>
-                                                    <a href="javascript:;" class="deleteConfirmation border ms-3 {{$prestation->etape == 1 ? 'disabled-link' : ''}}" data-uuid="{{$prestation->code}}"
+                                                    <a href="javascript:;" class="deleteConfirmation border ms-3 {{$prestation->etape != 0 && $prestation->etape != 3 ? 'disabled-link' : ''}}" data-uuid="{{$prestation->code}}"
                                                         data-type="confirmation_redirect" data-placement="top"
                                                         data-token="{{ csrf_token() }}" data-bs-toggle="tooltip" data-bs-placement="top" 
-                                                        title="{{ $prestation->etape == 1 ? 'Impossible de supprimer la demande une fois transmise' : '' }}"
+                                                        title="{{ $prestation->etape != 0 && $prestation->etape != 3 ? 'Impossible de supprimer la demande une fois transmise' : '' }}"
                                                         data-url="{{route('prestation.destroy',$prestation->code)}}"
                                                         data-title="Vous êtes sur le point de supprimer la prestation {{$prestation->code}} "
                                                         data-id="{{$prestation->code}}" data-param="0"
@@ -229,6 +278,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @include('prestations.components.modals.showMotifModal' , ['code' => $prestation->code])
                                 @endforeach
                             </tbody>
                         </table>
@@ -244,12 +294,7 @@
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
-            // Empêcher le clic sans désactiver le survol
-        // document.querySelectorAll('.disabled-link').forEach(function(link) {
-        //     link.addEventListener('click', function(event) {
-        //         event.preventDefault(); // Bloque l'action du lien
-        //     });
-        // });
+            
         });
     </script>
 @endsection

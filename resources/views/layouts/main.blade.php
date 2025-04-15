@@ -40,7 +40,19 @@
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-    
+    <style>
+    /* Pour la hauteur de l'élément Select2 */
+            .select2-container--default .select2-selection--single {
+                height: 38px !important; /* Ajuste à la hauteur que tu veux */
+                display: flex;
+                align-items: center;
+            }
+
+            /* Pour centrer le texte verticalement */
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: 38px !important;
+            }
+    </style>
 
 
     
@@ -127,9 +139,23 @@
                 var table = $('#example2').DataTable({
                     lengthChange: true,
                     buttons: ['copy', 'excel', 'pdf', 'print'],
+                    // language: {
+                    //     search: "Recherche :",
+                    // },
                     language: {
-                        search: "Recherche :",
-                    },
+                                search: "Recherche :",
+                                lengthMenu: "Afficher _MENU_ lignes",
+                                zeroRecords: "Aucun enregistrement trouvé",
+                                info: "Affichage de _START_ à _END_ sur _TOTAL_ enregistrements",
+                                infoEmpty: "Aucun enregistrement disponible",
+                                infoFiltered: "(filtré à partir de _MAX_ enregistrements)",
+                                paginate: {
+                                    first: "Premier",
+                                    last: "Dernier",
+                                    next: "Suivant",
+                                    previous: "Précédent",
+                                },
+                            },
                 });
 
                 table.buttons().container()
@@ -141,9 +167,23 @@
                 var table = $('#example3').DataTable({
                     lengthChange: true,
                     buttons: ['copy', 'excel', 'pdf', 'print'],
+                    // language: {
+                    //     search: "Recherche :",
+                    // },
                     language: {
-                        search: "Recherche :",
-                    },
+                                search: "Recherche :",
+                                lengthMenu: "Afficher _MENU_ lignes",
+                                zeroRecords: "Aucun enregistrement trouvé",
+                                info: "Affichage de _START_ à _END_ sur _TOTAL_ enregistrements",
+                                infoEmpty: "Aucun enregistrement disponible",
+                                infoFiltered: "(filtré à partir de _MAX_ enregistrements)",
+                                paginate: {
+                                    first: "Premier",
+                                    last: "Dernier",
+                                    next: "Suivant",
+                                    previous: "Précédent",
+                                },
+                            },
                 });
 
                 table.buttons().container()
@@ -155,7 +195,7 @@
                 $('.selection').select2({
                     placeholder: "Choisir",
                     allowClear: true,
-                    width: '100%'
+                    width: '100%',
                 });
             });
         </script>

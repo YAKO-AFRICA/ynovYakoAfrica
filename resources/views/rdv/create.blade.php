@@ -140,14 +140,14 @@
                             <div class="row g-3 mb-3">
                             
                                 <div class="col-12 col-lg-6">
-                                    <label for="single-select-field" class="form-label">Où habitez-vous ? <span class="star">*</span></label><br>
-                                    <select class="form-select" name="lieuresidence" id="single-select-field" data-placeholder="Veuillez sélectionner votre lieu d'habitation" required>
+                                    <label for="lieuresidence" class="form-label">Où habitez-vous ? <span class="star">*</span></label><br>
+                                    <select class="form-select selection" name="lieuresidence" id="lieuresidence" data-placeholder="Veuillez sélectionner votre lieu d'habitation" required>
                                         <option></option>
-                                        <option value="{{$membreDetails->lieuresidence ?? ''}}" selected>{{$membreDetails->lieuresidence ?? ''}}</option>
+                                        {{-- <option value="{{$membreDetails->lieuresidence ?? ''}}" selected>{{$membreDetails->lieuresidence ?? ''}}</option> --}}
                                         
                                         @foreach($villes as $ville)
-                                            @if($membreDetails && $membreDetails->lieuresidence !== $ville->libelleVillle)
-                                                <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option>
+                                            @if($membreDetails && $membreDetails->lieuresidence == $ville->libelleVillle)
+                                                <option value="{{ $ville->libelleVillle }}" selected>{{ $ville->libelleVillle }}</option>
                                             @else
                                                 <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option>
                                             @endif

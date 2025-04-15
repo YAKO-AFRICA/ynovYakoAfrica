@@ -159,8 +159,8 @@
                         </div>
                     </td>
                 </tr>
-                {{-- @include('settings.prestationByproduct.addModal', ['CodeProduit' => $item->CodeProduit]) --}}
-                @include('settings.prestationByproduct.showPrestationModal', [
+                {{-- @include('settings.prestationByProduct.addModal', ['CodeProduit' => $item->CodeProduit]) --}}
+                @include('settings.prestationByProduct.showPrestationModal', [
                     'CodeProduit' => $item->CodeProduit,
                 ])
             @empty

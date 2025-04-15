@@ -146,11 +146,11 @@ class PrestationController extends Controller
         
         $rdv = Tblrdv::where(['police'=> $idcontrat, 'motifrdv' => $typePrestation->libelle, 'etat' => 1])->first();
 
-        // detruis la session apres utilisation
-       session()->forget('contractDetails');
+        
        if ($prestation) {
             return redirect()->back()->with('fail','Une prestation de type "' . $typePrestation->libelle . '" pour le contrat ' . $idcontrat . ' est déja en cours. N° de prestation : ' . $prestation->code);
         }else{
+            session()->forget('contractDetails');
             return view('prestations.create', compact('typePrestation', 'contractDetails', 'membreDetails', 'typePrestationAutre', 'TotalEncaissement'));
         }
         
@@ -380,7 +380,18 @@ class PrestationController extends Controller
 
             $moyenPaiement = $request->moyenPaiement;
             $TelPaiement = ($moyenPaiement == 'Virement_Bancaire') ? null : $request->TelPaiement;
-            $IBAN = ($moyenPaiement == 'Virement_Bancaire') ? $request->IBAN : null;
+            // 5 caracteres
+            $codeBanque = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_1 . $request->rib_2 . $request->rib_3 .$request->rib_4 . $request->rib_5 : null;
+
+            // 5 caracteres
+            $codeGuichet = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_6 . $request->rib_7 . $request->rib_8 .$request->rib_9 . $request->rib_10 : null;
+
+            // 12 caracteres
+            $numCompte = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_11 . $request->rib_12 . $request->rib_13 . $request->rib_14 . $request->rib_15 . $request->rib_16 . $request->rib_17 . $request->rib_18 . $request->rib_19 . $request->rib_20 . $request->rib_21 . $request->rib_22 : null;
+
+            // 2 caracteres
+            $cleRIB = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_23 . $request->rib_24 : null;
+            $IBAN = ($moyenPaiement == 'Virement_Bancaire') ? $codeBanque . $codeGuichet . $numCompte . $cleRIB : null;
 
             // supprimer Espace en cas de $TelPaiement
             $montantSouhaite = preg_replace('/\s+/u', '', $request->montantSouhaite);
@@ -406,6 +417,10 @@ class PrestationController extends Controller
                 'moyenPaiement' => $moyenPaiement,
                 'Operateur' => $request->Operateur,
                 'telPaiement' => $TelPaiement,
+                'codeBanque' => $codeBanque,
+                'codeGuichet' => $codeGuichet,
+                'numCompte' => $numCompte,
+                'cleRIB' => $cleRIB,
                 'IBAN' => $IBAN,
                 'saisiepar' => $saisiepar,
                 'etape' => 0,
@@ -732,9 +747,9 @@ class PrestationController extends Controller
     public function mesPrestations()
     {
         $user = auth()->user();
-        $prestations = TblPrestation::where(['saisiepar' => $user->membre->idmembre])->where('moyenPaiement', '!=', null, 'and', 'montantSouhaite', '!=', null, 'and', 'telPaiement', '!=', null, 'and', 'Operateur', '!=', null, 'and', 'IBAN', '!=', null)->with('docPrestation')->orderBy('created_at', 'desc')->get();
+        $prestations = TblPrestation::where(['saisiepar' => $user->membre->idmembre])->where('moyenPaiement', '!=', null, 'and', 'montantSouhaite', '!=', null, 'and', 'telPaiement', '!=', null, 'and', 'Operateur', '!=', null, 'and', 'IBAN', '!=', null)->with('docPrestation', 'motifrejet')->orderBy('created_at', 'desc')->get();
 
-        $AutrePrestations = TblPrestation::where(['saisiepar' => $user->membre->idmembre])->where('moyenPaiement', '=', null, 'and', 'montantSouhaite', '=', null, 'and', 'telPaiement', '=', null, 'and', 'Operateur', '=', null, 'and', 'IBAN', '=', null)->with('docPrestation')->orderBy('created_at', 'desc')->get();
+        $AutrePrestations = TblPrestation::where(['saisiepar' => $user->membre->idmembre])->where('moyenPaiement', '=', null, 'and', 'montantSouhaite', '=', null, 'and', 'telPaiement', '=', null, 'and', 'Operateur', '=', null, 'and', 'IBAN', '=', null)->with('docPrestation', 'motifrejet')->orderBy('created_at', 'desc')->get();
         return view('prestations.mesPrestations', compact('prestations', 'AutrePrestations'));
     }
 
@@ -806,6 +821,38 @@ class PrestationController extends Controller
         return view('prestations.edit', compact('prestation', 'types', 'conditionsInvalides'));
     }
 
+    public function editAfterRejet(string $code)
+    {
+        $prestation = TblPrestation::where('code', $code)->first();
+        $documents = TblDocPrestation::where('idPrestation', $prestation->id)->get();
+
+        $types = [
+            'Police' => null,
+            'bulletin' => null,
+            'AttestationPerteContrat' => null,
+            'CNI' => null,
+            'FicheIDNum' => null,
+            'RIB' => null,
+            'Signature' => null,
+        ];
+
+        foreach ($documents as $doc) {
+            if (array_key_exists($doc->type, $types)) {
+                $types[$doc->type] = $doc->type; // Stocke la valeur si elle existe
+            }
+
+        }
+        // Vérification des conditions obligatoires
+        $conditionsInvalides = (
+            is_null($types['Signature']) || 
+            is_null($types['CNI']) || 
+            (is_null($types['Police']) && is_null($types['AttestationPerteContrat']) && is_null($types['bulletin'])) || 
+            (is_null($types['RIB']) && is_null($types['FicheIDNum']))
+        );
+        // dd($types, $conditionsInvalides);
+        return view('prestations.editAfterRejet', compact('prestation', 'types', 'conditionsInvalides'));
+    }
+
     /**
      * Update the specified resource in storage.
      */
@@ -813,15 +860,43 @@ class PrestationController extends Controller
     {
         DB::beginTransaction();
         try {
+            $otp = $request->otp_1 . $request->otp_2 . $request->otp_3 . $request->otp_4 . $request->otp_5 . $request->otp_6;
+            $otpVerif = Tblotp::where('codeOTP', $otp)->first();
+
+            // if ($otpVerif) {
             $isUpdated = TblPrestation::where('code', $code)->first();
+            $idOtp = $otpVerif->id ?? $isUpdated->idOtp;
+            $moyenPaiement = $request->moyenPaiement;
+            $TelPaiement = ($moyenPaiement == 'Virement_Bancaire') ? null : $request->TelPaiement;
+            // 5 caracteres
+            $codeBanque = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_1 . $request->rib_2 . $request->rib_3 .$request->rib_4 . $request->rib_5 : null;
+
+            // 5 caracteres
+            $codeGuichet = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_6 . $request->rib_7 . $request->rib_8 .$request->rib_9 . $request->rib_10 : null;
+
+            // 12 caracteres
+            $numCompte = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_11 . $request->rib_12 . $request->rib_13 . $request->rib_14 . $request->rib_15 . $request->rib_16 . $request->rib_17 . $request->rib_18 . $request->rib_19 . $request->rib_20 . $request->rib_21 . $request->rib_22 : null;
+
+            // 2 caracteres
+            $cleRIB = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_23 . $request->rib_24 : null;
+            $IBAN = ($moyenPaiement == 'Virement_Bancaire') ? $codeBanque . $codeGuichet . $numCompte . $cleRIB : null;
+            // $isUpdated = TblPrestation::where('code', $code)->first();
             $isUpdated->update([
-                'montantSouhaite' => $request->montantSouhaite,
-                'IBAN' => $request->IBAN,
+                'idOtp' => $idOtp,
                 'msgClient' => $request->msgClient,
                 'cel' => $request->cel,
                 'tel' => $request->tel,
                 'email' => $request->email,
-                'lieuresidence' => $request->lieuresidence
+                'lieuresidence' => $request->lieuresidence,
+                'moyenPaiement' => $moyenPaiement,
+                'Operateur' => $request->Operateur,
+                'codeBanque' => $codeBanque,
+                'codeGuichet' => $codeGuichet,
+                'numCompte' => $numCompte,
+                'cleRIB' => $cleRIB,
+                'telPaiement' => $TelPaiement,
+                'IBAN' => $IBAN,
+                'etape' => 0
             ]);
             if ($isUpdated) {
                 $prestationPdfUrl = $this->updatePrestationPdf($isUpdated);

@@ -78,7 +78,7 @@ return [
             'engine' => null,
         ],
         'mysql3' => [
-            'driver' => 'mysql',
+            'driver' => 'mysql3',
             'host' => env('DB_HOST_THREE', '127.0.0.1'),
             'port' => env('DB_PORT_THREE', '3306'),
             'database' => env('DB_DATABASE_THREE', 'forge'),

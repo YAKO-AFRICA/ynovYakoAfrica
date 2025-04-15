@@ -1,13 +1,13 @@
-<div class="modal fade " id="EditMotif{{ $item->id }}" tabindex="-1" aria-hidden="true">
+<div class="modal fade " id="addNewMotif" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl" style="margin-top:0; margin-right: 0">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Modifier le motif</h5>
+                <h5 class="modal-title">Ajouter un Motif</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span class="btn" aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('setting.motifRejet.update', $item->id) }}" method="POST" class="submitForm">
+            <form action="{{ route('setting.motifRejetProposition.store') }}" method="POST" class="submitForm">
                 @csrf
                 <div class="modal-body">
                     <fieldset class="border p-3">
@@ -15,7 +15,7 @@
                         <div class="row">
                             <div class="mb-3 col-sm-12 col-md-12 col-lg-12">
                                 <label for="libelle" class="form-label">Libelle <span><span class="text-danger">*</span></span></label>
-                                <input type="text" id="libelle" name="libelle" value="{{ $item->libelle }}" class="form-control" required>
+                                <input type="text" id="libelle" name="libelle" class="form-control" required>
                             </div>
                         </div>
                     </fieldset>

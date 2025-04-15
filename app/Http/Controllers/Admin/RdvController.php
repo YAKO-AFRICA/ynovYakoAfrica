@@ -33,6 +33,7 @@ class RdvController extends Controller
             
             $typePrestation = TblTypePrestation::where('id', $id)->first();
             $villes = TblVille::all();
+            // dd($villes);
             $villeReseaux = TblVilleReseau::select('idVilleBureau', 'libelleVilleBureau')
             ->whereHas('optionRdv') // Vérifie que la relation 'optionRdv' existe
             ->with('optionRdv') // Charge les options de rendez-vous pour chaque ville réseau
@@ -41,11 +42,12 @@ class RdvController extends Controller
             $contractDetails = $contract['details'][0] ?? [];
             $membreDetails   = $contract['membre'] ?? [];
             $rdv = Tblrdv::where(['police'=> $idcontrat, 'motifrdv' => $typePrestation->libelle, 'etat' => 1])->first();
-            session()->forget('contractDetails');
+            // session()->forget('contractDetails');
         }
         if ($rdv) {
             return redirect()->back()->with('fail','Une prestation de type "' . $typePrestation->libelle . '" pour le contrat ' . $idcontrat . ' est déja en cours. N° de prestation : ' . $rdv->codedmd.' cette prestation est a débouchée sur une prise de rendez-vous.'); 
         }else{
+            session()->forget('contractDetails');
             return view('rdv.create', compact('typePrestation', 'villes', 'villeReseaux', 'contractDetails', 'membreDetails'));
         }
     }
