@@ -101,6 +101,13 @@
     
             <div class="card-body productions">
                 <div class="bs-stepper-content card p-3">
+                    <div class="col-12 d-flex justify-content-center align-items-center">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-outline-warning " data-bs-toggle="modal" data-bs-target="#RechercherClientModal"><i class="fadeIn animated bx bx-search"></i>Recherche client</button>
+    
+                        <!-- Modal -->
+                    </div>
+                    <hr>
                     {{-- <form method="POST" action="{{ route('prod.store')}}" enctype="multipart/form-data" class="submitForm form"> --}}
                     <form id="productionForm" enctype="multipart/form-data" class="submitForm form">
                         @csrf
@@ -128,7 +135,7 @@
         </div>
     </div>
 </div>
-
+@include('productions.components.searchModal')
 <script>
     let garantiesProduct = @json($productGarantie);
 </script>

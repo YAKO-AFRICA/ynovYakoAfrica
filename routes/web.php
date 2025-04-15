@@ -140,6 +140,7 @@ Route::prefix('prestation')->name('prestation.')->group(function(){
         Route::get('show/{code}',[PrestationController::class, 'show'])->name('show');
         Route::post('/add',[PrestationController::class, 'store'])->name('store');
         Route::get('/edit/{code}',[PrestationController::class, 'edit'])->name('edit');
+        Route::get('/modifier-apres-rejet/{code}',[PrestationController::class, 'editAfterRejet'])->name('editAfterRejet');
         Route::post('/transmettrePrest/{code}',[PrestationController::class, 'transmettrePrest'])->name('transmettrePrest');
         Route::post('/update/{code}',[PrestationController::class, 'update'])->name('update');
         Route::post('/destroy/{code}',[PrestationController::class, 'destroy'])->name('destroy');
@@ -237,9 +238,15 @@ Route::prefix('settings')->name('setting.')->group(function(){
 
 
         Route::get('/index-motif-rejet', [MotifController::class, 'index'])->name('motifRejet.index');
-        Route::post('/store-motif-rejet', [MotifController::class, 'store'])->name('motifRejet.store');
-        Route::post('/update-motif-rejet/{id}', [MotifController::class, 'update'])->name('motifRejet.update');
-        Route::post('/destroy-motif-rejet/{id}', [MotifController::class, 'destroy'])->name('destroy.motifRejet');
+        Route::get('/index-motif-rejet-proposition', [MotifController::class, 'indexMotifProposition'])->name('motifRejetProposition.index');
+        Route::post('/store-motif-rejet-proposition', [MotifController::class, 'storeMotifProposition'])->name('motifRejetProposition.store');
+        Route::post('/update-motif-rejet-proposition/{id}', [MotifController::class, 'updateMotifProposition'])->name('motifRejetProposition.update');
+        Route::post('/destroy-motif-rejet-proposition/{id}', [MotifController::class, 'destroyMotifProposition'])->name('destroy.motifRejetProposition');
+
+        Route::get('/index-motif-rejet-prestation', [MotifController::class, 'indexMotifPrestation'])->name('motifRejetPrestation.index');
+        Route::post('/store-motif-rejet-prestation', [MotifController::class, 'storeMotifPrestation'])->name('motifRejetPrestation.store');
+        Route::post('/update-motif-rejet-prestation/{id}', [MotifController::class, 'updateMotifPrestation'])->name('motifRejetPrestation.update');
+        Route::post('/destroy-motif-rejet-prestation/{id}', [MotifController::class, 'destroyMotifPrestation'])->name('destroy.motifRejetPrestation');
 
 
 
@@ -292,6 +299,7 @@ Route::prefix('production')->name('prod.')->group(function(){
         Route::get('/edit/{id}', [ProductionController::class, 'edit'])->name('edit');
         Route::post('/update/{id}', [ProductionController::class, 'update'])->name('contrat.update');
         Route::get('/create/stepProduct', [ProductionController::class, 'stepProduct'])->name('stepProduct');
+        Route::post('search-adherent', [ProductionController::class, 'searchAdherant'])->name('search.adherent');
         Route::get('/create/add/{codeproduit}', [ProductionController::class, 'create'])->name('create');
         Route::get('/createYke/add/{codeproduit}', [ProductionController::class, 'createYke'])->name('createYke');
         Route::get('/createKds/add/{codeproduit}', [ProductionController::class, 'createKds'])->name('createKds');

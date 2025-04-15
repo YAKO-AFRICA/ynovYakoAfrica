@@ -364,7 +364,7 @@
                         @endif
                         <div class="row">
                             <div class="col-sm-12 col-md-6 col-lg-6">
-                                <div class="card" style="width: 90%">
+                                <div class="card">
                                     <div class="card-body">
                                         <h3>Prestation</h3>
                                         @if ($prestation)

@@ -19,6 +19,7 @@ use App\Models\TblAgence;
 use App\Models\Filliation;
 use App\Models\Profession;
 use App\Models\TblSociete;
+use App\Models\TblProspere;
 use Illuminate\Support\Str;
 use App\Models\Beneficiaire;
 use Illuminate\Http\Request;
@@ -161,6 +162,38 @@ class ProductionController extends Controller
         return view('productions.create.steps.stepProduct', compact('products'));
     }
 
+    public function searchAdherant(Request $request)
+    {
+        $query = $request->input('query');
+        $resultDataProspect = Null;
+        $resultData = Null;
+
+        $methodeRecherche = $request->input('methodeRecherche');
+        if($methodeRecherche == "CodeProspect"){
+            $resultDataProspect = TblProspere::where('code', $query)->first();
+        }elseif($methodeRecherche == "NumPiece"){
+            $resultData = Adherent::where('numeropiece', $query)->first();
+        }
+        if (!empty($resultData) || !empty($resultDataProspect)) {
+            //    ajouter dans la session
+            session()->put('adherent', $resultData);
+            session()->put('adherentProspect', $resultDataProspect);
+            return response()->json([
+                'type' => 'success',
+                'message' => 'Client trouvé ...', 
+                'urlback' => 'back',
+                'code' => 200
+            ]);
+        } else {
+            return response()->json([
+                'type' => 'error',
+                'urlback' => '',
+                'message' => 'Aucun client trouvé',
+                'code' => 404
+            ]);
+        }
+    }
+
     public function addAssureToSession(Request $request)
     {
         // Récupérer les assurés actuels dans la session ou initialiser un tableau vide
@@ -191,9 +224,11 @@ class ProductionController extends Controller
         $societes = TblSociete::select('MonLibelle')->get();
         $agences = TblAgence::select('NOM_LONG')->get();
         $filliations = Filliation::select('MonLibelle')->get();
-
-
-        return view('productions.create.create', compact('product', 'villes', 'secteurActivites', 'professions', 'productGarantie', 'societes', 'agences', 'filliations'));
+        // session()->put('adherent', $resultData);
+        $resultData = session()->get('adherent', []);
+        $resultDataProspect = session()->get('adherentProspect', []);
+        // dd($resultData, $resultDataProspect);
+        return view('productions.create.create', compact('product', 'villes', 'secteurActivites', 'professions', 'productGarantie', 'societes', 'agences', 'filliations', 'resultData', 'resultDataProspect'));
     }
 
  

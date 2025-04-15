@@ -21,6 +21,27 @@ function Refgenerate($table, $prefix, $key)
     // Générer le prochain code avec un format à 5 chiffres
     return $prefix . '-' . sprintf('%05d', $number + 1);
 }
+function RefgenerateCodeMotifRejet($table, $prefix, $key)
+{
+    // Récupérer le dernier enregistrement de la table
+    $latest = $table::orderBy('id', 'desc')->first();
+    
+    // Si aucun enregistrement n'existe, retourner le format initial
+    if (!$latest || !isset($latest->$key)) {
+        return $prefix . '-001';
+    }
+    
+    // Extraire la partie numérique du code
+    $number = preg_replace("/[^0-9]/", '', $latest->$key);
+    
+    // Si aucune partie numérique n'est trouvée, commencer à 1
+    if (empty($number)) {
+        $number = 0;
+    }
+    
+    // Générer le prochain code avec un format à 5 chiffres
+    return $prefix . '-' . sprintf('%05d', $number + 1);
+}
 
 function RefgenerateCode($table, $init, $key)
 {

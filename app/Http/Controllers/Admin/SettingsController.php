@@ -30,14 +30,14 @@ class SettingsController extends Controller
 
         // dd($products);
         $typeprestations = TblTypePrestation::where('etat', 'Actif')->get();
-        return view('settings.PrestationByProduct.index', compact('products', 'typeprestations'));
+        return view('settings.prestationByProduct.index', compact('products', 'typeprestations'));
     }
 
     public function PrestationProductform($codeProduit)
     {
         $product = Product::where('CodeProduit', $codeProduit)->first();
         $typeprestations = TblTypePrestation::where('etat', 'Actif')->where('impact', '!=', 'Autre')->get();
-        return view('settings.PrestationByProduct.addPrestation', compact('codeProduit', 'typeprestations', 'product'));
+        return view('settings.prestationByProduct.addPrestation', compact('codeProduit', 'typeprestations', 'product'));
     }
     public function PrestationProductStore(Request $request)
     {

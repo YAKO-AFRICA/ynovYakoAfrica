@@ -78,7 +78,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                @include('settings.prestationByproduct.showPrestationModal', [
+                                @include('settings.prestationByProduct.showPrestationModal', [
                                     'CodeProduit' => $item->CodeProduit,
                                 ])
                             @empty

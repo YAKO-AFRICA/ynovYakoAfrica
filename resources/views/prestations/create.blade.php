@@ -299,6 +299,10 @@
             });
         });
     </script>
+    <script>
+        let TotalEncaissement = @json($TotalEncaissement);
+        // alert(TotalEncaissement);
+    </script>
 
 
 

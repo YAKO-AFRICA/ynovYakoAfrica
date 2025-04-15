@@ -7,7 +7,7 @@
                     <span class="btn" aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('setting.motifRejet.store') }}" method="POST" class="submitForm">
+            <form action="{{ route('setting.motifRejetPrestation.store') }}" method="POST" class="submitForm">
                 @csrf
                 <div class="modal-body">
                     <fieldset class="border p-3">
@@ -15,7 +15,8 @@
                         <div class="row">
                             <div class="mb-3 col-sm-12 col-md-12 col-lg-12">
                                 <label for="libelle" class="form-label">Libelle <span><span class="text-danger">*</span></span></label>
-                                <input type="text" id="libelle" name="libelle" class="form-control" required>
+                                <textarea name="libelle" id="libelle" class="form-control" required cols="30" rows="5"></textarea>
+                                
                             </div>
                         </div>
                     </fieldset>
