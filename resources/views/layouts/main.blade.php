@@ -296,7 +296,7 @@
             const nextBtn = document.getElementById("nextBtn");
             const submitBtn = document.getElementById("submit");
             let currentStep = 0;
-
+            
             // Met à jour l'affichage des étapes du formulaire et du stepper
             function updateFormAndStepper() {
                 // Mettre à jour les étapes du formulaire

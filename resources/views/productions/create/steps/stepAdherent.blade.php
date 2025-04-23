@@ -239,6 +239,8 @@
                 class='bx bx-left-arrow-alt'></i>Precedent</button>
         {{-- </div> --}}
         {{-- <div class="col-12 col-lg-6 col-md-6"> --}}
+            {{-- <button type="button" data-bs-toggle="modal" data-bs-target="#otpModal" class="btn btn-two">Code OTP<i
+                class='bx bx-right-arrow-alt'></i></button> --}}
             <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i class='bx bx-right-arrow-alt'></i></button>
         {{-- </div> --}}
     </div>

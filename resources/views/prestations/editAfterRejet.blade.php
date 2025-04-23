@@ -80,19 +80,23 @@
                                 @endif
                             </center>
                         </p>
-                        <div class="d-flex align-items-center">
-                            <div>Cliquez sur l'oeil pour voir le(s) motif(s) de rejet</div>
-                            <div class="ms-2">
-                                <h5 class="mb-0 font-18 text-success p-1 border rounded bg-light" data-bs-toggle="modal"
-                                    data-bs-target="#showMotifRejetModal{{ $prestation->code }}"
-                                    style="cursor: pointer">
-                                    <i class="bx bx-show"></i>
-                                </h5>
+                        @if ($prestation->etape == 3)
+                            <div class="d-flex align-items-center">
+                                <div>Cliquez sur l'oeil pour voir le(s) motif(s) de rejet</div>
+                                <div class="ms-2">
+                                    <h5 class="mb-0 font-18 text-success p-1 border rounded bg-light" data-bs-toggle="modal"
+                                        data-bs-target="#showMotifRejetModal{{ $prestation->code }}"
+                                        style="cursor: pointer">
+                                        <i class="bx bx-show"></i>
+                                    </h5>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </center>
-                @include('prestations.components.modals.showMotifModal' , ['code' => $prestation->code])
+                @if ($prestation->etape == 3)
+                    @include('prestations.components.modals.showMotifModal' , ['code' => $prestation->code])
+                @endif
             </div>
             <div class="card">
                 <div class="card-body">

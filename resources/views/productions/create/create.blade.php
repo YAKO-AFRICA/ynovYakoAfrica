@@ -136,6 +136,7 @@
     </div>
 </div>
 @include('productions.components.searchModal')
+
 <script>
     let garantiesProduct = @json($productGarantie);
 </script>

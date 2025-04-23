@@ -357,6 +357,304 @@
 </div>
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const countries = @json($detailCountries);
+        const phoneInput = document.getElementById('phoneInput');
+        const countryPrefixSelect = document.getElementById('countryPrefix');
+        const phoneInputGroup = document.getElementById('phoneInputGroup');
+    
+        // Création du message de statut
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'prefix-status';
+        statusDiv.style.fontSize = '0.9em';
+        statusDiv.style.marginTop = '4px';
+        phoneInputGroup.insertAdjacentElement('afterend', statusDiv);
+    
+        function detectCountryFromPhone(value) {
+            const cleanedValue = value.replace(/\s+/g, '').replace(/^00/, '+');
+            if (!cleanedValue.startsWith('+') && countryPrefixSelect.value == '') {
+                statusDiv.innerHTML = `ℹ Entrez un numéro commençant par l'indicatif précédé de <code>+</code> ou <code>00</code>`;
+                statusDiv.style.color = '#6c757d'; // gris
+                // countryPrefixSelect.value = '';
+                return;
+            }
+    
+            const country = countries.find(c => cleanedValue.startsWith('+' + c.phone_international_prefix));
+    
+            if (country) {
+                const prefix = '+' + country.phone_international_prefix;
+                phoneInput.value = cleanedValue.replace(prefix, '');
+                countryPrefixSelect.value = country.phone_international_prefix;
+                statusDiv.innerHTML = `✅ <strong>${country.name}</strong> détecté (<code>${prefix}</code>)`;
+                statusDiv.style.color = '#198754'; // vert
+            } else if (!country && countryPrefixSelect.value == '') {
+                statusDiv.innerHTML = `❌ Aucun pays trouvé pour cet indicatif`;
+                statusDiv.style.color = '#dc3545'; // rouge
+                countryPrefixSelect.value = '';
+            }
+        }
+    
+        phoneInput.addEventListener('input', function () {
+            detectCountryFromPhone(phoneInput.value);
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sendOTPForm = document.getElementById('sendOTPForm');
+        // const otpModal = document.getElementById('otpModal');
+        const OTPSendID = document.getElementById('OTPSendID');
+        const OTPVerifyID = document.getElementById('OTPVerifyID');
+        const verifyOTPForm = document.getElementById('verifyOTPForm');
+        const sendOTPButton = document.getElementById('sendOTPButton');
+
+    
+        const otpInputs = document.querySelectorAll('.otp-input');
+    
+        // Envoi de l’OTP
+        sendOTPButton.addEventListener('click', function (e) {
+            e.preventDefault();
+    
+            const indicatif = document.getElementById('countryPrefix').value;
+            const telephone = document.getElementById('phoneInput').value;
+            const operation_type = document.getElementById('operation_type').value;
+            const csrfToken = document.querySelector('input[name="_token"]').value;
+    
+            fetch('http://192.168.11.76:8000/api/send-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    telIndicatif: indicatif,
+                    telephone: telephone,
+                    operation_type: operation_type
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("data");
+                if (data.status == 200) {
+                    console.log('OTP envoyé');
+                    // Masquer sendOTPForm, afficher verifyOTPForm
+                    OTPSendID.classList.add('d-none');
+                    OTPVerifyID.classList.remove('d-none');
+    
+                    // Stocker les valeurs pour la vérification
+                    document.getElementById('hiddenTelephone').value = telephone;
+                    document.getElementById('hiddenIndicatif').value = indicatif;
+    
+                    // Afficher un message
+                    const lastTwo = telephone.slice(-4);
+                    const firstTwo = telephone.slice(0, 2);
+                    alert('Un code de confirmation a été envoyé par SMS au numéro +' + indicatif + firstTwo + '****' + lastTwo );
+                } else {
+                    alert(data.message || 'Erreur lors de l’envoi de l’OTP.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Erreur réseau ou serveur.');
+            });
+        });
+        // sendOTPForm.addEventListener('submit', function (e) {
+        //     e.preventDefault();
+    
+        //     const indicatif = document.getElementById('countryPrefix').value;
+        //     const telephone = sendOTPForm.querySelector('input[name="telephone"]').value;
+        //     const operation_type = document.getElementById('operation_type').value;
+        //     const csrfToken = sendOTPForm.querySelector('input[name="_token"]').value;
+    
+        //     fetch('http://192.168.11.76:8000/api/send-otp', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'X-CSRF-TOKEN': csrfToken
+        //         },
+        //         body: JSON.stringify({
+        //             telIndicatif: indicatif,
+        //             telephone: telephone,
+        //             operation_type: operation_type
+        //         })
+        //     })
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         if (data.status == 200) {
+        //             // Masquer sendOTPForm, afficher verifyOTPForm
+        //             sendOTPForm.classList.add('d-none');
+        //             verifyOTPForm.classList.remove('d-none');
+    
+        //             // Stocker les valeurs pour la vérification
+        //             document.getElementById('hiddenTelephone').value = telephone;
+        //             document.getElementById('hiddenIndicatif').value = indicatif;
+    
+        //             // Afficher un message
+        //             const lastTwo = telephone.slice(-4);
+        //             const firstTwo = telephone.slice(0, 2);
+        //             alert('Un code de confirmation a été envoyé par SMS au numéro +' + indicatif + firstTwo + '*' + lastTwo );
+        //         } else {
+        //             alert(data.message || 'Erreur lors de l’envoi de l’OTP.');
+        //         }
+        //     })
+        //     .catch(err => {
+        //         console.error(err);
+        //         alert('Erreur réseau ou serveur.');
+        //     });
+        // });
+    
+        // Autofocus entre les champs OTP
+        otpInputs.forEach((input, index) => {
+            input.addEventListener("input", function () {
+                if (this.value.length === this.maxLength) {
+                    if (index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                } else if (this.value.length === 0 && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+    
+            input.addEventListener("keydown", function (e) {
+                if (e.key === "Backspace" && input.value === "" && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+        });
+    
+        // Vérification de l’OTP
+        // verifyOTPForm.addEventListener('submit', function (e) {
+        //     e.preventDefault();
+    
+        //     const telephone = document.getElementById('hiddenTelephone').value;
+        //     const indicatif = document.getElementById('hiddenIndicatif').value;
+        //     const phoneNumber = indicatif + telephone;
+        //     const csrfToken = verifyOTPForm.querySelector('input[name="_token"]').value;
+    
+        //     let otp = '';
+        //     otpInputs.forEach(input => {
+        //         otp += input.value;
+        //     });
+    
+        //     if (otp.length !== 6) {
+        //         alert("Veuillez saisir les 6 chiffres du code.");
+        //         otpInputs.forEach(input => {
+        //             input.classList.remove("is-valid");
+        //             input.classList.add("is-invalid");
+        //         });
+        //         return;
+        //     }
+    
+        //     fetch('http://192.168.11.76:8000/api/verify-otp', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'X-CSRF-TOKEN': csrfToken
+        //         },
+        //         body: JSON.stringify({
+        //             telephone: phoneNumber,
+        //             otp: otp
+        //         })
+        //     })
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         if (data.status == 200) {
+        //             alert('Votre numéro de téléphone a été vérifié avec succès.');
+        //             otpInputs.forEach(input => {
+        //                 input.classList.remove("is-invalid");
+        //                 input.classList.add("is-valid");
+        //             });
+        //         } else if (data.status == 400) {
+        //             alert('Le code de confirmation saisi est incorrect.');
+        //             otpInputs.forEach(input => {
+        //                 input.classList.remove("is-valid");
+        //                 input.classList.add("is-invalid");
+        //             });
+        //         } else {
+        //             alert('Le code de confirmation a expiré.');
+        //             otpInputs.forEach(input => {
+        //                 input.classList.remove("is-valid");
+        //                 input.classList.add("is-invalid");
+        //             });
+        //         }
+        //     })
+        //     .catch(err => {
+        //         console.error(err);
+        //         alert('Une erreur s’est produite lors de la vérification.');
+        //     });
+        // });
+        const verifyOtpButton = document.getElementById('verifyOtpButton');
+        // initialisation pour le hide modal bootstrap
+        const myModal = new bootstrap.Modal(document.getElementById('otpModal'));
+        verifyOtpButton.addEventListener('click', function () {
+            const telephone = document.getElementById('hiddenTelephone').value;
+            const indicatif = document.getElementById('hiddenIndicatif').value;
+            const phoneNumber = indicatif + telephone;
+            const csrfToken = document.querySelector('input[name="_token"]').value;
+
+            let otp = '';
+            otpInputs.forEach(input => {
+                otp += input.value;
+            });
+
+            if (otp.length !== 6) {
+                alert("Veuillez saisir les 6 chiffres du code.");
+                otpInputs.forEach(input => {
+                    input.classList.remove("is-valid");
+                    input.classList.add("is-invalid");
+                });
+                return;
+            }
+
+            fetch('http://192.168.11.76:8000/api/verify-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    telephone: phoneNumber,
+                    otp: otp
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status == 200) {
+                    alert('Votre numéro de téléphone a été vérifié avec succès.');
+                    otpInputs.forEach(input => {
+                        input.classList.remove("is-invalid");
+                        input.classList.add("is-valid");
+                    });
+                    // 👉 Passer à l’étape suivante 1 seconde apres
+                    setTimeout(() => {
+                        stepper1.next();
+                    }, 1000);
+                
+                myModal.hide();
+                } else if (data.status == 400) {
+                    alert('Le code de confirmation saisi est incorrect.');
+                    otpInputs.forEach(input => {
+                        input.classList.remove("is-valid");
+                        input.classList.add("is-invalid");
+                    });
+                } else {
+                    alert('Le code de confirmation a expiré.');
+                    otpInputs.forEach(input => {
+                        input.classList.remove("is-valid");
+                        input.classList.add("is-invalid");
+                    });
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Une erreur s’est produite lors de la vérification.');
+            });
+        });
+    });
+</script>
+
 <!-- JavaScript pour contrôler l'affichage du tableau en fonction de la sélection -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {

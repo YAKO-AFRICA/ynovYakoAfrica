@@ -222,10 +222,10 @@
                     <div style="width: 100%; text-align: center;">
                         <div style="width: 33%; float: left;">
                             <input type="radio" class="radio1" 
-                                @if ($contrat->adherent->sexe == 'M') checked @endif><span>Mme</span>
+                                @if ($contrat->adherent->sexe == 'F') checked @endif><span>Mme</span>
                         </div>
                         <div style="width: 33%; float: left;">
-                            <input type="radio" class="radio1" @if ($contrat->adherent->sexe == 'F') checked @endif><span>M</span>
+                            <input type="radio" class="radio1" @if ($contrat->adherent->sexe == 'M') checked @endif><span>M</span>
                         </div>
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->

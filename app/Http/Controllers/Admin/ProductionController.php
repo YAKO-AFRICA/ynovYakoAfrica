@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 
 class ProductionController extends Controller
@@ -147,7 +148,8 @@ class ProductionController extends Controller
         $produitLLv = [
             'PFA_IND',
             'YKE_2018',
-            'CADENCE'
+            'CADENCE',
+            'YKS_2018',
         ];
 
         if (Auth::user()->membre->codepartenaire === "LLV") {
@@ -227,8 +229,17 @@ class ProductionController extends Controller
         // session()->put('adherent', $resultData);
         $resultData = session()->get('adherent', []);
         $resultDataProspect = session()->get('adherentProspect', []);
+        $response = Http::withOptions(['timeout' => 60])
+        ->get(env('API_GET_COUNTRIES'));
+        if ($response->successful()) {
+            $countries = $response->json();
+
+            $detailCountries = $countries['countries'];
+            // dd($detailCountries);
+            
+        }
         // dd($resultData, $resultDataProspect);
-        return view('productions.create.create', compact('product', 'villes', 'secteurActivites', 'professions', 'productGarantie', 'societes', 'agences', 'filliations', 'resultData', 'resultDataProspect'));
+        return view('productions.create.create', compact('product', 'villes', 'secteurActivites', 'professions', 'productGarantie', 'societes', 'agences', 'filliations', 'resultData', 'resultDataProspect', 'detailCountries'));
     }
 
  

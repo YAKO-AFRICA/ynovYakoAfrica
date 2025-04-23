@@ -8,6 +8,7 @@ use App\Models\Contrat;
 use App\Models\MotifRejet;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\TblPrestation;
 use Illuminate\Support\Facades\Auth;
 
 class RapportController extends Controller
@@ -96,6 +97,63 @@ class RapportController extends Controller
 
         // Retourner la vue avec les données
         return view('rapport.eSouscription', compact('contrats', 'agents', 'activeColumns', 'defaultColumns', 'additionalColumns'));
+    }
+
+    public function ePrestation(Request $request)
+    {
+        $user = Auth::user()->idmembre;
+
+        $agents = Membre::where('idmembre', $user)->get();
+
+        $query = TblPrestation::where('saisiepar', $user);
+
+        // Filtrer par date (de et à)
+        if ($request->filled('dateFrom') && $request->filled('dateTo')) {
+            $query->whereBetween('created_at', [$request->dateFrom, $request->dateTo]);
+        }
+
+        // Filtrer par agent
+        if ($request->filled('agent')) {
+            $query->where('saisiepar', $request->agent);
+        }
+
+        // Filtrer par étape
+        if ($request->filled('etape')) {
+            $query->where('etape', $request->etape);
+        }
+
+        // Exécuter la requête
+        $prestations = $query->get();
+
+
+        $defaultColumns = ['#', 'code', 'ID contrat', 'type prestation', 'Montant souhaité', 'Mode de Paiement', 'Saisir Par', 'Status', 'Date création'];
+
+        $additionalColumns = [
+            'Nom ' => 'nom',
+            'Prenom' => 'prenom',
+            'Date Naissance' => 'datenaissance',
+            'Lieu Naissance' => 'lieunaissance',
+            'Telephone 1' => 'cel',
+            'Telephone 2' => 'tel',
+            'Email' => 'email',
+            'Lieu Residence' => 'lieuresidence',
+            'Operateur Paiement' => 'Operateur',
+            'Tel Paiement' => 'telPaiement',
+            'Code Banque' => 'codeBanque',
+            'Code Guichet' => 'codeGuichet',
+            'N° Compte' => 'numCompte',
+            'Clé RIB' => 'cleRIB',
+            'IBAN' => 'IBAN',
+            'Traiter par' => 'traiterpar',
+            'Traiter le' => 'traiterle',
+            'Migree le' => 'migreele',
+        ];
+        $activeColumns = session('activeColumns', []);
+
+        $selectedStatus = $request->input('etape');
+
+        // Retourner la vue avec les données
+        return view('rapport.ePrestation', compact('prestations', 'agents', 'activeColumns', 'defaultColumns', 'additionalColumns'));
     }
     public function ePret(Request $request)
     {

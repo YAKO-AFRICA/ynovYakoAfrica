@@ -64,7 +64,8 @@
             </div>
         @endforeach
     </div>
-
+    
+    <a href="{{ route('bullettin.test') }}" class="btn btn-primary" target="_blank"> bulletin</a>
 
 
     <script>
