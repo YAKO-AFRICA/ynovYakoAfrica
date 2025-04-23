@@ -16,14 +16,7 @@
             </div>
             <div class="ms-auto">
                 <div class="btn-group">
-                    {{-- <button type="button" class="btn btn-primary">Settings</button>
-                <button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
-                    <a class="dropdown-item" href="javascript:;">Another action</a>
-                    <a class="dropdown-item" href="javascript:;">Something else here</a>
-                    <div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
-                </div> --}}
+              
                 </div>
             </div>
         </div>
@@ -32,11 +25,6 @@
 
         <div class="card">
             <div class="card-body">
-                {{-- <div class="d-lg-flex align-items-center mb-4 gap-3">
-                <div class="position-relative">
-                </div>
-              <div class="ms-auto"><a href="javascript:;" class="btn btn-primary radius-30 mt-2 mt-lg-0" data-bs-toggle="modal" data-bs-target="#addnewReseau"><i class="bx bxs-plus-square"></i>Ajouter un reseau</a></div>
-            </div> --}}
                 
 
                 <div class="table-responsive">

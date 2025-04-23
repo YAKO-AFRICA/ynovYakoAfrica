@@ -36,76 +36,42 @@ use App\Http\Controllers\Admin\BeneficiairesController;
 | Here is where you can register web routes for your application. These
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
-|<iframe style="width: 100%; height: 100%" src="{{ url('storage/documents/' . $doc->filename) }}" frameborder="0"></iframe>
 */
 
-
-
-
-Route::get('storage/documents/{file}', function ($file) {
-    $path = base_path(env('UPLOADS_PATH') . $file);
-
-    if (!file_exists($path)) {
-        abort(404);
-    }
-
-    $fileContents = file_get_contents($path);
-    $mimeType = mime_content_type($path);
-
-    return Response::make($fileContents, 200, ['Content-Type' => $mimeType]);
-    
-})->where('file', '.*');
-
-Route::get('storage/prestations/{file}', function ($file) {
-    // $path = base_path('../public_html/upload/prestations/' . $file);
-    $path = base_path(env('UPLOAD_PRESTATION_FILE') . $file);
-    if (!file_exists($path)) {
-        abort(404);
-    }
-
-    $fileContents = file_get_contents($path);
-    $mimeType = mime_content_type($path);
-
-    return Response::make($fileContents, 200, ['Content-Type' => $mimeType]);
-    
-})->where('file', '.*');
-
-Route::post('/save-beneficiary-session', [EpretController::class, 'saveBeneficiarySession']);
-// web.php
-
-Route::get('/generate-demoBulletin', [BulletinController::class, 'demoBulletin'])->name('demoBulletin');
-
-
-Route::get('/', function () {
-    return view('auth.login');
-});
-Route::get('/prime', function () {
-
-    $prestation = TblTypePrestation::limit(5)->get();
-    return view('welcome', compact('prestation'));
-});
-
-Route::post('/post-demo', [EpretController::class, 'postDemo'])->name('postDemo');
-
-
-route::get('/generate-bulletin-demo', [EpretController::class, 'generateBu'])->name('generateBul');
-
 Auth::routes();
-Route::get('/formules/{codeProduit}', [SettingsController::class, 'getFormulesByProduct']);
+
+
+
+Route::middleware('guest','PreventBackHistory')->group(function(){
+
+    Route::get('/', function () {
+        return view('auth.login');
+    });
+
+});
 
 
 Route::prefix('shared')->name('shared.')->group(function(){
-    Route::middleware('guest','PreventBackHistory')->group(function(){
+    Route::middleware('guest')->group(function(){
 
-        // formule by product reseau 
+        
 
     });
+
     Route::middleware(['auth','PreventBackHistory'])->group(function () {
-        Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+        Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::post('/update/assuree/{id}', [AssurerController::class, 'updateAssur'])->name('assuree.update');
     });
 
 });
+
+
+
+
+
+Route::get('/formules/{codeProduit}', [SettingsController::class, 'getFormulesByProduct']);
+
+
 
 Route::prefix('report')->name('report.')->group(function(){
     Route::middleware('guest','PreventBackHistory')->group(function(){
@@ -115,6 +81,7 @@ Route::prefix('report')->name('report.')->group(function(){
         Route::get('eSouscription',[RapportController::class, 'eSouscription'])->name('eSouscription');
         Route::get('ePret',[RapportController::class, 'ePret'])->name('ePret');
         Route::get('eValidation',[RapportController::class, 'eValidation'])->name('eValidation');
+        Route::get('eProspection',[RapportController::class, 'eProspection'])->name('eProspection');
     });
 
 });
@@ -370,18 +337,20 @@ Route::prefix('prospect')->name('prospect.')->group(function(){
 
         Route::post('/followups/store/{uuid}', [ProspectController::class, 'storeFollowup'])->name('followup.store');
 
-        Route::get('/edit/{uuid}', [ProspectController::class, 'edit'])->name('edit');
+        // Route::get('/edit/{uuid}', [ProspectController::class, 'edit'])->name('edit');
         Route::put('/update/{uuid}', [ProspectController::class, 'update'])->name('update');
-
         Route::post('/prospects/{uuid}/convert', [ProspectController::class, 'convertToClient'])->name('convert');
-
         Route::post('/store', [ProspectController::class, 'store']);
 
         Route::delete('/{prospectId}/products/{productId}', [ProspectController::class, 'destroy'])->name('delete');
+        Route::post('/assign/{uuid}', [ProspectController::class, 'assign'])->name('assign');
+        Route::post('/addProduct', [ProspectController::class, 'addProduct'])->name('addProduct');
+
+        Route::get('/download', [ProspectController::class, 'downloadQrCode'])->name('download');
+
     });
 
 });
-
 
 // routes/web.php
 Route::get('/prospection/{token}', [ProspectController::class, 'showForm'])->name('prospection.form');
@@ -389,9 +358,39 @@ Route::get('/prospection/{token}', [ProspectController::class, 'showForm'])->nam
 
 Route::post('/prospection/{token}', [ProspectController::class, 'storeProspect']);
 
-Route::get('/prospection/download', [ProspectController::class, 'downloadQrCode'])
-    ->name('prospection.download')->middleware('auth');
 
+Route::get('storage/documents/{file}', function ($file) {
+    $path = base_path(env('UPLOADS_PATH') . $file);
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    $fileContents = file_get_contents($path);
+    $mimeType = mime_content_type($path);
+
+    return Response::make($fileContents, 200, ['Content-Type' => $mimeType]);
+    
+})->where('file', '.*');
+
+Route::get('storage/prestations/{file}', function ($file) {
+    // $path = base_path('../public_html/upload/prestations/' . $file);
+    $path = base_path(env('UPLOAD_PRESTATION_FILE') . $file);
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    $fileContents = file_get_contents($path);
+    $mimeType = mime_content_type($path);
+
+    return Response::make($fileContents, 200, ['Content-Type' => $mimeType]);
+    
+})->where('file', '.*');
+
+Route::post('/save-beneficiary-session', [EpretController::class, 'saveBeneficiarySession']);
+// web.php
+
+Route::get('/generate-demoBulletin', [BulletinController::class, 'demoBulletin'])->name('demoBulletin');
 
 
 // donnée de calcule des prime yke 
@@ -399,3 +398,9 @@ Route::post('/storeSimulationPrime', [ProductionController::class, 'storeSimulat
 
 
 Route::get('/test-api-local', [TestController::class, 'testApi'])->name('testApi');
+
+Route::get('/welcome', function () {
+    return view('welcome');
+});
+
+route::get('/generate-bulletin-demo', [EpretController::class, 'generateBu'])->name('generateBul');

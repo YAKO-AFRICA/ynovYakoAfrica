@@ -103,7 +103,15 @@
                 <div class="bs-stepper-content card p-3">
                     <div class="col-12 d-flex justify-content-center align-items-center">
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-outline-warning " data-bs-toggle="modal" data-bs-target="#RechercherClientModal"><i class="fadeIn animated bx bx-search"></i>Recherche client</button>
+                        {{-- <button type="button" class="btn btn-outline-warning " data-bs-toggle="modal" data-bs-target="#RechercherClientModal"><i class="fadeIn animated bx bx-search"></i>Recherche client</button> --}}
+
+                        <div class="d-flex justify-content-between mb-3">
+                            <div>
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#RechercherClientModal">
+                                    <i class="bx bx-search"></i> Rechercher un adhérent existant
+                                </button>
+                            </div>
+                        </div>
     
                         <!-- Modal -->
                     </div>

@@ -16,14 +16,6 @@
             </div>
             <div class="ms-auto">
                 <div class="btn-group">
-                    {{-- <button type="button" class="btn btn-primary">Settings</button>
-                <button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
-                    <a class="dropdown-item" href="javascript:;">Another action</a>
-                    <a class="dropdown-item" href="javascript:;">Something else here</a>
-                    <div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
-                </div> --}}
                 </div>
             </div>
         </div>
@@ -32,56 +24,6 @@
 
         <div class="card">
             <div class="card-body">
-                {{-- <form action="{{ route('setting.prestation_product.store') }}" method="POST" class="submitForm">
-                    @csrf
-                    <fieldset class="border p-3">
-                        <legend class="float-none w-auto px-2">
-                            <small><h5 class="mb-4">Produits Concernés : {{$product->MonLibelle}}</h5></small>
-                        </legend>
-            
-                        <input type="hidden" name="codeproduit" id="codeproduit" value="{{ $codeProduit }}">
-            
-                        <div class="mb-4">
-                            <label class="form-label" for="product_type">Type de Produit:</label>
-                            <select name="product_type" class="form-select" id="product_type" required>
-                                <option value="" selected>-- Choisir une option --</option>
-                                <option value="Epargne">Epargne</option>
-                                <option value="Obsèque">Obsèque</option>
-                            </select>
-                        </div>
-            
-                        <div class="mb-3">
-                            <div class="row mb-3">
-                                <div class="col-md-12 text-end">
-                                    <button type="button" class="btn btn-primary" onclick="addPrestation()">Ajouter une prestation</button>
-                                </div>
-                            </div>
-            
-                            <div id="prestationsContainer">
-                                <div class="row mb-3 prestation-item">
-                                    <label for=""> Type de Prestation possibles</label>
-                                    <div class="input-group">
-                                        <select name="prestations[]" class="form-select" required>
-                                            <option value="" selected>Choisir une prestation associée</option>
-                                            @foreach ($typeprestations as $prest)
-                                                <option value="{{ $prest->id }}">{{ $prest->libelle }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </fieldset>
-            
-                    <div class="row">
-                        <div class="col-md-6 text-start">
-                            <a href="{{ route('setting.prestation_product.index') }}" class="btn">Retour</a>
-                        </div>
-                        <div class="col-md-6 text-end">
-                            <button type="submit" class="btn btn-primary">Enregistrer</button>
-                        </div>
-                    </div>
-                </form> --}}
                 <form action="{{ route('setting.prestation_product.store') }}" method="POST" class="submitForm">
                     @csrf
                     <fieldset class="border p-3">

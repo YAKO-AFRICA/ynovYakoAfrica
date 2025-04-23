@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
+use PDF;
+use Carbon\Carbon;
+use Dompdf\Dompdf;
 use App\Models\Pret;
 use App\Models\Membre;
 use App\Models\Contrat;
+use App\Models\Product;
+use App\Models\Prospect;
+use App\Models\TblVille;
 use App\Models\MotifRejet;
+use App\Models\Profession;
 use Illuminate\Http\Request;
+use App\Models\TblSecteurActivite;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -266,6 +274,78 @@ class RapportController extends Controller
 
         // Retourner la vue avec les données
         return view('rapport.validation', compact('contrats', 'agents', 'activeColumns', 'defaultColumns', 'additionalColumns','motifs'));
+    }
+
+    public function eProspection(Request $request)
+    {
+        $query = Prospect::orderBy('id', 'desc');
+
+        if ($request->has('code') && !empty($request->code)) {
+            $query->where('code', 'like', '%' . $request->code . '%');
+        }
+
+        if ($request->has('first_name') && !empty($request->first_name)) {
+            $query->where('first_name', 'like', '%' . $request->first_name . '%');
+        }
+
+        if ($request->has('last_name') && !empty($request->last_name)) {
+            $query->where('last_name', 'like', '%' . $request->last_name . '%');
+        }
+
+        if ($request->has('date_from') && !empty($request->date_from) && 
+            $request->has('date_to') && !empty($request->date_to)) {
+            $query->whereBetween('created_at', [
+                Carbon::parse($request->date_from)->startOfDay(),
+                Carbon::parse($request->date_to)->endOfDay()
+            ]);
+        }
+
+        $allPropects = $query->get();
+
+        $defaultColumns = ['#', 'Code', 'Nom Complet','Nature', 'Agent', 'Prochaine relance', 'Date', ];
+
+        $additionalColumns = [
+            'UUID' => 'uuid',
+            'Code' => 'code',
+            'Nom' => 'last_name',
+            'Prrenom' => 'first_name',
+            'Mobile' => 'mobile',
+            'Email' => 'email',
+            'Adresse' => 'adress',
+            'Profession' => 'profession_uuid',
+            'Secteur Activite' => 'secteurActivity_uuid',
+            'Mode de Paiment' => 'modeDePaiment',
+            'Type Compagnie' => 'typeCompagnie',
+            'Ville' => 'city',
+            'Lieu Evenement' => 'lieuEvenement',
+            'Nature Prospect' => 'natureProspect',
+            'Note' => 'note',
+            'Produit' => 'produit_id',
+            'Etat' => 'etat',
+            'Status' => 'status',
+            'User Add' => 'userAdd_uuid',
+            'User Destroy' => 'userDestroy_uuid',
+            'Destroy Date' => 'destroy_date',
+            'Update By' => 'update_by',
+            'Assign To' => 'assign_to',
+            'Assigned By' => 'assigned_by',
+            'Assign Date' => 'assign_date',
+            'Created At' => 'created_at',
+            'Updated At' => 'updated_at',
+        ];
+        $activeColumns = session('activeColumns', []);
+
+        $product = Product::all();
+        $villes = TblVille::select('libelleVillle')->get();
+        $professions = Profession::select('MonLibelle')->get();
+        $secteurActivites = TblSecteurActivite::select('MonLibelle')->get();
+
+        if ($request->has('print')) {
+            $pdf = PDF::loadView('prospects.print', compact('allPropects'));
+            return $pdf->download('rapport_prospection_'.date('Y-m-d').'.pdf');
+        }
+
+        return view('rapport.prospection', compact('allPropects', 'villes', 'professions', 'secteurActivites', 'product', 'activeColumns', 'defaultColumns', 'additionalColumns'));
     }
 
 }

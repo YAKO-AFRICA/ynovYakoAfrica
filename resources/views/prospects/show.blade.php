@@ -11,19 +11,15 @@
                 <ol class="breadcrumb mb-0 p-0">
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">Prospect</li>
-                    <li class="breadcrumb-item active" aria-current="page">Liste</li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <a href="{{route('prospect.index')}}">Liste</a>
+                    </li> |
+                    <li class="breadcrumb-item active" aria-current="page">Detail sur la propection <span>{{ $prospect->code ?? " "}}</span></li>
                 </ol>
             </nav>
         </div>
         <div class="ms-auto">
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary">Reglages</button>
-                <button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
-                    <a class="dropdown-item" href="javascript:;" data-bs-toggle="modal" data-bs-target="#columnsModalPart">Personnaliser les colonnes</a>
-                </div>
-            </div>
+            
         </div>
     </div>
     <!--end breadcrumb-->
@@ -46,10 +42,12 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h5 class="mb-3">Informations Personnelles</h5>
-                                <p><strong>Nom complet:</strong> {{ $prospect->first_name }} {{ $prospect->last_name }}</p>
+                                <p><strong>Code:</strong> {{ $prospect->code ?? "" }}</p>
+                                <p><strong>Nom complet:</strong> {{ $prospect->first_name ?? ""}} {{ $prospect->last_name ?? ""}}</p>
                                 <p><strong>Téléphone:</strong> {{ $prospect->mobile }}</p>
                                 <p><strong>Email:</strong> {{ $prospect->email ?? 'Non renseigné' }}</p>
                                 <p><strong>Ville:</strong> {{ $prospect->ville->libelleVillle ?? 'Non renseigné' }}</p>
+                                <p><strong>Adresse complete:</strong> {{ $prospect->adress ?? 'Non renseigné' }}</p>
                             </div>
                             <div class="col-md-6">
                                 <h5 class="mb-3">Informations Professionnelles</h5>
@@ -57,11 +55,15 @@
                                 <p><strong>Secteur d'activité:</strong> {{ $prospect->secteurActivity->MonLibelle ?? 'Non renseigné' }}</p>
                                 <p><strong>Nature:</strong> {{ $prospect->natureProspect }}</p>
                                 <p>
-                                    <p><strong>Produits intéressants:</strong></p>
+                                    <p><strong>Produits intéressants:</strong> 
+                                        <button class="btn btn-sm p-1">
+                                            <span data-bs-toggle="modal" data-bs-target="#productAddModal"> <i class="fadeIn animated bx bx-plus-medical text-primary fs-6"></i> Ajouter</span>
+                                        </button>
+                                    </p>
                                     @if($prospect->products->count() > 0)
                                         <div class="d-flex flex-wrap gap-2" id="products-container">
                                             @foreach($prospect->products as $product)
-                                                <span class="badge bg-primary d-flex align-items-center product-badge" 
+                                                <span class="badge bg-secondary text-white d-flex align-items-center product-badge" 
                                                       id="product-{{ $product->IdProduit }}">
                                                     {{ $product->itemProduct->MonLibelle }}
 
@@ -70,7 +72,7 @@
                                                             data-product-id="{{ $product->itemProduct->IdProduit }}"
                                                             data-prospect-id="{{ $prospect->id }}"
                                                             title="Supprimer ce produit">
-                                                        <i class="bx bxs-trash fs-6"></i>
+                                                        <i class="bx bxs-trash fs-6 p-1 mx-auto"></i>
                                                     </button>
                                                 </span>
                                             @endforeach
@@ -81,32 +83,81 @@
                                 </p>
                             </div>
                         </div>
+
+                        <hr>
+
+                        <div class="col-sm-12 col-md-12">
+                            <h5>Dernières Notes</h5>
+                            <div class="bg-light p-3 rounded">
+                                {!! nl2br(e($prospect->note)) ?? 'Aucune note' !!}
+                            </div>
+                        </div>
                         
                         <hr>
                         
-                        <div class="row mt-4">
-                            <div class="col-md-6">
-                                <h5>Dernières Notes</h5>
-                                <div class="bg-light p-3 rounded">
-                                    {!! nl2br(e($prospect->note)) ?? 'Aucune note' !!}
-                                </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-4 ">
+                                <fieldset class="m-0 py-0 px-2 bg-light" style="min-height: 110px">
+                                    <legend class="float-none w-auto ">
+                                        <strong class="border-1">Propecté</strong>
+                                    </legend>
+
+                                    <p class="m-0 p-0">
+                                        <strong>Par</strong>
+                                        <span>{{ $prospect->userAdd->membre->nom ?? '' }} {{ $prospect->userAdd->membre->prenom ?? '' }}</span>
+                                    </p>
+                                    <p>
+                                        <strong>Le </strong>
+                                        <span>{{ $prospect->created_at->format('d-m-Y') ?? '' }}</span>
+                                    </p>
+                                </fieldset>
                             </div>
-                            <div class="col-md-6">
-                                <h5>Statut et Suivi</h5>
-                                <p><strong>Dernier contact:</strong> 
-                                    @if($prospect->followups->count() > 0)
-                                        {{ $prospect->followups->first()->followup_date->format('d/m/Y H:i') }}
+
+
+                            <div class="col-sm-12 col-md-4 ">
+                                <fieldset class="m-0 py-0 px-2 bg-light" style="min-height: 110px">
+                                    <legend class="float-none w-auto ">
+                                        <strong class="border-1">Assignation</strong>
+                                    </legend>
+
+                                    @if (!empty($prospect->assign_to))
+                                    <p class="m-0 p-0">
+                                        <strong>Par</strong>
+                                        <span>{{ $prospect->assigned->membre->nom ?? '' }} {{ $prospect->assigned->membre->prenom ?? '' }}</span> | <small>{{ Carbon\Carbon::parse($prospect->assign_date)->format('d-m-Y') }}</small>
+                                    </p>
+                                    <p>
+                                        <strong class="">Assigné à </strong>
+                                        <span>{{ $prospect->assignTo->membre->nom ?? '' }} {{ $prospect->assignTo->membre->prenom ?? '' }}</span>
+                                    </p>
                                     @else
-                                        Jamais contacté
+                                        <center>
+                                            Aucun assignation
+                                        </center>
                                     @endif
-                                </p>
-                                <p><strong>Prochain suivi:</strong> 
-                                    @if($prospect->followups->count() > 0 && $prospect->followups->first()->next_followup_date)
-                                        {{ $prospect->followups->first()->next_followup_date->format('d/m/Y H:i') }}
+                                </fieldset>
+                            </div>
+                            <div class="col-sm-12 col-md-4 ">
+                                <fieldset class="m-0 py-0 px-2 bg-light" style="min-height: 110px">
+                                    <legend class="float-none w-auto ">
+                                        <strong class="border-1">Mise a jour</strong>
+                                    </legend>
+
+                                    @if (!empty($prospect->update_by))
+
+                                    <p class="m-0 p-0">
+                                        <strong>Par</strong>
+                                        <span>{{ $prospect->updateBy->membre->nom ?? '' }} {{ $prospect->updateBy->membre->prenom ?? '' }}</span>
+                                    </p>
+                                    <p>
+                                        <strong>Le </strong>
+                                        <span>{{ $prospect->updated_at->format('d-m-Y') ?? '' }}</span>
+                                    </p>
                                     @else
-                                        Non planifié
+                                        <center>
+                                            Aucun mise a jour
+                                        </center>
                                     @endif
-                                </p>
+                                </fieldset>
                             </div>
                         </div>
                     </div>
@@ -117,13 +168,14 @@
                     <div class="card-header py-3" style="background-color: #1e4520">
                         <h5 class="m-0 font-weight-bold text-white">Historique des Relances</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body overflow-y-auto" style="max-height: 300px">
                         <div class="timeline">
                             @forelse($prospect->followups as $followup)
                             <div class="timeline-item">
                                 <div class="timeline-item-marker">
                                     <div class="timeline-item-marker-indicator bg-{{ $followup->status === 'completed' ? 'success' : ($followup->status === 'canceled' ? 'danger' : 'warning') }}"></div>
                                 </div>
+                                
                                 <div class="timeline-item-content">
                                     <div class="d-flex justify-content-between">
                                         <h6 class="mb-1">
@@ -132,13 +184,41 @@
                                         </h6>
                                         <small class="text-muted">{{ $followup->followup_date->format('d/m/Y H:i') }}</small>
                                     </div>
-                                    <p class="mb-1">{!! nl2br(e($followup->notes)) !!}</p>
+                                    
+                                    <div class="notes-container">
+                                        <p class="mb-1 short-notes">{!! nl2br(e(Str::limit($followup->notes, 100))) !!}</p>
+                                        @if(strlen($followup->notes) > 100)
+                                            <p class="mb-1 full-notes d-none">{!! nl2br(e($followup->notes)) !!}</p>
+                                            <button class="btn btn-sm btn-link toggle-notes p-1 float-end mt-0" data-state="short">
+                                                Voir plus <i class="bx bx-chevron-down"></i>
+                                            </button>
+                                        @endif
+                                    </div>
+                                    
                                     @if($followup->next_followup_date)
                                     <small class="text-muted">
-                                        <i class="fas fa-calendar-alt"></i> Prochain suivi: {{ $followup->next_followup_date->format('d/m/Y H:i') }}
+                                        <i class="bx bx-calendar-alt text-danger"></i> Prochain suivi: {{ $followup->next_followup_date->format('d/m/Y H:i') }}
                                     </small>
                                     @endif
                                 </div>
+                                
+                                <style>
+                                    .notes-container {
+                                        position: relative;
+                                    }
+                                    .toggle-notes {
+                                        font-size: 0.8rem;
+                                        text-decoration: none;
+                                    }
+                                    .toggle-notes i {
+                                        transition: transform 0.3s ease;
+                                    }
+                                    .toggle-notes[data-state="full"] i {
+                                        transform: rotate(180deg);
+                                    }
+                                </style>
+                                
+                                
                             </div>
                             @empty
                             <div class="text-center py-4">
@@ -165,13 +245,13 @@
                                 <label class="form-label">Type de contact</label>
                                 <div class="btn-group w-100" role="group">
                                     <input type="radio" class="btn-check" name="type" id="type_call" value="call" checked>
-                                    <label class="btn btn-outline-primary" for="type_call"><i class="fas fa-phone"></i> Appel</label>
+                                    <label class="btn btn-outline-primary" for="type_call"><i class="bx bx-phone fs-5"></i> Appel</label>
                                     
                                     <input type="radio" class="btn-check" name="type" id="type_email" value="email">
-                                    <label class="btn btn-outline-primary" for="type_email"><i class="fas fa-envelope"></i> Email</label>
+                                    <label class="btn btn-outline-primary" for="type_email"><i class="bx bx-envelope fs-5"></i> Email</label>
                                     
                                     <input type="radio" class="btn-check" name="type" id="type_meeting" value="meeting">
-                                    <label class="btn btn-outline-primary" for="type_meeting"><i class="fas fa-calendar-alt"></i> RDV</label>
+                                    <label class="btn btn-outline-primary" for="type_meeting"><i class="fadeIn animated bx bx-calendar fs-5"></i> RDV</label>
                                 </div>
                             </div>
                             
@@ -217,17 +297,26 @@
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                            <a href="{{ route('prospect.edit', $prospect->uuid) }}" class="btn btn-outline-primary">
-                                <i class="fas fa-edit me-2"></i> Modifier le prospect
-                            </a>
                             
-                            <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#convertToClientModal">
-                                <i class="fas fa-user-check me-2"></i> Convertir en client
+                            <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#editModal">
+                                 Modifier le prospect <i class="fas fa-edit me-2"></i>
+                            </button>
+
+                            <button class="btn btn-outline-success">
+                                <i class="fas fa-user-check me-2"></i> <a class="text-decoration-none" href="{{ route('prod.stepProduct')}}">Convertir en client</a> 
+                            </button>
+
+                            <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#assignToModal">
+                                <i class="fas fa-user-check me-2"></i> Assigné a un agent
                             </button>
                             
                             <a href="tel:{{ $prospect->mobile }}" class="btn btn-outline-info">
                                 <i class="fas fa-phone me-2"></i> Appeler le prospect
                             </a>
+
+                            {{-- <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#assignToModal">
+                                <i class="fas fa-user-check me-2"></i> Envoyé un mail
+                            </button> --}}
                         </div>
                     </div>
                 </div>
@@ -235,31 +324,10 @@
         </div>
     </div>
 
-    <!-- Modal de conversion en client -->
-    <div class="modal fade" id="convertToClientModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color: #1e4520">
-                    <h5 class="modal-title text-white">Convertir en client</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        <p>Êtes-vous sûr de vouloir convertir ce prospect en client ?</p>
-                        <div class="mb-3">
-                            <label for="client_code" class="form-label">Code client</label>
-                            <input type="text" class="form-control" id="client_code" name="client_code" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-success">Confirmer</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    @include('prospects.assignModal')
+    @include('prospects.addProductModal')
+    @include('prospects.editModal')
+    
 
     <style>
         /* Style pour la timeline */
@@ -366,6 +434,30 @@
                         alert(error.message || 'Une erreur est survenue');
                         this.innerHTML = originalHTML;
                         this.disabled = false;
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.toggle-notes').forEach(button => {
+                button.addEventListener('click', function() {
+                    const container = this.closest('.notes-container');
+                    const shortNotes = container.querySelector('.short-notes');
+                    const fullNotes = container.querySelector('.full-notes');
+                    
+                    if (this.dataset.state === 'short') {
+                        shortNotes.classList.add('d-none');
+                        fullNotes.classList.remove('d-none');
+                        this.innerHTML = 'Voir moins <i class="bx bx-chevron-down"></i>';
+                        this.dataset.state = 'full';
+                    } else {
+                        shortNotes.classList.remove('d-none');
+                        fullNotes.classList.add('d-none');
+                        this.innerHTML = 'Voir plus <i class="bx bx-chevron-down"></i>';
+                        this.dataset.state = 'short';
                     }
                 });
             });

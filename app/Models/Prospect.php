@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Models\Product;
 use App\Models\TblVille;
 use App\Models\Profession;
@@ -43,9 +44,30 @@ class Prospect extends Model
         'userAdd_uuid',
         'userDestroy_uuid',
         'destroy_date',
+        'update_by',
+        'assign_to',
+        'assigned_by',
+        'assign_date',
         'created_at',
         'updated_at'
     ];
+
+    public function userAdd()
+    {
+        return $this->belongsTo(User::class, 'userAdd_uuid','id');
+    }
+    public function assigned()
+    {
+        return $this->belongsTo(User::class, 'assigned_by','idmembre');
+    }
+    public function assignTo()
+    {
+        return $this->belongsTo(User::class, 'assign_to','idmembre');
+    }
+    public function updateBy()
+    {
+        return $this->belongsTo(User::class, 'update_by','idmembre');
+    }
 
 
     public function followups()

@@ -2,35 +2,70 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Membre;
 use App\Models\Product;
 use App\Models\Prospect;
 use App\Models\TblVille;
+use PDF;
+
+
+use Dompdf\Dompdf;
 use App\Models\Profession;
 use Illuminate\Support\Str;
+// use BaconQrCode\Encoder\QrCode;
 use Illuminate\Http\Request;
 use App\Models\ProspectProduct;
 use App\Models\ProspectFollowup;
 use App\Models\TblSecteurActivite;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ProspectController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+
+    public function index(Request $request)
     {
-        $allPropects = Prospect::orderBy('id', 'desc')->get();
-        // \dd($allPropects->prospectProduct);
+        $query = Prospect::where('userAdd_uuid', auth()->user()->uuid)->orderBy('id', 'desc');
+
+        if ($request->has('code') && !empty($request->code)) {
+            $query->where('code', 'like', '%' . $request->code . '%');
+        }
+
+        if ($request->has('first_name') && !empty($request->first_name)) {
+            $query->where('first_name', 'like', '%' . $request->first_name . '%');
+        }
+
+        if ($request->has('last_name') && !empty($request->last_name)) {
+            $query->where('last_name', 'like', '%' . $request->last_name . '%');
+        }
+
+        if ($request->has('date_from') && !empty($request->date_from) && 
+            $request->has('date_to') && !empty($request->date_to)) {
+            $query->whereBetween('created_at', [
+                Carbon::parse($request->date_from)->startOfDay(),
+                Carbon::parse($request->date_to)->endOfDay()
+            ]);
+        }
+
+        $allPropects = $query->get();
 
         $product = Product::all();
-
         $villes = TblVille::select('libelleVillle')->get();
         $professions = Profession::select('MonLibelle')->get();
         $secteurActivites = TblSecteurActivite::select('MonLibelle')->get();
 
+        if ($request->has('print')) {
+            $pdf = PDF::loadView('prospects.print', compact('allPropects'));
+            return $pdf->download('rapport_prospection_'.date('Y-m-d').'.pdf');
+        }
 
         return view('prospects.index', compact('allPropects', 'villes', 'professions', 'secteurActivites', 'product'));
     }
@@ -73,7 +108,7 @@ class ProspectController extends Controller
             'products.*' => 'integer|exists:tblproduit,IdProduit', 
         ]);
 
-        
+        DB::beginTransaction();
 
         try {
             $code = Refgenerate(Prospect::class, 'P', 'code');
@@ -131,15 +166,57 @@ class ProspectController extends Controller
         }
     }
 
+    public function addProduct(request $request)
+    {
+
+        DB::beginTransaction();
+        try {
+            if (!empty($request->products)) {
+                foreach ($request->products as $productId) {
+                    ProspectProduct::create([
+                        'prospect_id' => $request->prospect_id,
+                        'product_id' => $productId,
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'type' => 'success',
+                'urlback' => 'back',
+                'message' => "Enregistré avec succès!",
+                'code' => 200,
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error("Erreur lors de l'ajout de produit: " . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de l\'ajout des produits',
+                'error' => env('APP_DEBUG') ? $e->getMessage() : 'Une erreur est survenue',
+                'urlback' => '' // Vous devriez mettre une URL valide ici
+            ], 500);
+        }
+    }
+
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        $prospect = Prospect::with(['followups.user'])
-                ->where('id', $id)->firstOrFail();
+        $prospect = Prospect::with(['followups.user'])->where('id', $id)->firstOrFail();
 
-        return view('prospects.show', compact('prospect'));
+        $commerciaux = Membre::whereNotNull('codeagent')->where('codepartenaire',"llv")->limit(500)->get();
+
+        $professions = Profession::orderBy('MonLibelle')->get();
+        $secteurActivites = TblSecteurActivite::orderBy('MonLibelle')->get();
+        $products = Product::orderBy('MonLibelle')->get();
+        $villes = TblVille::orderBy('idville')->get();
+
+        return view('prospects.show', compact('prospect','commerciaux','products','professions','secteurActivites','villes'));
     }
 
 
@@ -194,16 +271,16 @@ class ProspectController extends Controller
         //     ->with('success', 'Prospect converti en client avec succès');
     }
 
-    public function edit($uuid)
-    {
-        $prospect = Prospect::where('uuid', $uuid)->firstOrFail();
-        $professions = Profession::orderBy('MonLibelle')->get();
-        $secteurActivites = TblSecteurActivite::orderBy('MonLibelle')->get();
-        $product = Product::orderBy('MonLibelle')->get();
-        $villes = TblVille::orderBy('idville')->get();
+    // public function edit($uuid)
+    // {
+    //     $prospect = Prospect::where('uuid', $uuid)->firstOrFail();
+    //     $professions = Profession::orderBy('MonLibelle')->get();
+    //     $secteurActivites = TblSecteurActivite::orderBy('MonLibelle')->get();
+    //     $product = Product::orderBy('MonLibelle')->get();
+    //     $villes = TblVille::orderBy('idville')->get();
         
-        return view('prospects.edit', compact('prospect', 'professions', 'secteurActivites', 'product', 'villes'));
-    }
+    //     return view('prospects.edit', compact('prospect', 'professions', 'secteurActivites', 'product', 'villes'));
+    // }
 
     public function update(Request $request, $uuid)
     {
@@ -227,8 +304,8 @@ class ProspectController extends Controller
                 'lieuEvenement' => $request->lieuEvenement,
                 'status' => $request->status,
                 'note' => $request->note,
-                
-
+                'update_by' => auth()->user()->idmembre,
+                'updated_at' => now(),
             ]
         );
 
@@ -244,6 +321,37 @@ class ProspectController extends Controller
 
         return redirect()->route('prospect.show', $prospectfirst->id)
             ->with('success', 'Prospect mis à jour avec succès');
+    }
+
+    public function assign(request $request, $uuid)
+    {
+        try {
+            Prospect::where('uuid', $uuid)->update([
+                'assign_to' => $request->assignedTo,
+                'assigned_by' => auth()->user()->idmembre,
+                'assign_date' => now(),
+                'note' => $request->note,
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'type' => 'success',
+                'urlback' => " ",
+                'message' => "Enregistré avec succès !",
+                'code' => 200,
+            ]);
+
+            
+        } catch (\Throwable $th) {
+            Log::error("Erreur système: ", ['error' => $th]);
+            return response()->json([
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur système! $th",
+                'code' => 500,
+            ]);
+        }
     }
 
     /**
@@ -402,12 +510,15 @@ class ProspectController extends Controller
     public function downloadQrCode()
     {
         $user = auth()->user();
-
-        $qrCode = QrCode::size(500)->format('png')
+        
+        $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')
+            ->size(500)
             ->generate(route('prospection.form', $user->qr_code_token));
         
         return response($qrCode)
-            ->header('Content-Type', 'image/png')
-            ->header('Content-Disposition', 'attachment; filename="qr-code-prospection.png"');
+            ->header('Content-Type', 'image/svg')
+            ->header('Content-Disposition', 'attachment; filename="qr-code-prospection.svg"');
     }
+
+  
 }

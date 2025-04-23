@@ -70,18 +70,18 @@
             <li>
                 <a href="{{ route('prospect.index')}}">
                     <div class="parent-icon">
-                        <i class='bx bx-home-alt'></i>
+                        <i class="lni lni-customer fs-5"></i>
                     </div>
                     <div class="menu-title">Nouvelle Prospection</div>
                 </a>
             </li>
-            <li>
+            {{-- <li>
                 <a href="{{ route('prospect.suivies')}}">
                     <div class="parent-icon"><i class="fadeIn animated bx bx-clipboard"></i>
                     </div>
                     <div class="menu-title">Suivie Prospection</div>
                 </a>
-            </li>
+            </li> --}}
             
             
                 
@@ -144,7 +144,7 @@
                 @can('Voir le rapport de souscription')
                     <li>
                         <a href="{{ route('report.eSouscription')}}">
-                            <div class="parent-icon"><i class="bx bx-line-chart"></i>
+                            <div class="parent-icon"><i class="lni lni-stackoverflow"></i>
                             </div>
                             <div class="menu-title">Souscription</div>
                         </a>
@@ -155,9 +155,18 @@
                 @can('Voir le rapport des pret')
                     <li>
                         <a href="{{ route('report.ePret')}}">
-                            <div class="parent-icon"><i class="bx bx-map-alt"></i>
+                            <div class="parent-icon"><i class="fadeIn animated bx bx-bitcoin"></i>
                             </div>
                             <div class="menu-title">Pret</div>
+                        </a>
+                    </li>
+                @endcan
+                @can('Voir le rapport des pret')
+                    <li>
+                        <a href="{{ route('report.eProspection')}}">
+                            <div class="parent-icon"><i class="fadeIn animated bx bx-user-voice"></i>
+                            </div>
+                            <div class="menu-title">Propections</div>
                         </a>
                     </li>
                 @endcan

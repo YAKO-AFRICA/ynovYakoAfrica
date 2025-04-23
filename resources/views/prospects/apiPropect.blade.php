@@ -10,10 +10,10 @@
 </head>
 <body>
     <div class="container mt-4">
-        @php
+        {{-- @php
             $token = auth()->user()->qr_code_token
-        @endphp
-        <form method="post" action="{{ route('prospection.form', $token) }}" id="multiStepForm">
+        @endphp --}}
+        <form method="post" action="{{ route('prospection.form', $token) }}" id="multiStepForm" class="submitForm">
             @csrf
             
             <!-- Progress Bar -->
@@ -21,7 +21,7 @@
                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" id="formProgress" style="width: 0%; background-color: #1e4520" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
 
-            <input type="hidden" name="token">
+            <input type="hidden" name="{{$commercial->qr_code_token}}">
             
             <!-- Steps Indicators - Version améliorée pour mobile -->
             <ul class="nav nav-pills mb-4 justify-content-center flex-nowrap overflow-auto" id="formSteps" role="tablist" style="white-space: nowrap;">

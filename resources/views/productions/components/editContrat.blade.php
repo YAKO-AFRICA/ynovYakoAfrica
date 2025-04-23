@@ -90,14 +90,14 @@
 
                                     <label for="codeguichet" class="form-label">Code Guichet</label>
     
-                                    <input type="text" class="form-control" value="{{ $contrat->codeguichet ?? '--'}}" id="codeguichet" name="codeguichet">
+                                    <input type="text" class="form-control" value="{{ $contrat->codeguichet ?? 0}}" id="codeguichet" name="codeguichet">
     
                                 </div>
                                 <div class="col-6 mb-3">
 
                                     <label for="rib" class="form-label">Rib</label>
     
-                                    <input type="text" class="form-control" value="{{ $contrat->rib ?? '--'}}" id="rib" name="rib">
+                                    <input type="text" class="form-control" value="{{ $contrat->rib ?? 0}}" id="rib" name="rib">
     
                                 </div>
                             </div>
@@ -106,7 +106,7 @@
 
                                 <label for="Matricule" class="form-label">Mon N° de compte (Matricule)</label>
 
-                                <input type="text" class="form-control" value="{{ $contrat->numerocompte ?? '--'}}" id="Matricule" name="numerocompte">
+                                <input type="text" class="form-control" value="{{ $contrat->numerocompte ?? 0}}" id="Matricule" name="numerocompte">
 
                             </div>
 
@@ -118,7 +118,7 @@
 
                                 <label for="numMobile" class="form-label">Mon N° Mobile</label>
 
-                                <input type="text" class="form-control" value="{{ $contrat->numerocompte ?? '--'}}" id="numMobile" name="numMobile">
+                                <input type="text" class="form-control" value="{{ $contrat->numerocompte ?? 0}}" id="numMobile" name="numMobile">
 
                             </div>
 

@@ -37,10 +37,6 @@ class EpretController extends Controller
      * Display a listing of the resource.
      */
 
-     public function postDemo(request $request)
-     {
-         dd($request->all());
-     }
     public function demoSimulateur()
     {
         // $user = Auth::user()->idmembre;
