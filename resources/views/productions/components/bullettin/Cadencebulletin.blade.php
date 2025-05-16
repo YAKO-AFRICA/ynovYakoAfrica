@@ -148,7 +148,7 @@
                     <div style="width: 54%; float: left; padding: 7px 5px;">
                         <div class="nom" style="margin-bottom: 10px;">
                             <label><strong>Conseiller : </strong><input type="text" class="input-border-bottom"
-                                    style="width: 81%" value="Nom Prenoms"> </label>
+                                    style="width: 81%" value="{{ $contrat->nomagent ?? "" }}"> </label>
                         </div>
 
                         <div class="birthday" style="margin-bottom: 10px;">
@@ -168,7 +168,7 @@
 
                         <div class="profession" style="margin-bottom: 10px;">
                             <label><strong>Réseau : </strong><input type="text" class="input-border-bottom"
-                                    style="width: 85%" value="Réseau"> </label>
+                                    style="width: 85%" value="{{ $contrat->agenceData->libelle ?? "" }}"> </label>
                         </div>
                     </div>
 
@@ -176,7 +176,7 @@
                     <div style="width: 42%; float: right; padding: 7px 0px;">
                         <div class="nom" style="margin-bottom: 10px;">
                             <label><strong>Code : </strong><input type="text" class="input-border-bottom"
-                                    style="width: 81%" value="Code conseiller"> </label>
+                                    style="width: 81%" value="{{ $contrat->codeConseiller ?? "" }}"> </label>
                         </div>
 
                         <div class="prenom" style="margin-bottom: 10px;">
@@ -245,11 +245,11 @@
             <div class="content" style="margin-top: 0px; padding: 10px;">
                 <section style="width: 30%; margin: 5px 0; border: 1px solid #444; padding: 7px; border-radius: 7px">
                     <div style="width: 100%; text-align: center;">
-                        <div style="width: 33%; float: left;"><input type="radio" class="radio1"><span>Mme</span>
+                        <div style="width: 33%; float: left;"><input type="radio" class="radio1" @if ($contrat->adherent->sexe == 'F') checked @endif><span>Mme</span>
                         </div>
-                        <div style="width: 33%; float: left;"><input type="radio" class="radio1"><span>Mlle</span>
-                        </div>
-                        <div style="width: 33%; float: left;"><input type="radio" class="radio1"><span>M</span>
+                        {{-- <div style="width: 33%; float: left;"><input type="radio" class="radio1"><span>Mlle</span>
+                        </div> --}}
+                        <div style="width: 33%; float: left;"><input type="radio" class="radio1" @if ($contrat->adherent->sexe == 'M') checked @endif><span>M</span>
                         </div>
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
@@ -257,17 +257,17 @@
                 <!-- Colonne gauche -->
                 <div style="width: 100%; margin-top: 15px;">
                     <label><strong>Nom :
-                        </strong><span>.............................................................</span></label>
+                        </strong><span>{{ $contrat->adherent->nom ?? ''}}</span></label>
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     <label><strong>Prénoms :
-                        </strong><span>.............................................................................................</span></label>
+                        </strong><span> {{ $contrat->adherent->prenom ?? ''}}</span></label>
                 </div>
                 <div style="width: 100%; margin-top: 15px;">
                     <label><strong>Né(e) le :
-                        </strong><span>.......................................................</span></label> &nbsp;
+                        </strong><span>{{ $contrat->adherent->datenaissance ?? ''}}</span></label> &nbsp;
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     <label><strong>à
-                        </strong><span>..............................................................................................................</span></label>
+                        </strong><span> {{ $contrat->adherent->lieunaissance ?? ''}} </span></label>
                 </div>
 
                 <section style="width: 80%; margin: 5px 0; padding: 7px; border-radius: 7px;">
@@ -288,31 +288,31 @@
 
                 <div style="width: 100%; margin-top: 15px;">
                     <label><strong>Profession :
-                        </strong><span>.......................................................</span></label> &nbsp;
+                        </strong><span>{{ $contrat->adherent->profession ?? ''}}</span></label> &nbsp;
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     <label><strong>Employeur :
-                        </strong><span>..........................................................................................</span></label>
+                        </strong><span>{{ $contrat->adherent->employeur ?? ''}}</span></label>
                 </div>
                 <div style="width: 100%; margin-top: 15px;">
                     <label><strong>Adresse actuelle :
-                        </strong><span>.......................................................</span></label> &nbsp;
+                        </strong><span>{{ $contrat->adherent->lieuresidence ?? ''}}</span></label> &nbsp;
                     &nbsp; &nbsp; &nbsp;
                     <label><strong>Adresse permanente :
-                        </strong><span>..........................................................................</span></label>
+                        </strong><span>{{ $contrat->adherent->lieuresidence ?? ''}}</span></label>
                 </div>
                 <div style="width: 100%; margin-top: 15px;">
                     <label><strong>Téléphone courant :
-                        </strong><span>....................................................</span></label> &nbsp; &nbsp;
+                        </strong><span>{{ $contrat->adherent->mobile ?? ''}}</span></label> &nbsp; &nbsp;
                     &nbsp;
                     <label><strong>Téléphone permanente :
-                        </strong><span>.......................................................................</span></label>
+                        </strong><span>{{ $contrat->adherent->telephone ?? ''}}</span></label>
                 </div>
                 <div style="width: 100%; margin-top: 15px;">
                     <label><strong>CNI :
                         </strong><span>.............................................................................</span></label>
                     &nbsp; &nbsp; &nbsp;
                     <label><strong>E-mail :
-                        </strong><span>...................................................................................................</span></label>
+                        </strong><span>{{ $contrat->adherent->email ?? ''}}</span></label>
                 </div>
             </div>
         </section>
@@ -336,20 +336,15 @@
                         <th>Teléphone</th>
                         <th>Résidence</th>
                     </tr>
+                    @foreach ($contrat->assures as $item)
                     <tr>
-                        <td>Dupont</td>
-                        <td>Fils de Jean Dupont</td>
-                        <td>01/01/1990</td>
-                        <td>Paris</td>
-                        <td>Lyon</td>
+                        <td>{{ $item->nom ?? ''}} {{ $item->prenom ?? ''}}</td>
+                        <td>{{ $item->filiation ?? ''}}</td>
+                        <td>{{ $item->datenaissance ?? ''}}</td>
+                        <td>{{ $item->telephone ?? ''}}</td>
+                        <td>{{ $item->lieuresidence ?? ''}}</td>
                     </tr>
-                    <tr>
-                        <td>Durand</td>
-                        <td>Fils de Marie Durand</td>
-                        <td>12/05/1985</td>
-                        <td>Marseille</td>
-                        <td>Bordeaux</td>
-                    </tr>
+                    @endforeach
                 </table>
                 
             </div>
@@ -389,16 +384,22 @@
 
                     <div style="width: 100%;">
                         <div style="width: 18%; float: left;"><input type="radio" class="radio1"
-                                checked><span>L'assué</span></div>
-                        <div style="width: 43%; float: left;"><input type="radio" class="radio1"><span>Le Conjoint
+                            @if ($contrat->beneficiaireauterme == 'adherent')
+                            checked @endif><span>L'adherent</span></div>
+                        <div style="width: 43%; float: left;"><input type="radio" class="radio1" @if ($contrat->beneficiaireauterme == 'Conjoint')
+                            checked @endif><span>Le Conjoint
                                 non séparé de corps, ni divorcé</span></div>
-                        <div style="width: 33%; float: left;"><input type="radio" class="radio1"><span>Les enfants
+                        <div style="width: 33%; float: left;"><input type="radio" class="radio1" @if ($contrat->beneficiaireauterme == 'Enfants nés et à naitre')
+                            checked @endif><span>Les enfants
                                 nés et à naître</span></div>
                         <div style="width: 18%; float: left;"><input type="radio" class="radio1"
-                                checked><span>Autres</span></div>
+                            @if ($contrat->beneficiaireauterme == 'autre')
+                            checked @endif><span>Autres</span></div>
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
+                {{-- @if ($contrat->beneficiaireauterme == 'autre')
+
                 <table border="1" cellpadding="5" cellspacing="0" width="100%">
                     <tr>
                         <th>Nom complet</th>
@@ -407,21 +408,17 @@
                         <th>Teléphone</th>
                         <th>Résidence</th>
                     </tr>
+                    @foreach ($contrat->beneficiaireauterme as $item)
                     <tr>
-                        <td>Dupont</td>
-                        <td>Fils de Jean Dupont</td>
-                        <td>01/01/1990</td>
-                        <td>Paris</td>
-                        <td>Lyon</td>
+                        <td>{{ $item->nom ?? ''}} {{ $item->prenom ?? ''}} </td>
+                        <td>{{ $item->filiation ?? ''}}</td>
+                        <td>{{ $item->datenaissance ?? ''}}</td>
+                        <td>{{ $item->telephone ?? ''}}</td>
+                        <td>{{ $item->lieuresidence ?? ''}}</td>
                     </tr>
-                    <tr>
-                        <td>Durand</td>
-                        <td>Fils de Marie Durand</td>
-                        <td>12/05/1985</td>
-                        <td>Marseille</td>
-                        <td>Bordeaux</td>
-                    </tr>
+                    @endforeach
                 </table>
+                @endif --}}
 
             </div>
 
@@ -434,15 +431,20 @@
 
                     <div style="width: 100%;">
                         {{-- <div style="width: 18%; float: left;"><input type="radio" class="radio1" checked><span>L'assué</span></div> --}}
-                        <div style="width: 43%; float: left;"><input type="radio" class="radio1"><span>Le Conjoint
+                        <div style="width: 43%; float: left;"><input type="radio" class="radio1" @if ($contrat->beneficiaireaudeces == 'Conjoint')
+                            checked @endif><span>Le Conjoint
                                 non séparé de corps, ni divorcé</span></div>
-                        <div style="width: 33%; float: left;"><input type="radio" class="radio1" checked><span>Les
+                        <div style="width: 33%; float: left;"><input type="radio" class="radio1" @if ($contrat->beneficiaireaudeces == 'Enfants nés et à naitre')
+                            checked @endif><span>Les
                                 enfants nés et à naître</span></div>
                         <div style="width: 18%; float: left;"><input type="radio" class="radio1"
-                                checked><span>Autres</span></div>
+                            @if ($contrat->beneficiaireaudeces == 'autre')
+                            checked @endif><span>Autres</span></div>
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
+                {{-- @if ($contrat->beneficiaireaudeces == 'autre') --}}
+
                 <table border="1" cellpadding="5" cellspacing="0" width="100%">
                     <tr>
                         <th>Nom complet</th>
@@ -451,21 +453,17 @@
                         <th>Teléphone</th>
                         <th>Résidence</th>
                     </tr>
+                    @foreach ($contrat->beneficiaires as $item)
                     <tr>
-                        <td>Dupont</td>
-                        <td>Fils de Jean Dupont</td>
-                        <td>01/01/1990</td>
-                        <td>Paris</td>
-                        <td>Lyon</td>
+                        <td>{{ $item->nom ?? ''}} {{ $item->prenom ?? ''}} </td>
+                        <td>{{ $item->filiation ?? ''}}</td>
+                        <td>{{ $item->datenaissance ?? ''}}</td>
+                        <td>{{ $item->telephone ?? ''}}</td>
+                        <td>{{ $item->lieuresidence ?? ''}}</td>
                     </tr>
-                    <tr>
-                        <td>Durand</td>
-                        <td>Fils de Marie Durand</td>
-                        <td>12/05/1985</td>
-                        <td>Marseille</td>
-                        <td>Bordeaux</td>
-                    </tr>
+                    @endforeach
                 </table>
+                {{-- @endif --}}
 
             </div>
         </section>
@@ -515,13 +513,13 @@
                 <!-- Colonne gauche -->
                 <div style="width: 100%; margin-top: 0px;">
 
-                    <label>Je souhaite souscrire au contrat "<strong> CADENCE</strong>" pour une durée de <strong>.......</strong> ANS en prenante éffet le <strong>........................</strong></label>
+                    <label>Je souhaite souscrire au contrat "<strong> CADENCE</strong>" pour une durée de <strong>{{ $contrat->duree ?? ''}}</strong> ANS en prenante éffet le <strong>{{ $contrat->dateeffet ?? ''}}</strong></label>
                 </div>
                 <div style="width: 100%; margin-top: 7px;">
                     <label>Le capital garanti au contrat doit être reservé au(x) bénéficiaire(s) sous la forme : </label><br><br>
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label> <input type="radio" class="radio1"> <span>d'un paiement unique à la date d'echéeance</span></label><br><br>
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label> <input type="radio" class="radio1"><span>d'une rente certaine payée</span></label><br>
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label><span>sur une duree de </span><b>..........</b>ANS</label><br><br>
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label><span>sur une duree de </span><b>{{ $contrat->duree ?? ''}}</b>ANS</label><br><br>
                 
                 </div>
 
@@ -529,13 +527,13 @@
                     <div style="width: 100%; margin-left: 100px; margin-top: -10px;">
                         <div style="width: 15%; float: left;"><span>par échéance</span></div>
                         <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><strong>Mensuelle</strong></div>
+                                class="radio1" @if ($contrat->periodicite == 'M')checked @endif><strong>Mensuelle</strong></div>
                         <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><strong>Trimestrielle</strong></div>
+                                class="radio1" @if ($contrat->periodicite == 'T')checked @endif><strong>Trimestrielle</strong></div>
                         <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><strong>Semestrielle</strong></div>
+                                class="radio1" @if ($contrat->periodicite == 'S')checked @endif><strong>Semestrielle</strong></div>
                         <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><strong>Annuelle</strong></div>
+                                class="radio1" @if ($contrat->periodicite == 'A')checked @endif><strong>Annuelle</strong></div>
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 {{-- </section> --}}
@@ -558,20 +556,20 @@
                     <div style="width: 100%;">
                         <div style="width: 25%; float: left;"><span>Je souhaite payer par</span></div>
                         <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><strong>Mois</strong></div>
+                                class="radio1" @if ($contrat->periodicite == 'M')checked @endif><strong>Mois</strong></div>
                         <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><strong>Trimestre</strong></div>
+                                class="radio1" @if ($contrat->periodicite == 'T')checked @endif><strong>Trimestre</strong></div>
                         <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><strong>Semestre</strong></div>
+                                class="radio1" @if ($contrat->periodicite == 'S')checked @endif><strong>Semestre</strong></div>
                         <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><strong>Année</strong></div>
+                                class="radio1" @if ($contrat->periodicite == 'A')checked @endif><strong>Année</strong></div>
                         <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><strong>Unique</strong></div>
+                                class="radio1" @if ($contrat->periodicite == 'U')checked @endif><strong>Unique</strong></div>
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
-                <label><span>sur une duree de </span><b>..........</b>ANS,</label>
-                <label><span>une cotisation de </span><b>..................</b>FCFA + <b>.................. <i>(Frais accessoire)</i></b>FCFA = <b>......................</b>FCFA</label><br><br>
+                <label><span>sur une duree de </span><b>{{ $contrat->duree ?? ''}}</b>ANS,</label>
+                <label><span>une cotisation de </span><b>{{ $contrat->primepricipale ?? ''}}</b>FCFA + <b>{{ $contrat->surprime ?? 0}} <i>(Frais accessoire)</i></b>FCFA = <b>{{ number_format($contrat->prime) ?? 0}}</b>FCFA</label><br><br>
                 <label><span>Frais unique d'Adhésion : </span><b>7 500 FCFA </b></label> <br><br>
                 <section style="width: 90%; border-radius: 7px; margin-bottom: 7px;">
                     <div style="width: 100%;">
@@ -624,7 +622,7 @@
                 <!-- Colonne gauche -->
                 <div style="width: 100%; margin-top: 0px;">
 
-                    <label>La cotisation et les primes d'Assurance d'un montant total de <span><b>..................</b> FCFA</span> seront payée par :</label>
+                    <label>La cotisation et les primes d'Assurance d'un montant total de <span><b>{{ number_format($contrat->prime) ?? 0}}</b> FCFA</span> seront payée par :</label>
                 </div>
                 <div style="width: 100%; margin-top: 10px;">
                     <label style="margin-top: 0px; margin-left:20px; display:block"> <input type="radio" class="radio1"checked>Prélèvement bancaire sur mon compte (<small><i>Joindre l'attestation de prélèvement et un relevé d'identité bancaire</i></small>)</label>
@@ -655,14 +653,13 @@
                 <h4 style="color: #fff; font-size: 15px; margin: 0; text-align: center">VIII</h4>
             </div>
             <div class=""
-                style="width: 55%; background-color: #747171; padding: 5px; border-radius: 0 7px 7px 0; margin-left: 33px;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0;">CONSTITUTION DU FONDS D'OPERATION</h4>
+                style="width: 55%; background-color: #747171; padding: 3px; border-radius: 0 7px 7px 0; margin-left: 33px;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0;">CONSTITUTION DU FONDS D'OPERATION</h4>
             </div>
             <!-- Contenu -->
             <div class="content" style="margin-top: 0px; padding: 10px; text-align: center;">
                 <!-- Colonne gauche -->
                     <label style="">Le fonds d'operation est constitué sur la base de ............................. <i style="font-size: 10px !important">(Maximum -50% de la cotisation annuelle)</i> par année</label>
-                
             </div>
         </section>
         <section style="width: 100%; margin-top: 7px;">
@@ -674,6 +671,8 @@
                 <div style="width: 33%; float: left;">
                     <strong>Signature du souscripteur</strong>
                     <p><i style="font-size: 10px !important">(précédée de la mention "LU et APPROUVE)</i></p>
+
+                    <img src="{{ $qrCodeBase64 }}" alt="QR Code de vérification" style="width: 60px; height: 60px;">
                 </div>
                 <div style="width: 33%; float: left;">
                     <strong>Signature de l'Assuré</strong>
@@ -684,7 +683,7 @@
                     <p><i style="font-size: 10px !important">(précédée de la mention "LU et APPROUVE)</i></p>
                 </div>
             </div>
-            <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
+            <div style="clear: both;"></div>
         </section>
     </div>
 </body>

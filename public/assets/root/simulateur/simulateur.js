@@ -2,18 +2,13 @@
 document.getElementById("loanSimulatorForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
-    // Récupérer la date de naissance saisie par l'utilisateur
     const birthdayInput = document.getElementById('birthday');
     const birthday = new Date(birthdayInput.value);
     const dateNaissance = `${birthday.getDate()}-${birthday.getMonth() + 1}-${birthday.getFullYear()}`;
-    // Récupérer la date actuelle
+
     const today = new Date();
-    // Calculer l'âge en années
     const age = today.getFullYear() - birthday.getFullYear();
 
-    
-    // Récupération des données du formulaire
-    // const age = parseInt(document.getElementById("age").value);
     const duree = parseInt(document.getElementById("loanDuration").value);
     const montant = parseFloat(document.getElementById("loanMontant").value);
     const genre = document.getElementById("genre").value;

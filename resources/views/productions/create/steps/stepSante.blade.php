@@ -1472,18 +1472,15 @@
                 <button onclick="event.preventDefault(); stepper1.previous()"
                     class="btn border-btn btn-previous-form"><i class='bx bx-left-arrow-alt'></i>Previous</button>
 
-                <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i
+                <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form d-none" id="btn-next-sante">Suivant<i
                         class='bx bx-right-arrow-alt'></i></button>
-                {{-- <button type="submit"
-                    class="btn btn-two">Enregistrer<i
-                    class='bx bx-right-arrow-alt'></i>
-                </button> --}}
-
+                <button type="button" data-bs-toggle="modal" data-bs-target="#otpModal" id="btn-otp-modal" class="btn btn-two">Code OTP<i
+                    class='bx bx-right-arrow-alt'></i></button>
             </div>
-
         </div>
+    </div>
 
-    </div><!---end row-->
+    @include('productions.components.otpModal')
 
 
 

@@ -41,14 +41,12 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <style>
-    /* Pour la hauteur de l'élément Select2 */
             .select2-container--default .select2-selection--single {
-                height: 38px !important; /* Ajuste à la hauteur que tu veux */
+                height: 38px !important;
                 display: flex;
                 align-items: center;
             }
 
-            /* Pour centrer le texte verticalement */
             .select2-container--default .select2-selection--single .select2-selection__rendered {
                 line-height: 38px !important;
             }
@@ -95,9 +93,14 @@
 
         {{-- js custome file --}}
         <script src="{{ asset('assets/js/custom.js')}}"></script>
-        {{-- <script src="{{ asset('root/resume.js')}}"></script> --}}
-        <script src="{{ asset('assets/root/simulateur/simulateur.js')}}"></script>
+        <script src="{{ asset('root/resume.js')}}"></script>
         <script src="{{ asset('assets/root/simulateur/primes.js')}}"></script>
+        <script src="{{ asset('assets/root/simulateur/doihooSimulateur.js')}}"></script>
+        <script src="{{ asset('assets/root/simulateur/simulateurKDS.js')}}"></script>
+        <script src="{{ asset('assets/root/simulateur/simulateurCADE.js')}}"></script>
+        <script src="{{ asset('assets/root/simulateur/simulateur.js')}}"></script>
+        <script src="{{ asset('assets/root/simulateur/ykeSimulateur.js')}}"></script>
+        <script src="{{ asset('assets/js/fieldsForm.js')}}"></script>
         <!-- Bootstrap JS -->
         <script src="{{ asset('assets/js/bootstrap.bundle.min.js')}}"></script>
         <!--plugins-->
@@ -137,9 +140,6 @@
                 var table = $('#example2').DataTable({
                     lengthChange: true,
                     buttons: ['copy', 'excel', 'pdf', 'print'],
-                    // language: {
-                    //     search: "Recherche :",
-                    // },
                     language: {
                                 search: "Recherche :",
                                 lengthMenu: "Afficher _MENU_ lignes",
@@ -165,9 +165,6 @@
                 var table = $('#example3').DataTable({
                     lengthChange: true,
                     buttons: ['copy', 'excel', 'pdf', 'print'],
-                    // language: {
-                    //     search: "Recherche :",
-                    // },
                     language: {
                                 search: "Recherche :",
                                 lengthMenu: "Afficher _MENU_ lignes",
@@ -227,8 +224,7 @@
             });
         
             $(".date-format").flatpickr({
-            // altInput: true, // Affiche un champ alternatif lisible par l'utilisateur
-            altFormat: "j F, Y", // Format alternatif en français (ex: 10 décembre, 2024)
+            altFormat: "j F, Y",
             dateFormat: "d-m-Y", // Format réel de la date envoyée (10-12-2024)
             minDate: "today", // La date minimale est aujourd'hui
             // locale: "fr" // Définit la langue en français

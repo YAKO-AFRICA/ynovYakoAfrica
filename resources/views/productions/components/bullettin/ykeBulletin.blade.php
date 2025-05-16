@@ -359,7 +359,6 @@
                             <img src="data:image/jpg;base64,{{ base64_encode(file_get_contents(public_path('root/images/Signature_Dta.jpg'))) }}" alt="Logo" style="width: 200px">
                         </div>
                     </div>
-
                 </div>
 
                 <div style="width: 48%; min-height: 127px; float: right; border: 1px solid #000; padding: 5px; display: flex; justify-content: space-between; align-items: center;">
@@ -371,6 +370,10 @@
                         <br><br>
 
                         <label for="prenom">Signature du Souscripteur</label>
+
+                        <div>
+                            <img src="{{ $qrCodeBase64 }}" alt="QR Code de vérification" style="width: 60px; height: 60px;">
+                        </div>
 
                     </div>
 
