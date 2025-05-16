@@ -64,8 +64,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        {{-- <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Vérifier<i
-                            class='bx bx-right-arrow-alt'></i></button> --}}
+                        
                             <button type="button" id="verifyOtpButton" class="btn btn-two btn-next-form">
                                 Vérifier <i class='bx bx-right-arrow-alt'></i>
                             </button>

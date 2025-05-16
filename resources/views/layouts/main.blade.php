@@ -69,15 +69,17 @@
     </div>
         <!--wrapper-->
         <div class="wrapper">
+
+            <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100"></div>
+
+            
             @include('layouts.sidebar')
 
-            <div class="page-wrapper" >
+            <div class="page-wrapper">
                 <div class="page-content" id="app">
-                     <!--content-->
-                     @yield('content')
-            
+                    @yield('content')
                 </div>
-            
+
             </div>
            
             <!--start overlay-->
@@ -126,7 +128,6 @@
         {{-- <script src="{{ mix('js/app.js') }}"></script> --}}
 
         <script type="module" src="{{ asset('api/request.js') }}"></script>
-
 
 
         <script>
@@ -249,39 +250,7 @@
         
         </script>
 
-        <script>
-             $(document).ready(function () {
-                $('#codeproduit').on('change', function () {
-                    const codeProduit = $(this).find(':selected').data('code-value'); // Récupère data-code-value
-                    const formuleSelect = $('#codeproduitformule');
-
-                    console.log('codeProduit:', codeProduit);
-
-                    // Réinitialise le menu déroulant des formules
-                    formuleSelect.html('<option value="">-- Choisir une option --</option>');
-
-                    if (codeProduit) {
-                        // Requête AJAX
-                        $.ajax({
-                            url: `/formules/${codeProduit}`,
-                            type: 'GET',
-                            success: function (data) {
-                                console.log('Données reçues de l\'API :', data); // Inspectez ce qui est reçu
-                                data.forEach(item => {
-                                    formuleSelect.append(`<option value="${item.CodeProduitFormule}">${item.MonLibelle}</option>`);
-                                });
-                            },
-
-                            error: function (xhr, status, error) {
-                                console.error('Erreur AJAX :', xhr.responseText);
-                                alert('Erreur lors de la récupération des formules.');
-                            }
-                        });
-                    }
-                });
-            });
-
-        </script>
+        
 
     
 
