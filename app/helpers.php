@@ -99,4 +99,68 @@ function RefgenerateOTP($table, $key)
 }
 
 
+if (!function_exists('getFileIcon')) {
+    function getFileIcon($mimeType) {
+        $icons = [
+            'image/' => 'image',
+            'application/pdf' => 'pdf',
+            'application/msword' => 'word',
+            'application/vnd.ms-excel' => 'excel',
+            'application/vnd.ms-powerpoint' => 'powerpoint',
+            'text/plain' => 'alt',
+            'application/zip' => 'archive',
+            'application/x-rar-compressed' => 'archive',
+        ];
+        
+        foreach ($icons as $key => $icon) {
+            if (str_starts_with($mimeType, $key)) {
+                return $icon;
+            }
+        }
+        
+        return 'file';
+    }
+}
+
+if (!function_exists('getFileColor')) {
+    function getFileColor($mimeType) {
+        $colors = [
+            'image/' => 'info',
+            'application/pdf' => 'danger',
+            'application/msword' => 'primary',
+            'application/vnd.ms-excel' => 'success',
+            'application/vnd.ms-powerpoint' => 'warning',
+            'text/plain' => 'secondary',
+            'application/zip' => 'dark',
+        ];
+        
+        foreach ($colors as $key => $color) {
+            if (str_starts_with($mimeType, $key)) {
+                return $color;
+            }
+        }
+        
+        return 'dark';
+    }
+}
+
+if (!function_exists('formatFileSize')) {
+    function formatFileSize($bytes) {
+        if ($bytes >= 1073741824) {
+            return number_format($bytes / 1073741824, 2) . ' GB';
+        } elseif ($bytes >= 1048576) {
+            return number_format($bytes / 1048576, 2) . ' MB';
+        } elseif ($bytes >= 1024) {
+            return number_format($bytes / 1024, 2) . ' KB';
+        } elseif ($bytes > 1) {
+            return $bytes . ' bytes';
+        } elseif ($bytes == 1) {
+            return '1 byte';
+        } else {
+            return '0 bytes';
+        }
+    }
+}
+
+
 ?>

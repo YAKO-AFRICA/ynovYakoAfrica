@@ -458,32 +458,19 @@
                 const villeSelect = document.getElementById('lieuresidence');
                 const lieuSelect = document.getElementById('lieunaissance');
                 
-                let selectedVilleFound = false;
-                let selectedLieuFound = false;
-                
                 data.forEach(ville => {
                     // Option pour lieu de résidence
                     const optionVille = document.createElement('option');
-                    optionVille.value = ville.CodeVille;
+                    optionVille.value = ville.MonLibelle;
                     optionVille.textContent = ville.MonLibelle;
                     villeSelect.appendChild(optionVille);
                     
                     // Option pour lieu de naissance
                     const optionLieu = document.createElement('option');
-                    optionLieu.value = ville.CodeVille;
+                    optionLieu.value = ville.MonLibelle;
                     optionLieu.textContent = ville.MonLibelle;
                     lieuSelect.appendChild(optionLieu);
-                    
-                    // Sélectionner l'option correspondante si le code match
-                    if (ville.CodeVille === lieuResidenceCode) {
-                        optionVille.selected = true;
-                        selectedVilleFound = true;
-                    }
-                    
-                    if (ville.CodeVille === lieuNaissanceCode) {
-                        optionLieu.selected = true;
-                        selectedLieuFound = true;
-                    }
+
                 });
                 
                 // Si le code stocké n'est pas trouvé dans l'API, garder l'affichage original
@@ -510,10 +497,7 @@
                     optionProfession.textContent = profession.MonLibelle;
                     professionSelect.appendChild(optionProfession);
                     
-                    if (profession.CodeProfession === professionCode) {
-                        optionProfession.selected = true;
-                        selectedProfessionFound = true;
-                    }
+                  
                 });
                 
                 if (!selectedProfessionFound) {

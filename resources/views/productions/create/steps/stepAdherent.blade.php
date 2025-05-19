@@ -309,12 +309,12 @@
                     
                     data.forEach(ville => {
                         const optionVille = document.createElement('option');
-                        optionVille.value = ville.CodeVille;
+                        optionVille.value = ville.MonLibelle;
                         optionVille.textContent = ville.MonLibelle;
                         villeSelect.appendChild(optionVille);
 
                         const optionLieu = document.createElement('option');
-                        optionLieu.value = ville.CodeVille;
+                        optionLieu.value = ville.MonLibelle;
                         optionLieu.textContent = ville.MonLibelle;
                         lieuSelect.appendChild(optionLieu);
                     });
@@ -328,7 +328,7 @@
                     const professionSelect = document.getElementById('profession');
                     data.forEach(profession => {
                         const optionProfession = document.createElement('option');
-                        optionProfession.value = profession.CodeProfession;
+                        optionProfession.value = profession.MonLibelle;
                         optionProfession.textContent = profession.MonLibelle;
                         professionSelect.appendChild(optionProfession);
                     });
