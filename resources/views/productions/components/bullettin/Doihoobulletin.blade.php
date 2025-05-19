@@ -225,7 +225,7 @@
                         <div style="width: 50%; float: left;">
                             <span>N°</span> 
                             <input type="text" style="width: 90%; padding: 2px" 
-                                   value="{{ $contrat->adherent->numeropiece ?? 'CI0039ZYT' }}">
+                                   value="{{ $contrat->adherent->numeropiece ?? '' }}">
                         </div>
                     </div>
                     <div style="clear: both;"></div>
@@ -545,7 +545,7 @@
     
                             <div class="profession" style="margin-bottom: 10px;">
                                 <label><strong>Réseau : </strong><input type="text" class="input-border-bottom"
-                                        style="width: 85%" value="----"> </label>
+                                        style="width: 85%" value="{{ $contrat->agenceData->libelle ?? "" }}"> </label>
                             </div>
                         </div>
     
@@ -553,22 +553,22 @@
                         <div style="width: 42%; float: right; padding: 7px 0px;">
                             <div class="nom" style="margin-bottom: 10px;">
                                 <label><strong>Code : </strong><input type="text" class="input-border-bottom"
-                                        style="width: 81%" value="Code conseiller"> </label>
+                                        style="width: 81%" value="{{ $contrat->codeConseiller ?? "" }}"> </label>
                             </div>
     
                             <div class="prenom" style="margin-bottom: 10px;">
                                 <label><strong>Code : </strong><input type="text" class="input-border-bottom"
-                                        style="width: 81%" value="Code Unit Manager"> </label>
+                                        style="width: 81%" value="----"> </label>
                             </div>
     
                             <div class="birthday" style="margin-bottom: 10px;">
                                 <label><strong>Code : </strong><input type="text" class="input-border-bottom"
-                                        style="width: 81%" value="Code assistant Manager"> </label>
+                                        style="width: 81%" value="----"> </label>
                             </div>
     
                             <div class="domicile" style="margin-bottom: 10px;">
                                 <label><strong>code : </strong><input type="text" class="input-border-bottom"
-                                        style="width: 81%" value="Code Manager"> </label>
+                                        style="width: 81%" value="----"> </label>
                             </div>
                         </div>
     

@@ -340,7 +340,7 @@
 
 
 
-<script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         const countries = @json($detailCountries);
         const phoneInput = document.getElementById('phoneInput');
@@ -382,9 +382,9 @@
             detectCountryFromPhone(phoneInput.value);
         });
     });
-</script>
+</script> --}}
 
-<script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         const sendOTPForm = document.getElementById('sendOTPForm');
         // const otpModal = document.getElementById('otpModal');
@@ -532,7 +532,7 @@
             });
         });
     });
-</script>
+</script> --}}
 
 <!-- JavaScript pour contrôler l'affichage du tableau en fonction de la sélection -->
 <script>
@@ -653,6 +653,8 @@
         updateDisplay();
     });
 </script>
+
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
