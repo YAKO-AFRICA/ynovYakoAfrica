@@ -1,339 +1,3 @@
-{{-- @extends('layouts.main')
-
-@section('content') --}}
-
-{{-- <div class="container">
-    <h3>Calcul de la Prime de Garantie</h3>
-
-    <form id="primeForm">
-        @csrf
-        <div class="mb-3">
-            <label class="form-label">Code Produit :</label>
-            <input type="text" class="form-control" id="CodeProduit" name="CodeProduit" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Code Garantie :</label>
-            <input type="text" class="form-control" id="codeGarantie" name="codeGarantie" required>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Code Périodicité :</label>
-            <input type="text" class="form-control" id="codePeriodicite" name="codePeriodicite" required>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Durée Cotisation :</label>
-            <input type="number" class="form-control" id="duree" name="duree" required>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Capital Souscrit :</label>
-            <input type="text" class="form-control" id="capitalSouscrit" name="capitalSouscrit" required>
-        </div>
-
-   
-        
-        <div class="mb-3">
-            <label class="form-label">Âge Calculé :</label>
-            <input type="number" class="form-control" id="age" name="age">
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Date d'effet :</label>
-            <input type="date" class="form-control" id="dateEffet" name="dateEffet" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Calculer</button>
-    </form>
-
-    <div class="mt-4">
-        <h4>Résultat :</h4>
-        <p id="result" class="alert alert-info d-none"></p>
-    </div>
-</div> --}}
-
-{{-- <style>
-    .ribbon {
-        position: relative;
-        background: #11771f;
-        color: white;
-        padding: 10px;
-        font-weight: bold;
-        text-align: center;
-        border-radius: 5px 5px 0 0;
-    }
-
-    .btn-inactif {
-        background-color: #d9d9d9;
-        color: #666;
-        cursor: not-allowed;
-        pointer-events: none;
-        }
-</style>
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12 col-md-8">
-            <div class="card p-4">
-                <h4 class="text-center text-uppercase">Simulateur de prime</h4>
-                <fieldset>
-                    <legend class="text-center w-auto float-none px-2 "><small>Données de simulation</small></legend>
-                
-                    <form id="primeForm">
-                        @csrf
-
-                        <div class="form-group row">
-                            <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Code Produit :</label>
-                                <input type="text" class="form-control" id="CodeProduit" name="CodeProduit" value="{{ $product->CodeProduit}}" required readonly>
-                            </div>
-                            <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Code Périodicité :</label>
-
-                                <select name="codePeriodicite" id="codePeriodicite" class="form-control" required>
-                                    <option value="M">MENSUEL</option>
-                                    <option value="T">TRIMESTRIEL</option>
-                                    <option value="S">SEMESTRIEL</option>
-                                    <option value="A">ANNUEL</option>
-                                </select>
-                            </div>
-
-                            <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Durée Cotisation :</label>
-                                <input type="number" class="form-control" id="duree" name="duree" value="5" required readonly>
-                            </div>
-                            <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Capital Souscrit :</label>
-                                <select name="capitalSouscrit" id="capitalSouscrit" class="form-select" required>
-                                    <option value="" selected>Selectionnez le capital souscrit</option>
-                                    <option value="300000">300 000</option>
-                                    <option value="500000">500 000</option>
-                                    <option value="750000">750 000</option>
-                                    <option value="1000000">1 000 000</option>
-                                    <option value="1250000">1 250 000</option>
-                                    <option value="1500000">1 500 000</option>
-                                    <option value="2000000">2 000 000</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Date denaissance :</label>
-                                <input type="Date" class="form-control" id="dateNaissance" name="dateNaissance">
-                            </div>
-                            <div class="col-sm-12 col-md-6 mb-3 d-none">
-                                <label class="form-label">Âge Calculé :</label>
-                                <input type="hidden" class="form-control" id="age" name="age">
-                            </div>
-                            <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Date d'effet :</label>
-                                <input type="date" class="form-control" id="dateEffet" name="dateEffet" required>
-                            </div>
-                        </div>
-                        
-                        
-                        <button type="submit" class="btn btn-primary w-100">Simuler</button>
-                    </form>
-                </fieldset>
-            </div>
-        </div>
-        <div class="col-sm-12 col-md-4">
-           <div class="card shadow-lg border-0 rounded-lg">
-                <div class="card-header text-white text-center py-3">
-                    <h5 class="text-uppercase mb-0">Résultat du simulateur</h5>
-                </div>
-
-                <div class="card-body">
-                    <div class="container">
-                        <table class="table">
-                            <tr>
-                                <td>Frais d'adhésion</td>
-                                <td>7500 FCFA</td>
-                            </tr>
-                        </table>
-                        <table class="table table-bordered table-striped">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Garantie</th>
-                                    <th>Prime</th>
-                                    <th>Capital</th>
-                                </tr>
-                            </thead>
-                            <tbody id="result">
-                                
-                            </tbody>
-                            
-                        </table>
-                        <div class="ribbon">Prime Totale</div>
-
-                        <table class="table">
-                            <tfoot class="table-light">
-                                <tr>
-                                    <td colspan="2" class="text-end fw-bold">Montant Total :</td>
-                                    <td id="primeTotal" class="fw-bold">0</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-
-                <a href="{{ route('prod.create',$product->CodeProduit) }}" id="btn-souscription" class="btn btn-primary btn btn-inactif">Souscrire</a>
-
-
-            </div>
-
-        </div>
-
-    
-
-
-    </div>
-</div>
-
-
-
-
-
-<script>
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const dateNaissanceInput = document.getElementById("dateNaissance");
-        const ageInput = document.getElementById("age");
-
-        // Ajouter un écouteur d'événement sur le champ date de naissance
-        dateNaissanceInput.addEventListener("change", function () {
-            const dateNaissance = new Date(this.value);
-            const today = new Date();
-
-            // Calculer l'âge en fonction de la date de naissance
-            let age = today.getFullYear() - dateNaissance.getFullYear();
-            const m = today.getMonth() - dateNaissance.getMonth();
-
-            // Ajuster l'âge si l'anniversaire n'est pas encore passé cette année
-            if (m < 0 || (m === 0 && today.getDate() < dateNaissance.getDate())) {
-                age--;
-            }
-
-            ageInput.value = age;
-        });
-        document.getElementById("primeForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            const fraieadhesion = 7500;
-
-            let formData = new FormData(this);
-            let totalPrime = fraieadhesion;
-            let garantiesData = [];
-            let garantieFinal = []; // Initialisation correcte
-            let garanties = @json($productGarantie);
-
-            
-
-            let resultDiv = document.getElementById("result");
-            resultDiv.innerHTML = "";
-
-            garanties.forEach((garantie) => {
-                let newFormData = new FormData();
-
-                formData.forEach((value, key) => {
-                    newFormData.append(key, value);
-                });
-
-                newFormData.set("codeGarantie", garantie.codeproduitgarantie);
-
-                fetch("https://api.yakoafricassur.com/enov/prime-garantie", {
-                    method: "POST",
-                    body: newFormData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (!data || data.error) {
-                        console.error(`Erreur pour ${garantie.codeproduitgarantie}:`, data?.message || "Réponse vide de l'API.");
-                    } else {
-                        if (Array.isArray(data) && data.length > 0) {
-                            let firstRecord = data[0];
-
-                            let prime = firstRecord.Prime || 0 ;
-                            let capital = firstRecord.Capital || 0;
-
-                            totalPrime += parseInt(prime);
-                            document.getElementById("primeTotal").textContent = totalPrime.toLocaleString();
-
-                            resultDiv.innerHTML += `
-                                <tr>
-                                    <td>${garantie.codeproduitgarantie}</td>
-                                    <td>${parseInt(prime).toLocaleString('fr-FR')}</td>
-                                    <td>${parseInt(capital).toLocaleString('fr-FR')}</td>
-                                </tr>
-                            `;
-
-                            if (garantiesData.some(item => item.codeGarantie === garantie.codeproduitgarantie)) {
-                                
-                            }
-
-                            let garantieItem = {
-                                codeGarantie: garantie.codeproduitgarantie,
-                                prime: prime,
-                                capital: capital,
-                                primeFinal: totalPrime,
-                                codeProduit: formData.get("CodeProduit"),
-                                codePeriodicite: formData.get("codePeriodicite"),
-                                duree: formData.get("duree"),
-                                capitalSouscrit: formData.get("capitalSouscrit"),
-                                age: formData.get("age"),
-                                dateEffet: formData.get("dateEffet"),
-                                dateNaisssance: formData.get("dateNaissance")
-                            };
-
-                            garantiesData.push(garantieItem);
-                            garantieFinal.push(garantieItem); // Ajout correct des données
-
-                            sessionStorage.setItem("garantiesData", JSON.stringify(garantieFinal));
-
-                            let returnDataSession = sessionStorage.getItem("garantiesData");
-
-                            console.log("Données de simulation:", returnDataSession);
-
-                            fetch("{{ route('storeSimulationPrime') }}", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content") 
-                                },
-                                body: JSON.stringify(JSON.parse(returnDataSession)) // Correction ici
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.error) {
-                                    console.error("Erreur lors de l'enregistrement en session PHP:", data.error);
-                                } else {
-                                    console.log("Données enregistrées en session PHP avec succès !");
-                                }
-                            })
-                            .catch(error => {
-                                console.error("Erreur lors de l'envoi des données en session PHP:", error);
-                            });
-
-
-                    
-
-                            if (totalPrime > 0) {
-                                document.getElementById("btn-souscription").classList.remove("btn-inactif");
-                            }
-                        } else {
-                            console.warn(`Aucun enregistrement trouvé pour ${garantie.codeproduitgarantie}.`);
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error(`Erreur lors de la connexion à l'API pour ${garantie.codeproduitgarantie}:`, error.message);
-                });
-
-                console.log("Données de newFormData:", newFormData);
-            });
-        });
-    });
-
-
-</script> --}}
-
 @extends('layouts.main')
 
 @section('content')
@@ -350,11 +14,12 @@
     }
 
     .btn-inactif {
-        background-color: #d9d9d9;
-        color: #666;
+        opacity: 0.6;
         cursor: not-allowed;
         pointer-events: none;
     }
+
+   
     
     .form-check-label {
         margin-left: 5px;
@@ -368,68 +33,100 @@
                 <h4 class="text-center text-uppercase">Simulateur de prime</h4>
                 <fieldset>
                     <legend class="text-center w-auto float-none px-2 "><small>Données de simulation</small></legend>
-                
+
                     <form id="primeForm">
                         @csrf
-
-                        <div class="form-group row">
-                            <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Code Produit :</label>
-                                <input type="text" class="form-control" id="CodeProduit" name="CodeProduit" value="{{ $product->CodeProduit}}" required readonly>
+                        <div class="card mb-4">
+                            <div class="card-header bg-primar text-white">
+                                <h5 class="mb-0">Informations de base</h5>
                             </div>
-                            <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Code Périodicité :</label>
-                                <select name="codePeriodicite" id="codePeriodicite" class="form-control" required>
-                                    <option value="M">MENSUEL</option>
-                                    <option value="T">TRIMESTRIEL</option>
-                                    <option value="S">SEMESTRIEL</option>
-                                    <option value="A">ANNUEL</option>
-                                </select>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Code Produit</label>
+                                        <input type="text" class="form-control" id="CodeProduit" name="CodeProduit" value="{{ $product->CodeProduit}}" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Périodicité</label>
+                                        <select name="codePeriodicite" id="codePeriodicite" class="form-select" required>
+                                            <option value="M">Mensuel</option>
+                                            <option value="T">Trimestriel</option>
+                                            <option value="S">Semestriel</option>
+                                            <option value="A">Annuel</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label class="form-label">Durée Cotisation</label>
+                                        <input type="number" class="form-control" id="duree" name="duree" min="5" max="5" value="5" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Capital Souscrit</label>
+                                        <select name="capitalSouscrit" id="capitalSouscrit" class="form-select" required>
+                                            <option value="" selected disabled>Choisissez un capital</option>
+                                            <option value="300000">300 000 FCFA</option>
+                                            <option value="500000">500 000 FCFA</option>
+                                            <option value="750000">750 000 FCFA</option>
+                                            <option value="1000000">1 000 000 FCFA</option>
+                                            <option value="1250000">1 250 000 FCFA</option>
+                                            <option value="1500000">1 500 000 FCFA</option>
+                                            <option value="2000000">2 000 000 FCFA</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label class="form-label">Date de naissance</label>
+                                        <input type="date" class="form-control" id="dateNaissance" name="dateNaissance" required>
+                                    </div>
+                                    <div class="col-md-6 d-none">
+                                        <label class="form-label">Âge Calculé</label>
+                                        <input type="hidden" class="form-control" id="age" name="age">
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label class="form-label">Date d'effet</label>
+                                        <input type="date" class="form-control" id="dateEffet" name="dateEffet" required>
+                                    </div>
+                                </div>
                             </div>
-
-                            <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Durée Cotisation :</label>
-                                <input type="number" class="form-control" id="duree" name="duree" value="5" required readonly>
+                        </div>
+                    
+                        <div class="card mb-4">
+                            <div class="card-header bg-primar text-white">
+                                <h5 class="mb-0">Options supplémentaires</h5>
                             </div>
-                            <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Capital Souscrit :</label>
-                                <select name="capitalSouscrit" id="capitalSouscrit" class="form-select" required>
-                                    <option value="" selected>Selectionnez le capital souscrit</option>
-                                    <option value="300000">300 000</option>
-                                    <option value="500000">500 000</option>
-                                    <option value="750000">750 000</option>
-                                    <option value="1000000">1 000 000</option>
-                                    <option value="1250000">1 250 000</option>
-                                    <option value="1500000">1 500 000</option>
-                                    <option value="2000000">2 000 000</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Date de naissance :</label>
-                                <input type="Date" class="form-control" id="dateNaissance" name="dateNaissance">
-                            </div>
-                            <div class="col-sm-12 col-md-6 mb-3 d-none">
-                                <label class="form-label">Âge Calculé :</label>
-                                <input type="hidden" class="form-control" id="age" name="age">
-                            </div>
-                            <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Date d'effet :</label>
-                                <input type="date" class="form-control" id="dateEffet" name="dateEffet" required>
-                            </div>
-                            
-                            <!-- Ajout du checkbox pour la garantie senior -->
-                            <div class="col-sm-12 mb-3">
-                                <div class="form-check">
+                            <div class="card-body">
+                                <div class="form-check mb-3">
                                     <input class="form-check-input" type="checkbox" id="garantieSeniorCheck">
                                     <label class="form-check-label" for="garantieSeniorCheck">
                                         Ajouter la garantie optionnelle Senior
                                     </label>
                                 </div>
+                    
+                                <div class="row" id="seniorPrimeInputWrapper" style="display: none;">
+                                    <div class="col-md-6">
+                                        <label for="seniorPrimeInput" class="form-label">Prime pour la garantie Senior</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="seniorPrimeInput" placeholder="Saisir la prime">
+                                            <span class="input-group-text">FCFA</span>
+                                        </div>
+                                        <small class="text-muted">Capital assuré: 500 000 FCFA</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        
-                        <button type="submit" class="btn btn-primary w-100">Simuler</button>
+                    
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4 row">
+                            <button type="submit" class="btn btn-primary col">
+                                <i class="bi bi-calculator me-2"></i>Simuler
+                            </button>
+                            <button type="button" id="btn-reset" class="btn btn-outline-secondary me-md-2 col float-start">
+                                <i class="bi bi-arrow-counterclockwise me-2"></i>Réinitialiser
+                            </button>
+                           
+                        </div>
                     </form>
+                    
                 </fieldset>
             </div>
         </div>
@@ -453,12 +150,6 @@
                             <tbody id="result">
                                 
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="2" class="text-end fw-bold">Prime principale :</td>
-                                    <td id="primePrincip" class="fw-bold">0</td>
-                                </tr>
-                            </tfoot>
                         </table>
                         <table class="table">
                             <tr>
@@ -486,200 +177,12 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const dateNaissanceInput = document.getElementById("dateNaissance");
-        const ageInput = document.getElementById("age");
-        const garantieSeniorCheck = document.getElementById("garantieSeniorCheck");
-        let hommagePrime = 0;
-        // Ajouter un écouteur d'événement sur le champ date de naissance
-        dateNaissanceInput.addEventListener("change", function () {
-            const dateNaissance = new Date(this.value);
-            const today = new Date();
 
-            // Calculer l'âge en fonction de la date de naissance
-            let age = today.getFullYear() - dateNaissance.getFullYear();
-            const m = today.getMonth() - dateNaissance.getMonth();
+    let garanties = @json($productGarantie);
 
-            // Ajuster l'âge si l'anniversaire n'est pas encore passé cette année
-            if (m < 0 || (m === 0 && today.getDate() < dateNaissance.getDate())) {
-                age--;
-            }
-
-            ageInput.value = age;
-        });
-
-        document.getElementById("primeForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            const fraieadhesion = 7500;
-            let formData = new FormData(this);
-            let totalPrime = fraieadhesion;
-            let totalPurePrime = 0;
-            let garantiesData = [];
-            let garantieFinal = [];
-            let garanties = @json($productGarantie);
-            let resultDiv = document.getElementById("result");
-            resultDiv.innerHTML = "";
-
-            // Vider le tableau des garanties si la case est cochée
-            if (garantieSeniorCheck.checked) {
-                garanties = garanties.filter(g => g.codeproduitgarantie !== "SENIOR");
-            }
-
-            garanties.forEach((garantie) => {
-                let newFormData = new FormData();
-
-                formData.forEach((value, key) => {
-                    newFormData.append(key, value);
-                });
-
-                newFormData.set("codeGarantie", garantie.codeproduitgarantie);
-
-                fetch("https://api.yakoafricassur.com/enov/prime-garantie", {
-                    method: "POST",
-                    body: newFormData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (!data || data.error) {
-                        console.error(`Erreur pour ${garantie.codeproduitgarantie}:`, data?.message || "Réponse vide de l'API.");
-                    } else {
-                        if (Array.isArray(data) && data.length > 0) {
-                            let firstRecord = data[0];
-                            let prime = firstRecord.Prime || 0;
-                            let capital = firstRecord.Capital || 0;
-
-                            // Stocker la prime de la garantie hommage si c'est la garantie HOMMAGE
-                            if (garantie.codeproduitgarantie === "HOMMAGE") {
-                                hommagePrime = parseInt(prime);
-                            }
-
-                            totalPrime += parseInt(prime);
-                            totalPurePrime += parseInt(prime);
-                            document.getElementById("primeTotal").textContent = totalPrime.toLocaleString();
-                            document.getElementById("primePrincip").textContent = totalPurePrime.toLocaleString();
-
-                            resultDiv.innerHTML += `
-                                <tr>
-                                    <td>${garantie.codeproduitgarantie}</td>
-                                    <td>${parseInt(prime).toLocaleString('fr-FR')}</td>
-                                    <td>${parseInt(capital).toLocaleString('fr-FR')}</td>
-                                </tr>
-                            `;
-
-                            let garantieItem = {
-                                codeGarantie: garantie.codeproduitgarantie,
-                                prime: prime,
-                                capital: capital,
-                                primeFinal: totalPrime,
-                                codeProduit: formData.get("CodeProduit"),
-                                codePeriodicite: formData.get("codePeriodicite"),
-                                duree: formData.get("duree"),
-                                capitalSouscrit: formData.get("capitalSouscrit"),
-                                age: formData.get("age"),
-                                dateEffet: formData.get("dateEffet"),
-                                dateNaisssance: formData.get("dateNaissance")
-                            };
-
-                            garantiesData.push(garantieItem);
-                            garantieFinal.push(garantieItem);
-
-                            // Si la case est cochée et que c'est la dernière garantie, ajouter la garantie senior
-                            if (garantieSeniorCheck.checked && garantie === garanties[garanties.length - 1]) {
-                                addSeniorGarantie(formData, totalPrime, resultDiv, garantieFinal,totalPurePrime);
-                            } else {
-                                finishProcess(garantieFinal, totalPrime);
-                            }
-                        } else {
-                            console.warn(`Aucun enregistrement trouvé pour ${garantie.codeproduitgarantie}.`);
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error(`Erreur lors de la connexion à l'API pour ${garantie.codeproduitgarantie}:`, error.message);
-                });
-            });
-        });
-
-        // Fonction pour ajouter la garantie senior
-        function addSeniorGarantie(formData, totalPrime, resultDiv, garantieFinal, totalPurePrime) {
-            // La prime senior est égale à la prime hommage
-
-            let seniorPrime = hommagePrime;
-            let seniorCapital = 500000;
-            
-            let newTotalPrime = totalPrime + parseInt(seniorPrime);
-            let newTotalPrimePru = totalPurePrime + parseInt(seniorPrime);
-            console.log(newTotalPrimePru);
-
-            console.log("newTotalPrime", newTotalPrime)
-            document.getElementById("primeTotal").textContent = newTotalPrime.toLocaleString();
-            document.getElementById("primePrincip").textContent = newTotalPrimePru.toLocaleString();
-
-            resultDiv.innerHTML += `
-                <tr>
-                    <td>SENIOR</td>
-                    <td>${parseInt(seniorPrime).toLocaleString('fr-FR')}</td>
-                    <td>${parseInt(seniorCapital).toLocaleString('fr-FR')}</td>
-                </tr>
-            `;
-
-            let garantieItem = {
-                codeGarantie: "SENIOR",
-                prime: seniorPrime,
-                capital: seniorCapital,
-                primeFinal: newTotalPrime,
-                primeFinalPur: newTotalPrimePru,
-                codeProduit: formData.get("CodeProduit"),
-                codePeriodicite: formData.get("codePeriodicite"),
-                duree: formData.get("duree"),
-                capitalSouscrit: formData.get("capitalSouscrit"),
-                age: formData.get("age"),
-                dateEffet: formData.get("dateEffet"),
-                dateNaisssance: formData.get("dateNaissance")
-            };
-
-            garantieFinal.push(garantieItem);
-            finishProcess(garantieFinal, newTotalPrime, newTotalPrimePru);
-        }
-
-        // Fonction pour finaliser le processus
-        function finishProcess(garantieFinal, totalPrime, newTotalPrimePru) {
-            sessionStorage.setItem("garantiesData", JSON.stringify(garantieFinal));
-
-            let returnDataSession = sessionStorage.getItem("garantiesData");
-
-            console.log("Données de simulation:", returnDataSession);
-
-            fetch("{{ route('storeSimulationPrime') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content") 
-                },
-                body: JSON.stringify(JSON.parse(returnDataSession))
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    console.error("Erreur lors de l'enregistrement en session PHP:", data.error);
-                } else {
-                    console.log("Données enregistrées en session PHP avec succès !");
-                }
-            })
-            .catch(error => {
-                console.error("Erreur lors de l'envoi des données en session PHP:", error);
-            });
-
-            if (totalPrime > 0) {
-                document.getElementById("btn-souscription").classList.remove("btn-inactif");
-            }
-        }
-    });
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     sessionStorage.removeItem("simulationData");
+    // });
 </script>
 
 @endsection
-
-
-
-{{-- @endsection --}}

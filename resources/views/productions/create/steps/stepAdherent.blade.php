@@ -2,6 +2,19 @@
     <h5 class="mb-1">Informations personnelles de l'adhérent</h5>
     <p class="mb-4">Veuillez entrer vos informations personnelles pour commencer l'adhésion en tenant compte des champs
         obligatoire (<span class="star">*</span>).</p>
+
+
+    <div class="col-12 d-flex justify-content-center align-items-center">
+
+        <div class="d-flex justify-content-between mb-3">
+            <div>
+                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#RechercherClientModal">
+                    <i class="bx bx-search"></i> Rechercher un adhérent existant
+                </button>
+            </div>
+        </div>
+    </div>
+    <hr>
         
     <div class="row g-3 mb-3">
         <div class="col-12">
@@ -61,18 +74,14 @@
                 data-codeproduit="{{ $product->CodeProduit }}" data-placeholder="Sélectionner le lieu" autocomplete="on">
                 <option value="" disabled selected>Sélectionner le lieu</option>
 
-                @foreach($villes as $ville)
+                {{-- @foreach($villes as $ville)
                     <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option>
-                @endforeach
+                @endforeach --}}
             </select>
         </div>
         
     </div>
 
-    {{-- <div>
-        <strong id="displayLieuNaissance">--</strong>
-        <strong id="displayResidence">--</strong>
-    </div> --}}
     <!---end row-->
     <div class="row g-3 mb-3">
         <div class="col-12 col-lg-4">
@@ -110,9 +119,9 @@
             <select class="form-select selection" name="lieuresidence" id="lieuresidence" autocomplete="on" required>
                 <option value="" disabled selected>Sélectionner le lieu</option>
 
-                @foreach($villes as $ville)
+                {{-- @foreach($villes as $ville)
                     <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option>
-                @endforeach
+                @endforeach --}}
             </select>
         </div>
     </div>
@@ -123,9 +132,9 @@
             <select class="form-select selection" name="profession" id="profession" autocomplete="on">
                 <option value="" disabled selected>Sélectionner la profession</option>
 
-                @foreach($professions as $profession)
+                {{-- @foreach($professions as $profession)
                     <option value="{{ $profession->MonLibelle }}">{{ $profession->MonLibelle }}</option>
-                @endforeach
+                @endforeach --}}
             </select>
         </div>
         <div class="col-12 col-lg-6">
@@ -246,7 +255,7 @@
                 document.querySelector('.error-message').innerHTML = 'Veuillez saisir le nom';
                 return false;
             }
-        return true;
+            return true;
         }
     </script>
 
@@ -275,19 +284,60 @@
 
                 // Vérifier si l'âge est hors des limites
                 if (!dateInput.value || userAge < ageMin || userAge > ageMax) {
-                    // Ajouter un message d'erreur
                     const errorSpan = document.createElement('span');
                     errorSpan.classList.add('text-danger', 'date-error');
                     errorSpan.textContent = `Veuillez entrer une date de naissance valide. L'âge doit être compris entre ${ageMin} et ${ageMax} ans.`;
                     dateInput.parentNode.appendChild(errorSpan);
                     dateInput.classList.add('is-invalid');
                 } else {
-                    // Retirer les styles et messages d'erreur si la date est valide
                     dateInput.classList.remove('is-invalid');
                 }
             });
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const apiUrl = 'https://api.yakoafricassur.com/enov/villes';
+            const apiProfessions = 'https://api.yakoafricassur.com/enov/professions';
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const villeSelect = document.getElementById('lieuresidence');
+                    const lieuSelect = document.getElementById('lieunaissance');
+                    
+                    data.forEach(ville => {
+                        const optionVille = document.createElement('option');
+                        optionVille.value = ville.CodeVille;
+                        optionVille.textContent = ville.MonLibelle;
+                        villeSelect.appendChild(optionVille);
+
+                        const optionLieu = document.createElement('option');
+                        optionLieu.value = ville.CodeVille;
+                        optionLieu.textContent = ville.MonLibelle;
+                        lieuSelect.appendChild(optionLieu);
+                    });
+                });
+
+
+
+            fetch(apiProfessions)
+                .then(response => response.json())
+                .then(data => {
+                    const professionSelect = document.getElementById('profession');
+                    data.forEach(profession => {
+                        const optionProfession = document.createElement('option');
+                        optionProfession.value = profession.CodeProfession;
+                        optionProfession.textContent = profession.MonLibelle;
+                        professionSelect.appendChild(optionProfession);
+                    });
+                });
+
+       
+        });
+    </script>
+
 
 
 

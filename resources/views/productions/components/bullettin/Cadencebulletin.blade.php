@@ -653,14 +653,13 @@
                 <h4 style="color: #fff; font-size: 15px; margin: 0; text-align: center">VIII</h4>
             </div>
             <div class=""
-                style="width: 55%; background-color: #747171; padding: 5px; border-radius: 0 7px 7px 0; margin-left: 33px;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0;">CONSTITUTION DU FONDS D'OPERATION</h4>
+                style="width: 55%; background-color: #747171; padding: 3px; border-radius: 0 7px 7px 0; margin-left: 33px;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0;">CONSTITUTION DU FONDS D'OPERATION</h4>
             </div>
             <!-- Contenu -->
             <div class="content" style="margin-top: 0px; padding: 10px; text-align: center;">
                 <!-- Colonne gauche -->
                     <label style="">Le fonds d'operation est constitué sur la base de ............................. <i style="font-size: 10px !important">(Maximum -50% de la cotisation annuelle)</i> par année</label>
-                
             </div>
         </section>
         <section style="width: 100%; margin-top: 7px;">
@@ -672,6 +671,8 @@
                 <div style="width: 33%; float: left;">
                     <strong>Signature du souscripteur</strong>
                     <p><i style="font-size: 10px !important">(précédée de la mention "LU et APPROUVE)</i></p>
+
+                    <img src="{{ $qrCodeBase64 }}" alt="QR Code de vérification" style="width: 60px; height: 60px;">
                 </div>
                 <div style="width: 33%; float: left;">
                     <strong>Signature de l'Assuré</strong>
@@ -682,7 +683,7 @@
                     <p><i style="font-size: 10px !important">(précédée de la mention "LU et APPROUVE)</i></p>
                 </div>
             </div>
-            <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
+            <div style="clear: both;"></div>
         </section>
     </div>
 </body>

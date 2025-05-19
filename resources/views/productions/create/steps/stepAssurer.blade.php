@@ -21,7 +21,6 @@
         </div>
 
 
-
         {{-- @if ($CodeProduit != 'ASSCPTBNI' && Auth::user()->codepartenaire == 'DIFIN') --}}
         <div class="col-12 col-lg-6 d-flex justify-content-center align-items-center">
             <!-- Button trigger modal -->
@@ -93,7 +92,8 @@
                                             <input class="form-check-input garantie-optionnelle" type="radio"
                                                 name="GarantiesOptionnelles[{{ $item->id }}]"
                                                 id="OuiGarantiesOptionnelles{{ $item->id }}" 
-                                                data-gar-value="{{ $item->codeproduitgarantie }}" 
+                                                data-gar-value="{{ $item->codeproduitgarantie }}"
+                                                @if ($product->CodeProduit == 'CADENCE') checked readonly @endif 
                                                 value="Oui">
                                             <label class="form-check-label"
                                                 for="OuiGarantiesOptionnelles{{ $item->id }}">Oui</label>
@@ -358,27 +358,7 @@
                 tbody.innerHTML += row;
             });
             assures.forEach((assure, index) => {
-                // const displayNom = document.getElementById('display-nom-assure');
-                // const displayPrenom = document.getElementById('display-prenom-assure');
-                // const displayDateNaissance = document.getElementById('display-date-naissance-assure');
-                // const displayLieuNaissance = document.getElementById('display-lieu-naissance-assure');
-                // const displayLieuResidence = document.getElementById('display-lieu-residence-assure');
-                // const displayTelephone = document.getElementById('display-telephone-assure');
-                // const displayEmail = document.getElementById('display-email-assure');
-                // const displayNumeropiece = document.getElementById('display-numeropiece-assure');
-                // const displayFiliation = document.getElementById('display-filiation-assure');
 
-                // displayNom.textContent = assure.nom;
-                // displayPrenom.textContent = assure.prenom;
-                // displayDateNaissance.textContent = assure.datenaissance;
-                // displayLieuNaissance.textContent = assure.lieuNaissance || '-';
-                // displayLieuResidence.textContent = assure.lieuresidenceAssur;
-                // displayTelephone.textContent = assure.mobileAssur || '-';
-                // displayEmail.textContent = assure.emailAssur;
-                // displayNumeropiece.textContent = assure.naturepieceAssur || '-';
-                // displayFiliation.textContent = assure.lienParente || '-';
-
-                // console.log("aasssssssssssssssssssssssss", assure);
                 const Datarow = `
                 <tr>
                     <td>${assure.nom || '-'}</td>

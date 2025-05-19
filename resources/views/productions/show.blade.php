@@ -18,6 +18,16 @@
 
     <div class="ms-auto gx-3">
         <div class="btn-group">
+            @can('Modifier une souscription')
+                @if (!in_array($contrat->etape, [2, 3]))
+                <button class="btn btn-primary mx-4 border-1 text-center" style="font-size: 12px">
+                    <a class="text-decoration-none" href="{{ route('prod.edit', $contrat->id) }}">
+                        <i class="bx bx-edit" title="Modifier la proposition"></i> Modifier
+                    </a>
+                </button>
+                @endif
+            @endcan
+
             @can('Transmettre une souscription')
                 @if (!in_array($contrat->etape, [2, 3]))
                 <form action="{{ route('prod.transmettreContrat', $contrat->id)}}" method="post" class="submitForm">
