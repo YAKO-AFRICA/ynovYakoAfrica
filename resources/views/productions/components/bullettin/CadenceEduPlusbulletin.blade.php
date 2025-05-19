@@ -370,21 +370,17 @@
 
                     <div style="width: 100%;">
                         <div style="width: 18%; float: left;"><input type="radio" class="radio1"
-                            @if ($contrat->beneficiaireauterme == 'adherent')
-                            checked @endif><span>L'assué</span></div>
-                        <div style="width: 43%; float: left;"><input type="radio" class="radio1" @if ($contrat->beneficiaireauterme == 'Conjoint')
-                            checked @endif><span>Le Conjoint
+                             @if(isset($contrat->beneficiaireauterme) && $contrat->beneficiaireauterme == 'adherent') checked @endif><span>L'assué</span></div>
+                        <div style="width: 43%; float: left;"><input type="radio" class="radio1" @if(isset($contrat->beneficiaireauterme) && $contrat->beneficiaireauterme == 'Conjoint') checked @endif><span>Le Conjoint
                                 non séparé de corps, ni divorcé</span></div>
-                        <div style="width: 33%; float: left;"><input type="radio" class="radio1" @if ($contrat->beneficiaireauterme == 'Enfants nés et à naitre')
-                            checked @endif><span>Les enfants
+                        <div style="width: 33%; float: left;"><input type="radio" class="radio1" @if(isset($contrat->beneficiaireauterme) && $contrat->beneficiaireauterme == 'Enfants nés et à naitre') checked @endif ><span>Les enfants
                                 nés et à naître</span></div>
                         <div style="width: 18%; float: left;"><input type="radio" class="radio1"
-                            @if ($contrat->beneficiaireauterme == 'autre')
-                            checked @endif><span>Autres</span></div>
+                             @if(isset($contrat->beneficiaireauterme) && $contrat->beneficiaireauterme == 'autre') checked @endif><span>Autres</span></div>
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
-                <table border="1" cellpadding="5" cellspacing="0" width="100%">
+                {{-- <table border="1" cellpadding="5" cellspacing="0" width="100%">
                     <tr>
                         <th>Nom complet</th>
                         <th>filliation</th>
@@ -406,7 +402,7 @@
                         <td>Marseille</td>
                         <td>Bordeaux</td>
                     </tr>
-                </table>
+                </table> --}}
 
             </div>
 
@@ -420,12 +416,12 @@
 
                     <div style="width: 100%;">
                         {{-- <div style="width: 18%; float: left;"><input type="radio" class="radio1" checked><span>L'assué</span></div> --}}
-                        <div style="width: 43%; float: left;"><input type="radio" class="radio1"><span>Le Conjoint
+                        <div style="width: 43%; float: left;"><input type="radio" class="radio1" @if(isset($contrat->beneficiaireaudeces) && $contrat->beneficiaireaudeces == 'Conjoint') checked @endif><span>Le Conjoint
                                 non séparé de corps, ni divorcé</span></div>
-                        <div style="width: 33%; float: left;"><input type="radio" class="radio1" checked><span>Les
+                        <div style="width: 33%; float: left;"><input type="radio" class="radio1" @if(isset($contrat->beneficiaireaudeces) && $contrat->beneficiaireaudeces == 'Enfants nés et à naitre') checked @endif><span>Les
                                 enfants nés et à naître</span></div>
                         <div style="width: 18%; float: left;"><input type="radio" class="radio1"
-                                checked><span>Autres</span></div>
+                            @if(isset($contrat->beneficiaireaudeces) && $contrat->beneficiaireaudeces == 'autre') checked @endif><span>Autres</span></div>
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
@@ -437,20 +433,15 @@
                         <th>Teléphone</th>
                         <th>Résidence</th>
                     </tr>
-                    <tr>
-                        <td>Dupont</td>
-                        <td>Fils de Jean Dupont</td>
-                        <td>01/01/1990</td>
-                        <td>Paris</td>
-                        <td>Lyon</td>
-                    </tr>
-                    <tr>
-                        <td>Durand</td>
-                        <td>Fils de Marie Durand</td>
-                        <td>12/05/1985</td>
-                        <td>Marseille</td>
-                        <td>Bordeaux</td>
-                    </tr>
+                    @foreach ($contrat->beneficiaires as $item)
+                        <tr>
+                            <td>{{ $item->nom ?? ''}} {{ $item->prenom ?? ''}} </td>
+                            <td>{{ $item->filiation ?? ''}}</td>
+                            <td>{{ $item->datenaissance ?? ''}}</td>
+                            <td>{{ $item->telephone ?? ''}}</td>
+                            <td>{{ $item->lieuresidence ?? ''}}</td>
+                        </tr>
+                    @endforeach
                 </table>
 
             </div>
@@ -470,20 +461,20 @@
                 <div style="width: 100%; margin-top: 0px;">
 
                     <label>Je souhaite souscrire au contrat "<strong style="text-transform: uppercase">Cadence
-                            Education Plus</strong>" pour une durée de <strong>.......</strong> ANS en prenante éffet le
-                        <strong>........................</strong></label>
+                            Education Plus</strong>" pour une durée de <strong>{{ $contrat->duree ?? ''}}</strong> ANS en prenante éffet le 
+                        <strong>{{ $contrat->dateeffet ?? ''}}</strong></label>
                 </div><br>
                 {{-- <section style="width: 80%; border-radius: 7px;"> --}}
                 <div style="width: 100%; margin-left: 70px; margin-top: -10px;">
                     <div style="width: 15%; float: left;"><span>Périodicité :</span></div>
                     <div style="width: 18%; float: left;"><input type="radio"
-                            class="radio1"><strong>Mensuelle</strong></div>
+                            class="radio1" @if(isset($contrat->periodicite) && $contrat->periodicite == 'M') checked @endif><strong>Mensuelle</strong></div>
                     <div style="width: 18%; float: left;"><input type="radio"
-                            class="radio1"><strong>Trimestrielle</strong></div>
+                            class="radio1" @if(isset($contrat->periodicite) && $contrat->periodicite == 'T') checked @endif><strong>Trimestrielle</strong></div>
                     <div style="width: 18%; float: left;"><input type="radio"
-                            class="radio1"><strong>Semestrielle</strong></div>
+                            class="radio1" @if(isset($contrat->periodicite) && $contrat->periodicite == 'S') checked @endif><strong>Semestrielle</strong></div>
                     <div style="width: 18%; float: left;"><input type="radio"
-                            class="radio1"><strong>Annuelle</strong></div>
+                            class="radio1" @if(isset($contrat->periodicite) && $contrat->periodicite == 'A') checked @endif><strong>Annuelle</strong></div>
                 </div>
                 <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 {{-- </section> --}}
@@ -493,7 +484,7 @@
 
                 <label><span>CAPITAL ETUDE </span><b>..................</b>FCFA
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MONTANT
-                    PRIME <b>......................</b>FCFA</label><br><br>
+                    PRIME <b>{{ number_format($contrat->prime) ?? 0}}</b>FCFA</label><br><br>
                 <label><span>Frais unique d'Adhésion : </span><b>7 500 FCFA </b></label> <br><br>
                 <section style="width: 90%; border-radius: 7px; margin-bottom: 7px;">
                     <div style="width: 100%;">
@@ -524,28 +515,38 @@
                 <!-- Colonne gauche -->
                 <div style="width: 100%; margin-top: 0px;">
 
-                    <label>La cotisation et les primes d'Assurance d'un montant total de <span><b>..................</b>
+                    <label>La cotisation et les primes d'Assurance d'un montant total de <span><b>{{ number_format($contrat->prime) ?? 0}}</b>
                             FCFA</span> seront payée par :</label>
                 </div>
 
                 <div style="width: 100%; margin-top: 10px;">
                     <label style="margin-top: 0px; margin-left:20px; display:block"> <input type="radio"
-                            class="radio1"checked>Prélèvement bancaire sur mon compte (<small><i>Joindre l'attestation
+                            class="radio1"@if(isset($contrat->modepaiement) && $contrat->modepaiement == 'VIR') checked @endif>Prélèvement bancaire sur mon compte (<small><i>Joindre l'attestation
                                 de prélèvement et un relevé d'identité bancaire</i></small>)</label>
                     <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio"
-                            class="radio1">Retenue sur salaire auprès de mon employeur (<small><i>Joindre
+                            class="radio1" @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'SOURCE') checked @endif>Retenue sur salaire auprès de mon employeur (<small><i>Joindre
                                 l'autorrisation de retenue à la source</i></small>)</label>
                     <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio"
-                            class="radio1">Chèque (<small><i>à l'ordre exclusif de <strong>YAKO AFRICA Assurances
+                            class="radio1" @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'CHK') checked @endif>Chèque (<small><i>à l'ordre exclusif de <strong>YAKO AFRICA Assurances
                                     Vie</strong></i></small>)</label>
                     <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio"
-                            class="radio1">Espèces (<small><i>exclusivement aux guides de <strong>YAKO AFRICA
+                            class="radio1" @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'ESP') checked @endif>Espèces (<small><i>exclusivement aux guides de <strong>YAKO AFRICA
                                     Assurances Vie</strong> ou auprès des mandataires autorisés</i></small>)</label>
                     <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio"
-                            class="radio1">Moble money ou Internet</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio"
-                            class="radio1">Autres, préciser : &nbsp;
-                        <b>...............................................................................................................................................</b></label>
+                            class="radio1" @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'Mobile_money') checked @endif>Moble money ou Internet</label>
+                    <!-- Autres (autres valeurs) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && !in_array($contrat->modepaiement, ['VIR', 'SOURCE', 'CHK', 'ESP', 'Mobile_money'])) checked @endif>
+                        Autres, préciser : &nbsp; 
+                        <b>
+                            @if(isset($contrat->modepaiement) && !in_array($contrat->modepaiement, ['VIR', 'SOURCE', 'CHK', 'ESP', 'Mobile_money']))
+                                {{ $contrat->modepaiement }}
+                            @else
+                                ...............................................................................................................................................
+                            @endif
+                        </b>
+                    </label>
                 </div>
 
             </div>
