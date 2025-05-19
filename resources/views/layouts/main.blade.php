@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 
 <head>
 	<!-- Required meta tags -->
@@ -52,6 +52,37 @@
             }
     </style>
 
+    <style>
+        /* Style des notifications */
+        .unread-notification {
+            background-color: rgba(13, 110, 253, 0.05);
+            border-left: 3px solid #ff0000;
+        }
+        
+        .read-notification {
+            opacity: 0.7;
+        }
+        
+        .notification-item:hover {
+            background-color: #f8f9fa !important;
+        }
+        
+        .notification-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .notification-list::-webkit-scrollbar-thumb {
+            background-color: #dee2e6;
+            border-radius: 3px;
+        }
+        
+        .alert-count {
+            font-size: 0.65rem;
+            padding: 0.25em 0.4em;
+            min-width: 1.5em;
+        }
+    </style>
+
 
     
 	<title>YNOV - Plateforme de souscription en ligne</title>
@@ -67,8 +98,23 @@
     </div>
         <!--wrapper-->
         <div class="wrapper">
+            
+        @php
+            $unreadNotifications = auth()->user()->unreadNotifications;
+            $allNotifications = auth()->user()->notifications;
+
+        @endphp
 
             <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100"></div>
+            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+                <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-url="">
+                    <div class="toast-header">
+                        <strong class="me-auto" id="toast-title">Notification</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body" id="toast-body"></div>
+                </div>
+            </div>
 
             
             @include('layouts.sidebar')
@@ -131,6 +177,9 @@
         {{-- <script src="{{ mix('js/app.js') }}"></script> --}}
 
         <script type="module" src="{{ asset('api/request.js') }}"></script>
+
+
+ 
 
 
         <script>

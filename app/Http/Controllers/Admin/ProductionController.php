@@ -8,9 +8,11 @@ use Carbon\Carbon;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use App\Models\User;
 use App\Models\Assurer;
 use App\Models\Contrat;
 use App\Models\Product;
+use BaconQrCode\Writer;
 use setasign\Fpdi\Fpdi;
 use App\Models\Adherent;
 use App\Models\Document;
@@ -33,15 +35,17 @@ use App\Models\TblSecteurActivite;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Notifications\SystemeNotify;
+
+use Illuminate\Support\Facades\Notification;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Session;
-
-use BaconQrCode\Writer;
 use BaconQrCode\Renderer\ImageRenderer;
+use Illuminate\Support\Facades\Session;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
-use BaconQrCode\Renderer\Image\ImagickImageBackEnd; // Utilisez Imagick si disponible
 use BaconQrCode\Renderer\Image\SvgImageBackEnd; // Alternative SVG
+use BaconQrCode\Renderer\Image\ImagickImageBackEnd; // Utilisez Imagick si disponible
 
 class ProductionController extends Controller
 {
@@ -671,8 +675,20 @@ class ProductionController extends Controller
                 throw new \Exception("Erreur lors de la génération du bulletin : " . $bulletinData['message']);
             }
 
+            $details_log = [
+                'url' => route('prod.show', $idContrat),
+                'user' => auth()->user()->membre->nom . ' ' . auth()->user()->membre->prenom,
+                'date' => now(),
+                'title' => "Enregistrement de la proposition ID $idContrat",
+                'action' => "Voir",
+               
+            ];
+            
+            $usersToNotify = User::all();
+            Notification::send($usersToNotify, new SystemeNotify($details_log));
+            
             DB::commit();
-
+            
             return response()->json([
                 'type' => 'success',
                 'urlback' => route('prod.edit', ['id' => $idContrat]),
@@ -1034,6 +1050,18 @@ class ProductionController extends Controller
                 // 'capital' => $request->capital,
 
             ]);
+
+            $details_log = [
+                'url' => route('prod.show', $id),
+                'user' => \auth()->user()->membre->nom . ' ' . \auth()->user()->membre->prenom,
+                'date' => now(),
+                'title' => "Modification de la proposition ID $id ",
+                'action' => "Voir",
+                'sound' => 'son1.wav' // Ajout du fichier son
+            ];
+
+            $usersToNotify = User::all();
+            Notification::send($usersToNotify, new SystemeNotify($details_log));
             DB::commit();
 
             return response()->json([

@@ -93,7 +93,7 @@
             <div style="width: 100%;">
                 <div style="width: 55%; margin: auto; border: 1px solid #444; padding: 7px; border-radius: 7px;">
                     <strong style="font-size: 15px">IND-DOI_2301</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
-                        style="color: red; font-size: 20px">000000</span></div>
+                        style="color: red; font-size: 20px">{{ $contrat->id}}</span></div>
             </div>
             <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
         </section>
@@ -167,50 +167,83 @@
                     <div style="width: 100%;">
                         <div style="width: 55%; border: 1px solid #444; padding: 5px; border-radius: 5px;  float: right;">
                             <strong style="font-size: 10px">N° ID :</strong> &nbsp;&nbsp;<span
-                                style="color: red; font-size: 15px">000000</span></div>
+                                style="color: red; font-size: 15px">{{ $contrat->id}}</span></div>
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
                 <section style="width: 30%; margin: 5px 0; border: 1px solid #444; padding: 7px; border-radius: 7px">
                     <div style="width: 100%; text-align: center;">
-                        <div style="width: 33%; float: left;"><input type="radio" class="radio1"><span>Mme</span>
+                        <div style="width: 33%; float: left;">
+                            <input type="radio" class="radio1" name="civilite" 
+                                   @if(isset($contrat->adherent->civilite) && strtolower($contrat->adherent->civilite) === 'madame') checked @endif>
+                            <span>Mme</span>
                         </div>
-                        <div style="width: 33%; float: left;"><input type="radio" class="radio1"><span>Mlle</span>
+                        <div style="width: 33%; float: left;">
+                            <input type="radio" class="radio1" name="civilite" 
+                                   @if(isset($contrat->adherent->civilite) && strtolower($contrat->adherent->civilite) === 'mademoiselle') checked @endif>
+                            <span>Mlle</span>
                         </div>
-                        <div style="width: 33%; float: left;"><input type="radio" class="radio1"><span>M</span>
+                        <div style="width: 33%; float: left;">
+                            <input type="radio" class="radio1" name="civilite" 
+                                   @if(isset($contrat->adherent->civilite) && strtolower($contrat->adherent->civilite) === 'monsieur') checked @endif>
+                            <span>M</span>
                         </div>
                     </div>
-                    <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
+                    <div style="clear: both;"></div>
                 </section>
                 <section style="width: 100%; margin: 5px 0; padding: 7px; border-radius: 7px;">
                     <div style="width: 100%;">
-                        <div style="width: 18%; float: left;"><input type="radio" class="radio1"><span>Passeport</span>
+                        <!-- Passeport -->
+                        <div style="width: 18%; float: left;">
+                            <input type="radio" class="radio1" name="naturepiece" 
+                                   @if(isset($contrat->adherent->naturepiece) && strtolower($contrat->adherent->naturepiece) === 'passport') checked @endif>
+                            <span>Passeport</span>
                         </div>
-                        <div style="width: 12%; float: left;"><input type="radio" class="radio1"><span>CNI</span>
+                        
+                        <!-- CNI -->
+                        <div style="width: 12%; float: left;">
+                            <input type="radio" class="radio1" name="naturepiece" 
+                                   @if(isset($contrat->adherent->naturepiece) && strtolower($contrat->adherent->naturepiece) === 'cni') checked @endif>
+                            <span>CNI</span>
                         </div>
-                        <div style="width: 10%; float: left;"><input type="radio" class="radio1"><span>PC</span>
+                        
+                        <!-- AT (Permis de Conduire) -->
+                        <div style="width: 10%; float: left;">
+                            <input type="radio" class="radio1" name="naturepiece" 
+                                   @if(isset($contrat->adherent->naturepiece) && strtolower($contrat->adherent->naturepiece) === 'at') checked @endif>
+                            <span>AT</span>
                         </div>
-                        <div style="width: 10%; float: left;"><input type="radio" class="radio1"><span>CC</span>
+                        
+                        <!-- CC (Carte Consulaire) -->
+                        <div style="width: 10%; float: left;">
+                            <input type="radio" class="radio1" name="naturepiece" 
+                                   @if(isset($contrat->adherent->naturepiece) && strtolower($contrat->adherent->naturepiece) === 'cc') checked @endif>
+                            <span>CC</span>
                         </div>
-                        <div style="width: 50%; float: left;"><span>N°</span> <input type="text" style="width: 90%; padding: 2px" value="CI0039ZYT">
+                        
+                        <!-- Numéro de pièce -->
+                        <div style="width: 50%; float: left;">
+                            <span>N°</span> 
+                            <input type="text" style="width: 90%; padding: 2px" 
+                                   value="{{ $contrat->adherent->numeropiece ?? 'CI0039ZYT' }}">
                         </div>
                     </div>
-                    <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
+                    <div style="clear: both;"></div>
                 </section>
                 <!-- Colonne gauche -->
                 <div style="width: 100%; margin-top: 15px;">
                     <label><strong>Nom :
-                        </strong><span>.............................................................</span></label>
+                        </strong><span>{{ $contrat->adherent->nom ?? '....' }}</span></label>
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     <label><strong>Prénoms :
-                        </strong><span>.............................................................................................</span></label>
+                        </strong><span>{{ $contrat->adherent->prenom ?? '....' }}</span></label>
                 </div>
                 <div style="width: 100%; margin-top: 15px;">
                     <label><strong>Né(e) le :
-                        </strong><span>.......................................................</span></label> &nbsp;
+                        </strong><span>{{ $contrat->adherent->datenaissance ?? '....' }}</span></label> &nbsp;
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     <label><strong>à
-                        </strong><span>..............................................................................................................</span></label>
+                        </strong><span>{{ $contrat->adherent->lieunaissance ?? '....' }}</span></label>
                 </div>
 
                 <section style="width: 80%; margin: 5px 0; padding: 7px; border-radius: 7px;">
@@ -226,34 +259,34 @@
                         <div style="width: 18%; float: left;"><input type="radio"
                                 class="radio1"><span>Veuf(ve)</span></div>
                     </div>
-                    <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
+                    <div style="clear: both;"></div>
                 </section>
 
                 <div style="width: 100%; margin-top: 15px;">
                     <label><strong>Profession :
-                        </strong><span>.......................................................</span></label> &nbsp;
+                        </strong><span>{{ $contrat->adherent->profession ?? '....' }}</span></label> &nbsp;
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     <label><strong>Employeur :
-                        </strong><span>..........................................................................................</span></label>
+                        </strong><span>{{ $contrat->adherent->employeur ?? '....' }}</span></label>
                 </div>
                 <div style="width: 100%; margin-top: 15px;">
                     <label><strong>Lieu de residence :
-                        </strong><span>..............................................................................................................................................................................</span></label> &nbsp;
+                        </strong><span>{{ $contrat->adherent->lieuresidence ?? '....' }}</span></label> &nbsp;
                     
                 </div>
                 <div style="width: 100%; margin-top: 15px;">
                     <label><strong>Téléphone courant :
-                        </strong><span>....................................................</span></label> &nbsp; &nbsp;
+                        </strong><span>{{ $contrat->adherent->mobile ?? '....' }}</span></label> &nbsp; &nbsp;
                     &nbsp;
                     <label><strong>N° Whatsapp :
-                        </strong><span>.......................................................................</span></label>
+                        </strong><span>{{ $contrat->adherent->telephone ?? '....' }}</span></label>
                 </div>
                 <div style="width: 100%; margin-top: 15px;">
                     <label><strong>Adresse :
-                        </strong><span>.......................................................................</span></label>
+                        </strong><span>{{ $contrat->adherent->telephone1 ?? '....' }}</span></label>
                     &nbsp; &nbsp;
                     <label><strong>E-mail :
-                        </strong><span>...................................................................................................</span></label>
+                        </strong><span>{{ $contrat->adherent->email ?? '....' }}</span></label>
                 </div>
             </div>
         </section>
@@ -270,30 +303,26 @@
             <div class="content1" style="margin-top: 5px; padding: 10px;">
 
                 <table border="1" cellpadding="5" cellspacing="0" width="100%">
-                    {{-- <tr>
-                        <th>Nom complet</th>
-                        <th>filliation</th>
-                        <th>Né(e) le</th>
-                        <th>Teléphone</th>
-                        <th>Résidence</th>
-                    </tr> --}}
+                    @foreach ($contrat->garanties as $garantie )
                     <tr>
-                        <td class="padding">Montant de la cotisation mensuelle</td>
-                        <td class="padding">10 400</td> 
+                        <td class="padding">{{ $garantie->monlibelle ?? '' }}</td>
+                        <td class="padding">{{ $garantie->prime ?? '' }}</td> 
                     </tr>
-                    <tr>
+                    @endforeach
+                    
+                    {{-- <tr>
                         <td class="padding">Montant du capital garanti au terme du contrat</td>
                         <td class="padding">1 000 000</td> 
                     </tr>
                     <tr>
                         <td class="padding">Montant du capital garanti en cas de tirage au sort</td>
                         <td class="padding">200 000</td> 
-                    </tr>
+                    </tr> --}}
                 </table>
                 
             </div>
             <div style="width: 13%; background-color: #7471718b; padding: 5px; margin: 10px 0; border-radius: 15px; text-align: center">
-                <strong>Durée : <i>8 ans</i></strong>
+                <strong>Durée : <i>{{ $contrat->duree ?? '' }} ans</i></strong>
             </div>
         
         </section>
@@ -311,12 +340,54 @@
                 <!-- Colonne gauche -->
                 
                 <div style="width: 100%; margin-top: 10px;">
-                    <label style="margin-top: 0px; margin-left:20px; display:block"> <input type="radio" class="radio1"checked>Prélèvement bancaire sur mon compte (<small><i>Joindre l'attestation de prélèvement et un relevé d'identité bancaire</i></small>)</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio" class="radio1">Retenue sur salaire auprès de mon employeur (<small><i>Joindre l'autorrisation de retenue à la source</i></small>)</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio" class="radio1">Chèque (<small><i>à l'ordre exclusif de <strong>YAKO AFRICA Assurances Vie</strong></i></small>)</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio" class="radio1">Espèces (<small><i>exclusivement aux guides de <strong>YAKO AFRICA Assurances Vie</strong> ou auprès des mandataires autorisés</i></small>)</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio" class="radio1">Moble money ou Internet</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio" class="radio1">Autres, préciser : &nbsp; <b>...............................................................................................................................................</b></label>              
+                    <!-- Prélèvement bancaire (VIR) -->
+                    <label style="margin-top: 0px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat" 
+                               @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'VIR') checked @endif>
+                        Prélèvement bancaire sur mon compte (<small><i>Joindre l'attestation de prélèvement et un relevé d'identité bancaire</i></small>)
+                    </label>
+                    
+                    <!-- Retenue sur salaire (SOURCE) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'SOURCE') checked @endif>
+                        Retenue sur salaire auprès de mon employeur (<small><i>Joindre l'autorisation de retenue à la source</i></small>)
+                    </label>
+                    
+                    <!-- Chèque (CHK) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'CHK') checked @endif>
+                        Chèque (<small><i>à l'ordre exclusif de <strong>YAKO AFRICA Assurances Vie</strong></i></small>)
+                    </label>
+                    
+                    <!-- Espèces (ESP) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'ESP') checked @endif>
+                        Espèces (<small><i>exclusivement aux guichets de <strong>YAKO AFRICA Assurances Vie</strong> ou auprès des mandataires autorisés</i></small>)
+                    </label>
+                    
+                    <!-- Mobile money (Mobile_money) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'Mobile_money') checked @endif>
+                        Mobile money ou Internet
+                    </label>
+                    
+                    <!-- Autres (autres valeurs) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && !in_array($contrat->modepaiement, ['VIR', 'SOURCE', 'CHK', 'ESP', 'Mobile_money'])) checked @endif>
+                        Autres, préciser : &nbsp; 
+                        <b>
+                            @if(isset($contrat->modepaiement) && !in_array($contrat->modepaiement, ['VIR', 'SOURCE', 'CHK', 'ESP', 'Mobile_money']))
+                                {{ $contrat->modepaiement }}
+                            @else
+                                ...............................................................................................................................................
+                            @endif
+                        </b>
+                    </label>              
                 </div>
                 
             </div>
@@ -336,7 +407,7 @@
 
                 <div style="width: 15%; background-color: #7471718b; padding: 5px; margin: 10px 0; border-radius: 15px; text-align: center">
                     <strong><i>1. En cas de vie</i></strong></div>
-                    <div style="width: 43%; float: left;"><input type="radio" class="radio1"><span>Le Souscripteur</span></div>
+                    <div style="width: 43%; float: left;"><input type="radio" checked class="radio1"><span>Le Souscripteur</span></div>
             </div>
 
             <div class="content1" style="margin-top: 5px; padding: 5px;">
@@ -347,13 +418,16 @@
                 <section style="width: 97%; margin: 5px 0; padding: 7px; border-radius: 7px;">
 
                     <div style="width: 100%;">
-                        {{-- <div style="width: 18%; float: left;"><input type="radio" class="radio1" checked><span>L'assué</span></div> --}}
-                        <div style="width: 43%; float: left;"><input type="radio" class="radio1"><span>Le Conjoint
-                                non séparé de corps, ni divorcé</span></div>
-                        <div style="width: 33%; float: left;"><input type="radio" class="radio1" checked><span>Les
-                                enfants nés et à naître</span></div>
-                        <div style="width: 18%; float: left;"><input type="radio" class="radio1"
-                                checked><span>Autres</span></div>
+                        <div style="width: 43%; float: left;">
+                            <input type="radio" class="radio1" @if(isset($contrat->beneficiaireaudeces) && $contrat->beneficiaireaudeces == 'Conjoint') checked @endif>
+                            <span>Le Conjoint non séparé de corps, ni divorcé</span>
+                        </div>
+                        <div style="width: 33%; float: left;">
+                            <input type="radio" class="radio1" @if(isset($contrat->beneficiaireaudeces) && $contrat->beneficiaireaudeces == 'Enfants nés et à naitre') checked @endif>
+                            <span>Les enfants nés et à naître</span></div>
+                        <div style="width: 18%; float: left;">
+                            <input type="radio" class="radio1" @if(isset($contrat->beneficiaireaudeces) && $contrat->beneficiaireaudeces == 'autre') checked @endif>
+                                <span>Autres</span></div>
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
@@ -365,20 +439,16 @@
                         <th>Teléphone</th>
                         <th>Résidence</th>
                     </tr>
+                    @foreach ($contrat->beneficiaires as $item)
                     <tr>
-                        <td>Dupont</td>
-                        <td>Fils de Jean Dupont</td>
-                        <td>01/01/1990</td>
-                        <td>Paris</td>
-                        <td>Lyon</td>
+                        <td>{{ $item->nom ?? '' }} {{ $item->prenom ?? '' }}</td>
+                        <td>{{ $item->filiation ?? '' }}</td>
+                        <td>{{ $item->datenaissance ?? '' }}</td>
+                        <td>{{ $item->telephone ?? '' }}</td>
+                        <td>{{ $item->lieuresidence ?? '' }}</td>
                     </tr>
-                    <tr>
-                        <td>Durand</td>
-                        <td>Fils de Marie Durand</td>
-                        <td>12/05/1985</td>
-                        <td>Marseille</td>
-                        <td>Bordeaux</td>
-                    </tr>
+                    @endforeach
+                    
                 </table>
 
             </div>
@@ -395,7 +465,7 @@
             <!-- Contenu -->
             <div class="content" style="margin-top: 0px; padding: 10px;">
                 <!-- Colonne gauche -->
-                <label><span>Frais unique d'Adhésion : </span><b>7 500 FCFA </b></label> <br><br>
+                <label><span>Frais unique d'Adhésion : </span><b>{{ $contrat->fraisadhesion ?? ''}} </b></label> <br><br>
                 <section style="width: 90%; border-radius: 7px; margin-bottom: 7px;">
                     <div style="width: 100%;">
                         <div style="width: 38%; float: left;"><span>Adhésion aux services en ligne e-Nov : </span></div>
@@ -455,7 +525,7 @@
                         <div style="width: 54%; float: left; padding: 7px 5px;">
                             <div class="nom" style="margin-bottom: 10px;">
                                 <label><strong>Conseiller : </strong><input type="text" class="input-border-bottom"
-                                        style="width: 81%" value="Nom Prenoms"> </label>
+                                        style="width: 81%" value="{{ $contrat->nomagent ?? ''}}"> </label>
                             </div>
     
                             <div class="birthday" style="margin-bottom: 10px;">
@@ -465,17 +535,17 @@
     
                             <div class="prenom" style="margin-bottom: 10px;">
                                 <label><strong>Assistant Manager : </strong><input type="text" class="input-border-bottom"
-                                        style="width: 67%" value="Assistant Manager"> </label>
+                                        style="width: 67%" value="----"> </label>
                             </div>
     
                             <div class="domicile" style="margin-bottom: 10px;">
                                 <label><strong>Manager : </strong><input type="text" class="input-border-bottom"
-                                        style="width: 83%" value="Manager"> </label>
+                                        style="width: 83%" value="----"> </label>
                             </div>
     
                             <div class="profession" style="margin-bottom: 10px;">
                                 <label><strong>Réseau : </strong><input type="text" class="input-border-bottom"
-                                        style="width: 85%" value="Réseau"> </label>
+                                        style="width: 85%" value="----"> </label>
                             </div>
                         </div>
     
@@ -516,10 +586,10 @@
         </div>
         <div style="width: 100%; margin: 15px 0; ">
             <label><strong>Nom et prénoms :
-                </strong><span>.................................................................................................</span></label>
+                </strong><span>{{ $contrat->personneressource ?? '....' }}</span></label>
             &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
             <label><strong>Contact :
-                </strong><span>.........................................................</span></label>
+                </strong><span>{{ $contrat->contactpersonneressource ?? '....' }}</span></label>
         </div>
         <section style="width: 100%; margin-top: 20px;">
             <div style="width: 100%; margin-top: 10px; margin-bottom: 20px;">

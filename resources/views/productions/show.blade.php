@@ -16,51 +16,43 @@
     </div>
     
 
-    <div class="ms-auto gx-3">
-        <div class="btn-group">
-            @can('Modifier une souscription')
-                @if (!in_array($contrat->etape, [2, 3]))
-                <button class="btn btn-primary mx-4 border-1 text-center" style="font-size: 12px">
-                    <a class="text-decoration-none" href="{{ route('prod.edit', $contrat->id) }}">
-                        <i class="bx bx-edit" title="Modifier la proposition"></i> Modifier
-                    </a>
-                </button>
-                @endif
-            @endcan
-
-            @can('Transmettre une souscription')
-                @if (!in_array($contrat->etape, [2, 3]))
-                <form action="{{ route('prod.transmettreContrat', $contrat->id)}}" method="post" class="submitForm">
-                    @csrf
-                    <button type="submit" class="btn btn-primary p-1 border-1 text-center"> Transmettre</button>
-                </form>
-                @endif
-            @endcan
-            
-
-            <button class="btn btn-primary mx-4 border-1 text-center" style="font-size: 12px">
-                <a class="text-decoration-none" href="{{ route('prod.generate.bulletin', $contrat->id) }}" target="_blank">
-                    <i class="bx bx-download" title="Telecharger le bulletin"></i> Print Bulletin
-                </a>
-            </button>
-        </div>
-    </div>
+    
 </div>
 <!--end breadcrumb-->
+<div class="d-flex justify-content-end my-4">
+    <div class="btn-group gap-1 gap-md-2 gap-lg-3">
+        @can('Modifier une souscription')
+            @if (!in_array($contrat->etape, [2, 3]))
+                <a href="{{ route('prod.edit', $contrat->id) }}" class="btn btn-primary btn-sm text-decoration-none px-2 px-md-3">
+                    <i class="bx bx-edit me-1" title="Modifier"></i>
+                    <span class="d-none d-sm-inline">Modifier</span>
+                </a>
+            @endif
+        @endcan
+
+        @can('Transmettre une souscription')
+            @if (!in_array($contrat->etape, [2, 3]))
+                <form action="{{ route('prod.transmettreContrat', $contrat->id)}}" method="post" class="d-inline m-0 submitForm">
+                    @csrf
+                    <button type="submit" class="btn btn-primary btn-sm px-2 px-md-3 ">
+                        <i class="bx bx-send me-1"></i>
+                        <span class="d-none d-sm-inline">Transmettre</span>
+                    </button>
+                </form>
+            @endif
+        @endcan
+        
+        <a href="{{ route('prod.generate.bulletin', $contrat->id) }}" target="_blank" class="btn btn-primary btn-sm text-decoration-none px-2 px-md-3">
+            <i class="bx bx-download me-1" title="Bulletin"></i>
+            <span class="d-none d-sm-inline">Bulletin</span>
+        </a>
+    </div>
+</div>
 <div id="stepper1" class="bs-stepper">
     <div class="card">
         <div class="card-header">
             <div class="d-lg-flex flex-lg-row align-items-lg-center justify-content-lg-between" role="tablist">
-                {{-- <div class="step" data-target="#test-l-0">
-                    <div class="step-trigger" role="tab" id="stepper1trigger1" aria-controls="test-l-0">
-                        <div class="bs-stepper-circle">0</div>
-                        <div class="">
-                            <h5 class="mb-0 steper-title @if ($contrat->etape == 0)
-                                text-primary @endif">Saisie Inachevée</h5>
-                            <p class="mb-0 steper-sub-title">{{ $contrat->saisiele ?? ''}}</p>
-                        </div>
-                    </div>
-                </div> --}}
+          
                 <div class="step" data-target="#test-l-1">
                     <div class="step-trigger" role="tab" id="stepper1trigger1" aria-controls="test-l-1">
                         <div class="bs-stepper-circle">1</div>
@@ -550,45 +542,89 @@
                 <section id="edit-assurer" class="section-content d-none">
                     <fieldset>
                         <legend class="float-none w-auto px-2"><small>Assurés</small></legend>
-                        <table class="table mb-0 table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Assuré(e)</th>
-                                    <th scope="col">Garanties</th>
-                                    <th scope="col">Garanties complémentaires</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if ($contrat->assures->count() > 0)
-                                    @foreach ($contrat->assures as $assure)
+
+                        <div class="table-responsive">
+                            <table class="table mb-0 table-striped d-none d-md-table">
+                                <!-- Tableau (masqué sur mobile) -->
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Assuré(e)</th>
+                                        <th scope="col">Garanties</th>
+                                        <th scope="col">Garanties complémentaires</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if ($contrat->assures->count() > 0)
+                                        @foreach ($contrat->assures as $assure)
+                                            <tr>
+                                                <td>{{ $assure->nom ?? '-' }} {{ $assure->prenom ?? '-' }}</td>
+                                                <td>
+                                                    <ul class="mb-0">
+                                                        @foreach ($assure->garanties as $item)
+                                                            <li>{{ $item->monlibelle ?? 'Aucune garantie'}}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    <ul class="mb-0">
+                                                        <li>Pas de garanties complémentaires</li>
+                                                    </ul>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="" data-bs-target="#showAssureModal{{ $assure->id }}" data-bs-toggle="modal">
+                                                        <i class="bx bx-show fs-4 btn btn-sm btn-outline-primary"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            @include('productions.assurer.show')
+                                        @endforeach
+                                    @else
                                         <tr>
-                                            <td>{{ $assure->nom ?? '-' }} {{ $assure->prenom ?? '-' }}</td>
-                                            <td>
-                                                <ul>
+                                            <td colspan="4" class="text-center">Aucun assuré trouvé</td>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Version mobile (cartes) -->
+                        <div class="d-md-none">
+                            @if ($contrat->assures->count() > 0)
+                                @foreach ($contrat->assures as $assure)
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ $assure->nom ?? '-' }} {{ $assure->prenom ?? '-' }}</h5>
+                                            
+                                            <div class="mb-2">
+                                                <h6 class="fw-bold mb-1">Garanties :</h6>
+                                                <ul class="mb-0 ps-3">
                                                     @foreach ($assure->garanties as $item)
                                                         <li>{{ $item->monlibelle ?? 'Aucune garantie'}}</li>
                                                     @endforeach
                                                 </ul>
-                                            </td>
-                                            <td>
-                                                <ul>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <h6 class="fw-bold mb-1">Garanties complémentaires :</h6>
+                                                <ul class="mb-0 ps-3">
                                                     <li>Pas de garanties complémentaires</li>
                                                 </ul>
-                                            </td>
-                                            <td><a href="" data-bs-target="#showAssureModal{{ $assure->id }}" data-bs-toggle="modal"><i class="fadeIn animated bx bx-show fs-4 btn"></i></a></td>
-                                        </tr>
-                                        @include('productions.assurer.show')
-                                    @endforeach
-                                @else
-                                    <tr>
-                                        <td colspan="3" class="text-center">Aucun assuré trouvé</td>
-                                    </tr>
-                                @endif
-    
-                            </tbody>
-    
-                        </table>
+                                            </div>
+                                            
+                                            <div class="text-end">
+                                                <a href="" class="btn btn-sm btn-primary" data-bs-target="#showAssureModal{{ $assure->id }}" data-bs-toggle="modal">
+                                                    <i class="bx bx-show me-1"></i> Voir détails
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @include('productions.assurer.show')
+                                @endforeach
+                            @else
+                                <div class="alert alert-info text-center">Aucun assuré trouvé</div>
+                            @endif
+                        </div>
                     </fieldset>
                 </section>
 
@@ -612,46 +648,109 @@
                                 </div>
                             </div>
                         @endif
-                        <table class="table mb-0 table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Nom & Prénoms</th>
-                                    <th scope="col">Né(e) le</th>
-                                    <th scope="col">Lieu de naissance</th>
-                                    <th scope="col">Lieu de résidence</th>
-                                    <th scope="col">Filiation</th>
-                                    <th scope="col">Téléphone</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Taux (%)</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if ($contrat->beneficiaires->count() > 0)
-                                    @foreach ($contrat->beneficiaires as $beneficiaire)
-                                        <tr>
-                                            <td>{{ $beneficiaire->nom ?? '--' }} {{ $beneficiaire->prenom ?? '--' }}</td>
-                                            <td>{{ $beneficiaire->datenaissance ?? '--' }}</td>
-                                            <td>{{ $beneficiaire->lieunaissance ?? '--' }}</td>
-                                            <td>{{ $beneficiaire->lieuresidence ?? '--' }}</td>
-                                            <td>{{ $beneficiaire->filiation ?? '--' }}</td>
-                                            <td>{{ $beneficiaire->mobile ?? '--' }}</td>
-                                            <td>{{ $beneficiaire->email ?? '--' }}</td>
-                                            <td>{{ $beneficiaire->part ?? '--' }}</td>
-                                            <td> <a href="" data-bs-target="#showBenefModal{{ $beneficiaire->id }}" data-bs-toggle="modal"><i class="fadeIn animated bx bx-show fs-4 btn"></i></a></td>
-                                        </tr>
-
-                                        @include('productions.beneficiaires.show')
-                                    @endforeach
-                                @else
+                        <div class="table-responsive d-none d-md-block">
+                            <!-- Version Desktop (masquée sur mobile) -->
+                            <table class="table mb-0 table-striped">
+                                <thead>
                                     <tr>
-                                        <td colspan="8" class="text-center">Aucun bénéficiaire trouvé</td>
+                                        <th scope="col">Nom & Prénoms</th>
+                                        <th scope="col">Né(e) le</th>
+                                        <th scope="col">Lieu de naissance</th>
+                                        <th scope="col">Lieu de résidence</th>
+                                        <th scope="col">Filiation</th>
+                                        <th scope="col">Téléphone</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Taux (%)</th>
+                                        <th></th>
                                     </tr>
-                                @endif
-
-                            </tbody>
-
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @if ($contrat->beneficiaires->count() > 0)
+                                        @foreach ($contrat->beneficiaires as $beneficiaire)
+                                            <tr>
+                                                <td>{{ $beneficiaire->nom ?? '--' }} {{ $beneficiaire->prenom ?? '--' }}</td>
+                                                <td>{{ $beneficiaire->datenaissance ?? '--' }}</td>
+                                                <td>{{ $beneficiaire->lieunaissance ?? '--' }}</td>
+                                                <td>{{ $beneficiaire->lieuresidence ?? '--' }}</td>
+                                                <td>{{ $beneficiaire->filiation ?? '--' }}</td>
+                                                <td>{{ $beneficiaire->mobile ?? '--' }}</td>
+                                                <td>{{ $beneficiaire->email ?? '--' }}</td>
+                                                <td>{{ $beneficiaire->part ?? '--' }}</td>
+                                                <td class="text-center">
+                                                    <a href="" class="btn btn-sm btn-outline-primary" data-bs-target="#showBenefModal{{ $beneficiaire->id }}" data-bs-toggle="modal">
+                                                        <i class="bx bx-show"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            @include('productions.beneficiaires.show')
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="9" class="text-center">Aucun bénéficiaire trouvé</td>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Version Mobile (cartes) -->
+                        <div class="d-md-none">
+                            @if ($contrat->beneficiaires->count() > 0)
+                                @foreach ($contrat->beneficiaires as $beneficiaire)
+                                    <div class="card mb-3 shadow-sm">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ $beneficiaire->nom ?? '--' }} {{ $beneficiaire->prenom ?? '--' }}</h5>
+                                            
+                                            <div class="row g-2 mb-2">
+                                                <div class="col-6">
+                                                    <small class="text-muted">Né(e) le</small>
+                                                    <div>{{ $beneficiaire->datenaissance ?? '--' }}</div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <small class="text-muted">Taux</small>
+                                                    <div>{{ $beneficiaire->part ?? '--' }}%</div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="mb-2">
+                                                <small class="text-muted">Lieu de naissance</small>
+                                                <div>{{ $beneficiaire->lieunaissance ?? '--' }}</div>
+                                            </div>
+                                            
+                                            <div class="mb-2">
+                                                <small class="text-muted">Lieu de résidence</small>
+                                                <div>{{ $beneficiaire->lieuresidence ?? '--' }}</div>
+                                            </div>
+                                            
+                                            <div class="mb-2">
+                                                <small class="text-muted">Filiation</small>
+                                                <div>{{ $beneficiaire->filiation ?? '--' }}</div>
+                                            </div>
+                                            
+                                            <div class="row g-2">
+                                                <div class="col-6">
+                                                    <small class="text-muted">Téléphone</small>
+                                                    <div>{{ $beneficiaire->mobile ?? '--' }}</div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <small class="text-muted">Email</small>
+                                                    <div class="text-truncate">{{ $beneficiaire->email ?? '--' }}</div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="text-end mt-3">
+                                                <a href="" class="btn btn-sm btn-primary" data-bs-target="#showBenefModal{{ $beneficiaire->id }}" data-bs-toggle="modal">
+                                                    <i class="bx bx-show me-1"></i> Détails
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @include('productions.beneficiaires.show')
+                                @endforeach
+                            @else
+                                <div class="alert alert-info text-center">Aucun bénéficiaire trouvé</div>
+                            @endif
+                        </div>
                     </fieldset>
 
                 </section>

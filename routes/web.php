@@ -4,9 +4,13 @@ use App\Models\TblTypePrestation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MailController;
 use Illuminate\Support\Facades\Response;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Admin\RdvController;
 use App\Http\Controllers\Admin\TestController;
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Admin\EpretController;
 use App\Http\Controllers\setting\RoleController;
 use App\Http\Controllers\Setting\UserController;
@@ -53,14 +57,40 @@ Route::middleware('guest','PreventBackHistory')->group(function(){
 
 Route::prefix('shared')->name('shared.')->group(function(){
     Route::middleware('guest')->group(function(){
-
-        
-
     });
 
     Route::middleware(['auth','PreventBackHistory'])->group(function () {
         Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::post('/update/assuree/{id}', [AssurerController::class, 'updateAssur'])->name('assuree.update');
+
+    });
+});
+
+Route::prefix('tickets')->name('ticket.')->group(function(){
+    Route::middleware('guest')->group(function(){
+
+        
+    });
+
+    Route::middleware(['auth','PreventBackHistory'])->group(function () {
+        Route::get('tickets/index', [TicketController::class, 'index'])->name('tickets.index');
+        Route::post('tickets/store', [TicketController::class, 'store'])->name('ticket.store');
+
+        Route::get('tickets/show/{ticket}', [TicketController::class, 'show'])->name('ticket.show');
+        Route::get('attachments/{attachment}/download', [AttachmentController::class,'download'])->name('attachments.download');
+        Route::get('attachments/{attachment}/destroy', [AttachmentController::class,'destroy'])->name('attachments.destroy');
+
+        Route::post('/{ticket}/messages',[MessageController::class, 'store'])->name('messages.store');
+
+
+        // Route::get('tickets', [TicketController::class, 'index'])->name('tickets.index');
+        // Route::post('tickets/{ticket}/messages',[MessageController::class, 'store'])->name('messages.store');
+        // Route::post('tickets/{ticket}/close', [TicketController::class, 'close'])->name('tickets.close');
+        // Route::post('tickets/{ticket}/reopen', [TicketController::class, 'reopen'])->name('tickets.reopen');
+        // Route::get('attachments/{attachment}/download', [TicketController::class,'download'])->name('attachments.download');
+
+       
+
     });
 
 });
@@ -135,6 +165,8 @@ Route::prefix('production')->name('prod.')->group(function(){
     });
 
 });
+
+Route::get('/notifications/mark-as-read/{id}',[MailController::class,'markAsRead'])->name('notif.markToRead');
 
 
 
