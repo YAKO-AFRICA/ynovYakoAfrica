@@ -283,7 +283,6 @@ class ProductionController extends Controller
         $filliations = Filliation::select('MonLibelle')->get();
        
         $resultData = session()->get('adherent', []);
-
         $response = Http::withOptions(['timeout' => 60])
         ->get(env('API_GET_COUNTRIES'));
         if ($response->successful()) {

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\TblProductPrestation;
 use Illuminate\Support\Facades\Http;
+use App\Models\TblMotifrejetbyprestat;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class PrestationController extends Controller
@@ -900,6 +901,13 @@ class PrestationController extends Controller
             ]);
             if ($isUpdated) {
                 $prestationPdfUrl = $this->updatePrestationPdf($isUpdated);
+                $motifsRejet = TblMotifrejetbyprestat::where('codeprestation', $code)->get();
+                foreach ($motifsRejet as $motif) {
+                    $motif->delete();
+                }
+                if (!$prestationPdfUrl) {
+                    Log::info("Erreur lors de la mise à jour du PDF de la prestation");
+                }
                 $dataResponse = [
                     'type' => 'success',
                     'urlback' => 'back',

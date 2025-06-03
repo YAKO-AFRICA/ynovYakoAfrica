@@ -12,7 +12,7 @@
                 <ol class="breadcrumb mb-0 p-0">
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">Rapport</li>
-                    <li class="breadcrumb-item active" aria-current="page">Souscriptions</li>
+                    <li class="breadcrumb-item active" aria-current="page">Prestations</li>
                 </ol>
             </nav>
         </div>
@@ -30,7 +30,7 @@
     <!--end breadcrumb-->
 
     <div class="card p-3">
-        <form id="searchForm" class="row g-3" method="GET" action="{{ route('report.eSouscription') }}">
+        <form id="searchForm" class="row g-3" method="GET" action="{{ route('report.ePrestation') }}">
 
             <fieldset class="col-md-6">
                 <legend class="float-none w-auto px-2">Recherche par Date</legend>
@@ -63,10 +63,10 @@
                 <label for="searchEtape" class="form-label">Recherche par Étape</label>
                 <select class="form-select selection" id="searchEtape" name="etape">
                     <option value="">Choisir un statut</option>
-                    <option value="1" {{ request('etape') == '1' ? 'selected' : '' }}>En saisie</option>
-                    <option value="2" {{ request('etape') == '2' ? 'selected' : '' }}>Transmis</option>
-                    <option value="3" {{ request('etape') == '3' ? 'selected' : '' }}>Accepté</option>
-                    <option value="4" {{ request('etape') == '4' ? 'selected' : '' }}>Rejeté</option>
+                    <option value="0" {{ request('etape') == '0' ? 'selected' : '' }}>En saisie</option>
+                    <option value="1" {{ request('etape') == '1' ? 'selected' : '' }}>Transmis</option>
+                    <option value="2" {{ request('etape') == '2' ? 'selected' : '' }}>Accepté</option>
+                    <option value="3" {{ request('etape') == '3' ? 'selected' : '' }}>Rejeté</option>
                 </select>
             </div>
         
@@ -84,8 +84,8 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div>
-                            <p class="mb-0 text-secondary">Total Souscriptions</p>
-                            <h4 class="my-1">{{ count($contrats) }}</h4>
+                            <p class="mb-0 text-secondary">Total Prestation</p>
+                            <h4 class="my-1">{{ count($prestations) }}</h4>
                         </div>
                         <div class="text-primary ms-auto font-35"><i class='bx bxl-chrome'></i>
                         </div>
@@ -99,7 +99,7 @@
                     <div class="d-flex align-items-center">
                         <div>
                             <p class="mb-0 text-secondary">Transmis</p>
-                            <h4 class="my-1">{{ count($contrats->where('etape', '2')) }}</h4>
+                            <h4 class="my-1">{{ count($prestations->where('etape', '1')) }}</h4>
                         </div>
                         <div class="text-danger ms-auto font-35"><i class='bx bxl-github'></i>
                         </div>
@@ -113,7 +113,7 @@
                     <div class="d-flex align-items-center">
                         <div>
                             <p class="mb-0 text-secondary">Accepter</p>
-                            <h4 class="my-1">{{ count($contrats->where('etape', '3')) }}</h4>
+                            <h4 class="my-1">{{ count($prestations->where('etape', '2')) }}</h4>
                         </div>
                         <div class="text-warning ms-auto font-35"><i class='bx bxl-firefox'></i>
                         </div>
@@ -127,7 +127,7 @@
                     <div class="d-flex align-items-center">
                         <div>
                             <p class="mb-0 text-secondary">Rejeté</p>
-                            <h4 class="my-1">{{ count($contrats->where('etape', '4')) }}</h4>
+                            <h4 class="my-1">{{ count($prestations->where('etape', '3')) }}</h4>
                         </div>
                         <div class="text-success ms-auto font-35"><i class='bx bxl-shopify'></i>
                         </div>
@@ -155,40 +155,91 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($contrats as $item)
+                    @forelse ($prestations as $item)
                     <tr class="">
                         <td>{{ $item->id }}</td>
-                        <td>{{ $item->libelleproduit ?? "" }}</td>
-                        <td>{{ $item->dateeffet ?? "" }}</td>
-                        <td>{{ $item->prime ?? "" }}</td>
-                        <td>{{ $item->capital ?? "" }}</td>
-                        <td>{{ $item->user->membre->nom ?? "" }} {{ $item->user->membre->prenom ?? "" }}</td>
+                        <td>{{ $item->code ?? "" }}</td>
+                        <td>{{ $item->idcontrat ?? "" }}</td>
+                        <td>{{ $item->typeprestation ?? "" }}</td>
+                        <td>{{ $item->montantSouhaite ?? "" }}</td>
+                        <td>{{ $item->moyenPaiement ?? "" }}</td>
+                        
                         <td>
-                            @if ($item->etape == '0')
+                            @if($item->membre->typ_membre != 3)
+                                {{ $item->membre->nom ?? "" }} {{ $item->membre->prenom ?? "" }}
+                            @else
+                                Demande en ligne
+                            @endif
+                            </td>
+                        <td>
+                            @if ($item->etape == '-1')
                                 <div class="badge rounded-pill text-secondary bg-light-secondary p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>Saisie non achevée</div>
-                            @elseif ($item->etape == '1')
+                            @elseif ($item->etape == '0')
                                 <div class="badge rounded-pill text-info bg-light-info p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>Saisie Non Transmis</div>
-                            @elseif ($item->etape == '2')
+                            @elseif ($item->etape == '1')
                                 <div class="badge rounded-pill text-primary bg-light-primary p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>Transmis</div>
-                            @elseif ($item->etape == '3')
+                            @elseif ($item->etape == '2')
                                 <div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>Accepté</div>
-                            @elseif ($item->etape == '4')
+                            @elseif ($item->etape == '3')
                                 <div class="badge rounded-pill text-danger bg-light-danger p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>Rejeté</div>
                             @endif
                         </td>
+                        <td>{{ $item->created_at->format('d/m/Y à H:i') ?? "" }}</td>
                         
                         @foreach ($activeColumns as $colKey)
                             <td>{{ $item->$colKey ?? '' }}</td>
                         @endforeach
                         <td>
                             <div class="d-flex order-actions">
-                                <a href="{{ route('prod.show', $item->id)}}">
-                                    <i class='bx bxs-show'></i>
-                                </a>
+                                @if ($item->moyenPaiement == '' || $item->moyenPaiement == null || $item->Operateur == '' || $item->Operateur == null)
+                                    <a href="javascript:void(0)" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal{{ $item->code }}"
+                                        class="ms-2 border"><i class='bx bxs-show'></i>
+                                    </a>
+                                @else
+                                    <a href="{{ route('prestation.show', $item->code)}}" class="ms-2 border">
+                                        <i class='bx bxs-show'></i>
+                                    </a>
+                                @endif
+                                
                                 
                             </div>
                         </td>
                     </tr>
+                    <div class="modal fade" id="exampleModal{{ $item->code }}" tabindex="-1"
+                        aria-labelledby="exampleModalLabel{{ $item->code }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel{{ $item->code }}">
+                                        Détails de la prestation</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Fermer"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card radius-10">
+                                        <div class="card-header">
+                                            <div class="d-flex align-items-center">
+                                                <h5 class="mb-0">{{ $item->typeprestation }}</h5>
+                                            </div>
+                                        </div>
+                                        <div class="card-body bg-light-success rounded">
+                                            <div class="align-items-center">
+                                                <div class="flex-grow-1 ms-3 my-4"
+                                                    style="text-align: justify">
+                                                    {{ $item->msgClient ?? 'Aucune information disponible.' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary"
+                                        data-bs-dismiss="modal">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     @empty
                     <tr>
                         <td colspan="{{ count($defaultColumns) + count($activeColumns) + 1 }}">Aucun contrat trouvé</td>

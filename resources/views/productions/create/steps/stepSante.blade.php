@@ -1,5 +1,5 @@
 <div id="test-l-5" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger5">
-
+    {{-- @include('productions.components.otpModal') --}}
     <h5 class="mb-1">Informations sur votre état de santé</h5>
 
     <p class="mb-4">Veuillez cocher les informations relatives à votre état de santé en tenant compte des champs

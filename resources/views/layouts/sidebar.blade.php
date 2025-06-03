@@ -153,6 +153,13 @@
                     </li>
                 @endcan
                 
+                <li>
+                    <a href="{{ route('report.ePrestation')}}">
+                        <div class="parent-icon"><i class="bx bx-line-chart"></i>
+                        </div>
+                        <div class="menu-title">Prestation</div>
+                    </a>
+                </li>
                 
                 @can('Voir le rapport des pret')
                     <li>

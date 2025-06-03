@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Product;
+// use App\Models\Product;
 use App\Models\Prospect;
 use App\Models\ProduitGarantie;
 use App\Models\ProspectProduct;
