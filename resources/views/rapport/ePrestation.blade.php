@@ -165,7 +165,7 @@
                         <td>{{ $item->moyenPaiement ?? "" }}</td>
                         
                         <td>
-                            @if($item->membre->typ_membre != 3)
+                            @if($item->membre && $item->membre->typ_membre != 3)
                                 {{ $item->membre->nom ?? "" }} {{ $item->membre->prenom ?? "" }}
                             @else
                                 Demande en ligne
@@ -191,13 +191,55 @@
                         @endforeach
                         <td>
                             <div class="d-flex order-actions">
-                                <a href="{{ route('prestation.show', $item->code)}}">
-                                    <i class='bx bxs-show'></i>
-                                </a>
+                                @if ($item->moyenPaiement == '' || $item->moyenPaiement == null || $item->Operateur == '' || $item->Operateur == null)
+                                    <a href="javascript:void(0)" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal{{ $item->code }}"
+                                        class="ms-2 border"><i class='bx bxs-show'></i>
+                                    </a>
+                                @else
+                                    <a href="{{ route('prestation.show', $item->code)}}" class="ms-2 border">
+                                        <i class='bx bxs-show'></i>
+                                    </a>
+                                @endif
+                                
                                 
                             </div>
                         </td>
                     </tr>
+                    <div class="modal fade" id="exampleModal{{ $item->code }}" tabindex="-1"
+                        aria-labelledby="exampleModalLabel{{ $item->code }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel{{ $item->code }}">
+                                        Détails de la prestation</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Fermer"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card radius-10">
+                                        <div class="card-header">
+                                            <div class="d-flex align-items-center">
+                                                <h5 class="mb-0">{{ $item->typeprestation }}</h5>
+                                            </div>
+                                        </div>
+                                        <div class="card-body bg-light-success rounded">
+                                            <div class="align-items-center">
+                                                <div class="flex-grow-1 ms-3 my-4"
+                                                    style="text-align: justify">
+                                                    {{ $item->msgClient ?? 'Aucune information disponible.' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary"
+                                        data-bs-dismiss="modal">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     @empty
                     <tr>
                         <td colspan="{{ count($defaultColumns) + count($activeColumns) + 1 }}">Aucun contrat trouvé</td>

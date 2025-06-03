@@ -231,10 +231,10 @@
                                                         title="{{ $prestation->etape != 0 ? 'Impossible de modifier la demande une fois transmise' : '' }}">
                                                          <i class='bx bxs-edit'></i>
                                                      </a>
-                                                    <a href="javascript:;" class="deleteConfirmation border ms-3 {{$prestation->etape != 0 && $prestation->etape != 3 ? 'disabled-link' : ''}}" data-uuid="{{$prestation->code}}"
+                                                    <a href="javascript:;" class="deleteConfirmation border ms-3 {{$prestation->etape != 0 ? 'disabled-link' : ''}}" data-uuid="{{$prestation->code}}"
                                                         data-type="confirmation_redirect" data-placement="top"
                                                         data-token="{{ csrf_token() }}" data-bs-toggle="tooltip" data-bs-placement="top" 
-                                                        title="{{ $prestation->etape != 0 && $prestation->etape != 3 ? 'Impossible de supprimer la demande une fois transmise' : '' }}"
+                                                        title="{{ $prestation->etape != 0 ? 'Impossible de supprimer la demande une fois transmise' : '' }}"
                                                         data-url="{{route('prestation.destroy',$prestation->code)}}"
                                                         data-title="Vous êtes sur le point de supprimer la prestation {{$prestation->code}} "
                                                         data-id="{{$prestation->code}}" data-param="0"

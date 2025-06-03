@@ -869,6 +869,7 @@ class PrestationController extends Controller
             $idOtp = $otpVerif->id ?? $isUpdated->idOtp;
             $moyenPaiement = $request->moyenPaiement;
             $TelPaiement = ($moyenPaiement == 'Virement_Bancaire') ? null : $request->TelPaiement;
+            $Operateur = ($moyenPaiement == 'Mobile_Money') ? $request->Operateur : null;
             // 5 caracteres
             $codeBanque = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_1 . $request->rib_2 . $request->rib_3 .$request->rib_4 . $request->rib_5 : null;
 
@@ -890,7 +891,7 @@ class PrestationController extends Controller
                 'email' => $request->email,
                 'lieuresidence' => $request->lieuresidence,
                 'moyenPaiement' => $moyenPaiement,
-                'Operateur' => $request->Operateur,
+                'Operateur' => $Operateur,
                 'codeBanque' => $codeBanque,
                 'codeGuichet' => $codeGuichet,
                 'numCompte' => $numCompte,
@@ -902,6 +903,7 @@ class PrestationController extends Controller
             if ($isUpdated) {
                 $prestationPdfUrl = $this->updatePrestationPdf($isUpdated);
                 $motifsRejet = TblMotifrejetbyprestat::where('codeprestation', $code)->get();
+                
                 foreach ($motifsRejet as $motif) {
                     $motif->delete();
                 }

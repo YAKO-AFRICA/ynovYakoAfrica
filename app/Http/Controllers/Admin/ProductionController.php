@@ -14,12 +14,12 @@ use App\Models\Product;
 use setasign\Fpdi\Fpdi;
 use App\Models\Adherent;
 use App\Models\Document;
+use App\Models\Prospect;
 use App\Models\TblVille;
 use App\Models\TblAgence;
 use App\Models\Filliation;
 use App\Models\Profession;
 use App\Models\TblSociete;
-use App\Models\TblProspere;
 use Illuminate\Support\Str;
 use App\Models\Beneficiaire;
 use Illuminate\Http\Request;
@@ -166,35 +166,89 @@ class ProductionController extends Controller
 
     public function searchAdherant(Request $request)
     {
+        $request->validate([
+            'methodeRecherche' => 'required|in:numerocompte,numPiece',
+            'query' => 'required|string'
+        ]);
+    
         $query = $request->input('query');
-        $resultDataProspect = Null;
-        $resultData = Null;
-
         $methodeRecherche = $request->input('methodeRecherche');
-        if($methodeRecherche == "CodeProspect"){
-            $resultDataProspect = TblProspere::where('code', $query)->first();
-        }elseif($methodeRecherche == "NumPiece"){
-            $resultData = Adherent::where('numeropiece', $query)->first();
-        }
-        if (!empty($resultData) || !empty($resultDataProspect)) {
-            //    ajouter dans la session
-            session()->put('adherent', $resultData);
-            session()->put('adherentProspect', $resultDataProspect);
-            return response()->json([
-                'type' => 'success',
-                'message' => 'Client trouvé ...', 
-                'urlback' => 'back',
-                'code' => 200
+    
+        $apiData = [
+            $methodeRecherche => $query
+        ];
+    
+        try {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->post('https://api.yakoafricassur.com/enov/search-personne-web', [
+                'form_params' => $apiData,
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MjExODcyLCJlbWFpbCI6ImZvcm1hdGlvbi5ibmlAYm5pLmNvbSIsIm5vbSI6IkJOSSIsImNvZGVhZ2VudCI6IkIwNDAiLCJ0eXBlbWVicmUiOm51bGwsInByZW5vbSI6IkZvcm1hdGlvbiJ9.gwxwy43VeMDcfaTpgpFbuWkxjirIBqvuXq3UZOuw_nA',
+                ]
             ]);
-        } else {
+    
+            $apiResponse = json_decode($response->getBody(), true);
+    
+            if (!empty($apiResponse['dataPersonne'])) {
+                $clientData = $apiResponse['dataPersonne'];
+                
+                // Formater les données pour correspondre à vos champs de formulaire
+                $formattedData = [
+                    'civilite' => $clientData['civilite'] ?? '',
+                    'nom' => $clientData['nom'] ?? '',
+                    'prenom' => $clientData['prenom'] ?? '',
+                    'datenaissance' => $clientData['datenaissance'] ?? '',
+                    'lieunaissance' => $clientData['lieunaissance'] ?? '',
+                    'naturepiece' => $clientData['naturepiece'] ?? '',
+                    'numeropiece' => $clientData['numeropiece'] ?? '',
+                    'lieuresidence' => $clientData['lieuresidence'] ?? '',
+                    'profession' => $clientData['profession'] ?? '',
+                    'employeur' => $clientData['employeur'] ?? '',
+                    'email' => $clientData['email'] ?? '',
+                    'mobile' => $clientData['mobile'] ?? '',
+                    'mobile1' => $clientData['mobile1'] ?? '',
+                    'telephone' => $clientData['telephone'] ?? '',
+                    'numerocompte' => $clientData['numerocompte'] ?? ''
+                ];
+                
+                session()->put('adherent', $formattedData);
+                
+                return response()->json([
+                    'type' => 'success',
+                    'message' => 'Client trouvé avec succès', 
+                    'code' => 200,
+                    'data' => $formattedData
+                ]);
+            } else {
+                return response()->json([
+                    'type' => 'error',
+                    'message' => 'Aucun client trouvé avec ces informations',
+                    'code' => 404
+                ]);
+            }
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $errorMessage = 'Erreur lors de la connexion à l\'API';
+            if ($e->hasResponse()) {
+                $response = json_decode($e->getResponse()->getBody(), true);
+                $errorMessage = $response['message'] ?? $errorMessage;
+            }
+            
             return response()->json([
                 'type' => 'error',
-                'urlback' => '',
-                'message' => 'Aucun client trouvé',
-                'code' => 404
+                'message' => $errorMessage,
+                'code' => 500
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'type' => 'error',
+                'message' => 'Erreur lors de la recherche: ' . $e->getMessage(),
+                'code' => 500
             ]);
         }
     }
+
+
 
     public function addAssureToSession(Request $request)
     {

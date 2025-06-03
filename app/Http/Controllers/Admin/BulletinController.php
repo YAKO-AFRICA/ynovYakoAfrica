@@ -51,7 +51,8 @@ class BulletinController extends Controller
         // $pdf = Pdf::loadView('productions.components.bullettin.ykeBulletin');
         // $pdf = Pdf::loadView('productions.components.bullettin.basicBulletin');
         // $pdf = Pdf::loadView('productions.components.bullettin.pfaINDbulletin');
-        $pdf = Pdf::loadView('productions.components.bullettin.Cadencebulletintest');
+        // $pdf = Pdf::loadView('productions.components.bullettin.Cadencebulletintest');
+        $pdf = Pdf::loadView('productions.components.bullettin.Doihoobulletintest');
 
         $fileName = 'cadencebulletin.pdf';
         return $pdf->stream($fileName);

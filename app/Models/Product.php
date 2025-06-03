@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+// use App\Models\Product;
+use App\Models\Prospect;
 use App\Models\ProduitGarantie;
+use App\Models\ProspectProduct;
 use App\Models\TblTypePrestation;
 use App\Models\TblProductPrestation;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +14,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Product extends Model
 {
     use HasFactory;
+
+    protected $connection = 'mysql';
+
     protected $table = 'tblproduit';
 
     protected $fillable = [
@@ -58,6 +64,7 @@ class Product extends Model
         return $this->hasMany(TblProductPrestation::class, 'product_id', 'CodeProduit');
         
     }
+
     // public function typePrestations()
     // {
     //     return $this->hasMany(TblTypePrestation::class, 'product_id', 'CodeProduit');

@@ -281,7 +281,8 @@
                                                                     <label class="form-check-label"
                                                                         for="Mobile_Money">Mobile Money</label>
                                                                 </div>
-
+                                                                 {{-- Champ caché qui contient la valeur à soumettre --}}
+                                                                <input type="hidden" name="moyenPaiement" value="{{ $prestation->moyenPaiement }}">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -324,9 +325,12 @@
                                                             <div class="col-md-12">
                                                                 <label for="" class="form-label">N° de
                                                                     paiement</label>
-                                                                <input type="number" name="telPaiement"
+                                                                <input type="number" name="TelPaiement"
                                                                     value="{{ $prestation->telPaiement ?? '' }}" readonly
                                                                     class="form-control">
+
+                                                                    {{-- Champ caché qui contient la valeur à soumettre --}}
+                                                        <input type="hidden" name="Operateur" value="{{ $prestation->Operateur }}">
                                                                     
                                                             </div>
                                                         </div>
@@ -438,28 +442,28 @@
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
                                                         <label for="" class="form-label">N° de téléphone</label>
-                                                        <input type="datetime" name="cel"
-                                                            value="{{ $prestation->membreClient->cel ?? ($prestation->cel ?? '') }}"
-                                                            class="form-control">
+                                                        <input type="number" name="cel"
+                                                            value="{{ $prestation->cel ?? '' }}"
+                                                            class="form-control" @if ($prestation->moyenPaiement == 'Virement_Bancaire') readonly @endif>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="" class="form-label">Tel WhatsApp</label>
-                                                        <input type="text" name="tel"
-                                                            value="{{ $prestation->membreClient->tel ?? ($prestation->tel ?? '') }}"
+                                                        <input type="number" name="tel"
+                                                            value="{{ $prestation->tel ?? '' }}"
                                                             class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
                                                         <label for="" class="form-label">E-mail</label>
-                                                        <input type="datetime" name="email"
-                                                            value="{{ $prestation->membreClient->email ?? ($prestation->email ?? '') }}"
+                                                        <input type="email" name="email"
+                                                            value="{{ $prestation->email ?? '' }}"
                                                             class="form-control">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="" class="form-label">Lieu de residence</label>
                                                         <input type="text" name="lieuresidence"
-                                                            value="{{ $prestation->membreClient->lieuresidence ?? ($prestation->lieuresidence ?? '') }}"
+                                                            value="{{ $prestation->lieuresidence ?? '' }}"
                                                             class="form-control">
                                                     </div>
                                                 </div>
