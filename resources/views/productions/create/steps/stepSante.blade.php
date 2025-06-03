@@ -1474,7 +1474,8 @@
 
                 <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form d-none" id="btn-next-sante">Suivant<i
                         class='bx bx-right-arrow-alt'></i></button>
-                <button type="button" data-bs-toggle="modal" data-bs-target="#otpModal" id="btn-otp-modal" class="btn btn-two">Code OTP<i
+
+                <button type="button" data-bs-toggle="modal" data-bs-target="#otpModal" id="btn-otp-modal" class="btn btn-two d-non">Code OTP<i
                     class='bx bx-right-arrow-alt'></i></button>
             </div>
         </div>

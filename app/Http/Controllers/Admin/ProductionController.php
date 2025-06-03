@@ -18,6 +18,7 @@ use App\Models\Adherent;
 use App\Models\Document;
 use App\Models\Prospect;
 use App\Models\TblVille;
+use App\Models\Signature;
 use App\Models\TblAgence;
 use App\Models\Filliation;
 use App\Models\Profession;
@@ -27,22 +28,28 @@ use App\Models\Beneficiaire;
 use Illuminate\Http\Request;
 use App\Models\ReseauProduct;
 use App\Models\TblProfession;
+use Endroid\QrCode\Logo\Logo;
 use App\Models\AssureGarantie;
 use App\Models\ProduitGarantie;
 use BaconQrCode\Encoder\QrCode;
+use Endroid\QrCode\Label\Label;
 use App\Models\DeclarationSante;
 use App\Models\TblSecteurActivite;
 use Illuminate\Support\Facades\DB;
+
 use Illuminate\Support\Facades\Log;
+
 use App\Http\Controllers\Controller;
 use App\Notifications\SystemeNotify;
-
-use Illuminate\Support\Facades\Notification;
-
+use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Endroid\QrCode\Encoding\Encoding;
 use BaconQrCode\Renderer\ImageRenderer;
+
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Notification;
+use Endroid\QrCode\Writer\ValidationException;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd; // Alternative SVG
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd; // Utilisez Imagick si disponible
@@ -667,6 +674,11 @@ class ProductionController extends Controller
                 'typesouscipteur' => Auth::user()->membre->branche,
             ])->save();
 
+            $sign = Signature::where('key_uuid', $request->tokGenerate)->first();
+            $sign->update([
+                'reference_key' => $idContrat
+            ]);  
+
             
             $bulletinData = $this->generateBulletin($idContrat);
 
@@ -681,11 +693,10 @@ class ProductionController extends Controller
                 'date' => now(),
                 'title' => "Enregistrement de la proposition ID $idContrat",
                 'action' => "Voir",
-               
             ];
             
-            $usersToNotify = User::all();
-            Notification::send($usersToNotify, new SystemeNotify($details_log));
+            // $usersToNotify = auth()->user();
+            // Notification::send($usersToNotify, new SystemeNotify($details_log)); 
             
             DB::commit();
             
@@ -786,6 +797,7 @@ class ProductionController extends Controller
     }
 
 
+
     private function generateBulletin($idContrat)
     {
         try {
@@ -796,6 +808,13 @@ class ProductionController extends Controller
                 new RendererStyle(200),
                 new SvgImageBackEnd()
             );
+
+           // Dans votre contrôleur
+            $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$contrat->id."/E-SOUSCRIPTION";
+            $imageData = file_get_contents($imageUrl);
+            $base64Image = base64_encode($imageData);
+            $imageSrc = 'data:image/png;base64,'.$base64Image;
+
 
             $qrContent = "Contrat bien enregistré\n";
             $qrContent .= "Date: " . $contrat->saisiele . "\n";
@@ -826,7 +845,8 @@ class ProductionController extends Controller
             }else if($contrat->codeproduit == "PFA_IND"){
                 $pdf = PDF::loadView('productions.components.bullettin.pfaINDbulletin', [
                     'contrat' => $contrat,
-                    'qrCodeBase64' => $qrCodeBase64
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc,
                 ]);
                 $cguFile = public_path('root/cgu/cg_yke.pdf');
                 
@@ -1089,6 +1109,7 @@ class ProductionController extends Controller
         //
     }
 }
+
 
 
 // $files = $request->file('files');

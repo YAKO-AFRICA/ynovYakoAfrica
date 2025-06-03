@@ -119,10 +119,8 @@
                             <!-- Zone de texte -->
                             <div class="flex-grow-1 position-relative me-2">
                                 <textarea name="content" class="form-control reply-textarea" 
-                                    placeholder="Écrire votre réponse..." 
-                                    rows="1" 
-                                    style="resize: none; border-radius: 20px; min-height: 45px; max-height: 120px;">
-                                </textarea>
+                                    placeholder="Écrire votre réponse..." rows="1" 
+                                    style="resize: none; border-radius: 20px; min-height: 45px; max-height: 120px;" required></textarea>
                             </div>
                             
                             <!-- Bouton d'upload -->

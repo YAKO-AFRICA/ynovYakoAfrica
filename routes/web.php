@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Str;
+use BaconQrCode\Encoder\QrCode;
 use App\Models\TblTypePrestation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +34,7 @@ use App\Http\Controllers\Admin\ProductionController;
 use App\Http\Controllers\Admin\ValidationController;
 use App\Http\Controllers\Admin\BeneficiairesController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,7 +46,6 @@ use App\Http\Controllers\Admin\BeneficiairesController;
 */
 
 Auth::routes();
-
 
 
 Route::middleware('guest','PreventBackHistory')->group(function(){
@@ -438,3 +440,7 @@ Route::get('/welcome', function () {
 });
 
 route::get('/generate-bulletin-demo', [EpretController::class, 'generateBu'])->name('generateBul');
+
+Route::get('/generate-qr', [ProductionController::class, 'getQrCode'])->name('generate-qr-code');
+
+

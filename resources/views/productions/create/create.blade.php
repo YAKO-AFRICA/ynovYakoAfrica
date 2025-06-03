@@ -24,6 +24,14 @@
   }
 
 </style>
+    @php
+        $tok = Str::uuid();
+        $token = [
+            'token' => $tok,
+            'operation_type' => "E-SOUSCRIPTION",
+            'key_uuid' => $tok
+        ];
+    @endphp
 
 <div class="productions">
     <div id="stepper1{{ $product->CodeProduit }}" class="bs-stepper">
@@ -114,6 +122,7 @@
                         <input type="hidden" id="assuresInput" name="assures">
                         <input type="hidden" id="beneficiariesInput" name="beneficiaires">
                         <input type="hidden" id="simulationDataInput" name="inputSessionData">
+                        <input type="hidden" id="tokGenerate" name="tokGenerate" value="{{ $tok }}">
 
                         <input type="hidden" id="codeproduitvalue" name="codeproduit" value="{{ $product->CodeProduit }}">
                     
@@ -128,8 +137,11 @@
             </div>
         </div>
     </div>
+
+    
 </div>
 @include('productions.components.searchModal')
+@include('productions.create.steps.signModal')
 
 <script>
     let garantiesProduct = @json($productGarantie);

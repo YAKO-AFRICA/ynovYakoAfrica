@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Pret;
 use App\Models\User;
 use App\Models\Contrat;
 use App\Models\Partner;
@@ -41,7 +42,7 @@ class ValidationController extends Controller
             ];
         });
 
-        $partBNI = Partner::where('code', '092')->first(); // Un seul partenaire
+        $partBNI = Partner::where('code', '092')->first();
 
         if ($partBNI) {
             $PartBNIContrat = [
@@ -53,8 +54,10 @@ class ValidationController extends Controller
         } else {
             $PartBNIContrat = null; // Gérer le cas où aucun partenaire n'est trouvé
         }
+
+        $prets = Pret::where(['etat' => 1])->get();
         // dd($PartContrat);
-        return view('productions.validations.index', compact('PartContrat', 'PartBNIContrat'));
+        return view('productions.validations.index', compact('PartContrat', 'PartBNIContrat', 'prets'));
     }
 
     /**

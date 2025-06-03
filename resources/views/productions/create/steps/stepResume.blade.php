@@ -1,6 +1,8 @@
 <div id="test-l-6" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger6">
     <h5 class="mb-1">Résumé des informations</h5>
     <p class="mb-4">Veuillez relire vos informations pour verifier si elles sont correctes</p>
+    
+
 
     <div class="row g-3">
         <div class="col-12">
@@ -162,47 +164,6 @@
                 </div>
             </div>
         </div>
-
-        {{-- <input type="hidden" id="garantiesperf" name="garantiesperf" value="">
-        <input type="hidden" id="garantiessecu" name="garantiessecu" value=""> --}}
-
-        {{-- <div class="col-12">
-            <div class="card" style="width: 100%">
-                <div class="card-header">
-                    <h4>Garanties</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 overflow-auto overflow-scroll">
-                            <table class="table mb-0 table-striped table-responsive table-bordered">
-                                <thead class="fw-bold">
-                                    <tr>
-                                        <th scope="col">Garantie</th>
-                                        <th scope="col">Code garantie</th>
-                                        <th scope="col">Prime principale</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="garantiesTableBody">
-                                    <!-- Message par défaut -->
-                                    <tr>
-                                        <td colspan="4" class="text-center text-muted py-3">
-                                            <i class="fas fa-info-circle me-2"></i>
-                                            Chargement des garanties...
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="3" class="text-end fw-bold">Prime Total :</td>
-                                        <td id="primeTotalResume" class="fw-bold">0</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
         <div class="col-12">
             <div class="card" style="width: 100%">
                 <div class="card-header">
@@ -290,6 +251,46 @@
     <!---end row-->
 
 </div>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const stepElement = document.getElementById("test-l-6");
+    
+    // Initialisation du modal Bootstrap
+    const qrModal = new bootstrap.Modal(document.getElementById('qrCodeModal'), {
+        keyboard: false,
+        backdrop: 'static'
+    });
+
+    
+    if (stepElement) {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(mutation => {
+                if (mutation.attributeName === 'class' && 
+                    stepElement.classList.contains('active')) {
+                    console.log("Element actif détecté - ouverture du modal");
+                    qrModal.show();
+                }
+            });
+        });
+ 
+        
+        observer.observe(stepElement, { 
+            attributes: true 
+        });
+    }
+
+});
+
+
+</script>
+
+
+
+
+
 
 <script>
     // script pour ajouter adherent comme assurer dans le resume

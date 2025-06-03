@@ -220,6 +220,18 @@ class BulletinController extends Controller
         $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($qrCodeImage);
 
 
+        $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$contrat->id."/E-SOUSCRIPTION";
+        if($imageUrl == null){
+            $imageData = file_get_contents($imageUrl);
+            $base64Image = base64_encode($imageData);
+            $imageSrc = 'data:image/png;base64,'.$base64Image;
+        }else{
+            $imageSrc = null;
+        }
+
+        
+
+
         if($contrat)
         {
             // Options pour Dompdf
@@ -237,14 +249,16 @@ class BulletinController extends Controller
             {
                 $pdf = PDF::loadView('productions.components.bullettin.Cadencebulletin', [
                     'contrat' => $contrat,
-                    'qrCodeBase64' => $qrCodeBase64
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc
                 ]);
                 $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
                 
             }else if($contrat->codeproduit == "PFA_IND"){
                 $pdf = PDF::loadView('productions.components.bullettin.pfaINDbulletin', [
                     'contrat' => $contrat,
-                    'qrCodeBase64' => $qrCodeBase64
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc
                 ]);
                 $cguFile = public_path('root/cgu/cg_yke.pdf');
             }else if($contrat->codeproduit == "DOIHOO"){
