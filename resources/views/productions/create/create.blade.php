@@ -25,12 +25,14 @@
 
 </style>
     @php
-        $tok = Str::uuid();
+        $tok = Str::random(80);
         $token = [
             'token' => $tok,
             'operation_type' => "E-SOUSCRIPTION",
             'key_uuid' => $tok
         ];
+        $keyUuid = $token['key_uuid'];
+        $operationType = $token['operation_type'];
     @endphp
 
 <div class="productions">
@@ -234,5 +236,44 @@
 
     @include('productions.assurer.addModal', ['CodeProduit' => $product->CodeProduit])
     @include('productions.beneficiaires.add')
+
+    <script>
+    let pollingInterval;
+
+    const qrCodeModal = document.getElementById('qrCodeModal');
+
+    qrCodeModal.addEventListener('shown.bs.modal', function () {
+        const keyUuid = "{{ $keyUuid }}"; // Variable Blade pour key_uuid
+        const operationType = "{{ $operationType }}"; // Variable Blade pour operation_type
+
+        // Polling toutes les 3 secondes pour vérifier l'état de la signature
+        pollingInterval = setInterval(() => {
+            fetch(`https://apisign.yakoafricassur.com/api/check-signature-status/${keyUuid}/${operationType}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status == 'completed') {
+                        clearInterval(pollingInterval);
+
+                        // Masquer la modale si la signature est terminée
+                        const modal = bootstrap.Modal.getInstance(qrCodeModal);
+                        modal.hide();
+
+                        // Afficher un message indiquant que la signature est terminée
+                        alert("Signature terminée avec succès !");
+                    }
+                })
+                .catch(error => {
+                    console.error("Erreur de polling :", error);
+                });
+        }, 3000); // toutes les 3 secondes
+    });
+
+    // Si la modale est fermée, on arrête le polling
+    qrCodeModal.addEventListener('hidden.bs.modal', function () {
+        if (pollingInterval) {
+            clearInterval(pollingInterval);
+        }
+    });
+</script>
 
 @endsection

@@ -83,3 +83,36 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const stepElement = document.getElementById("test-l-3");
+        
+        // Initialisation du modal Bootstrap
+        const qrModal = new bootstrap.Modal(document.getElementById('qrCodeModal'), {
+            keyboard: false,
+            backdrop: 'static'
+        });
+
+        
+        if (stepElement) {
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(mutation => {
+                    if (mutation.attributeName === 'class' && 
+                        stepElement.classList.contains('active')) {
+                        console.log("Element actif détecté - ouverture du modal");
+                        qrModal.show();
+                    }
+                });
+            });
+    
+            
+            observer.observe(stepElement, { 
+                attributes: true 
+            });
+        }
+
+    });
+
+
+</script>

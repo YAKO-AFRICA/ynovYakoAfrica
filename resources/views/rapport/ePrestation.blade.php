@@ -165,7 +165,7 @@
                         <td>{{ $item->moyenPaiement ?? "" }}</td>
                         
                         <td>
-                            @if($item->membre->typ_membre != 3)
+                            @if($item->membre && $item->membre->typ_membre != 3)
                                 {{ $item->membre->nom ?? "" }} {{ $item->membre->prenom ?? "" }}
                             @else
                                 Demande en ligne

@@ -334,7 +334,6 @@ class ProductionController extends Controller
 
 
 
-
     public function storeSimulationPrime(Request $request)
     {
         // Vérification des données reçues

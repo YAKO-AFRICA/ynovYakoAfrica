@@ -113,7 +113,10 @@ class RapportController extends Controller
 
         $agents = Membre::where('idmembre', $user)->get();
 
-        $query = TblPrestation::where('saisiepar', $user);
+        // $query = TblPrestation::where('saisiepar', $user);
+
+        $query = TblPrestation::where('etape', '!=', '-1');
+        
 
         // Filtrer par date (de et à)
         if ($request->filled('dateFrom') && $request->filled('dateTo')) {
@@ -132,6 +135,7 @@ class RapportController extends Controller
 
         // Exécuter la requête
         $prestations = $query->get();
+        // dd($prestations);
 
 
         $defaultColumns = ['#', 'code', 'ID contrat', 'type prestation', 'Montant souhaité', 'Mode de Paiement', 'Saisir Par', 'Status', 'Date création'];

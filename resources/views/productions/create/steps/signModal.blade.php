@@ -3,7 +3,7 @@
             <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title text-center">Signature electroique</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
             </div>
 
             <div class="modal-body">
@@ -11,7 +11,7 @@
 
                 <div class="card p-2">
                     <div class="card-header text-center">
-                        <h4>Veuillez scanner ce code QR pour effectuer votre signature</h4>
+                        <h4>Veuillez scanner ce code QR pour éffectuer votre signature</h4>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -23,18 +23,18 @@
                     <div class="card-footer">
                         <div class="row">
                             <div class="col-12">
-                                Vous pouvez aussi utiliser le lien suivant : 
+                                Vous pouvez également signer en cliquant: 
                                 <a href="https://apisign.yakoafricassur.com/signature/{{ $token['token'] }}/{{ $token['operation_type'] }}/{{ $token['key_uuid'] }}">
-                                    https://apisign.yakoafricassur.com
+                                    <strong>ICI</strong>
                                 </a>
                             </div>
                         </div>
                     </div>  
                 </div>
             </div>
-            <div class="modal-footer">
+            {{-- <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            </div>
+            </div> --}}
             </div>
         </div>
     </div>

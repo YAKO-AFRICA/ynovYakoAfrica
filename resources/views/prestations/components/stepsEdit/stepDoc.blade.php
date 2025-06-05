@@ -86,7 +86,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-12 col-md-6" id="FicheIDNum">
+                    <div class="col-12" id="FicheIDNum">
                         <div class="mb-3">
                             <div class="card">
                                 <div class="card-header">
@@ -99,7 +99,7 @@
                             </div> 
                         </div>
                     </div>
-                    <div class="col-12 col-md-6" id="RIB-file">
+                    <div class="col-12" id="RIB-file">
                         <div class="mb-3">
                             <div class="card">
                                 <div class="card-header">
@@ -112,7 +112,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
+                    {{-- <div class="col-12 col-md-6">
 
                         <div class="card">
 
@@ -138,7 +138,7 @@
 
                         </div>
 
-                    </div> 
+                    </div>  --}}
                 </div>
             </div>
         </div>
