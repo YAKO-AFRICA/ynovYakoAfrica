@@ -133,9 +133,12 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="ms-auto">
-                                <button type="button" class="btn btn-outline-secondary float-end" data-bs-target="#addnewPropect" data-bs-toggle="modal">
-                                    <i class="bx bxs-plus-square"></i> Nouvelle prospection
-                                </button>
+                                @can('Demarrer une propection')
+                                    <button type="button" class="btn btn-outline-secondary float-end" data-bs-target="#addnewPropect" data-bs-toggle="modal">
+                                        <i class="bx bxs-plus-square"></i> Nouvelle prospection
+                                    </button>
+                                @endcan
+                                
                             </div>
                         </div>
                         <div class="card-body">

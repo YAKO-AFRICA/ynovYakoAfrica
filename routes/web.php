@@ -1,10 +1,12 @@
 <?php
 
+use App\Models\FileManager;
 use Illuminate\Support\Str;
 use BaconQrCode\Encoder\QrCode;
 use App\Models\TblTypePrestation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MailController;
 use Illuminate\Support\Facades\Response;
@@ -29,6 +31,7 @@ use App\Http\Controllers\Setting\EquipCcontroller;
 use App\Http\Controllers\Setting\EquipeController;
 use App\Http\Controllers\Setting\PartnerController;
 use App\Http\Controllers\Setting\ReseauxController;
+use App\Http\Controllers\Admin\FileManageController;
 use App\Http\Controllers\Admin\PrestationController;
 use App\Http\Controllers\Admin\ProductionController;
 use App\Http\Controllers\Admin\ValidationController;
@@ -64,6 +67,20 @@ Route::prefix('shared')->name('shared.')->group(function(){
     Route::middleware(['auth','PreventBackHistory'])->group(function () {
         Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::post('/update/assuree/{id}', [AssurerController::class, 'updateAssur'])->name('assuree.update');
+
+    });
+});
+Route::prefix('file')->name('file.')->group(function(){
+    Route::middleware('guest')->group(function(){
+    });
+
+    Route::middleware(['auth','PreventBackHistory'])->group(function () {
+        Route::get('/manager', [FileManageController::class, 'index'])->name('manager');
+        Route::post('/store/folder', [FileManageController::class, 'storeFolder'])->name('storeFolder');
+        Route::post('/store/files', [FileManageController::class, 'storeFile'])->name('storeFile');
+        Route::get('/file-manager/files/{folder_id}', [FileManageController::class, 'getFilesByFolder']);
+
+       
 
     });
 });
@@ -443,5 +460,76 @@ Route::get('/welcome', function () {
 route::get('/generate-bulletin-demo', [EpretController::class, 'generateBu'])->name('generateBul');
 
 Route::get('/generate-qr', [ProductionController::class, 'getQrCode'])->name('generate-qr-code');
+
+
+
+
+
+
+
+
+
+
+// Téléchargement de fichier
+Route::get('/file-manager/download/{uuid}', function ($uuid) {
+    $file = FileManager::where('uuid', $uuid)->firstOrFail();
+    
+    $disk = Storage::disk('external');
+    $filePath = $file->path;
+    
+    if (!$disk->exists($filePath)) {
+        abort(404, 'Fichier non trouvé');
+    }
+    
+    return $disk->download(
+        $filePath,
+        $file->name . '.' . $file->extension,
+        [
+            'Content-Type' => $file->mime_type,
+            'Content-Disposition' => 'attachment; filename="' . $file->name . '.' . $file->extension . '"'
+        ]
+    );
+})->name('file.download');
+
+// Prévisualisation de fichier
+Route::get('/file-manager/preview/{uuid}', function ($uuid) {
+    $file = FileManager::where('uuid', $uuid)->firstOrFail();
+    $disk = Storage::disk('external');
+
+    if (!$disk->exists($file->path)) {
+        abort(404);
+    }
+
+    // PDF ou Image : stream direct dans l'iframe
+    if (str_starts_with($file->mime_type, 'image/') || $file->mime_type === 'application/pdf') {
+        $stream = $disk->readStream($file->path);
+        return response()->stream(function () use ($stream) {
+            fpassthru($stream);
+        }, 200, [
+            'Content-Type' => $file->mime_type,
+            'Content-Disposition' => 'inline; filename="' . $file->name . '.' . $file->extension . '"',
+            'Cache-Control' => 'public, max-age=86400',
+        ]);
+    }
+
+    // Texte brut : afficher dans une vue
+    if ($file->mime_type === 'text/plain') {
+        $content = $disk->get($file->path);
+        return view('file-manager.text-preview', ['content' => nl2br(e($content))]);
+    }
+
+    // Word : Google Docs Viewer
+    if (in_array($file->mime_type, [
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ])) {
+        $url = "https://docs.google.com/gview?url=" . urlencode(route('file-manager.download', $uuid)) . "&embedded=true";
+        return view('file-manager.embed', ['url' => $url]);
+    }
+
+    // Fichier non pris en charge
+    return view('file-manager.preview-not-available', ['file' => $file]);
+});
+
 
 

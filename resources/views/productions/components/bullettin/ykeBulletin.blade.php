@@ -371,8 +371,13 @@
 
                         <label for="prenom">Signature du Souscripteur</label>
 
-                        <div>
+                        {{-- <div>
                             <img src="{{ $qrCodeBase64 }}" alt="QR Code de vérification" style="width: 60px; height: 60px;">
+                        </div> --}}
+                        <div>
+                            @if ($imageSrc != null)
+                                <img src="{{ $imageSrc }}" alt="QR Code de vérification" style="width: 55px; height: 55px;">
+                            @endif
                         </div>
 
                     </div>

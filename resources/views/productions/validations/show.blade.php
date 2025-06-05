@@ -96,36 +96,28 @@
 
         </div>
 
+
         <div class="card">
-
             <div class="card-body">
-
-                <h5 class="mb-0 font-weight-bold">Documents joint </h5>
-
+                <h5 class="mb-0 font-weight-bold">Documents joints</h5>
                 <div class="mt-3"></div>
+                
+                @php
+                    $documents = $contrat->getDocumentsBasedOnProduct();
+                @endphp
 
-                @if (count($contrat->documents) > 0)
-
-                    @foreach ($contrat->documents as $doc)
-
+                
+                @if (count($documents) > 0)
+                    @foreach ($documents as $doc)
                     <div class="d-flex align-items-center mt-3">
-
-                        <div class="fm-file-box bg-light-success text-success"><i
-
-                                class='bx bxs-file-doc'></i>
-
+                        <div class="fm-file-box bg-light-success text-success">
+                            <i class='bx bxs-file-doc'></i>
                         </div>
-
                         <div class="flex-grow-1 ms-2">
-
                             <h6 class="mb-0" style="font-size: 10px">{{ $doc->libelle ?? ''}}</h6>
-
                             <p class="mb-0 text-secondary">
-
                                 {{ $doc->saisiele ?? ''}}
-
                             </p>
-
                         </div>
                         <h6 class="text-primary mb-0">
                             <a class="btn btn-sm btn-outline-secondary" data-bs-target="#view-bulletin{{$doc->id}}" data-bs-toggle="modal" title="Preview"> 
@@ -134,54 +126,27 @@
                         </h6>
                         
                         <div class="modal fade" id="view-bulletin{{$doc->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-
                             <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-
                                 <div class="modal-content">
-
                                     <div class="modal-header">
-
                                         <h5 class="modal-title" id="exampleModalLabel">Preview {{$doc->libelle ?? ''}}</h5>
-
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
                                     </div>
-
                                     <div class="modal-body" style="width: 100%; height: 80vh">
-
-                                        {{-- <iframe style="width: 100%; height: 100%" src="{{ asset('documents/files/'.$doc->filename) }}" frameborder="0"></iframe> --}}
                                         <iframe style="width: 100%; height: 100%" src="{{ url('storage/documents/' . $doc->filename) }}" frameborder="0"></iframe>
-
                                     </div>
-
                                     <div class="modal-footer">
-
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-
                                     </div>
-
                                 </div>
-
                             </div>
-
                         </div>
-
                     </div>
-
                     @endforeach
-
                 @else
-
                     <p class="text-secondary">Aucun document joint</p>
-
                 @endif
-
-                
-
-                
-
             </div>
-
         </div>
 
     </div>
@@ -722,8 +687,8 @@
                                             <td>{{ $assure->nom ?? '-' }} {{ $assure->prenom ?? '-' }}</td>
                                             <td>
                                                 <ul>
-                                                    @foreach ($assure->garanties as $item)
-                                                        <li>{{ $item->monlibelle ?? 'Aucune garantie'}}</li>
+                                                    @foreach ($productGarantie as $item)
+                                                        <li>{{ $item->MonLibelle }}</li>
                                                     @endforeach
                                                 </ul>
                                             </td>

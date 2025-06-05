@@ -86,7 +86,6 @@
         }
     </style>
 
-
     
 	<title>YNOV - Plateforme de souscription en ligne</title>
 </head>

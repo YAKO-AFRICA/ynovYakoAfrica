@@ -132,4 +132,18 @@ class Contrat extends Model
     {
         return $this->hasMany(AssureGarantie::class, 'codecontrat', 'id');
     }
+
+
+    public function documentsLoyemp()
+    {
+        return $this->hasMany(Document::class, 'codecontrat', 'refcontratsource')
+                    ->where('source', 'pret');
+    }
+
+       public function getDocumentsBasedOnProduct()
+    {
+        return $this->codeproduit === 'loyemp' 
+            ? $this->documentsLoyemp 
+            : $this->documents;
+    }
 }

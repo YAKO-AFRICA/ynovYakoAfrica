@@ -44,15 +44,10 @@ class ValidationController extends Controller
 
         $partBNI = Partner::where('code', '092')->first();
 
-        if ($partBNI) {
-            $PartBNIContrat = [
-                'partner' => $partBNI,
-                'contrats' => $contrats->filter(function ($contrat) use ($partBNI) {
-                    return $contrat->partenaire == $partBNI->code;
-                })
-            ];
+         if ($partBNI) {
+            $PartBNIContrat = Contrat::where(['partenaire' => 'BNI', 'etape' => 2, 'estMigre' => 0])->get();
         } else {
-            $PartBNIContrat = null; // Gérer le cas où aucun partenaire n'est trouvé
+            $PartBNIContrat = null;
         }
 
         $prets = Pret::where(['etat' => 1])->get();

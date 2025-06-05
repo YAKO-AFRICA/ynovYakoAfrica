@@ -837,7 +837,8 @@ class ProductionController extends Controller
             if($contrat->codeproduit == "YKE_2018"){
                 $pdf = PDF::loadView('productions.components.bullettin.ykeBulletin', [
                     'contrat' => $contrat,
-                    'qrCodeBase64' => $qrCodeBase64
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc,
                 ]);
                 $cguFile = public_path('root/cgu/cg_yke.pdf');
 
@@ -853,20 +854,23 @@ class ProductionController extends Controller
             {
                 $pdf = PDF::loadView('productions.components.bullettin.Cadencebulletin', [
                     'contrat' => $contrat,
-                    'qrCodeBase64' => $qrCodeBase64
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc,
                 ]);
                 $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
                 
             }else if($contrat->codeproduit == "DOIHOO"){
                 $pdf = PDF::loadView('productions.components.bullettin.Doihoobulletin', [
                     'contrat' => $contrat,
-                    'qrCodeBase64' => $qrCodeBase64
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc,
                 ]);
                 $cguFile = public_path('root/cgu/doihoo_cgu.pdf');
             }else{
                 $pdf = PDF::loadView('productions.components.bullettin.basicBulletin', [
                     'contrat' => $contrat,
-                    'qrCodeBase64' => $qrCodeBase64
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc,
                 ]);
                 $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
             }

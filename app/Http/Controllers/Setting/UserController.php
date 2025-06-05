@@ -202,99 +202,83 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
 
-        // \dd($request->all());
-
-        // if ($request->codePart == "092") {
-        //     $partenaire = "BNI";
-        //     $type = null;
-        // } else {
-        //     $partenaire = $request->codePart;
-        //     $type = 2;
-        // }
-
-        // $id = Membre::max('idmembre') + 2;
-
+        Log::info("ID du membre : $id");
+        Log::info("code reseau : $request->codereseau");
 
         DB::beginTransaction();
+
         try {
             $membre = Membre::where('idmembre', $id)->update([
-                // 'idmembre' => $id,
-                // 'typ_membre' => $type,
-                'codeagent' => $request->codeagent,
                 'codereseau' => $request->codereseau,
-                // 'codepartenaire' => $request->codePart,
-                // 'partenaire' => $partenaire,
                 'codezone' => $request->codezone,
-                'codeequipe' => $request->codeequipe, // id agence // equipe
+                'codeequipe' => $request->codeequipe,
                 'sexe' => $request->sexe,
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
                 'datenaissance' => $request->datenaissance,
                 'profession' => $request->profession,
-                'agence' => $request->equipeCode,  // equipe es une aagence // code
+                'agence' => $request->equipeCode,
                 'branche' => $request->branche,
                 'login' => $request->login,
                 'role' => $request->profile,
-                'coderole' => $request->profile_id,
-                // 'pass' => $request->pass,
+                'coderole' => $request->role_id, // ou profile_id selon cohérence
                 'email' => $request->email,
                 'cel' => $request->cel,
                 'tel' => $request->tel,
             ]);
 
-            // if($membre){
+            if ($membre) {
+                Log::info("Membre mis à jour");
 
-            //     $userAssign = User::where('idmembre', $id)->first();
-            //     User::where('idmembre', $id)->update([
-            //         // 'idmembre' => $id,
-            //         'email' => $request->email,
-            //         'login' => $request->login,
-            //         'id_role' => $request->role_id,
-            //         // 'password' => bcrypt($request->pass),
-            //         // 'codepartenaire' => $request->codePart,
-            //         'branche' => $request->branche
-            //     ]);
+                $userAssign = User::where('idmembre', $id)->first();
+                if ($userAssign) {
+                    Log::info("User assigné trouvé");
 
-            //     // $role = Role::find($request->role_id);
-            //     // $userAssign->assignRole($role);
+                    $userAssign->update([
+                        'email' => $request->email,
+                        'login' => $request->login,
+                        'id_role' => $request->role_id,
+                        'branche' => $request->branche
+                    ]);
 
-            //     // $userAssign->syncRoles([$role->id]);
+                    $role = Role::find($request->role_id);
+                    if ($role) {
+                        $userAssign->assignRole($role);
+                        $userAssign->syncRoles([$role->id]);
+                        Log::info("Rôle synchronisé");
+                    }
+                }
 
-            //     DB::commit();
-                
-            // }
-
-            DB::commit();
-
-            if($membre){
-                $dataResponse =[
-                    'type'=>'success',
-                    'urlback'=>"back",
-                    'message'=>"Enregistré avec succes!",
-                    'code'=>200,
-                ];
                 DB::commit();
-            }else{
-                $dataResponse =[
-                    'type'=>'error',
-                    'urlback'=>'',
-                    'message'=>"Erreur d'enregistrement !",
-                    'code'=>500,
+
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => "back",
+                    'message' => "Enregistré avec succès !",
+                    'code' => 200,
                 ];
+            } else {
                 DB::rollBack();
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur d'enregistrement !",
+                    'code' => 500,
+                ];
             }
-            
 
         } catch (\Throwable $th) {
             DB::rollBack();
-            $dataResponse =[
-                'type'=>'error',
-                'urlback'=>'',
-                'message'=>"Erreur systeme! ". $th->getMessage(),
-                'code'=>500,
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur système ! " . $th->getMessage(),
+                'code' => 500,
             ];
         }
+
         return response()->json($dataResponse);
+
     }
 
     /**

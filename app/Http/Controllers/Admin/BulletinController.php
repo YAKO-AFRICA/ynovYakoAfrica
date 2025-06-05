@@ -223,7 +223,7 @@ class BulletinController extends Controller
 
 
         $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$contrat->id."/E-SOUSCRIPTION";
-        if($imageUrl == null){
+        if($imageUrl != null){
             $imageData = file_get_contents($imageUrl);
             $base64Image = base64_encode($imageData);
             $imageSrc = 'data:image/png;base64,'.$base64Image;
@@ -266,14 +266,16 @@ class BulletinController extends Controller
             }else if($contrat->codeproduit == "DOIHOO"){
                 $pdf = PDF::loadView('productions.components.bullettin.Doihoobulletin', [
                     'contrat' => $contrat,
-                    'qrCodeBase64' => $qrCodeBase64
+                    'qrCodeBase64' => $qrCodeBase64,
+                     'imageSrc' => $imageSrc
                 ]);
                 $cguFile = public_path('root/cgu/doihoo_cgu.pdf');
             }else{
 
                 $pdf = PDF::loadView('productions.components.bullettin.basicBulletin', [
                     'contrat' => $contrat,
-                    'qrCodeBase64' => $qrCodeBase64
+                    'qrCodeBase64' => $qrCodeBase64,
+                     'imageSrc' => $imageSrc
                 ]);
                 $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
             }

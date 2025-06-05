@@ -9,7 +9,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
                     <li class="breadcrumb-item active" aria-current="page">Productions</li>
-                    <li class="breadcrumb-item active" aria-current="page">Validation Popositions | {{ $datas['partners']->designation }}</li>
+                    <li class="breadcrumb-item active" aria-current="page">Validation Popositions | {{ $datas['partners']->designation ?? 'BNI' }}</li>
                 </ol>
             </nav>
         </div>
@@ -173,8 +173,6 @@
                                 </div>
                             </form>
                         </div>
-                        
-
                     </div>
                 </div>
             </div>
