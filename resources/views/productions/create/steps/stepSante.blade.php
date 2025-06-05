@@ -1,5 +1,5 @@
 <div id="test-l-5" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger5">
-    @include('productions.components.otpModal')
+    {{-- @include('productions.components.otpModal') --}}
     <h5 class="mb-1">Informations sur votre état de santé</h5>
 
     <p class="mb-4">Veuillez cocher les informations relatives à votre état de santé en tenant compte des champs
@@ -1472,20 +1472,16 @@
                 <button onclick="event.preventDefault(); stepper1.previous()"
                     class="btn border-btn btn-previous-form"><i class='bx bx-left-arrow-alt'></i>Previous</button>
 
-                <button type="button" data-bs-toggle="modal" data-bs-target="#otpModal" class="btn btn-two">Code OTP<i
+                <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form d-none" id="btn-next-sante">Suivant<i
                         class='bx bx-right-arrow-alt'></i></button>
-                {{-- <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i
-                        class='bx bx-right-arrow-alt'></i></button> --}}
-                {{-- <button type="submit"
-                    class="btn btn-two">Enregistrer<i
-                    class='bx bx-right-arrow-alt'></i>
-                </button> --}}
 
+                <button type="button" data-bs-toggle="modal" data-bs-target="#otpModal" id="btn-otp-modal" class="btn btn-two d-non">Code OTP<i
+                    class='bx bx-right-arrow-alt'></i></button>
             </div>
-
         </div>
+    </div>
 
-    </div><!---end row-->
+    @include('productions.components.otpModal')
 
 
 

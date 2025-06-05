@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use App\Models\Membre;
 use App\Models\Tblotp;
 use App\Models\Tblrdv;
+use App\Models\Signature;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\MembreContrat;
 use App\Models\TblPrestation;
@@ -138,6 +140,13 @@ class PrestationController extends Controller
         $typePrestation = TblTypePrestation::where('id', $id)->first();
         $typePrestationAutre = TblTypePrestation::where('impact', 'Autre')->where('etat', 'Actif')->first();
         $TotalEncaissement = session('TotalEncaissement', 0);
+
+        $tok = Str::random(80);
+        $token = [
+            'token' => $tok,
+            'operation_type' => "E-PRESTATION",
+            'key_uuid' => $tok
+        ];
         // dd($TotalEncaissement);
         $contract = session('contractDetails', []);
         $contractDetails = $contract['details'][0] ?? [];
@@ -152,7 +161,7 @@ class PrestationController extends Controller
             return redirect()->back()->with('fail','Une prestation de type "' . $typePrestation->libelle . '" pour le contrat ' . $idcontrat . ' est déja en cours. N° de prestation : ' . $prestation->code);
         }else{
             session()->forget('contractDetails');
-            return view('prestations.create', compact('typePrestation', 'contractDetails', 'membreDetails', 'typePrestationAutre', 'TotalEncaissement'));
+            return view('prestations.create', compact('typePrestation', 'contractDetails', 'membreDetails', 'typePrestationAutre', 'TotalEncaissement', 'token', 'tok'));
         }
         
     }
@@ -531,7 +540,10 @@ class PrestationController extends Controller
                     TblDocPrestation::create($fileData);
                 }
             }
-
+            $sign = Signature::where('key_uuid', $request->tokGenerate)->first();
+            $sign->update([
+                'reference_key' => $prestation->code
+            ]);
             $prestationPdfUrl = $this->generatePrestationPdf($prestation);
             return response()->json([
                 'type' => 'success',
@@ -559,9 +571,18 @@ class PrestationController extends Controller
             if (!is_dir($externalUploadDir)) {
                 mkdir($externalUploadDir, 0777, true);
             }
+            
+            $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$prestation->code."/E-PRESTATION";
+            if ($imageUrl != null || $imageUrl != '') {
+                $imageData = file_get_contents($imageUrl);
+                $base64Image = base64_encode($imageData);
+                $imageSrc = 'data:image/png;base64,'.$base64Image;
+            } else {
+                $imageSrc = '';
+            }
             // Génération du QR code et du fichier PDF pour la prestation
             $qrcode = base64_encode(QrCode::format('svg')->size(80)->generate(url('prestation/getInfoPrestation/' . $prestation->id)));
-            $pdf = Pdf::loadView('prestations.fiches.prestation', compact('qrcode', 'prestation'))
+            $pdf = Pdf::loadView('prestations.fiches.prestation', compact('qrcode', 'prestation', 'imageSrc'))
                 ->setPaper('a4', 'portrait')
                 ->setOptions([
                     'isHtml5ParserEnabled' => true,
@@ -802,7 +823,6 @@ class PrestationController extends Controller
             'CNI' => null,
             'FicheIDNum' => null,
             'RIB' => null,
-            'Signature' => null,
         ];
 
         foreach ($documents as $doc) {
@@ -813,7 +833,6 @@ class PrestationController extends Controller
         }
         // Vérification des conditions obligatoires
         $conditionsInvalides = (
-            is_null($types['Signature']) || 
             is_null($types['CNI']) || 
             (is_null($types['Police']) && is_null($types['AttestationPerteContrat']) && is_null($types['bulletin'])) || 
             (is_null($types['RIB']) && is_null($types['FicheIDNum']))
@@ -834,7 +853,6 @@ class PrestationController extends Controller
             'CNI' => null,
             'FicheIDNum' => null,
             'RIB' => null,
-            'Signature' => null,
         ];
 
         foreach ($documents as $doc) {
@@ -845,7 +863,6 @@ class PrestationController extends Controller
         }
         // Vérification des conditions obligatoires
         $conditionsInvalides = (
-            is_null($types['Signature']) || 
             is_null($types['CNI']) || 
             (is_null($types['Police']) && is_null($types['AttestationPerteContrat']) && is_null($types['bulletin'])) || 
             (is_null($types['RIB']) && is_null($types['FicheIDNum']))
@@ -1046,7 +1063,6 @@ class PrestationController extends Controller
                 'CNI' => null,
                 'FicheIDNum' => null,
                 'RIB' => null,
-                'Signature' => null,
             ];
 
             foreach ($documents as $doc) {
@@ -1056,7 +1072,6 @@ class PrestationController extends Controller
             }
             // Vérification des conditions obligatoires
             $conditionsInvalides = (
-                is_null($types['Signature']) || 
                 is_null($types['CNI']) || 
                 (is_null($types['Police']) && is_null($types['AttestationPerteContrat']) && is_null($types['bulletin'])) || 
                 (is_null($types['RIB']) && is_null($types['FicheIDNum']))
@@ -1199,9 +1214,17 @@ class PrestationController extends Controller
             if (!is_dir($externalUploadDir)) {
                 mkdir($externalUploadDir, 0777, true);
             }
+            $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$prestation->code."/E-PRESTATION";
+            if ($imageUrl != null || $imageUrl != '') {
+                $imageData = file_get_contents($imageUrl);
+                $base64Image = base64_encode($imageData);
+                $imageSrc = 'data:image/png;base64,'.$base64Image;
+            } else {
+                $imageSrc = '';
+            }
             // Génération du QR code et du fichier PDF pour la prestation
             $qrcode = base64_encode(QrCode::format('svg')->size(80)->generate(url('prestation/getInfoPrestation/' . $prestation->id)));
-            $pdf = Pdf::loadView('prestations.fiches.prestation', compact('qrcode', 'prestation'))
+            $pdf = Pdf::loadView('prestations.fiches.prestation', compact('qrcode', 'prestation', 'imageSrc'))
                 ->setPaper('a4', 'portrait')
                 ->setOptions([
                     'isHtml5ParserEnabled' => true,

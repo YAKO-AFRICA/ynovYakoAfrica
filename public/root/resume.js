@@ -1,252 +1,227 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Références aux champs de saisie et aux éléments d'affichage
-    const civiliteInputs = document.querySelectorAll('input[name="civilite"]');
-    const nomInput = document.querySelector('input[name="nom"]');
-    const prenomInput = document.querySelector('input[name="prenom"]');
-    const birthdayInput = document.querySelector('input[name="datenaissance"]');
+    // Fonction principale pour mettre à jour le résumé
+    function updateResume() {
+        // Fonction helper pour récupérer les valeurs
+        const getValue = (name) => {
+            const element = document.querySelector(`[name="${name}"]`);
+            if (element) {
+                if (element.type === 'radio' || element.type === 'checkbox') {
+                    const checked = document.querySelector(`[name="${name}"]:checked`);
+                    return checked ? checked.value : '';
+                }
+                return element.value;
+            }
+            return sessionStorage.getItem(name) || '';
+        };
 
+        // Fonction pour formater la date
+        const formatDate = (dateString) => {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR');
+        };
 
+        // Fonction pour formater les montants
+        const formatAmount = (amount) => {
+            if (!amount) return '--';
+            return new Intl.NumberFormat('fr-FR').format(amount) + ' FCFA';
+        };
 
-    $('#lieunaissance').on("select2:select", function(e) {
-        let selectedValue = e.params.data.text;
-        console.log("Lieu de naissance sélectionné :", selectedValue);
-        $("#displayLieuNaissance").text(selectedValue);
-    });
+        // Mise à jour des informations personnelles
+        document.getElementById('displayCivility').textContent = getValue('civilite') || '--';
+        document.getElementById('displayNom').textContent = getValue('nom') || '--';
+        document.getElementById('displayPrenom').textContent = getValue('prenom') || '--';
+        document.getElementById('displayBirthday').textContent = formatDate(getValue('datenaissance')) || '--';
+        document.getElementById('displayLieuNaissance').textContent = $('#lieunaissance').select2('data')[0]?.text || getValue('lieunaissance') || '--';
+        document.getElementById('displayResidence').textContent = $('#lieuresidence').select2('data')[0]?.text || getValue('lieuresidence') || '--';
+        document.getElementById('displayNumPiece').textContent = `${getValue('naturepiece') || ''} ${getValue('numeropiece') || ''}`.trim() || '--';
+        document.getElementById('displayProfession').textContent = $('#profession').select2('data')[0]?.text || getValue('profession') || '--';
+        document.getElementById('displayEmployeur').textContent = $('#employeur').select2('data')[0]?.text || getValue('employeur') || '--';
+        document.getElementById('displayEmail').textContent = getValue('email') || '--';
+        document.getElementById('displayTelephone').textContent = getValue('telephone') || '--';
+        document.getElementById('displayMobile').textContent = getValue('mobile') || '--';
+        document.getElementById('displayMobile1').textContent = getValue('mobile1') || '--';
 
-    $('#lieuresidence').on("select2:select", function(e) {
-        let selectedValue = e.params.data.text;
-        console.log("Lieu de résidence sélectionné :", selectedValue);
-        $("#displayResidence").text(selectedValue);
-    });
-    $('#profession').on("select2:select", function(e) {
-        let selectedValue = e.params.data.text;
-        $("#displayProfession").text(selectedValue);
-    });
-    $('#employeur').on("select2:select", function(e) {
-        let selectedValue = e.params.data.text;
-        $("#displayEmployeur").text(selectedValue);
-    });
-
-
-    const naturepieceInputs = document.querySelectorAll('input[name="naturepiece"]');
-    const numeropieceInput = document.querySelector('input[name="numeropiece"]');
-    const sexeInput = document.querySelector('input[name="sexe"]');
-
-    const emailInput = document.querySelector('input[name="email"]');
-
-    const mobileInput = document.querySelector('input[name="mobile"]');
-
-    const mobile1Input = document.getElementById('mobile1');
-    const telephoneInput = document.getElementById('telephone');
-    const displayTelephone = document.getElementById('displayTelephone');
-    const displayMobile1 = document.getElementById('displayMobile1');
-
-    if (mobile1Input) {
-        mobile1Input.addEventListener('input', () => {
-            displayMobile1.textContent = mobile1Input.value.trim() || '--';
-        });
+        // Mise à jour des informations du contrat
+        document.getElementById('displayDateEffet').textContent = formatDate(getValue('dateEffet')) || '--';
+        document.getElementById('displayPrimePrincipale').textContent = formatAmount(getValue('primepricipale'));
+        document.getElementById('displayFraisAdhesion').textContent = formatAmount(getValue('fraisAdhesion'));
+        document.getElementById('displayCapital').textContent = formatAmount(getValue('capital'));
+        document.getElementById('displayModePaiement').textContent = getPaymentMethodLabel(getValue('modepaiement')) || '--';
+        document.getElementById('displayOrganisme').textContent = $('#banque').val() || '--';
+        document.getElementById('displayAgence').textContent = $('#Agence').val() || '--';
+        document.getElementById('displayNumeroCompte').textContent = getValue('numerocompte') || '--';
+        document.getElementById('displayPeriodicite').textContent = getPeriodicityLabel(getValue('periodicite')) || '--';
     }
 
-    if (telephoneInput) {
-        telephoneInput.addEventListener('input', () => {
-            displayTelephone.textContent = telephoneInput.value.trim() || '--';
-        });
+    // Fonctions pour les libellés
+    function getPaymentMethodLabel(value) {
+        const methods = {
+            'VIR': 'Virement bancaire',
+            'ESP': 'Espèce',
+            'CHK': 'Chèque',
+            'Mobile_money': 'Mobile money',
+            'SOURCE': 'Prélèvement à la source'
+        };
+        return methods[value] || value;
     }
 
-   
-
-   
-    const dureePayInput = document.querySelectorAll('input[name="duree"]');
-
-    const periodiciteRadios = document.querySelectorAll('input[name="periodicite"]');
-    const dateEffetInput = document.querySelector('input[name="dateEffet"]');
-    const primeInput = document.querySelector('input[name="primepricipale"]');
-    const fraisAdhesionInput = document.querySelector('input[name="fraisadhesion"]');
-    const capitalInput = document.querySelector('input[name="capital"]');
-    const banqueSelect = document.querySelector('select[name="organisme"]');
-
-    // const agenceSelect = document.querySelector('select[name="agence"]');
-
-    $('#Agence').on("change", function(e) {
-        $("#displayAgence").text(this.value);
-    });
-
-    const numeroCompteInput = document.getElementById('Matricule');
-
-    if (numeroCompteInput) {
-        numeroCompteInput.addEventListener('input', () => {
-            displayNumeroCompte.textContent = numeroCompteInput.value.trim() || '--';
-        });
+    function getPeriodicityLabel(value) {
+        const periods = {
+            'M': 'Mensuelle',
+            'T': 'Trimestrielle',
+            'S': 'Semestrielle',
+            'A': 'Annuelle',
+            'U': 'Versement unique'
+        };
+        return periods[value] || value;
     }
 
+    // Liste des champs à surveiller
+    const fieldsToWatch = [
+        // Informations personnelles
+        'civilite', 'nom', 'prenom', 'datenaissance', 'lieunaissance',
+        'naturepiece', 'numeropiece', 'lieuresidence', 'profession',
+        'employeur', 'email', 'mobile', 'mobile1', 'telephone',
+        
+        // Informations du contrat
+        'modepaiement', 'organisme', 'agence', 'numerocompte',
+        'dateEffet', 'primepricipale', 'fraisAdhesion', 'capital',
+        'periodicite', 'numMobile'
+    ];
 
-    const numMobileInput = document.querySelector('input[name="numMobile"]');
-
-
-
-    // Références aux éléments d'affichage
-    const displayCivility = document.getElementById('displayCivility');
-    const displayNom = document.getElementById('displayNom');
-    const displayPrenom = document.getElementById('displayPrenom');
-    const displayBirthday = document.getElementById('displayBirthday');
-    
-    const displayNaturepiece = document.getElementById('displayNaturepiece');
-    const displayNumPiece = document.getElementById('displayNumPiece');
-    
-    const displaySexe = document.getElementById('displaySexe');
-    const displayEmail = document.getElementById('displayEmail');
-    const displayMobile = document.getElementById('displayMobile');
-
-    
-    // const displayDureePay = document.getElementById('displayDureePay');
-    const displayOrganisme = document.getElementById('displayOrganisme');
-    const displayAgence = document.getElementById('displayAgence');
-    const displayDateEffet = document.getElementById('displayDateEffet');
-    const displayPrimePrincipale = document.getElementById('displayPrimePrincipale');
-    const displayFraisAdhesion = document.getElementById('displayFraisAdhesion');
-    const displayCapital = document.getElementById('displayCapital');
-    const displayPeriodicite = document.getElementById('displayPeriodicite');
-    const displayNumMobile = document.getElementById('displayNumMobile');
-
-    // Mise à jour dynamique des valeurs affichées
-    civiliteInputs.forEach(input => {
-        input.addEventListener('change', () => {
-            displayCivility.textContent = input.checked ? input.value : 'null';
+    // Ajout des écouteurs d'événements
+    fieldsToWatch.forEach(field => {
+        const elements = document.querySelectorAll(`[name="${field}"]`);
+        elements.forEach(element => {
+            element.addEventListener('input', updateResume);
+            element.addEventListener('change', updateResume);
         });
     });
 
-    if (nomInput) {
-        nomInput.addEventListener('input', () => {
-            displayNom.textContent = nomInput.value || 'Null';
-        });
-    }
+    // Écouteurs pour les Select2
+    const select2Fields = ['lieunaissance', 'lieuresidence', 'profession', 'employeur', 'banque', 'Agence'];
+    select2Fields.forEach(field => {
+        $(`#${field}`).on("select2:select select2:change", updateResume);
+    });
 
-    if (prenomInput) {
-        prenomInput.addEventListener('input', () => {
-            displayPrenom.textContent = prenomInput.value || 'Null';
-        });
-    }
-
-    if (birthdayInput) {
-        birthdayInput.addEventListener('input', () => {
-            displayBirthday.textContent = birthdayInput.value || 'Null';
-        });
-    }
-
-    naturepieceInputs.forEach(input => {
-        input.addEventListener('change', () => {
-            displayNaturepiece.textContent = input.checked ? input.value : 'null';
+    // Gestion de l'affichage des modes de paiement
+    document.querySelectorAll('input[name="modepaiement"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            document.getElementById('mode_bancaire').style.display = 
+                (this.value === 'VIR' || this.value === 'SOURCE') ? 'block' : 'none';
+            document.getElementById('mode_mobile').style.display = 
+                (this.value === 'Mobile_money') ? 'block' : 'none';
+            updateResume();
         });
     });
 
-    if (numeropieceInput) {
-        numeropieceInput.addEventListener('input', () => {
-            displayNumPiece.textContent = numeropieceInput.value || 'Null';
-        });
-    }
+    // Mise à jour initiale
+    updateResume();
 
-    
+    // Fonction pour être appelée quand l'étape résumé est affichée
+    window.onResumeStepShow = function() {
 
-
-    if (sexeInput) {
-        sexeInput.addEventListener('input', () => {
-            displaySexe.textContent = sexeInput.value || 'Null';
-        });
-    }
-
-    // if (professionSelect) {
-    //     professionSelect.addEventListener('change', () => {
-    //         displayProfession.textContent = professionSelect.value || 'Null';
-    //     });
-    // }
-
-    // if (employeurSelect) {
-    //     employeurSelect.addEventListener('change', () => {
-    //         displayEmployeur.textContent = employeurSelect.value || 'Null';
-    //     });
-    // }
-
-    if (emailInput) {
-        emailInput.addEventListener('input', () => {
-            displayEmail.textContent = emailInput.value || 'Null';
-        });
-    }
-
-    if (mobileInput) {
-        mobileInput.addEventListener('input', () => {
-            displayMobile.textContent = mobileInput.value || 'Null';
-        });
-    }
-
-    // if (mobile1Input) {
-    //     mobile1Input.addEventListener('input', () => {
-    //         displayMobile1.textContent = mobile1Input.value || 'Null';
-    //     });
-    // }
-
-    // if (telephoneInput) {
-    //     telephoneInput.addEventListener('input', () => {
-    //         displayTelephone.textContent = telephoneInput.value || 'Null';
-    //     });
-    // }
-
-  
- // Assure-toi que cet élément existe
-
-    const modePaiementRadios = document.querySelectorAll('input[name="modepaiement"]');
-    const displayModePaiement = document.getElementById('displayModePaiement');
-
-    modePaiementRadios.forEach(radio => {
-        radio.addEventListener('change', () => {
-            const selectedRadio = document.querySelector('input[name="modepaiement"]:checked'); // Trouve le radio sélectionné
-            displayModePaiement.textContent = selectedRadio ? selectedRadio.value : 'Null';
-        });
-    });
-
-
-    banqueSelect.addEventListener('change', () => {
-        displayOrganisme.textContent = banqueSelect.value || 'Null';
-    });
-
-    // Mise à jour de l'agence
-    agenceSelect.addEventListener('change', () => {
-        displayAgence.textContent = agenceSelect.value || 'Null';
-    });
-
-  
-
-    // Mise à jour de la date d'effet
-    dateEffetInput.addEventListener('input', () => {
-        displayDateEffet.textContent = dateEffetInput.value || 'Null';
-    });
-
-    // Mise à jour de la prime principale
-    primeInput.addEventListener('input', () => {
-        displayPrimePrincipale.textContent = primeInput.value || 'Null';
-    });
-
-    // Mise à jour des frais d'adhésion
-    fraisAdhesionInput.addEventListener('input', () => {
-        displayFraisAdhesion.textContent = fraisAdhesionInput.value || 'Null';
-    });
-
-    // Mise à jour du capital
-    capitalInput.addEventListener('input', () => {
-        displayCapital.textContent = capitalInput.value || 'Null';
-    });
-
-    // Mise à jour de la périodicité
-    periodiciteRadios.forEach(radio => {
-        radio.addEventListener('change', () => {
-            displayPeriodicite.textContent = radio.value || 'Null';
-        });
-    });
-
-    numMobileInput.addEventListener('input', () => {
-        displayNumMobile.textContent = numMobileInput.value || 'Null';
-    });
-
-
-
+        updateResume();
+    };
     
 });
+
+{/* <script> */}
+    document.addEventListener('DOMContentLoaded', function() {
+        const garantieTable = document.getElementById('garantiesTableBody');
+        
+        function updateGarantiesTable() {
+            const donneSession = sessionStorage.getItem('simulationData');
+            
+            // Vider le tableau
+            garantieTable.innerHTML = '';
+            
+            if (donneSession) {
+                try {
+                    const simulationData = JSON.parse(donneSession);
+                    let garanties = [];
+                    let totalPrimeGaranties = 0;
+
+                    // Récupérer les garanties selon la structure des données
+                    if (Array.isArray(simulationData)) {
+                        garanties = simulationData;
+                    } else if (simulationData.garantieData) {
+                        garanties = simulationData.garantieData;
+                    } else if (simulationData.garanties) {
+                        garanties = simulationData.garanties;
+                    }
+
+                    // Afficher les garanties
+                    if (garanties.length > 0) {
+                        garanties.forEach(garantie => {
+                            const prime = parseInt(garantie.prime || garantie.Prime || 0);
+                            totalPrimeGaranties += prime;
+                            
+                            const garantieRow = document.createElement('tr');
+                            garantieRow.innerHTML = `
+                                <td>${garantie.libelle || garantie.Libelle || '--'}</td>
+                                <td>${garantie.codeGarantie || garantie.CodeGarantie || '--'}</td>
+                                <td>${prime.toLocaleString('fr-FR')} FCFA</td>
+                            `;
+                            garantieTable.appendChild(garantieRow);
+                        });
+
+                        // Ajouter la ligne de total
+                        const totalRow = document.createElement('tr');
+                        totalRow.className = 'table-active fw-bold';
+                        totalRow.innerHTML = `
+                            <td colspan="2">Total des garanties</td>
+                            <td>${totalPrimeGaranties.toLocaleString('fr-FR')} FCFA</td>
+                        `;
+                        garantieTable.appendChild(totalRow);
+
+                    } else {
+                        // Aucune garantie
+                        garantieTable.innerHTML = `
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-3">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Aucune garantie sélectionnée
+                                </td>
+                            </tr>`;
+                    }
+
+                    // Afficher la prime principale (si elle existe dans les données)
+                    if (simulationData.infoSimulation?.primepricipale || simulationData.PrimeTotal) {
+                        const primepricipale = parseInt(simulationData.infoSimulation?.primepricipale || simulationData.PrimeTotal || 0);
+                    }
+                    
+                } catch (e) {
+                    console.error("Erreur lors du parsing des données:", e);
+                    garantieTable.innerHTML = `
+                        <tr>
+                            <td colspan="3" class="text-center text-danger py-3">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Erreur lors du chargement des données
+                            </td>
+                        </tr>`;
+                }
+            } else {
+                // Aucune donnée en session
+                garantieTable.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="text-center text-muted py-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Aucune donnée de simulation trouvée
+                        </td>
+                    </tr>`;
+            }
+        }
+    
+        // Initialisation
+        updateGarantiesTable();
+    
+        // Écouter les changements dans le sessionStorage
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'simulationData') {
+                updateGarantiesTable();
+            }
+        });
+    });
+{/* </script> */}

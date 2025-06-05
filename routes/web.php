@@ -1,12 +1,18 @@
 <?php
 
+use Illuminate\Support\Str;
+use BaconQrCode\Encoder\QrCode;
 use App\Models\TblTypePrestation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MailController;
 use Illuminate\Support\Facades\Response;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Admin\RdvController;
 use App\Http\Controllers\Admin\TestController;
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Admin\EpretController;
 use App\Http\Controllers\setting\RoleController;
 use App\Http\Controllers\Setting\UserController;
@@ -28,6 +34,7 @@ use App\Http\Controllers\Admin\ProductionController;
 use App\Http\Controllers\Admin\ValidationController;
 use App\Http\Controllers\Admin\BeneficiairesController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,7 +48,6 @@ use App\Http\Controllers\Admin\BeneficiairesController;
 Auth::routes();
 
 
-
 Route::middleware('guest','PreventBackHistory')->group(function(){
 
     Route::get('/', function () {
@@ -53,17 +59,116 @@ Route::middleware('guest','PreventBackHistory')->group(function(){
 
 Route::prefix('shared')->name('shared.')->group(function(){
     Route::middleware('guest')->group(function(){
-
-        
-
     });
 
     Route::middleware(['auth','PreventBackHistory'])->group(function () {
         Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::post('/update/assuree/{id}', [AssurerController::class, 'updateAssur'])->name('assuree.update');
+
+    });
+});
+
+Route::prefix('tickets')->name('ticket.')->group(function(){
+    Route::middleware('guest')->group(function(){
+
+        
+    });
+
+    Route::middleware(['auth','PreventBackHistory'])->group(function () {
+        Route::get('tickets/index', [TicketController::class, 'index'])->name('tickets.index');
+        Route::post('tickets/store', [TicketController::class, 'store'])->name('ticket.store');
+
+        Route::get('tickets/show/{ticket}', [TicketController::class, 'show'])->name('ticket.show');
+        Route::get('attachments/{attachment}/download', [AttachmentController::class,'download'])->name('attachments.download');
+        Route::get('attachments/{attachment}/destroy', [AttachmentController::class,'destroy'])->name('attachments.destroy');
+
+        Route::post('/{ticket}/messages',[MessageController::class, 'store'])->name('messages.store');
+
+
+        // Route::get('tickets', [TicketController::class, 'index'])->name('tickets.index');
+        // Route::post('tickets/{ticket}/messages',[MessageController::class, 'store'])->name('messages.store');
+        // Route::post('tickets/{ticket}/close', [TicketController::class, 'close'])->name('tickets.close');
+        // Route::post('tickets/{ticket}/reopen', [TicketController::class, 'reopen'])->name('tickets.reopen');
+        // Route::get('attachments/{attachment}/download', [TicketController::class,'download'])->name('attachments.download');
+
+       
+
     });
 
 });
+
+Route::prefix('production')->name('prod.')->group(function(){
+    Route::middleware('guest','PreventBackHistory')->group(function(){
+
+
+    });
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/index', [ProductionController::class, 'index'])->name('index');
+        Route::get('/show/{id}', [ProductionController::class, 'show'])->name('show');
+        Route::post('/transmettreContrat/{id}', [ProductionController::class, 'transmettreContrat'])->name('transmettreContrat');
+        Route::get('/edit/{id}', [ProductionController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}', [ProductionController::class, 'update'])->name('contrat.update');
+        Route::get('/create/stepProduct', [ProductionController::class, 'stepProduct'])->name('stepProduct');
+        Route::post('search-adherent', [ProductionController::class, 'searchAdherant'])->name('search.adherent');
+        Route::get('/create/add/{codeproduit}', [ProductionController::class, 'create'])->name('create');
+        Route::get('/createYke/add/{codeproduit}', [ProductionController::class, 'createYke'])->name('createYke');
+        Route::get('/createKds/add/{codeproduit}', [ProductionController::class, 'createKds'])->name('createKds');
+        Route::get('/createdoihoo/add/{codeproduit}', [ProductionController::class, 'createdoihoo'])->name('createdoihoo');
+        Route::get('/createCAD/add/{codeproduit}', [ProductionController::class, 'createCAD'])->name('createCAD');
+        Route::post('/store', [ProductionController::class, 'store'])->name('store');
+        Route::post('/upload-documents', [ProductionController::class, 'upload'])->name('upload.documents');
+
+        Route::get('production/assureadd/get', [ProductionController::class, 'addassurgetForm'])->name('production.get.assureadd');
+        Route::post('/add-assure-session', [ProductionController::class, 'addAssureToSession'])->name('addAssureToSession');
+        Route::get('/get-assures-session', [ProductionController::class, 'getAssuresFromSession'])->name('getAssuresFromSession');
+
+
+        Route::post('/update/adherent/{id}', [AdherentController::class, 'update'])->name('adherent.update');
+
+        Route::post('/store/assure', [AssurerController::class, 'store'])->name('store.assurer');
+        Route::post('/assures/update/{id}', [AssurerController::class, 'update'])->name('assures.update');
+        Route::post('/deleteassure/{id}', [AssurerController::class, 'deleteAssure'])->name('delete.assure');
+
+        Route::post('/store/benef', [BeneficiairesController::class, 'store'])->name('store.beneficiaires');
+        Route::post('/update/benef/{id}', [BeneficiairesController::class, 'update'])->name('update.beneficiaires');
+        
+        Route::post('/beneficiaires/addBenefType{id}', [BeneficiairesController::class, 'addBenefType'])->name('addBenefType');
+
+        Route::post('/update/benefire/{id}', [BeneficiairesController::class, 'updateBeneficiaire'])->name('benef.update');
+        Route::post('/update/benefDeces/{id}', [BeneficiairesController::class, 'updateBenefDeces'])->name('benef.deces.update');
+
+        Route::post('/delete/beneficiaire/{id}', [BeneficiairesController::class, 'destroy'])->name('delete.beneficiaire');
+        
+        Route::post('/store/document', [DocumentController::class, 'store'])->name('store.document');
+        Route::post('/store/document/pret', [DocumentController::class, 'storeDocPret'])->name('storeDocPret');
+        Route::post('/destroy/document/{id}', [DocumentController::class, 'destroy'])->name('destroy.document');
+
+
+        // bulletin
+
+        Route::get('/show/bullettin/{id}', [BulletinController::class, 'show'])->name('bullettin.show');
+        Route::get('/generate-bulletin/{id}', [BulletinController::class, 'generate'])->name('generate.bulletin');
+
+        // Validation route
+
+        Route::get('/validation/index', [ValidationController::class, 'index'])->name('validation.index');
+        Route::get('/traitement/prodByPartner/{code}', [ValidationController::class, 'prodByPartner'])->name('validation.prodByPartner');
+        Route::get('/traitement/proposition/show/{id}', [ValidationController::class, 'show'])->name('validation.show');
+        Route::post('/traitement/proposition/rejet/{id}', [ValidationController::class, 'rejetContrat'])->name('traitement.proposition.rejet');
+        Route::get('/proposition/edit{id}', [ValidationController::class, 'edit'])->name('proposition.edit');
+        Route::post('/traitement/proposition/valider/{id}', [ValidationController::class, 'acceptContrat'])->name('traitement.proposition.valider');
+
+        
+
+
+        
+
+
+    });
+
+});
+
+Route::get('/notifications/mark-as-read/{id}',[MailController::class,'markAsRead'])->name('notif.markToRead');
 
 
 
@@ -254,76 +359,7 @@ Route::prefix('epret')->name('epret.')->group(function(){
 });
 Route::get('/show/bullettin/test', [BulletinController::class, 'printBulletin'])->name('bullettin.test');
 
-Route::prefix('production')->name('prod.')->group(function(){
-    Route::middleware('guest','PreventBackHistory')->group(function(){
 
-        // formule by product reseau 
-        // Route::get('/show/bullettin/test', [BulletinController::class, 'printBulletin'])->name('bullettin.test');
-
-    });
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/index', [ProductionController::class, 'index'])->name('index');
-        Route::get('/show/{id}', [ProductionController::class, 'show'])->name('show');
-        Route::post('/transmettreContrat/{id}', [ProductionController::class, 'transmettreContrat'])->name('transmettreContrat');
-        Route::get('/edit/{id}', [ProductionController::class, 'edit'])->name('edit');
-        Route::post('/update/{id}', [ProductionController::class, 'update'])->name('contrat.update');
-        Route::get('/create/stepProduct', [ProductionController::class, 'stepProduct'])->name('stepProduct');
-        Route::post('search-adherent', [ProductionController::class, 'searchAdherant'])->name('search.adherent');
-        Route::get('/create/add/{codeproduit}', [ProductionController::class, 'create'])->name('create');
-        Route::get('/createYke/add/{codeproduit}', [ProductionController::class, 'createYke'])->name('createYke');
-        Route::get('/createKds/add/{codeproduit}', [ProductionController::class, 'createKds'])->name('createKds');
-        Route::post('/store', [ProductionController::class, 'store'])->name('store');
-        Route::post('/upload-documents', [ProductionController::class, 'upload'])->name('upload.documents');
-
-        Route::get('production/assureadd/get', [ProductionController::class, 'addassurgetForm'])->name('production.get.assureadd');
-        Route::post('/add-assure-session', [ProductionController::class, 'addAssureToSession'])->name('addAssureToSession');
-        Route::get('/get-assures-session', [ProductionController::class, 'getAssuresFromSession'])->name('getAssuresFromSession');
-
-
-        Route::post('/update/adherent/{id}', [AdherentController::class, 'update'])->name('adherent.update');
-
-        Route::post('/store/assure', [AssurerController::class, 'store'])->name('store.assurer');
-        Route::post('/assures/update/{id}', [AssurerController::class, 'update'])->name('assures.update');
-        Route::post('/deleteassure/{id}', [AssurerController::class, 'deleteAssure'])->name('delete.assure');
-
-        Route::post('/store/benef', [BeneficiairesController::class, 'store'])->name('store.beneficiaires');
-        Route::post('/update/benef/{id}', [BeneficiairesController::class, 'update'])->name('update.beneficiaires');
-        
-        Route::post('/beneficiaires/addBenefType{id}', [BeneficiairesController::class, 'addBenefType'])->name('addBenefType');
-
-        Route::post('/update/benefire/{id}', [BeneficiairesController::class, 'updateBeneficiaire'])->name('benef.update');
-        Route::post('/update/benefDeces/{id}', [BeneficiairesController::class, 'updateBenefDeces'])->name('benef.deces.update');
-
-        Route::post('/delete/beneficiaire/{id}', [BeneficiairesController::class, 'destroy'])->name('delete.beneficiaire');
-        
-        Route::post('/store/document', [DocumentController::class, 'store'])->name('store.document');
-        Route::post('/store/document/pret', [DocumentController::class, 'storeDocPret'])->name('storeDocPret');
-        Route::post('/destroy/document/{id}', [DocumentController::class, 'destroy'])->name('destroy.document');
-
-
-        // bulletin
-
-        Route::get('/show/bullettin/{id}', [BulletinController::class, 'show'])->name('bullettin.show');
-        Route::get('/generate-bulletin/{id}', [BulletinController::class, 'generate'])->name('generate.bulletin');
-
-        // Validation route
-
-        Route::get('/validation/index', [ValidationController::class, 'index'])->name('validation.index');
-        Route::get('/traitement/prodByPartner/{code}', [ValidationController::class, 'prodByPartner'])->name('validation.prodByPartner');
-        Route::get('/traitement/proposition/show/{id}', [ValidationController::class, 'show'])->name('validation.show');
-        Route::post('/traitement/proposition/rejet/{id}', [ValidationController::class, 'rejetContrat'])->name('traitement.proposition.rejet');
-        Route::get('/proposition/edit{id}', [ValidationController::class, 'edit'])->name('proposition.edit');
-        Route::post('/traitement/proposition/valider/{id}', [ValidationController::class, 'acceptContrat'])->name('traitement.proposition.valider');
-
-        
-
-
-        
-
-
-    });
-
-});
 
 Route::prefix('prospect')->name('prospect.')->group(function(){
     Route::middleware('guest','PreventBackHistory')->group(function(){
@@ -405,3 +441,7 @@ Route::get('/welcome', function () {
 });
 
 route::get('/generate-bulletin-demo', [EpretController::class, 'generateBu'])->name('generateBul');
+
+Route::get('/generate-qr', [ProductionController::class, 'getQrCode'])->name('generate-qr-code');
+
+

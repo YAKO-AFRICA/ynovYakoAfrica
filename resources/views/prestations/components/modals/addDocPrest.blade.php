@@ -184,7 +184,7 @@
                                 @endif
                             @endunless
 
-                            @unless ($types['Signature'] == 'Signature')
+                            {{-- @unless ($types['Signature'] == 'Signature')
                                 <!-- Signature -->
                                 <div class="col-xl-9 mx-auto">
 
@@ -216,7 +216,7 @@
                                     </div>
 
                                 </div>
-                            @endunless
+                            @endunless --}}
                         </div>
                     @endif
                 </div>

@@ -3,34 +3,18 @@
     @csrf
 
     <div class="row g-3 mb-3">
-
         <div class="col-12">
-
             <label class="form-label">Civilité <span class="star">*</span></label><br>
-
-        
-
             @php
-
                 $civilite = $contrat->adherent->civilite ?? '';
-
             @endphp
 
-        
-
             <div class="form-check form-check-inline">
-
                 <input class="form-check-input" type="radio" name="civilite" id="inlineRadio1" value="Madame" 
-
                        autocomplete="on" required data-invalid-message="Veuillez cocher la civilité" 
-
                        {{ $civilite === 'Madame' ? 'checked' : '' }}>
-
                 <label class="form-check-label" for="inlineRadio1">Madame</label>
-
             </div>
-
-            
 
             <div class="form-check form-check-inline">
 
@@ -125,7 +109,7 @@
 
             
 
-                @foreach($villes as $ville)
+                {{-- @foreach($villes as $ville)
 
                     @if($contrat->adherent->lieunaissance !== $ville->libelleVillle)
 
@@ -133,7 +117,7 @@
 
                     @endif
 
-                @endforeach
+                @endforeach --}}
 
             </select>
 
@@ -455,7 +439,71 @@
         </div>
 
     </div>
-
-
-
 </form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const apiUrl = 'https://api.yakoafricassur.com/enov/villes';
+        const apiProfessions = 'https://api.yakoafricassur.com/enov/professions';
+
+        // Récupérer les valeurs stockées
+        const lieuNaissanceCode = "{{ $contrat->adherent->lieunaissance ?? '' }}";
+        const lieuResidenceCode = "{{ $contrat->adherent->lieuresidence ?? '' }}";
+        const professionCode = "{{ $contrat->adherent->profession ?? '' }}";
+
+        // Chargement des villes
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const villeSelect = document.getElementById('lieuresidence');
+                const lieuSelect = document.getElementById('lieunaissance');
+                
+                data.forEach(ville => {
+                    // Option pour lieu de résidence
+                    const optionVille = document.createElement('option');
+                    optionVille.value = ville.MonLibelle;
+                    optionVille.textContent = ville.MonLibelle;
+                    villeSelect.appendChild(optionVille);
+                    
+                    // Option pour lieu de naissance
+                    const optionLieu = document.createElement('option');
+                    optionLieu.value = ville.MonLibelle;
+                    optionLieu.textContent = ville.MonLibelle;
+                    lieuSelect.appendChild(optionLieu);
+
+                });
+                
+                // Si le code stocké n'est pas trouvé dans l'API, garder l'affichage original
+                if (!selectedVilleFound) {
+                    villeSelect.insertAdjacentHTML('afterbegin', 
+                        `<option selected value="${lieuResidenceCode}">${lieuResidenceCode}</option>`);
+                }
+                
+                if (!selectedLieuFound) {
+                    lieuSelect.insertAdjacentHTML('afterbegin',
+                        `<option selected value="${lieuNaissanceCode}">${lieuNaissanceCode}</option>`);
+                }
+            });
+
+        fetch(apiProfessions)
+            .then(response => response.json())
+            .then(data => {
+                const professionSelect = document.getElementById('profession');
+                let selectedProfessionFound = false;
+                
+                data.forEach(profession => {
+                    const optionProfession = document.createElement('option');
+                    optionProfession.value = profession.CodeProfession;
+                    optionProfession.textContent = profession.MonLibelle;
+                    professionSelect.appendChild(optionProfession);
+                    
+                  
+                });
+                
+                if (!selectedProfessionFound) {
+                    professionSelect.insertAdjacentHTML('afterbegin',
+                        `<option selected value="${professionCode}">${professionCode}</option>`);
+                }
+            });
+    });
+</script>

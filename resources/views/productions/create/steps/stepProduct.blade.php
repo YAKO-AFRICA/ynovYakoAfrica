@@ -2,6 +2,22 @@
 
 @section('content')
 
+ <!--breadcrumb-->
+ <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+    <div class="breadcrumb-title pe-3"><a href="/shared/home"><i class="bx bx-home-alt"></i></a></div>
+    <div class="ps-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 p-0">
+                <li class="breadcrumb-item active" aria-current="page">Productions</li>
+                <li class="breadcrumb-item active" aria-current="page">Selection de produit</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="ms-auto">
+    </div>
+</div>
+<!--end breadcrumb-->
+
     <div class="row mb-2">
         <div class="col-4">
             <input type="text" id="searchProduct" class="form-control" placeholder="Rechercher un produit...">
@@ -36,10 +52,30 @@
                             <a href="#" class="btn-prime btn-prime-two d-block text-danger">Vous n'etes pas autorisé</a>
                         </div>
                         @endcan
-                    @elseif ($product->CodeProduit == 'CADENCE')
+                    @elseif (in_array($product->CodeProduit, ['CADENCE']))
                         @can('Demarrer une souscription')
                         <div class="card-footer text-center">
                             <a href="{{ route('prod.createKds', $product->CodeProduit) }}" class="btn-prime btn-prime-two d-block">Souscrire</a>
+                        </div>
+                        @else
+                        <div class="card-footer text-center">
+                            <a href="#" class="btn-prime btn-prime-two d-block text-danger">Vous n'etes pas autorisé</a>
+                        </div>
+                        @endcan
+                    @elseif (in_array($product->CodeProduit, ['CAD_EDUCPLUS']))
+                        @can('Demarrer une souscription')
+                        <div class="card-footer text-center">
+                            <a href="{{ route('prod.createCAD', $product->CodeProduit) }}" class="btn-prime btn-prime-two d-block">Souscrire</a>
+                        </div>
+                        @else
+                        <div class="card-footer text-center">
+                            <a href="#" class="btn-prime btn-prime-two d-block text-danger">Vous n'etes pas autorisé</a>
+                        </div>
+                        @endcan
+                    @elseif ($product->CodeProduit == 'DOIHOO')
+                        @can('Demarrer une souscription')
+                        <div class="card-footer text-center">
+                            <a href="{{ route('prod.createdoihoo', $product->CodeProduit) }}" class="btn-prime btn-prime-two d-block">Souscrire</a>
                         </div>
                         @else
                         <div class="card-footer text-center">
@@ -65,11 +101,12 @@
         @endforeach
     </div>
     
-    <a href="{{ route('bullettin.test') }}" class="btn btn-primary" target="_blank"> bulletin</a>
+    {{-- <a href="{{ route('bullettin.test') }}" class="btn btn-primary" target="_blank"> bulletin</a> --}}
 
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            sessionStorage.removeItem('simulationData');
             var searchInput = document.getElementById('searchProduct');
             var productItems = document.querySelectorAll('.product-item');
 

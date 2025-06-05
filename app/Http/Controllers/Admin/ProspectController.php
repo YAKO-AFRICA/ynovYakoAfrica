@@ -271,16 +271,16 @@ class ProspectController extends Controller
         //     ->with('success', 'Prospect converti en client avec succès');
     }
 
-    // public function edit($uuid)
-    // {
-    //     $prospect = Prospect::where('uuid', $uuid)->firstOrFail();
-    //     $professions = Profession::orderBy('MonLibelle')->get();
-    //     $secteurActivites = TblSecteurActivite::orderBy('MonLibelle')->get();
-    //     $product = Product::orderBy('MonLibelle')->get();
-    //     $villes = TblVille::orderBy('idville')->get();
+    public function edit($uuid)
+    {
+        $prospect = Prospect::where('uuid', $uuid)->firstOrFail();
+        $professions = Profession::orderBy('MonLibelle')->get();
+        $secteurActivites = TblSecteurActivite::orderBy('MonLibelle')->get();
+        $product = Product::orderBy('MonLibelle')->get();
+        $villes = TblVille::orderBy('idville')->get();
         
-    //     return view('prospects.edit', compact('prospect', 'professions', 'secteurActivites', 'product', 'villes'));
-    // }
+        return view('prospects.edit', compact('prospect', 'professions', 'secteurActivites', 'product', 'villes'));
+    }
 
     public function update(Request $request, $uuid)
     {

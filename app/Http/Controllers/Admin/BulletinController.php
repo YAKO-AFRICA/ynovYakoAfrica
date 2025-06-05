@@ -15,6 +15,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
+use BaconQrCode\Encoder\QrCode;
+
+use BaconQrCode\Writer;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Renderer\Image\ImagickImageBackEnd; // Utilisez Imagick si disponible
+use BaconQrCode\Renderer\Image\SvgImageBackEnd; // Alternative SVG
+
 class BulletinController extends Controller
 {
     /**
@@ -52,7 +60,8 @@ class BulletinController extends Controller
         // $pdf = Pdf::loadView('productions.components.bullettin.basicBulletin');
         // $pdf = Pdf::loadView('productions.components.bullettin.pfaINDbulletin');
         // $pdf = Pdf::loadView('productions.components.bullettin.Cadencebulletintest');
-        $pdf = Pdf::loadView('productions.components.bullettin.Doihoobulletintest');
+        // $pdf = Pdf::loadView('productions.components.bullettin.Doihoobulletintest');
+        $pdf = Pdf::loadView('productions.components.bullettin.CadenceEduPlusbulletintest');
 
         $fileName = 'cadencebulletin.pdf';
         return $pdf->stream($fileName);
@@ -197,6 +206,34 @@ class BulletinController extends Controller
     DB::beginTransaction();
     try {
         $contrat = Contrat::find($id);
+
+        $renderer = new ImageRenderer(
+            new RendererStyle(200),
+            new SvgImageBackEnd()
+        );
+
+        $qrContent = "Signature Electronique\n";
+        $qrContent .= "Date: " . $contrat->saisiele . "\n";
+        $qrContent .= "Réf. Contrat: " . $contrat->id;
+        
+        $writer = new Writer($renderer);
+    
+        $qrCodeImage = $writer->writeString($qrContent);
+        $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($qrCodeImage);
+
+
+        $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$contrat->id."/E-SOUSCRIPTION";
+        if($imageUrl == null){
+            $imageData = file_get_contents($imageUrl);
+            $base64Image = base64_encode($imageData);
+            $imageSrc = 'data:image/png;base64,'.$base64Image;
+        }else{
+            $imageSrc = null;
+        }
+
+        
+
+
         if($contrat)
         {
             // Options pour Dompdf
@@ -214,18 +251,29 @@ class BulletinController extends Controller
             {
                 $pdf = PDF::loadView('productions.components.bullettin.Cadencebulletin', [
                     'contrat' => $contrat,
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc
                 ]);
                 $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
                 
             }else if($contrat->codeproduit == "PFA_IND"){
                 $pdf = PDF::loadView('productions.components.bullettin.pfaINDbulletin', [
                     'contrat' => $contrat,
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc
                 ]);
                 $cguFile = public_path('root/cgu/cg_yke.pdf');
-                
+            }else if($contrat->codeproduit == "DOIHOO"){
+                $pdf = PDF::loadView('productions.components.bullettin.Doihoobulletin', [
+                    'contrat' => $contrat,
+                    'qrCodeBase64' => $qrCodeBase64
+                ]);
+                $cguFile = public_path('root/cgu/doihoo_cgu.pdf');
             }else{
+
                 $pdf = PDF::loadView('productions.components.bullettin.basicBulletin', [
                     'contrat' => $contrat,
+                    'qrCodeBase64' => $qrCodeBase64
                 ]);
                 $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
             }

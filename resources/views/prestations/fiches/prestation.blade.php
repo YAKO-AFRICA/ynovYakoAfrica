@@ -592,8 +592,9 @@
                         </div>
                     </div>
                     <label for="qrcode" style="position: absolute; top: 310px; left: 200px; max-height: 65px; max-width: 65px;">
-                        
-                        <img src="data:image/jpg;base64,{{ base64_encode(file_get_contents(asset($Signature->path))) ?? '' }}" alt="Yako Africa Logo" style="height: 65px; width: 65px" class="logo">
+                        @if($imageSrc != '')
+                            <img src="{{ $imageSrc }}" alt="Yako Africa Logo" style="height: 65px; width: 65px" class="logo">
+                        @endif
                     </label>
                 </section>
             </div>

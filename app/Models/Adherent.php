@@ -46,6 +46,7 @@ class Adherent extends Model
         'capitalconnexe',
     ];
 
+
     protected function datenaissance(): Attribute
     {
         return Attribute::make(

@@ -18,6 +18,13 @@
                                         aria-label="Indicatif Pays" required>
                                         <option selected disabled value="">🌍 Pays</option>
                                         @foreach ($detailCountries as $item)
+                                            @if ($item['phone_international_prefix'] == '225')
+                                                <option value="{{ $item['phone_international_prefix'] }}" selected>
+                                                    +{{ $item['phone_international_prefix'] }}
+                                                    {{ $item['flag'] }}
+                                                </option>
+                                                
+                                            @endif
                                             <option value="{{ $item['phone_international_prefix'] }}">
                                                 +{{ $item['phone_international_prefix'] }}
                                                 {{ $item['flag'] }}
@@ -60,13 +67,16 @@
                                     <input type="text" class="otp-input" maxlength="1">
                                 </div>
                             </div>
+                            <div class="otp-expi-timer" id="otp-expi-timer">
+                                {{-- afficher le deconte ici  --}}
+                            </div>
+                            <a href="#" class="d-none resend-otp-btn">Renvoyer l'OTP</a>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        {{-- <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Vérifier<i
-                            class='bx bx-right-arrow-alt'></i></button> --}}
-                            <button type="button" id="verifyOtpButton" class="btn btn-two btn-next-form">
+                        <button type="button" class="btn btn-secondary" id="changePhoneButton" disabled >Modifier le numéro</button>
+                        
+                            <button type="button" id="verifyOtpButton" class="btn btn-two btn-next-for">
                                 Vérifier <i class='bx bx-right-arrow-alt'></i>
                             </button>
                     </div>

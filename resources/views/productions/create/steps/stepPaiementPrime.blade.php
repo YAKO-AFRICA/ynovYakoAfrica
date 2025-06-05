@@ -94,9 +94,6 @@
             </div>
         </div>
         <div class="col-12 col-lg-4">
-
-          
-
             <div class="card mx-0">
                 <div class="card-body">
                     <label for="" class="form-label">Je souhaite payer mes primes chaque : <span class="text-danger">*</span></label>
@@ -145,30 +142,12 @@
                                 <label for="DateEffet" class="form-label">Mon contrat prendra effet le : <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control" id="DateEffet" name="dateEffet" required>
                             </div>
-                            @if ($product->CodeProduit != 'PFA_IND' && $product->CodeProduit == 'CADENCE')
-                            <div class="col-12 mb-4">
+                            <div class="col-12 mb-3">
                                 <label for="primepricipale" class="form-label">Je souhaite payer une prime de
                                     : <span class="text-danger">*</span></label>
-                                <select name="primepricipale" id="primepricipale" class="form-select" required>
-                                    <option value="" selected>Selectionnez une prime</option>
-                                    <option value="15000">15 000</option>
-                                    <option value="20000">20 000</option>
-                                    <option value="25000">25 000</option>
-                                    <option value="30000">30 000</option>
-                                    <option value="40000">40 000</option>
-                                    <option value="50000">50 000</option>
-                                    <option value="75000">75 000</option>
-                                    <option value="100000">100 000</option>
-                                </select>
+                                <input type="number" class="form-control" id="primepricipale" name="primepricipale"
+                                    min="1000" required>
                             </div>
-                            @elseif($product->CodeProduit == 'PFA_IND' && $product->CodeProduit != 'CADENCE')
-                                <div class="col-12 mb-3">
-                                    <label for="primepricipale" class="form-label">Je souhaite payer une prime de
-                                        : <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" id="primepricipale" name="primepricipale"
-                                        min="1000" required>
-                                </div>
-                            @endif
                             <div class="col-12 mb-3">
                                 <label for="duree" class="form-label">Durée de mes cotisations (en année, entre 6
                                     et 60) :
@@ -176,139 +155,100 @@
                                 <input type="number" min="6" max="60" class="form-control"
                                     id="duree" name="duree" required>
                             </div>
-                            @if ($product->CodeProduit == 'PFA_IND' && $product->CodeProduit != 'CADENCE')
-                                <div class="col-12 mb-4">
-                                    <label for="montantrente" class="form-label">Montant de la Rente (en FCFA) :
-                                        : <span class="text-danger">*</span></label>
-                                    <select name="montantrente" id="montantrente" class="form-select" required>
-                                        <option value="" selected>Selectionnez le montant de la rente</option>
-                                        <option value="50000">50 000</option>
-                                        <option value="75000">75 000</option>
-                                        <option value="100000">100 000</option>
-                                        <option value="150000">150 000</option>
-                                        <option value="200000">200 000</option>
-                                        <option value="250000">250 000</option>
-                                        <option value="500000">500 000</option>
-                                        <option value="1000000">1000 000</option>
-                                    </select>
-                                </div>
+                            <div class="col-12 mb-4">
+                                <label for="montantrente" class="form-label">Montant de la Rente (en FCFA) :
+                                    : <span class="text-danger">*</span></label>
+                                <select name="montantrente" id="montantrente" class="form-select" required>
+                                    <option value="" selected>Selectionnez le montant de la rente</option>
+                                    <option value="50000">50 000</option>
+                                    <option value="75000">75 000</option>
+                                    <option value="100000">100 000</option>
+                                    <option value="150000">150 000</option>
+                                    <option value="200000">200 000</option>
+                                    <option value="250000">250 000</option>
+                                    <option value="500000">500 000</option>
+                                    <option value="1000000">1000 000</option>
+                                </select>
+                            </div>
 
-                                <div class="col-12 mb-3">
-                                    <label for="" class="form-label">Périodicité de la rente:</label>
-                                    <div class="mb-3">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" name="periodiciterente" type="radio"
-                                                value="M" id="Moisrente">
-                                            <label class="form-check-label" for="Moisrente">
-                                                Mois
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" name="periodiciterente" type="radio"
-                                                value="T" id="Trimestrerente">
-                                            <label class="form-check-label" for="Trimestrerente">
-                                                Trimestre
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" name="periodiciterente" type="radio"
-                                                value="S" id="Semestrerente">
-                                            <label class="form-check-label" for="Semestrerente">
-                                                Semestre
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" name="periodiciterente" type="radio"
-                                                value="A" id="Anneerente">
-                                            <label class="form-check-label" for="Anneerente">
-                                                Année
-                                            </label>
-                                        </div>
+                            <div class="col-12 mb-3">
+                                <label for="" class="form-label">Périodicité de la rente:</label>
+                                <div class="mb-3">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" name="periodiciterente" type="radio"
+                                            value="M" id="Moisrente">
+                                        <label class="form-check-label" for="Moisrente">
+                                            Mois
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" name="periodiciterente" type="radio"
+                                            value="T" id="Trimestrerente">
+                                        <label class="form-check-label" for="Trimestrerente">
+                                            Trimestre
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" name="periodiciterente" type="radio"
+                                            value="S" id="Semestrerente">
+                                        <label class="form-check-label" for="Semestrerente">
+                                            Semestre
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" name="periodiciterente" type="radio"
+                                            value="A" id="Anneerente">
+                                        <label class="form-check-label" for="Anneerente">
+                                            Année
+                                        </label>
                                     </div>
                                 </div>
-                                <div class="col-12 mb-3">
-                                    <label for="dureerente" class="form-label">Durée de service de la rente (en mois) :</label>
-                                    <select name="dureerente" id="dureerente" class="form-select">
-                                        <option value="" selected>Selectionnez la durée de service de la rente</option>
-                                        <option value="12">12</option>
-                                        <option value="24">24</option>
-                                        <option value="36">36</option> 
-                                    </select>
-                                </div>
-                            @endif
-                        @elseif($product->CodeProduit == 'YKE_2008' || $product->CodeProduit == 'YKE_2018')
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="dureerente" class="form-label">Durée de service de la rente (en mois) :</label>
+                                <select name="dureerente" id="dureerente" class="form-select">
+                                    <option value="" selected>Selectionnez la durée de service de la rente</option>
+                                    <option value="12">12</option>
+                                    <option value="24">24</option>
+                                    <option value="36">36</option> 
+                                </select>
+                            </div>
+
+                        @else
                             <div class="col-12 mb-3">
                                 <label for="DateEffet" class="form-label">Mon contrat prendra effet le :</label>
-                                <input type="date" class="form-control" id="DateEffetYKE_2008" name="dateEffet" readonly>
+                                <input type="date" class="form-control" id="DateEffet" name="dateEffet">
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="primepricipale" class="form-label">Je souhaite payer une prime de
                                     :</label>
-                                <input type="number" class="form-control" id="primepricipaleYKE_2008" name="primepricipale"
-                                    min="0" required readonly>
+                                <input type="number" class="form-control" id="primepricipale" name="primepricipale"
+                                    min="0" required>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="fraisAdhesion" class="form-label">Fraie d'adhesion :</label>
+                                <input type="number" class="form-control" id="fraisAdhesion" name="fraisAdhesion"
+                                    min="0">
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="capital" class="form-label">Capital souscrit :</label>
-                                <input type="number" class="form-control" id="capitalYKE_2008" name="capital"
-                                    min="0" readonly>
-                                    
+                                <input type="text" class="form-control" id="capital" name="capital" required>
+                                
+                                    {{-- <select name="capital" id="capital" class="form-select" required>
+                                        <option value="" selected>Selectionnez le capital souscrit</option>
+                                        <option value="300000">300 000</option>
+                                        <option value="500000">500 000</option>
+                                        <option value="750000">750 000</option>
+                                        <option value="1000000">1 000 000</option>
+                                        <option value="1250000">1 250 000</option>
+                                        <option value="1500000">1 500 000</option>
+                                        <option value="2000000">2 000 000</option>
+                                    </select> --}}
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="duree" class="form-label">Durée de mes cotisations :</label>
-                                <input type="number" class="form-control" id="dureeYKE_2008" name="duree" min="0"> 
+                                <input type="number" class="form-control" id="duree" name="duree" min="0"> 
                             </div>
-
-                            <div class="col-12 mb-3">
-                                <label for="fraisadhesion" class="form-label">Fraie d'adhesion :</label>
-                                <input type="number" class="form-control" id="fraisadhesion" value="7500" name="fraisadhesion" readonly>
-                            </div>
-                        @elseif ($product->CodeProduit == 'CADENCE')
-                        <div class="col-12 mb-3">
-                            <label for="DateEffet" class="form-label">Mon contrat prendra effet le :</label>
-                            <input type="date" class="form-control" id="DateEffet" name="dateEffet">
-                        </div>
-                        <div class="col-12 mb-3">
-                            <label for="primepricipale" class="form-label">Je souhaite payer une prime de
-                                :</label>
-                            <input type="number" class="form-control primeCalcule" id="primepricipale" name="primepricipale"
-                                min="0" required>
-                        </div>
-                        
-                        <div class="col-12 mb-3">
-                            <label for="duree" class="form-label">Durée de mes cotisations :</label>
-                            <input type="number" class="form-control" id="duree" name="duree" min="0"> 
-                        </div>
-
-                        @else
-                        <div class="col-12 mb-3">
-                            <label for="DateEffet" class="form-label">Mon contrat prendra effet le :</label>
-                            <input type="date" class="form-control" id="DateEffet" name="dateEffet">
-                        </div>
-                        <div class="col-12 mb-3">
-                            <label for="primepricipale" class="form-label">Je souhaite payer une prime de
-                                :</label>
-                            <input type="number" class="form-control" id="primepricipale" name="primepricipale"
-                                min="0" required>
-                        </div>
-                        <div class="col-12 mb-3">
-                            <label for="capital" class="form-label">Capital souscrit :</label>
-                            {{-- <input type="number" class="form-control" id="capital" name="capital"
-                                min="0"> --}}
-                                <select name="capital" id="capital" class="form-select" required>
-                                    <option value="" selected>Selectionnez le capital souscrit</option>
-                                    <option value="300000">300 000</option>
-                                    <option value="500000">500 000</option>
-                                    <option value="750000">750 000</option>
-                                    <option value="1000000">1 000 000</option>
-                                    <option value="1250000">1 250 000</option>
-                                    <option value="1500000">1 500 000</option>
-                                    <option value="2000000">2 000 000</option>
-                                </select>
-                        </div>
-                        <div class="col-12 mb-3">
-                            <label for="duree" class="form-label">Durée de mes cotisations :</label>
-                            <input type="number" class="form-control" id="duree" name="duree" min="0"> 
-                        </div>
 
                         @endif
 

@@ -209,26 +209,44 @@
             </div>
             <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
         </section>
-        <section style="padding: 0 25px; margin: 0 auto; margin-bottom: 20px">
-            <div style="width: 100%; margin-bottom: 15px; margin-top: 5px">
-                <div style="float: left; text-align:center;">
-                    <p>
-                        <small>
-                            Société Anonyme d'Assurance Vie au capital de 3 000 000 000 FCFA. Entreprise régie par le
-                            code des Assurances CIMA Siège social : Abidjan-Plateau - Immeuble woodin Center 4ème étage
-                            - Avenue Noguès 01 BP 11885 Abidjan 01
-                        </small>
-                    </p>
-                    <p>
-                        <small><strong>Tél.: (225) 27 20 22 94 64 / 27 20 33 15 00 - Fax : (225) 27 20 22 95 92 - RCC :
-                                CI-ABJ-03-2022-M-22882 </strong></small>
-                    </p>
-                    <p>
-                        <small style="color: #656565">Email : infos@yakoafricassur.com - Site Web :
-                            www.yakoafricassur.com</small>
-                    </p>
+        <section class="footer-fixed">
+            <section style="padding: 0 25px; margin: 0 auto; margin-bottom: 20px" >
+                <div style="width: 100%; margin-bottom: 15px; margin-top: 5px">
+                    <div style="float: left; text-align:center;">
+                        <p>
+                            <small>
+                                Société Anonyme d'Assurance Vie au capital de 3 000 000 000 FCFA. Entreprise régie par le
+                                code des Assurances CIMA Siège social : Abidjan-Plateau - Immeuble woodin Center 4ème étage
+                                - Avenue Noguès 01 BP 11885 Abidjan 01
+                            </small>
+                        </p>
+                        <p>
+                            <small><strong>Tél.: (225) 27 20 22 94 64 / 27 20 33 15 00 - Fax : (225) 27 20 22 95 92 - RCC :
+                                    CI-ABJ-03-2022-M-22882 </strong></small>
+                        </p>
+                        <p>
+                            <small style="color: #656565">Email : infos@yakoafricassur.com - Site Web :
+                                www.yakoafricassur.com</small>
+                        </p>
+                    </div>
                 </div>
-            </div>
+    
+                <style>
+                    .footer-fixed {
+    
+                        position: fixed;
+                        height: 140px;
+                        bottom: 0;
+                        }
+    
+                        @media print {
+                        .footer-fixed {
+                            position: fixed;
+                            bottom: 0;
+                        }
+                        }
+                </style>
+            </section>
         </section>
     </div>
     <div class="a4-container">
@@ -308,8 +326,8 @@
                         </strong><span>{{ $contrat->adherent->telephone ?? ''}}</span></label>
                 </div>
                 <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>CNI :
-                        </strong><span>.............................................................................</span></label>
+                    <label><strong>{{ $contrat->adherent->naturepiece ?? ''}} :
+                        </strong><span> N° {{ $contrat->adherent->numeropiece ?? ''}}</span></label>
                     &nbsp; &nbsp; &nbsp;
                     <label><strong>E-mail :
                         </strong><span>{{ $contrat->adherent->email ?? ''}}</span></label>
@@ -353,17 +371,17 @@
             </div>
             <div style="width: 100%; margin: 15px 0; ">
                 <label><strong>Nom et prénoms :
-                    </strong><span>.................................................................................................</span></label>
+                    </strong><span>{{ $contrat->personneressource ?? ''}} </span></label>
                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
                 <label><strong>Contact :
-                    </strong><span>.........................................................</span></label>
+                    </strong><span>{{ $contrat->contactpersonneressource ?? ''}}</span></label>
             </div>
             <div style="width: 100%; margin: 15px 0; ">
                 <label><strong>Nom et prénoms :
-                    </strong><span>.................................................................................................</span></label>
+                    </strong><span>{{ $contrat->personneressource2 ?? ''}}</span></label>
                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
                 <label><strong>Contact :
-                    </strong><span>.........................................................</span></label>
+                    </strong><span>{{ $contrat->contactpersonneressource2 ?? ''}}</span></label>
             </div>
         </section>
         <section style="margin-bottom: 25px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
@@ -398,27 +416,6 @@
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
-                {{-- @if ($contrat->beneficiaireauterme == 'autre')
-
-                <table border="1" cellpadding="5" cellspacing="0" width="100%">
-                    <tr>
-                        <th>Nom complet</th>
-                        <th>filliation</th>
-                        <th>Né(e) le</th>
-                        <th>Teléphone</th>
-                        <th>Résidence</th>
-                    </tr>
-                    @foreach ($contrat->beneficiaireauterme as $item)
-                    <tr>
-                        <td>{{ $item->nom ?? ''}} {{ $item->prenom ?? ''}} </td>
-                        <td>{{ $item->filiation ?? ''}}</td>
-                        <td>{{ $item->datenaissance ?? ''}}</td>
-                        <td>{{ $item->telephone ?? ''}}</td>
-                        <td>{{ $item->lieuresidence ?? ''}}</td>
-                    </tr>
-                    @endforeach
-                </table>
-                @endif --}}
 
             </div>
 
@@ -474,29 +471,29 @@
             </div>
             <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
         </section>
-        <section style="padding: 0 25px; margin: 0 auto; margin-bottom: 20px">
-            <div style="width: 100%; margin-bottom: 15px; margin-top: 5px">
-                <div style="float: left; text-align:center;">
-                    <p>
-                        <small>
-                            Société Anonyme d'Assurance Vie au capital de 3 000 000 000 FCFA. Entreprise régie par le
-                            code des Assurances CIMA Siège social : Abidjan-Plateau - Immeuble woodin Center 4ème étage
-                            - Avenue Noguès 01 BP 11885 Abidjan 01
-                        </small>
-                    </p>
-                    <p>
-                        <small><strong>Tél.: (225) 27 20 22 94 64 / 27 20 33 15 00 - Fax : (225) 27 20 22 95 92 - RCC :
-                                CI-ABJ-03-2022-M-22882 </strong></small>
-                    </p>
-                    <p>
-                        <small style="color: #656565">Email : infos@yakoafricassur.com - Site Web :
-                            www.yakoafricassur.com</small>
-                    </p>
+        <section class="footer-fixed">
+            <section style="padding: 0 25px; margin: 0 auto; margin-bottom: 20px" >
+                <div style="width: 100%; margin-bottom: 15px; margin-top: 5px">
+                    <div style="float: left; text-align:center;">
+                        <p>
+                            <small>
+                                Société Anonyme d'Assurance Vie au capital de 3 000 000 000 FCFA. Entreprise régie par le
+                                code des Assurances CIMA Siège social : Abidjan-Plateau - Immeuble woodin Center 4ème étage
+                                - Avenue Noguès 01 BP 11885 Abidjan 01
+                            </small>
+                        </p>
+                        <p>
+                            <small><strong>Tél.: (225) 27 20 22 94 64 / 27 20 33 15 00 - Fax : (225) 27 20 22 95 92 - RCC :
+                                    CI-ABJ-03-2022-M-22882 </strong></small>
+                        </p>
+                        <p>
+                            <small style="color: #656565">Email : infos@yakoafricassur.com - Site Web :
+                                www.yakoafricassur.com</small>
+                        </p>
+                    </div>
                 </div>
-            </div>
+            </section>
         </section>
-
-
     </div>
     <div class="a4-container">
         <section style="margin-bottom: 7px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
@@ -518,13 +515,12 @@
                 <div style="width: 100%; margin-top: 7px;">
                     <label>Le capital garanti au contrat doit être reservé au(x) bénéficiaire(s) sous la forme : </label><br><br>
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label> <input type="radio" class="radio1"> <span>d'un paiement unique à la date d'echéeance</span></label><br><br>
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label> <input type="radio" class="radio1"><span>d'une rente certaine payée</span></label><br>
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label><span>sur une duree de </span><b>{{ $contrat->duree ?? ''}}</b>ANS</label><br><br>
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label> <input type="radio" class="radio1"><span>d'une rente certaine payée sur une duree de <b>{{ $contrat->duree ?? ''}}</b> ANS</span></label>
                 
-                </div>
+                </div> <br> <br>
 
                 {{-- <section style="width: 80%; border-radius: 7px;"> --}}
-                    <div style="width: 100%; margin-left: 100px; margin-top: -10px;">
+                    <div style="width: 100%; margin-left: 50px; margin-top: -10px;">
                         <div style="width: 15%; float: left;"><span>par échéance</span></div>
                         <div style="width: 18%; float: left;"><input type="radio"
                                 class="radio1" @if ($contrat->periodicite == 'M')checked @endif><strong>Mensuelle</strong></div>
@@ -566,7 +562,7 @@
                         <div style="width: 18%; float: left;"><input type="radio"
                                 class="radio1" @if ($contrat->periodicite == 'U')checked @endif><strong>Unique</strong></div>
                     </div>
-                    <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
+                    <div style="clear: both;"></div> 
                 </section>
                 <label><span>sur une duree de </span><b>{{ $contrat->duree ?? ''}}</b>ANS,</label>
                 <label><span>une cotisation de </span><b>{{ $contrat->primepricipale ?? ''}}</b>FCFA + <b>{{ $contrat->surprime ?? 0}} <i>(Frais accessoire)</i></b>FCFA = <b>{{ number_format($contrat->prime) ?? 0}}</b>FCFA</label><br><br>
@@ -579,7 +575,7 @@
                         <div style="width: 35%; float: left;"><input type="radio"
                                 class="radio1"><strong>Abonnement annuelle: 6000 FCFA</strong></div>
                     </div>
-                    <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
+                    <div style="clear: both;"></div> 
                 </section>
             </div>
         </section>
@@ -596,13 +592,18 @@
             <!-- Contenu -->
             <div class="content" style="margin-top: 0px; padding: 10px;">
                 <!-- Colonne gauche -->
+
+                @php
+                    $garantieSurete = $contrat->garanties->where('codeproduitgarantie', 'SURETE')->first();
+                    $garantieDeces = $contrat->garanties->where('codeproduitgarantie', 'DECES')->first();
+                @endphp
                 <div style="width: 100%; margin-top: 0px;">
 
                     <label>Les primes en couverture de <strong>CAPITAL SURETE</strong> et de <strong>garantie complementaire DECÈS ACCIDENTEL</strong>sont payées en sus de la COTISATION D'ASSURANCE et en même temps qu'elle</label>
                 </div>
                 <div style="width: 100%; margin-top: 7px;">
-                    <label style="margin-top: 0px; margin-left:20px; display:block"> <input type="radio" class="radio1"> Je souhaite souscrit au CAPITAL SURETE de <span><b>..................</b> FCFA</span> <span> pour une prime de </span><b>..................</b> FCFA</label>
-                    <label style="margin-top: 7px; margin-left:20px; display:block"> <input type="radio" class="radio1"> Je souhaite souscrit au CAPITAL ACCIDENT de <span><b>..................</b> FCFA</span> <span> pour une prime de </span><b>..................</b> FCFA</label>
+                    <label style="margin-top: 0px; margin-left:20px; display:block"> <input type="radio" class="radio1"> Je souhaite souscrit au CAPITAL SURETE de <span><b>{{ $garantieSurete->capitalgarantie ?? 0}}</b> FCFA</span> <span> pour une prime de </span><b>{{ $garantieSurete->prime ?? 0}}</b> FCFA</label>
+                    <label style="margin-top: 7px; margin-left:20px; display:block"> <input type="radio" class="radio1"> Je souhaite souscrit au CAPITAL ACCIDENT de <span><b>{{ $garantieDeces->capitalgarantie ?? 0}}</b> FCFA</span> <span> pour une prime de </span><b>{{ $garantieDeces->prime ?? 0}}</b> FCFA</label>
                                     
                 </div>
             </div>
@@ -625,24 +626,108 @@
                     <label>La cotisation et les primes d'Assurance d'un montant total de <span><b>{{ number_format($contrat->prime) ?? 0}}</b> FCFA</span> seront payée par :</label>
                 </div>
                 <div style="width: 100%; margin-top: 10px;">
-                    <label style="margin-top: 0px; margin-left:20px; display:block"> <input type="radio" class="radio1"checked>Prélèvement bancaire sur mon compte (<small><i>Joindre l'attestation de prélèvement et un relevé d'identité bancaire</i></small>)</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio" class="radio1">Retenue sur salaire auprès de mon employeur (<small><i>Joindre l'autorrisation de retenue à la source</i></small>)</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio" class="radio1">Chèque (<small><i>à l'ordre exclusif de <strong>YAKO AFRICA Assurances Vie</strong></i></small>)</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio" class="radio1">Espèces (<small><i>exclusivement aux guides de <strong>YAKO AFRICA Assurances Vie</strong> ou auprès des mandataires autorisés</i></small>)</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio" class="radio1">Moble money ou Internet</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio" class="radio1">Autres, préciser : &nbsp; <b>...............................................................................................................................................</b></label>              
+                    <!-- Prélèvement bancaire (VIR) -->
+                    <label style="margin-top: 0px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat" 
+                               @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'VIR') checked @endif>
+                        Prélèvement bancaire sur mon compte (<small><i>Joindre l'attestation de prélèvement et un relevé d'identité bancaire</i></small>)
+                    </label>
+                    
+                    <!-- Retenue sur salaire (SOURCE) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'SOURCE') checked @endif>
+                        Retenue sur salaire auprès de mon employeur (<small><i>Joindre l'autorisation de retenue à la source</i></small>)
+                    </label>
+                    
+                    <!-- Chèque (CHK) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'CHK') checked @endif>
+                        Chèque (<small><i>à l'ordre exclusif de <strong>YAKO AFRICA Assurances Vie</strong></i></small>)
+                    </label>
+                    
+                    <!-- Espèces (ESP) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'ESP') checked @endif>
+                        Espèces (<small><i>exclusivement aux guichets de <strong>YAKO AFRICA Assurances Vie</strong> ou auprès des mandataires autorisés</i></small>)
+                    </label>
+                    
+                    <!-- Mobile money (Mobile_money) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'Mobile_money') checked @endif>
+                        Mobile money ou Internet
+                    </label>
+                    
+                    <!-- Autres (autres valeurs) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && !in_array($contrat->modepaiement, ['VIR', 'SOURCE', 'CHK', 'ESP', 'Mobile_money'])) checked @endif>
+                        Autres, préciser : &nbsp; 
+                        <b>
+                            @if(isset($contrat->modepaiement) && !in_array($contrat->modepaiement, ['VIR', 'SOURCE', 'CHK', 'ESP', 'Mobile_money']))
+                                {{ $contrat->modepaiement }}
+                            @else
+                                ...............................................................................................................................................
+                            @endif
+                        </b>
+                    </label>              
                 </div>
                 <div style="width: 100%; margin-top: 7px;">
 
                     <label>La première échéance de la prime sera payée par :</label>
                 </div>
                 <div style="width: 100%; margin-top: 10px;">
-                    <label style="margin-top: 0px; margin-left:20px; display:block"> <input type="radio" class="radio1"checked>Prélèvement bancaire sur mon compte (<small><i>Joindre l'attestation de prélèvement et un relevé d'identité bancaire</i></small>)</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio" class="radio1">Retenue sur salaire auprès de mon employeur (<small><i>Joindre l'autorrisation de retenue à la source</i></small>)</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio" class="radio1">Chèque (<small><i>à l'ordre exclusif de <strong>YAKO AFRICA Assurances Vie</strong></i></small>)</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio" class="radio1">Espèces (<small><i>exclusivement aux guides de <strong>YAKO AFRICA Assurances Vie</strong> ou auprès des mandataires autorisés</i></small>)</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio" class="radio1">Moble money ou Internet</label>
-                    <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio" class="radio1">Autres, préciser : &nbsp; <b>...............................................................................................................................................</b></label>              
+                    <!-- Prélèvement bancaire (VIR) -->
+                    <label style="margin-top: 0px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat" 
+                               @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'VIR') checked @endif>
+                        Prélèvement bancaire sur mon compte (<small><i>Joindre l'attestation de prélèvement et un relevé d'identité bancaire</i></small>)
+                    </label>
+                    
+                    <!-- Retenue sur salaire (SOURCE) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'SOURCE') checked @endif>
+                        Retenue sur salaire auprès de mon employeur (<small><i>Joindre l'autorisation de retenue à la source</i></small>)
+                    </label>
+                    
+                    <!-- Chèque (CHK) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'CHK') checked @endif>
+                        Chèque (<small><i>à l'ordre exclusif de <strong>YAKO AFRICA Assurances Vie</strong></i></small>)
+                    </label>
+                    
+                    <!-- Espèces (ESP) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'ESP') checked @endif>
+                        Espèces (<small><i>exclusivement aux guichets de <strong>YAKO AFRICA Assurances Vie</strong> ou auprès des mandataires autorisés</i></small>)
+                    </label>
+                    
+                    <!-- Mobile money (Mobile_money) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'Mobile_money') checked @endif>
+                        Mobile money ou Internet
+                    </label>
+                    
+                    <!-- Autres (autres valeurs) -->
+                    <label style="margin-top: 5px; margin-left:20px; display:block">
+                        <input type="radio" class="radio1" name="modepaiement_etat"
+                               @if(isset($contrat->modepaiement) && !in_array($contrat->modepaiement, ['VIR', 'SOURCE', 'CHK', 'ESP', 'Mobile_money'])) checked @endif>
+                        Autres, préciser : &nbsp; 
+                        <b>
+                            @if(isset($contrat->modepaiement) && !in_array($contrat->modepaiement, ['VIR', 'SOURCE', 'CHK', 'ESP', 'Mobile_money']))
+                                {{ $contrat->modepaiement }}
+                            @else
+                                ...............................................................................................................................................
+                            @endif
+                        </b>
+                    </label>              
                 </div>
             </div>
         </section>
@@ -653,14 +738,13 @@
                 <h4 style="color: #fff; font-size: 15px; margin: 0; text-align: center">VIII</h4>
             </div>
             <div class=""
-                style="width: 55%; background-color: #747171; padding: 5px; border-radius: 0 7px 7px 0; margin-left: 33px;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0;">CONSTITUTION DU FONDS D'OPERATION</h4>
+                style="width: 55%; background-color: #747171; padding: 3px; border-radius: 0 7px 7px 0; margin-left: 33px;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0;">CONSTITUTION DU FONDS D'OPERATION</h4>
             </div>
             <!-- Contenu -->
             <div class="content" style="margin-top: 0px; padding: 10px; text-align: center;">
                 <!-- Colonne gauche -->
                     <label style="">Le fonds d'operation est constitué sur la base de ............................. <i style="font-size: 10px !important">(Maximum -50% de la cotisation annuelle)</i> par année</label>
-                
             </div>
         </section>
         <section style="width: 100%; margin-top: 7px;">
@@ -672,6 +756,8 @@
                 <div style="width: 33%; float: left;">
                     <strong>Signature du souscripteur</strong>
                     <p><i style="font-size: 10px !important">(précédée de la mention "LU et APPROUVE)</i></p>
+
+                    <img src="{{ $qrCodeBase64 }}" alt="QR Code de vérification" style="width: 60px; height: 60px;">
                 </div>
                 <div style="width: 33%; float: left;">
                     <strong>Signature de l'Assuré</strong>
@@ -682,7 +768,7 @@
                     <p><i style="font-size: 10px !important">(précédée de la mention "LU et APPROUVE)</i></p>
                 </div>
             </div>
-            <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
+            <div style="clear: both;"></div>
         </section>
     </div>
 </body>

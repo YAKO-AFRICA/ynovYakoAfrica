@@ -9,6 +9,7 @@
     </div>
     <!--navigation-->
     <ul class="metismenu" id="menu">
+    
         <div class="bg-light" style="min-height: 15vh">
             @php
                 $codePartenaire = Auth::user()->codepartenaire;
@@ -31,6 +32,7 @@
                 </a>
             @endif
         </div>
+        
 
         <div class="overflow-auto " style="height: calc(90vh - 180px)">
             @can('Voir e-validation')
@@ -249,67 +251,121 @@
                     <div class="menu-title">Produit</div>
                 </a>
             </li>
+            <li class="menu-label">Support</li>
+          
+            <li>
+                <a href="">
+                    <div class="parent-icon"><i class="bx bx-folder"></i>
+                    </div>
+                    <div class="menu-title">Documentation</div>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('ticket.tickets.index') }}">
+                    <div class="parent-icon"><i class="bx bx-support"></i>
+                    </div>
+                    <div class="menu-title">Support</div>
+                </a>
+            </li>
             @endcan
         </div>
+
+     
     </ul>
     <!--end navigation-->
 </div>
 <!--end sidebar wrapper -->
 <!--start header -->
-<header class="top-header">
+<header class="top-hea">
     <div class="topbar d-flex align-items-center">
         <nav class="navbar navbar-expand gap-3">
-            <div class="mobile-toggle-menu"><i class='bx bx-menu'></i>
+            <div class="mobile-toggle-menu"><i class='bx bx-menu text-light'></i>
             </div>
 
+            <div class="top-menu ms-auto">
+           
 
-              <div class="top-menu ms-auto ">
                 <ul class="navbar-nav align-items-center gap-1">
 
+
                     <li class="nav-item dropdown dropdown-large">
-                        <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" data-bs-toggle="dropdown"><span class="alert-count">0</span>
-                            <i class='bx bx-bell text-white'></i>
+                        <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative bg-light" href="#" data-bs-toggle="dropdown"><span class="alert-count">{{ $unreadNotifications ? count($unreadNotifications) : 0 }}</span>
+                            <i class='bx bx-bell'></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a href="javascript:;" >
-                                <div class="msg-header" style="background-color: #fff">
-                                    <p class="msg-header-title">Notifications</p>
-                                    <p class="msg-header-badge">0</p>
+                            <a href="javascript:;">
+                                <div class="msg-header">
+                                    <p class="msg-header-title">Notification{{ count($unreadNotifications) > 1 ? 's' : '' }}</p>
+                                    <p class="msg-header-badge">{{ $unreadNotifications ? count($unreadNotifications) : 0 }} non lue{{ count($unreadNotifications) > 1 ? 's' : '' }}</p>
                                 </div>
                             </a>
-                            <div class="header-notifications-list header-message-list app-container">
-                                <a class="dropdown-item" href="javascript:;">
-                                    <div class="d-flex align-items-center">
-                                        {{-- <div class="user-online">
-                                            <img src="{{ asset('root/images/default.png')}}" class="msg-avatar" alt="user avatar">
-                                        </div> --}}
-                                        {{-- <div class="flex-grow-1">
-                                            <h6 class="msg-name">Daisy Anderson<span class="msg-time float-end">5 sec
-                                        ago</span></h6>
-                                            <p class="msg-info">The standard chunk of lorem</p>
-                                        </div> --}}
+                            <div class="header-notifications-list">
+                               
+                                @forelse($allNotifications as $notification)
+                                <a class="dropdown-item d-block p-3 border-bottom notification-item {{ $notification->read_at ? 'read-notification' : 'unread-notification' }}" 
+                                   href="{{ route('notif.markToRead', $notification->id) }}"
+                                   data-id="{{ $notification->id }}">
+                                    <div class="d-flex align-items-start">
+                                   
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <strong class="text-dark">{{ $notification->data['user'] }}</strong>
+                                                <small class="text-muted">{{ \Carbon\Carbon::parse($notification->data['date'])->diffForHumans() }}</small>
+                                            </div>
+                                            <p class="mb-1 text-wrap">{{ $notification->data['title'] }}</p>
+                                            @if(!$notification->read_at)
+                                                <span class="badge bg-light-info text-info rounded-pill">Nouveau</span>
+                                            @endif
+                                        </div>
                                     </div>
                                 </a>
-                            </div>
-                            {{-- <a href="javascript:;">
-                                <div class="text-center msg-footer">
-                                    <button class="btn btn-primary w-100">View All Notifications</button>
+                            @empty
+                                <div class="text-center py-4">
+                                    <i class='bx bx-bell-off fs-1 text-muted mb-2'></i>
+                                    <p class="mb-0 text-muted">Aucune notification disponible</p>
                                 </div>
-                            </a> --}}
+                            @endforelse
+                              
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown dropdown-large d-none">
+                        <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <span class="alert-count">8</span>
+                            <i class='bx bx-shopping-bag'></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a href="javascript:;">
+                                <div class="msg-header">
+                                    <p class="msg-header-title">My Cart</p>
+                                    <p class="msg-header-badge">10 Items</p>
+                                </div>
+                            </a>
+                            <div class="header-message-list">
+                               
+                            </div>
+                            <a href="javascript:;">
+                                <div class="text-center msg-footer">
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <h5 class="mb-0">Total</h5>
+                                        <h5 class="mb-0 ms-auto">$489.00</h5>
+                                    </div>
+                                    <button class="btn btn-primary w-100">Checkout</button>
+                                </div>
+                            </a>
                         </div>
                     </li>
                 </ul>
             </div>
+         
+            
+           
             <div class="user-box dropdown px-3">
                 <a class="d-flex align-items-center nav-link dropdown-toggle gap-3 dropdown-toggle-nocaret" 
                    href="#" 
                    role="button" 
                    data-bs-toggle="dropdown" 
                    aria-expanded="false">
-                    <!-- User Avatar -->
-                    {{-- <img src="{{ asset('root/images/login-images/default.png') }}" 
-                         class="user-img rounded-circle" 
-                         alt="User Avatar"> --}}
                     @if(Auth::user()->membre->photo != null && Auth::user()->membre->photo != '')
                         <img src="{{ asset('images/userProfile/' . Auth::user()->membre->photo) }}" class="user-img" alt="user avatar">
                     @else
@@ -362,28 +418,5 @@
     </div>
 </header>
 
+
 @include('prestations.components.modals.getCustomerModal')
-<!--end header -->
-
-{{-- <li>
-                <a href="{{ route('prod.index')}}">
-                    <div class="parent-icon"><i class="fadeIn animated bx bx-clipboard"></i>
-                    </div>
-                    <div class="menu-title">Mes Propositions</div>
-                </a>
-            </li> --}}
-            {{-- @can('Voir e-pret') --}}
-
-
-            {{-- <li>
-                <a href="{{ route('epret.demoSimulateur')}}">
-                    <div class="parent-icon"><i class="bx bx-dollar-circle fs-5"></i>
-                    </div>
-                    <div class="menu-title">Demo</div>
-                </a>
-            </li> --}}
-            
-            
-            {{-- @endcan
-
-            @can('Voir le rapport') --}}

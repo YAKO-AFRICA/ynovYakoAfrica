@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 
 <head>
 	<!-- Required meta tags -->
@@ -40,18 +40,50 @@
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+
     <style>
-    /* Pour la hauteur de l'élément Select2 */
             .select2-container--default .select2-selection--single {
-                height: 38px !important; /* Ajuste à la hauteur que tu veux */
+                height: 38px !important;
                 display: flex;
                 align-items: center;
             }
 
-            /* Pour centrer le texte verticalement */
             .select2-container--default .select2-selection--single .select2-selection__rendered {
                 line-height: 38px !important;
             }
+    </style>
+
+    <style>
+        /* Style des notifications */
+        .unread-notification {
+            background-color: rgba(13, 110, 253, 0.05);
+            border-left: 3px solid #ff0000;
+        }
+        
+        .read-notification {
+            opacity: 0.7;
+        }
+        
+        .notification-item:hover {
+            background-color: #f8f9fa !important;
+        }
+        
+        .notification-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .notification-list::-webkit-scrollbar-thumb {
+            background-color: #dee2e6;
+            border-radius: 3px;
+        }
+        
+        .alert-count {
+            font-size: 0.65rem;
+            padding: 0.25em 0.4em;
+            min-width: 1.5em;
+        }
     </style>
 
 
@@ -69,8 +101,23 @@
     </div>
         <!--wrapper-->
         <div class="wrapper">
+            
+        @php
+            $unreadNotifications = auth()->user()->unreadNotifications;
+            $allNotifications = auth()->user()->notifications;
+
+        @endphp
 
             <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100"></div>
+            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+                <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-url="">
+                    <div class="toast-header">
+                        <strong class="me-auto" id="toast-title">Notification</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body" id="toast-body"></div>
+                </div>
+            </div>
 
             
             @include('layouts.sidebar')
@@ -93,11 +140,19 @@
             </footer>
         </div>
 
+        
+
+
         {{-- js custome file --}}
         <script src="{{ asset('assets/js/custom.js')}}"></script>
-        {{-- <script src="{{ asset('root/resume.js')}}"></script> --}}
-        <script src="{{ asset('assets/root/simulateur/simulateur.js')}}"></script>
+        <script src="{{ asset('root/resume.js')}}"></script>
         <script src="{{ asset('assets/root/simulateur/primes.js')}}"></script>
+        <script src="{{ asset('assets/root/simulateur/doihooSimulateur.js')}}"></script>
+        <script src="{{ asset('assets/root/simulateur/simulateurKDS.js')}}"></script>
+        <script src="{{ asset('assets/root/simulateur/simulateurCADE.js')}}"></script>
+        <script src="{{ asset('assets/root/simulateur/simulateur.js')}}"></script>
+        <script src="{{ asset('assets/root/simulateur/ykeSimulateur.js')}}"></script>
+        <script src="{{ asset('assets/js/fieldsForm.js')}}"></script>
         <!-- Bootstrap JS -->
         <script src="{{ asset('assets/js/bootstrap.bundle.min.js')}}"></script>
         <!--plugins-->
@@ -130,6 +185,9 @@
         <script type="module" src="{{ asset('api/request.js') }}"></script>
 
 
+ 
+
+
         <script>
             $(document).ready(function() {
     
@@ -137,9 +195,6 @@
                 var table = $('#example2').DataTable({
                     lengthChange: true,
                     buttons: ['copy', 'excel', 'pdf', 'print'],
-                    // language: {
-                    //     search: "Recherche :",
-                    // },
                     language: {
                                 search: "Recherche :",
                                 lengthMenu: "Afficher _MENU_ lignes",
@@ -165,9 +220,6 @@
                 var table = $('#example3').DataTable({
                     lengthChange: true,
                     buttons: ['copy', 'excel', 'pdf', 'print'],
-                    // language: {
-                    //     search: "Recherche :",
-                    // },
                     language: {
                                 search: "Recherche :",
                                 lengthMenu: "Afficher _MENU_ lignes",
@@ -227,8 +279,7 @@
             });
         
             $(".date-format").flatpickr({
-            // altInput: true, // Affiche un champ alternatif lisible par l'utilisateur
-            altFormat: "j F, Y", // Format alternatif en français (ex: 10 décembre, 2024)
+            altFormat: "j F, Y",
             dateFormat: "d-m-Y", // Format réel de la date envoyée (10-12-2024)
             minDate: "today", // La date minimale est aujourd'hui
             // locale: "fr" // Définit la langue en français

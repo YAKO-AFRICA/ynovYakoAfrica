@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Pret;
+use App\Models\User;
 use App\Models\Contrat;
 use App\Models\Partner;
 use App\Models\Product;
@@ -15,7 +17,9 @@ use App\Models\ProduitGarantie;
 use App\Models\TblSecteurActivite;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Notifications\SystemeNotify;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class ValidationController extends Controller
 {
@@ -24,6 +28,8 @@ class ValidationController extends Controller
      */
     public function index()
     {
+
+        
         $contrats = Contrat::where(['etape'=> '2', 'estMigre' => '0'])->get();
         // dd($contrats);
         $partners = Partner::where('code' ,'!=' , '092')->get();
@@ -36,7 +42,7 @@ class ValidationController extends Controller
             ];
         });
 
-        $partBNI = Partner::where('code', '092')->first(); // Un seul partenaire
+        $partBNI = Partner::where('code', '092')->first();
 
         if ($partBNI) {
             $PartBNIContrat = [
@@ -48,8 +54,10 @@ class ValidationController extends Controller
         } else {
             $PartBNIContrat = null; // Gérer le cas où aucun partenaire n'est trouvé
         }
+
+        $prets = Pret::where(['etat' => 1])->get();
         // dd($PartContrat);
-        return view('productions.validations.index', compact('PartContrat', 'PartBNIContrat'));
+        return view('productions.validations.index', compact('PartContrat', 'PartBNIContrat', 'prets'));
     }
 
     /**
@@ -57,6 +65,11 @@ class ValidationController extends Controller
      */
     public function prodByPartner(Request $request, $code)
     {
+
+        // $unreadNotifications = auth()->user()->unreadNotifications;
+        // $allNotifications = auth()->user()->notifications;
+
+        // dd($unreadNotifications);
         set_time_limit(300);
 
         $partners = Partner::where('code', $code)->first();
@@ -157,6 +170,17 @@ class ValidationController extends Controller
                         ]
                     );
 
+                    $details_log = [
+                        'url' => route('prod.show', $id),
+                        'user' => \auth()->user()->membre->nom . ' ' . \auth()->user()->membre->prenom,
+                        'date' => now(),
+                        'title' => "Acceptation de la proposition ID $id ",
+                        'action' => "Voir",
+                    ];
+        
+                    $usersToNotify = User::all();
+                    Notification::send($usersToNotify, new SystemeNotify($details_log));
+
                     DB::commit();
                 
                     return response()->json([
@@ -165,6 +189,8 @@ class ValidationController extends Controller
                         'message' => "Proposition N° " . $id . " validée avec succès!",
                         'code' => 200,
                     ]);
+
+                
                 } else {
                     return response()->json([
                         'type' => 'error',
@@ -201,48 +227,121 @@ class ValidationController extends Controller
         return view('productions.validations.show', compact('contrat', 'productGarantie', 'motifs'));
     }
 
+    // public function rejetContrat(Request $request, string $id)
+    // {
+    //     DB::beginTransaction();
+    //     try {
+    //             $contrat = Contrat::find($id);
+    
+    //             if ($contrat) {
+    //                 $contrat->update(
+    //                     [
+    //                         'annulerle' => now(),
+    //                         'etape' => 4,
+    //                         'motifrejet' => $request->motifrejet,
+    //                         'rejeterpar' => Auth::user()->membre->idmembre
+    //                     ]
+    //                 );
+
+    //                 $users = User::all();
+    //                 $user = auth()->user()->idmembre;
+    //                 $details_log = [
+    //                     // 'url' => url()->current(),
+    //                     'url' => route('prod.show', $id),
+    //                     'user' => $user,
+    //                     'date' => date('Y-m-d H:i:s'),
+    //                     'title' => "Rejet de la proposition",
+    //                     'action' => "Voir la proposition rejetée ".$id, 
+    //                 ];
+    
+    //                 foreach ($users as $user) {
+    //                     $user->notify(new SystemeNotify($details_log));
+    //                 }
+        
+
+
+    //                 DB::commit();
+                
+    //                 return response()->json([
+    //                     'type' => 'success',
+    //                     'urlback' => \route('prod.validation.prodByPartner', $contrat->partenaire),
+    //                     'message' => "Proposition N° " . $id . " rejetée avec succès!",
+    //                     'code' => 200,
+    //                 ]);
+    //             } else {
+    //                 return response()->json([
+    //                     'type' => 'error',
+    //                     'urlback' => 'back',
+    //                     'message' => "Erreur lors du rejet de la proposition N° " . $id . "!",
+    //                     'code' => 200,
+    //                 ]);
+    //             }
+       
+    //         } catch (\Throwable $th) {
+    //             DB::rollBack();
+    //             return response()->json([
+    //                 'type' => 'error',
+    //                 'urlback' => '',
+    //                 'message' => "Erreur système! $th",
+    //                 'code' => 500,
+    //             ]);
+    //         }
+    // }
+
     public function rejetContrat(Request $request, string $id)
     {
+        $contrat = Contrat::select(['id', 'partenaire'])->find($id);
+        
+        if (!$contrat) {
+            return response()->json([
+                'type' => 'error',
+                'urlback' => 'back',
+                'message' => "Proposition N° $id introuvable!",
+                'code' => 404,
+            ]);
+        }
+
         DB::beginTransaction();
         try {
-                $contrat = Contrat::find($id);
-    
-                if ($contrat) {
-                    $contrat->update(
-                        [
-                            'annulerle' => now(),
-                            'etape' => 4,
-                            'motifrejet' => $request->motifrejet,
-                            'rejeterpar' => Auth::user()->membre->idmembre
-                        ]
-                    );
+            $contrat->update([
+                'annulerle' => now(),
+                'etape' => 4,
+                'motifrejet' => $request->motifrejet,
+                'rejeterpar' => Auth::id()
+            ]);
 
-                    DB::commit();
-                
-                    return response()->json([
-                        'type' => 'success',
-                        'urlback' => \route('prod.validation.prodByPartner', $contrat->partenaire),
-                        'message' => "Proposition N° " . $id . " rejetée avec succès!",
-                        'code' => 200,
-                    ]);
-                } else {
-                    return response()->json([
-                        'type' => 'error',
-                        'urlback' => 'back',
-                        'message' => "Erreur lors du rejet de la proposition N° " . $id . "!",
-                        'code' => 200,
-                    ]);
-                }
-       
-            } catch (\Throwable $th) {
-                DB::rollBack();
-                return response()->json([
-                    'type' => 'error',
-                    'urlback' => '',
-                    'message' => "Erreur système! $th",
-                    'code' => 500,
-                ]);
-            }
+            // Notifier seulement les utilisateurs concernés (ex: admins)
+            $details_log = [
+                'url' => route('prod.show', $id),
+                'user' => \auth()->user()->membre->nom . ' ' . \auth()->user()->membre->prenom,
+                'date' => now(),
+                'title' => "Rejet de la proposition ID $id . \n pour motif: " . $request->motifrejet,
+                'action' => "Voir",
+            ];
+
+            $usersToNotify = User::where('idmembre', $contrat->saisiepar)->get();
+            Notification::send($usersToNotify, new SystemeNotify($details_log));
+
+            DB::commit();
+        
+            return response()->json([
+                'type' => 'success',
+                'urlback' => route('prod.validation.prodByPartner', $contrat->partenaire),
+                'message' => "Proposition N° $id rejetée avec succès!",
+                'code' => 200,
+            ]);
+        
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            // Log::error("Erreur rejet contrat $id", ['error' => $th]);
+            
+            return response()->json([
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur système! Veuillez réessayer." . $th,
+                'code' => 500,
+            ]);
+        }
     }
 
     /**
