@@ -283,14 +283,37 @@ class ProductionController extends Controller
         $filliations = Filliation::select('MonLibelle')->get();
        
         $resultData = session()->get('adherent', []);
-        $response = Http::withOptions(['timeout' => 60])
-        ->get(env('API_GET_COUNTRIES'));
-        if ($response->successful()) {
-            $countries = $response->json();
+        // $response = Http::withOptions(['timeout' => 60])->get(env('API_GET_COUNTRIES'));
+        // if ($response->successful()) {
+        //     $countries = $response->json();
 
-            $detailCountries = $countries['countries'];
-            // dd($detailCountries);
+        //     $detailCountries = $countries['countries'];
+        //     // dd($detailCountries);
             
+        // }else {
+        //     $detailCountries = [];
+        // }
+        $detailCountries = []; // Valeur par défaut
+
+        try {
+            $response = Http::withOptions(['timeout' => 60])->get(env('API_GET_COUNTRIES'));
+
+            if ($response->successful()) {
+                $data = $response->json(); // on convertit la réponse JSON en tableau associatif
+
+                // Vérifie si la clé "countries" existe
+                if (isset($data['countries'])) {
+
+                    $detailCountries = $data['countries'];
+                    Log::info('La clé "countries" est trouvée dans la réponse API.');
+                } else {
+                    Log::info('La clé "countries" est absente de la réponse API.');
+                }
+            } else {
+                Log::error('Échec de la récupération des pays depuis l\'API.');
+            }
+        } catch (\Exception $e) {
+            Log::error('Exception lors de l\'appel à l\'API des pays : ' . $e->getMessage());
         }
 
         return view('productions.create.create', compact('product', 'villes', 'secteurActivites', 'professions', 'productGarantie', 'societes', 'agences', 'filliations', 'resultData', 'detailCountries'));
@@ -856,7 +879,7 @@ class ProductionController extends Controller
                     'qrCodeBase64' => $qrCodeBase64,
                     'imageSrc' => $imageSrc,
                 ]);
-                $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
+                $cguFile = public_path('root/cgu/cadenceCgu.pdf');
                 
             }else if($contrat->codeproduit == "DOIHOO"){
                 $pdf = PDF::loadView('productions.components.bullettin.Doihoobulletin', [
@@ -865,6 +888,15 @@ class ProductionController extends Controller
                     'imageSrc' => $imageSrc,
                 ]);
                 $cguFile = public_path('root/cgu/doihoo_cgu.pdf');
+
+            }else if($contrat->codeproduit == "CAD_EDUCPLUS"){
+                $pdf = PDF::loadView('productions.components.bullettin.CadenceEduPlusbulletin', [
+                    'contrat' => $contrat,
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc,
+                ]);
+                $cguFile = public_path('root/cgu/CADENCEpLUS.pdf');
+                
             }else{
                 $pdf = PDF::loadView('productions.components.bullettin.basicBulletin', [
                     'contrat' => $contrat,

@@ -572,13 +572,35 @@ class PrestationController extends Controller
                 mkdir($externalUploadDir, 0777, true);
             }
             
-            $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$prestation->code."/E-PRESTATION";
-            if ($imageUrl != null || $imageUrl != '') {
-                $imageData = file_get_contents($imageUrl);
-                $base64Image = base64_encode($imageData);
-                $imageSrc = 'data:image/png;base64,'.$base64Image;
-            } else {
-                $imageSrc = '';
+            // $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$prestation->code."/E-PRESTATION";
+            // if ($imageUrl != null || $imageUrl != '') {
+            //     $imageData = file_get_contents($imageUrl);
+            //     $base64Image = base64_encode($imageData);
+            //     $imageSrc = 'data:image/png;base64,'.$base64Image;
+            // } else {
+            //     $imageSrc = '';
+            // }
+            $imageSrc = '';
+            try {
+                $response = Http::timeout(5)->get($imageUrl);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+
+                    // Vérifie si 'error' existe et est à true
+                    if (isset($data['error']) && $data['error'] === true) {
+                        Log::info('Signature non trouvée pour la prestation N°: ' . $prestation->code);
+                    } else {
+                    
+                        $imageData = $response->body(); 
+                        $base64Image = base64_encode($imageData);
+                        $imageSrc = 'data:image/png;base64,' . $base64Image;
+                    }
+                } else {
+                    Log::error('Erreur HTTP lors de l\'appel de l\'API signature. Code de retour : ' , $response->json());
+                }
+            } catch (\Exception $e) {
+                Log::error('Exception lors de la récupération de la signature : ' . $e->getMessage());
             }
             // Génération du QR code et du fichier PDF pour la prestation
             $qrcode = base64_encode(QrCode::format('svg')->size(80)->generate(url('prestation/getInfoPrestation/' . $prestation->id)));
@@ -1214,13 +1236,36 @@ class PrestationController extends Controller
             if (!is_dir($externalUploadDir)) {
                 mkdir($externalUploadDir, 0777, true);
             }
-            $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$prestation->code."/E-PRESTATION";
-            if ($imageUrl != null || $imageUrl != '') {
-                $imageData = file_get_contents($imageUrl);
-                $base64Image = base64_encode($imageData);
-                $imageSrc = 'data:image/png;base64,'.$base64Image;
-            } else {
-                $imageSrc = '';
+            // $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$prestation->code."/E-PRESTATION";
+            // if ($imageUrl != null || $imageUrl != '') {
+            //     $imageData = file_get_contents($imageUrl);
+            //     $base64Image = base64_encode($imageData);
+            //     $imageSrc = 'data:image/png;base64,'.$base64Image;
+            // } else {
+            //     $imageSrc = '';
+            // }
+
+            $imageSrc = '';
+            try {
+                $response = Http::timeout(5)->get($imageUrl);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+
+                    // Vérifie si 'error' existe et est à true
+                    if (isset($data['error']) && $data['error'] === true) {
+                        Log::info('Signature non trouvée pour la prestation N°: ' . $prestation->code);
+                    } else {
+                    
+                        $imageData = $response->body(); 
+                        $base64Image = base64_encode($imageData);
+                        $imageSrc = 'data:image/png;base64,' . $base64Image;
+                    }
+                } else {
+                    Log::error('Erreur HTTP lors de l\'appel de l\'API signature. Code de retour : ' , $response->json());
+                }
+            } catch (\Exception $e) {
+                Log::error('Exception lors de la récupération de la signature : ' . $e->getMessage());
             }
             // Génération du QR code et du fichier PDF pour la prestation
             $qrcode = base64_encode(QrCode::format('svg')->size(80)->generate(url('prestation/getInfoPrestation/' . $prestation->id)));

@@ -8,20 +8,21 @@ use Dompdf\Options;
 
 use App\Models\Contrat;
 
+use BaconQrCode\Writer;
 use setasign\Fpdi\Fpdi;
 use Illuminate\Http\Request;
+use BaconQrCode\Encoder\QrCode;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+
 use Illuminate\Support\Facades\Log;
+
 use App\Http\Controllers\Controller;
-
-use BaconQrCode\Encoder\QrCode;
-
-use BaconQrCode\Writer;
+use Illuminate\Support\Facades\Http;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
-use BaconQrCode\Renderer\Image\ImagickImageBackEnd; // Utilisez Imagick si disponible
 use BaconQrCode\Renderer\Image\SvgImageBackEnd; // Alternative SVG
+use BaconQrCode\Renderer\Image\ImagickImageBackEnd; // Utilisez Imagick si disponible
 
 class BulletinController extends Controller
 {
@@ -223,12 +224,27 @@ class BulletinController extends Controller
 
 
         $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$contrat->id."/E-SOUSCRIPTION";
-        if($imageUrl != null){
-            $imageData = file_get_contents($imageUrl);
-            $base64Image = base64_encode($imageData);
-            $imageSrc = 'data:image/png;base64,'.$base64Image;
-        }else{
-            $imageSrc = null;
+        $imageSrc = null;
+         try {
+            $response = Http::timeout(5)->get($imageUrl);
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                // Vérifie si 'error' existe et est à true
+                if (isset($data['error']) && $data['error'] === true) {
+                    Log::info('Signature non trouvée pour le contrat ID: ' . $contrat->id);
+                } else {
+                
+                    $imageData = $response->body(); 
+                    $base64Image = base64_encode($imageData);
+                    $imageSrc = 'data:image/png;base64,' . $base64Image;
+                }
+            } else {
+                Log::error('Erreur HTTP lors de l\'appel de l\'API signature. Code de retour : ' , $response->json());
+            }
+        } catch (\Exception $e) {
+            Log::error('Exception lors de la récupération de la signature : ' . $e->getMessage());
         }
 
         
@@ -254,7 +270,7 @@ class BulletinController extends Controller
                     'qrCodeBase64' => $qrCodeBase64,
                     'imageSrc' => $imageSrc
                 ]);
-                $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
+                $cguFile = public_path('root/cgu/cadenceCgu.pdf');
                 
             }else if($contrat->codeproduit == "PFA_IND"){
                 $pdf = PDF::loadView('productions.components.bullettin.pfaINDbulletin', [
@@ -270,6 +286,14 @@ class BulletinController extends Controller
                      'imageSrc' => $imageSrc
                 ]);
                 $cguFile = public_path('root/cgu/doihoo_cgu.pdf');
+            }else if($contrat->codeproduit == "CAD_EDUCPLUS"){
+                $pdf = PDF::loadView('productions.components.bullettin.CadenceEduPlusbulletin', [
+                    'contrat' => $contrat,
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc,
+                ]);
+                $cguFile = public_path('root/cgu/CADENCEpLUS.pdf');
+                
             }else{
 
                 $pdf = PDF::loadView('productions.components.bullettin.basicBulletin', [
