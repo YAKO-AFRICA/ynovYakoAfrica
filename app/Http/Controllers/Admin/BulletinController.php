@@ -260,6 +260,8 @@ class BulletinController extends Controller
             if($contrat->codeproduit == "YKE_2018"){
                 $pdf = PDF::loadView('productions.components.bullettin.ykeBulletin', [
                     'contrat' => $contrat,
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc
                 ]);
                 $cguFile = public_path('root/cgu/cg_yke.pdf');
 

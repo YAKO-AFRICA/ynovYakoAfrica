@@ -88,73 +88,74 @@ class SMSService
     //  */
     public function sendOtpByOrangeAPI($phoneNumber, $otp, $from="YAKO AFRICA")
     {
-        // $accessToken = $this->getAccessToken();
+        $accessToken = $this->getAccessToken();
 
-        // if (isset($accessToken['error'])) {
-        //     return $accessToken; // Retourne une erreur si le token n'a pas été généré correctement
-        // }
+        if (isset($accessToken['error'])) {
+            return $accessToken; // Retourne une erreur si le token n'a pas été généré correctement
+        }
 
+        $smsUrl = "{$this->smsUrl}/tel%3A%2B" . urlencode($this->sender) . "/requests";
         // $smsUrl = "{$this->smsUrl}/tel%3A%2B" . urlencode($this->sender) . "/requests";
-        // // $smsUrl = "{$this->smsUrl}/tel%3A%2B" . urlencode($this->sender) . "/requests";
-
-        // $body = [
-        //     'outboundSMSMessageRequest' => [
-        //         'address' => "tel:+{$phoneNumber}",
-        //         // 'senderAddress' => "tel:+{$phoneNumber}",
-        //         'senderAddress' => "tel:+{$this->sender}",
-        //         'outboundSMSTextMessage' => [
-        //             'message' => "Votre code de confirmation est : $otp",
-        //         ],
-        //     ],
-        // ];
-
-        // try {
-        //     $response = Http::withHeaders([
-        //         'Authorization' => "Bearer $accessToken",
-        //         'Content-Type' => 'application/json',
-        //     ])->post($smsUrl, $body);
-
-        //     if ($response->failed()) {
-        //         throw new \Exception('Erreur lors de l\'envoi du SMS : ' . $response->body());
-        //     }
-
-        //     return $response->json();
-        // } catch (\Exception $e) {
-        //     return ['error' => $e->getMessage()];
-        // }
-        $url = "https://wp2e3q.api.infobip.com/sms/2/text/advanced";
-        $cleApi = "ca9b1e97d87d27dc425b2d598aa83c46-cbbd83f5-f0af-49ae-9bc0-02ba090ecac3";
-        // $url = "https://z32vrw.api.infobip.com/sms/2/text/advanced";
-        // $cleApi = "7e23a940f0227d7a9555890da2569aa2-80288480-49fb-47d5-bf44-fe05699acfbc";
-        $headers = [
-                    'Authorization' => "App $cleApi",
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-        ];
 
         $body = [
-            "messages" => [
-                [
-                    // "from" => 2250789078557,
-                    "from" => $from,
-                    "destinations" => [
-                        ["to" => $phoneNumber]
-                    ],
-                    "text" => "Votre code de confirmation de votre numéro est : $otp"
-                ]
-            ]
+            'outboundSMSMessageRequest' => [
+                'address' => "tel:+{$phoneNumber}",
+                // 'senderAddress' => "tel:+{$phoneNumber}",
+                'senderAddress' => "tel:+{$this->sender}",
+                'outboundSMSTextMessage' => [
+                    'message' => "Votre code de confirmation est : $otp",
+                ],
+            ],
         ];
 
         try {
-            
-            $response = Http::withHeaders($headers)
-                ->post($url, $body);
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer $accessToken",
+                'Content-Type' => 'application/json',
+            ])->post($smsUrl, $body);
 
-            return json_decode($response->getBody(), true);
+            if ($response->failed()) {
+                throw new \Exception('Erreur lors de l\'envoi du SMS : ' . $response->body());
+            }
+
+            return $response->json();
         } catch (\Exception $e) {
             return ['error' => $e->getMessage()];
         }
+        // $url = "https://wp2e3q.api.infobip.com/sms/2/text/advanced";
+        // $cleApi = "ca9b1e97d87d27dc425b2d598aa83c46-cbbd83f5-f0af-49ae-9bc0-02ba090ecac3";
+        // // $url = "https://z32vrw.api.infobip.com/sms/2/text/advanced";
+        // // $cleApi = "7e23a940f0227d7a9555890da2569aa2-80288480-49fb-47d5-bf44-fe05699acfbc";
+        // $headers = [
+        //             'Authorization' => "App $cleApi",
+        //             'Content-Type' => 'application/json',
+        //             'Accept' => 'application/json',
+        // ];
+
+        // $body = [
+        //     "messages" => [
+        //         [
+        //             // "from" => 2250789078557,
+        //             "from" => $from,
+        //             "destinations" => [
+        //                 ["to" => $phoneNumber]
+        //             ],
+        //             "text" => "Votre code de confirmation de votre numéro est : $otp"
+        //         ]
+        //     ]
+        // ];
+
+        // try {
+            
+        //     $response = Http::withHeaders($headers)
+        //         ->post($url, $body);
+
+        //     return json_decode($response->getBody(), true);
+        // } catch (\Exception $e) {
+        //     return ['error' => $e->getMessage()];
+        // }
     }
+
     // public function sendOtp($phoneNumber, $otp)
     // {
     //     // $url = "https://z32vrw.api.infobip.com/sms/2/text/advanced";
@@ -195,41 +196,73 @@ class SMSService
 
     public function sendOtpByInfobipAPI($phoneNumber, $otp, $from="YAKO AFRICA")
     {
-        $url = "https://wp2e3q.api.infobip.com/sms/2/text/advanced";
-        $cleApi = "ca9b1e97d87d27dc425b2d598aa83c46-cbbd83f5-f0af-49ae-9bc0-02ba090ecac3";
-        // $url = "https://z32vrw.api.infobip.com/sms/2/text/advanced";
-        // $cleApi = "7e23a940f0227d7a9555890da2569aa2-80288480-49fb-47d5-bf44-fe05699acfbc";
-        $headers = [
-                    'Authorization' => "App $cleApi",
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-        ];
+        // $url = "https://wp2e3q.api.infobip.com/sms/2/text/advanced";
+        // $cleApi = "ca9b1e97d87d27dc425b2d598aa83c46-cbbd83f5-f0af-49ae-9bc0-02ba090ecac3";
+        // // $url = "https://z32vrw.api.infobip.com/sms/2/text/advanced";
+        // // $cleApi = "7e23a940f0227d7a9555890da2569aa2-80288480-49fb-47d5-bf44-fe05699acfbc";
+        // $headers = [
+        //             'Authorization' => "App $cleApi",
+        //             'Content-Type' => 'application/json',
+        //             'Accept' => 'application/json',
+        // ];
+
+        // $body = [
+        //     "messages" => [
+        //         [
+        //             // "from" => 2250789078557,
+        //             "from" => $from,
+        //             "destinations" => [
+        //                 ["to" => $phoneNumber]
+        //             ],
+        //             "text" => "Votre code de confirmation de votre numéro est : $otp"
+        //         ]
+        //     ]
+        // ];
+
+        // try {
+            
+        //     $response = Http::withHeaders($headers)
+        //         ->post($url, $body);
+
+        //     return json_decode($response->getBody(), true);
+        // } catch (\Exception $e) {
+        //     return ['error' => $e->getMessage()];
+        // }
+
+        $accessToken = $this->getAccessToken();
+
+        if (isset($accessToken['error'])) {
+            return $accessToken; // Retourne une erreur si le token n'a pas été généré correctement
+        }
+
+        $smsUrl = "{$this->smsUrl}/tel%3A%2B" . urlencode($this->sender) . "/requests";
+        // $smsUrl = "{$this->smsUrl}/tel%3A%2B" . urlencode($this->sender) . "/requests";
 
         $body = [
-            "messages" => [
-                [
-                    // "from" => 2250789078557,
-                    "from" => $from,
-                    "destinations" => [
-                        ["to" => $phoneNumber]
-                    ],
-                    "text" => "Votre code de confirmation de votre numéro est : $otp"
-                ]
-            ]
+            'outboundSMSMessageRequest' => [
+                'address' => "tel:+{$phoneNumber}",
+                // 'senderAddress' => "tel:+{$phoneNumber}",
+                'senderAddress' => "tel:+{$this->sender}",
+                'outboundSMSTextMessage' => [
+                    'message' => "Votre code de confirmation est : $otp",
+                ],
+            ],
         ];
 
         try {
-            
-            $response = Http::withHeaders($headers)
-                ->post($url, $body);
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer $accessToken",
+                'Content-Type' => 'application/json',
+            ])->post($smsUrl, $body);
 
-            return json_decode($response->getBody(), true);
+            if ($response->failed()) {
+                throw new \Exception('Erreur lors de l\'envoi du SMS : ' . $response->body());
+            }
+
+            return $response->json();
         } catch (\Exception $e) {
             return ['error' => $e->getMessage()];
         }
     }
-    // $response = $this->client->post($url, [
-    //             'headers' => $headers,
-    //             'json' => $body,
-    //         ]);
+    
 }

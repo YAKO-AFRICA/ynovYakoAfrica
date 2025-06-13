@@ -217,7 +217,7 @@
 
                             
                             <div class="col-12 mb-3">
-                                <label for="fraisadhesion" class="form-label">Fraie d'adhesion :</label>
+                                <label for="fraisadhesion" class="form-label">Frais d'adhesion :</label>
                                 <input type="number" class="form-control" id="fraisadhesion" name="fraisadhesion" min="0" value="{{ $contrat->fraisadhesion ?? '--'}}"  placeholder="{{ $contrat->fraisadhesion ?? '--'}}">
                             </div>
                         </div>

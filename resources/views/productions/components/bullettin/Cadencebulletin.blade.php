@@ -90,7 +90,7 @@
             <div style="width: 100%;">
                 <div style="width: 55%; margin: auto; border: 1px solid #444; padding: 7px; border-radius: 7px;">
                     <strong style="font-size: 15px">IND-CAD-2410</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
-                        style="color: red; font-size: 20px">000000</span></div>
+                        style="color: red; font-size: 20px">{{ $contrat->id}}</span></div>
             </div>
             <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
         </section>
@@ -153,17 +153,17 @@
 
                         <div class="birthday" style="margin-bottom: 10px;">
                             <label><strong>Unit Manager : </strong><input type="text" class="input-border-bottom"
-                                    style="width: 76%" value="Unit Manager"> </label>
+                                    style="width: 76%" value="..."> </label>
                         </div>
 
                         <div class="prenom" style="margin-bottom: 10px;">
                             <label><strong>Assistant Manager : </strong><input type="text" class="input-border-bottom"
-                                    style="width: 67%" value="Assistant Manager"> </label>
+                                    style="width: 67%" value="..."> </label>
                         </div>
 
                         <div class="domicile" style="margin-bottom: 10px;">
                             <label><strong>Manager : </strong><input type="text" class="input-border-bottom"
-                                    style="width: 83%" value="Manager"> </label>
+                                    style="width: 83%" value="..."> </label>
                         </div>
 
                         <div class="profession" style="margin-bottom: 10px;">
@@ -181,17 +181,17 @@
 
                         <div class="prenom" style="margin-bottom: 10px;">
                             <label><strong>Code : </strong><input type="text" class="input-border-bottom"
-                                    style="width: 81%" value="Code Unit Manager"> </label>
+                                    style="width: 81%" value="..."> </label>
                         </div>
 
                         <div class="birthday" style="margin-bottom: 10px;">
                             <label><strong>Code : </strong><input type="text" class="input-border-bottom"
-                                    style="width: 81%" value="Code assistant Manager"> </label>
+                                    style="width: 81%" value="..."> </label>
                         </div>
 
                         <div class="domicile" style="margin-bottom: 10px;">
                             <label><strong>code : </strong><input type="text" class="input-border-bottom"
-                                    style="width: 81%" value="Code Manager"> </label>
+                                    style="width: 81%" value="..."> </label>
                         </div>
                     </div>
 
@@ -750,7 +750,7 @@
         <section style="width: 100%; margin-top: 7px;">
             <div style="width: 100%; margin-top: 10px; margin-bottom: 7px;">
 
-                <label>Fait à <strong>................................................ </strong> le <strong> ................................................</strong></label>
+                <label>Fait à : <strong> {{ $contrat->user->membre->zone->libellezone ?? '' }}  </strong> le <strong> {{ \Carbon\Carbon::parse($contrat->saisiele)->format('d/m/Y à H:i:s') ?? '' }} </strong></label>
             </div>
             <div style="width: 100%; text-align: center;">
                 <div style="width: 33%; float: left;">

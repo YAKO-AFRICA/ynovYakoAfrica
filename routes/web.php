@@ -16,7 +16,7 @@ use App\Http\Controllers\Admin\RdvController;
 use App\Http\Controllers\Admin\TestController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Admin\EpretController;
-use App\Http\Controllers\setting\RoleController;
+use App\Http\Controllers\Setting\RoleController;
 use App\Http\Controllers\Setting\UserController;
 use App\Http\Controllers\Setting\ZoneController;
 use App\Http\Controllers\Admin\AssurerController;

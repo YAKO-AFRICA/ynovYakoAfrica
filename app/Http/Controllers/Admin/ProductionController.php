@@ -1018,6 +1018,8 @@ class ProductionController extends Controller
 
         $contrat = Contrat::where('id', $id)->first();
         $filliations =  Filliation::select('MonLibelle')->get();
+        // $zone =  $contrat->user->membre->zone->libellezone;
+        // dd($zone);
 
         return view('productions.show', compact('contrat', 'productGarantie','filliations'));
     }
