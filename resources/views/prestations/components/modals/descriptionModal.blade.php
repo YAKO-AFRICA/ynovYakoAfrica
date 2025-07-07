@@ -42,14 +42,15 @@
             <div class="modal-body">
                 <div class="card radius-10">
                     <div class="card-body bg-light-success rounded">
-                        <div class="d-flex align-items-center">
-                            <img src="{{ asset('root/images/login-images/yvon.png')}}" class="rounded-circle p-1 border" width="90" height="90" alt="...">
-                            <div class="flex-grow-1 ms-3 text-dark">
+
+                        <div class="row">
+                            <div class="col-md-3 col-lg-3 col-sm-12 text-center">
+                                <img src="{{ asset('root/images/login-images/yvon.png')}}" class="rounded-circle p-1 border img-fluid">
+                            </div>
+                            <div class="col-md-9 col-lg-9 col-sm-12">
                                 <h5 class="mt-0">Qu'est ce qu'un(e) {{$typePrestation->libelle ?? ''}}</h5>
                                 <p class="mb-0">{!! ($typePrestation->description) ?? 'Pas de description' !!}</p>
                             </div>
-                            
-
                         </div>
                     </div>
                     <div class="flex-grow-1 ms-3">
@@ -115,11 +116,11 @@
                     @if(in_array($contractDetails['codeProduit'], $produitsObsequeValides1) || in_array($contractDetails['codeProduit'], $produitsObsequeValides2))
                         <a href="{{ route('rdv.create', $typePrestation->id) }}" type="button" class="btn">Ok, Je Continue</a>
                     @endif
-                    @if(in_array($contractDetails['codeProduit'], $produitsObsequeValides2))
+                    {{-- @if(in_array($contractDetails['codeProduit'], $produitsObsequeValides2))
                         <a href="{{ route('rdv.create', $typePrestation->id) }}" class="btn">
                             Ok, Je Continue
                         </a>
-                    @endif
+                    @endif --}}
                 </div>
             @elseif($typePrestation->impact == 'Autre')
                 <div class="modal-footer">
