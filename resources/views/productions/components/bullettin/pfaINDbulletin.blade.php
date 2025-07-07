@@ -90,7 +90,7 @@
             <div style="width: 100%;">
                 <div style="width: 33%; float: right; border: 1px solid #444; padding: 5px;">
                     <strong>IND-PERF-2310</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
-                        style="color: red; font-size: 15px">000000</span></div>
+                        style="color: red; font-size: 15px">{{ $contrat->id }}</span></div>
             </div>
             <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
         </section>
@@ -114,12 +114,12 @@
 
                         <div class="birthday" style="margin-bottom: 10px;">
                             <label><strong>Unit Manager : </strong><input type="text" class="input-border-bottom"
-                                    style="width: 76%" value="Unit Manager"> </label>
+                                    style="width: 76%" value="..."> </label>
                         </div>
 
                         <div class="domicile" style="margin-bottom: 10px;">
                             <label><strong>Manager : </strong><input type="text" class="input-border-bottom"
-                                    style="width: 83%" value="Manager"> </label>
+                                    style="width: 83%" value="..."> </label>
                         </div>
 
                         <div class="profession" style="margin-bottom: 10px;">
@@ -659,7 +659,7 @@
 
                 <div style="width: 100%; margin-top: 10px;">
 
-                    <label>Fait à <strong>................................................ </strong> le <strong> ................................................</strong></label>
+                    <label>Fait à : <strong> {{ $contrat->user->membre->zone->libellezone ?? '' }}  </strong> le <strong> {{ \Carbon\Carbon::parse($contrat->saisiele)->format('d/m/Y à H:i:s') ?? '' }} </strong></label>
                 </div>
             </div>
         </section>

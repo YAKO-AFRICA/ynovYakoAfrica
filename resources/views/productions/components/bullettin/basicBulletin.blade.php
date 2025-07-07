@@ -318,7 +318,7 @@
 
             <div class="prenom" style="width: 100%; margin-top: 10px">
 
-                <label for="prenom">Fait à : ...................................le.....................................</label>
+                <label for="prenom">Fait à : {{ $contrat->user->membre->zone->libellezone ?? '' }} le {{ \Carbon\Carbon::parse($contrat->saisiele)->format('d/m/Y à H:i:s') ?? '' }} </label>
 
             </div>
         </section>

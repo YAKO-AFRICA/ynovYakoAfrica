@@ -319,7 +319,7 @@
             </div>
 
             <div class="etapeEditPrest d-none" id="etapeEditPrest5">
-                <div class="row g-3 mb-3 text-center" id="OTP">
+                <div class="row g-3 mb-3 text-center" id="OTP-edit">
                     <span class="form-label">Un code de confirmation a été envoyé pas SMS, veuillez le
                         rentrer ci-dessous</span>
                     <div class="col-12 d-flex justify-content-center align-items-center">
@@ -334,10 +334,10 @@
                     </div>
 
 
-                    <div class="otp-timer" id="otp-timer">
+                    <div class="otp-timer-edit" id="otp-timer">
                         {{-- afficher le deconte ici  --}}
                     </div>
-                    <a href="#" class="d-none resend-otp-link">Renvoyer l'OTP</a>
+                    <a href="#" class="d-none resend-otp-link-edit">Renvoyer l'OTP</a>
                 </div>
                 <div class="row">
                     <div class="col-12 d-flex justify-content-end gap-3">

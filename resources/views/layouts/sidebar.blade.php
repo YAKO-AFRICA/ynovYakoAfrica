@@ -65,7 +65,7 @@
             @endcan
 
             {{-- module de gestion de prospection --}}
-
+            @can('Voir e-prospection')
             <strong><li class="menu-label">E-Prospection</li></strong>
             <li>
                 <a href="{{ route('prospect.index')}}">
@@ -75,6 +75,7 @@
                     <div class="menu-title">Nouvelle Prospection</div>
                 </a>
             </li>
+            @endcan
             {{-- <li>
                 <a href="{{ route('prospect.suivies')}}">
                     <div class="parent-icon"><i class="fadeIn animated bx bx-clipboard"></i>
@@ -146,6 +147,15 @@
                             <div class="parent-icon"><i class="lni lni-stackoverflow"></i>
                             </div>
                             <div class="menu-title">Souscription</div>
+                        </a>
+                    </li>
+                @endcan
+                @can('Voir le rapport de prestation')
+                    <li>
+                        <a href="{{ route('report.ePrestation')}}">
+                            <div class="parent-icon"><i class="lni lni-stackoverflow"></i>
+                            </div>
+                            <div class="menu-title">Prestation</div>
                         </a>
                     </li>
                 @endcan
@@ -239,6 +249,26 @@
                     <div class="parent-icon"><i class='bx bx-network-chart'></i>
                     </div>
                     <div class="menu-title">Produit</div>
+                </a>
+            </li>
+
+            @endcan
+
+            @can('Voir le support')
+            <li class="menu-label">Support</li>
+          
+            <li>
+                <a href="">
+                    <div class="parent-icon"><i class="bx bx-folder"></i>
+                    </div>
+                    <div class="menu-title">Documentation</div>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('ticket.tickets.index') }}">
+                    <div class="parent-icon"><i class="bx bx-support"></i>
+                    </div>
+                    <div class="menu-title">Support</div>
                 </a>
             </li>
             @endcan

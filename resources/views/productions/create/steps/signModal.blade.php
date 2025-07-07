@@ -25,7 +25,6 @@
                         <div class="row">
                             <div class="col-12">
                                 Vous pouvez également signer en cliquant: 
-                                {{-- <a href="https://192.168.11.8:8002/signature/{{ $token['token'] }}/{{ $token['operation_type'] }}/{{ $token['key_uuid'] }}"> --}}
                                 <a href="https://apisign.yakoafricassur.com/signature/{{ $token['token'] }}/{{ $token['operation_type'] }}/{{ $token['key_uuid'] }}" target="_blank">
                                     <strong>ICI</strong>
                                 </a>

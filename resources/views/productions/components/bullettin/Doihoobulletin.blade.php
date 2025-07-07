@@ -530,7 +530,7 @@
     
                             <div class="birthday" style="margin-bottom: 10px;">
                                 <label><strong>Unit Manager : </strong><input type="text" class="input-border-bottom"
-                                        style="width: 76%" value="Unit Manager"> </label>
+                                        style="width: 76%" value="----"> </label>
                             </div>
     
                             <div class="prenom" style="margin-bottom: 10px;">
@@ -593,8 +593,8 @@
         </div>
         <section style="width: 100%; margin-top: 20px;">
             <div style="width: 100%; margin-top: 10px; margin-bottom: 20px;">
-
-                <label>Fait à <strong>................................................ </strong> le <strong> ................................................</strong></label>
+                <label>Fait à : <strong> {{ $contrat->user->membre->zone->libellezone ?? '' }}  </strong> le <strong> {{ \Carbon\Carbon::parse($contrat->saisiele)->format('d/m/Y à H:i:s') ?? '' }} </strong></label>
+                
             </div>
             <div style="width: 100%; text-align: center;">
                 <div style="width: 45%; float: left;">

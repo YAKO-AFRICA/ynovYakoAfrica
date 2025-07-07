@@ -151,6 +151,7 @@ class PrestationController extends Controller
         $contract = session('contractDetails', []);
         $contractDetails = $contract['details'][0] ?? [];
         $membreDetails   = $contract['membre'] ?? [];
+        // dd($contractDetails, $membreDetails);
 
         $prestation = TblPrestation::where(['idcontrat'=> $idcontrat, 'typeprestation' => $typePrestation->libelle, 'etape' => 1])->first();
         
@@ -572,7 +573,7 @@ class PrestationController extends Controller
                 mkdir($externalUploadDir, 0777, true);
             }
             
-            // $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$prestation->code."/E-PRESTATION";
+            $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$prestation->code."/E-PRESTATION";
             // if ($imageUrl != null || $imageUrl != '') {
             //     $imageData = file_get_contents($imageUrl);
             //     $base64Image = base64_encode($imageData);
@@ -1236,7 +1237,7 @@ class PrestationController extends Controller
             if (!is_dir($externalUploadDir)) {
                 mkdir($externalUploadDir, 0777, true);
             }
-            // $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$prestation->code."/E-PRESTATION";
+            $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$prestation->code."/E-PRESTATION";
             // if ($imageUrl != null || $imageUrl != '') {
             //     $imageData = file_get_contents($imageUrl);
             //     $base64Image = base64_encode($imageData);

@@ -9,6 +9,7 @@ use App\Models\Membre;
 use App\Models\Reseau;
 use App\Models\Partner;
 use App\Models\Profile;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
@@ -98,10 +99,30 @@ class UserController extends Controller
             $type = 2;
         }
 
+<<<<<<< HEAD
         // $id = Membre::max('idmembre') + 2;
         $id = now()->format('mdHis');
 
         Log::info("ID du membre : $id");
+=======
+        // $id = Membre::max('idmembre') + 1;
+
+        // $existe = Membre::where('idmembre', $id)->firstOrFail();
+
+        // if($existe){
+        //     $id + 1;
+        // }
+        // do {
+        //     $id = Membre::max('idmembre') + 1;
+        // } while (Membre::where('idmembre', $id )->exists() && User::where('idmembre', $id )->exists());
+
+        // random de 6 caractere en chiffre
+        do {
+            $id = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        } while (Membre::where('idmembre', $id)->exists() && User::where('idmembre', $id)->exists());
+
+
+>>>>>>> 249025b7a8b61bacf13d8e1667a7f0831d220896
 
 
         DB::beginTransaction();

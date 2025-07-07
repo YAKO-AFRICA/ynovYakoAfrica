@@ -87,6 +87,80 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    const steps = document.querySelectorAll('.etaperdv'); // Sélectionner toutes les étapes
+    const nextButtons = document.querySelectorAll('.next-btn'); // Boutons "Next"
+    const submitdrvButtons = document.querySelectorAll('.submitdrv-btn'); // Boutons "Next"
+    const prevButtons = document.querySelectorAll('.prev-btn'); // Boutons "Prev"
+    // const telPaiementField = document.getElementById('TelPaiement');
+    // const confirmTelPaiementField = document.getElementById('ConfirmTelPaiement');
+    // Fonction pour valider les champs obligatoires dans une étape donnée
+    function validateStep(step) {
+        let isValid = true;
+        const allFields = step.querySelectorAll('input, textarea, select'); // Tous les champs de l'étape
+        allFields.forEach(field => {
+            if (field.required && !field.value.trim()) {
+                isValid = false;
+                field.classList.add('is-invalid'); // Ajouter une classe pour indiquer une erreur
+                field.classList.remove('is-valid'); // Retirer la classe valide
+            } else {
+                field.classList.remove('is-invalid'); // Retirer la classe d'erreur
+                field.classList.add('is-valid'); // Ajouter une classe pour indiquer la validité
+            }
+        });
+
+        return isValid;
+    }
+
+
+    // Gestionnaire pour les boutons "Next"
+    nextButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const currentContainer = this.closest('.etaperdv'); // Étape actuelle
+            const nextStep = document.querySelector(`#${this.dataset.next}`); // Étape suivante
+
+            // // Vérifier si on est sur l'étape contenant les champs de téléphone
+            // if (currentContainer.contains(telPaiementField)) {
+            //     if (!validateTelFields()) {
+            //         alert("Veuillez vérifier que les numéros de téléphone sont conformes.");
+            //         return; // Arrêter si les champs ne sont pas valides
+            //     }
+            // }
+
+            if (validateStep(currentContainer)) {
+                // Si les champs sont valides, attendre 1 seconde avant de passer à l'étape suivante
+                setTimeout(() => {
+                    currentContainer.classList.add('d-none');
+                    nextStep.classList.remove('d-none');
+                }, 1000); // 1 seconde
+            }
+        });
+    });
+    submitdrvButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const currentContainer = this.closest('.etaperdv'); // Étape actuelle
+
+            if (validateStep(currentContainer)) {
+                // Si les champs sont valides, attendre 1 seconde avant de soumettre le formulair
+                setTimeout(() => {
+                    return;
+                }, 500);
+            }
+        });
+    });
+
+    // Gestionnaire pour les boutons "Prev"
+    prevButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const currentContainer = this.closest('.etaperdv'); // Étape actuelle
+            const prevStep = document.querySelector(`#${this.dataset.prev}`); // Étape précédente
+
+            currentContainer.classList.add('d-none');
+            prevStep.classList.remove('d-none');
+        });
+    });
+});
+
 document.addEventListener("DOMContentLoaded", function () {
     const steps = document.querySelectorAll(".etape, .etapePrest"); // Sélectionner toutes les étapes
     const nextButtons = document.querySelectorAll(".next-btn"); // Boutons "Next"
@@ -742,43 +816,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Intégration de la gestion du changement pour récupérer les détails du contrat
-    // $(document).on('change', '#single-select-field', function() {
-    //     var idcontrat = $(this).val(); // Récupérer l'ID du contrat sélectionné
-
-    //     montantSouhaite.disabled = false;
-    //     if (idcontrat) {
-    //         $.ajax({
-    //             url: '/api/fetch-contract-details', // Route Laravel
-    //             type: 'POST',
-    //             data: {
-    //                 idcontrat: idcontrat,
-    //                 _token: '{{ csrf_token() }}'  // Le token CSRF pour sécuriser la requête
-    //             },
-    //             dataType: 'json', // Assurez-vous que la réponse attendue est en JSON
-    //             success: function(response) {
-    //                 if (response.status === 'success') {
-    //                     var details = response.data.details;
-    //                     if (details && details.length > 0) {
-    //                         var CapitalSouscrit = parseInt(details[0].CapitalSouscrit);
-    //                         // var DureeCotisationAns = parseInt(details[0].DureeCotisationAns);
-    //                         $("#Capital").val(CapitalSouscrit);
-    //                         $("#CapitalTotal").text('Capital souscrit : ' + CapitalSouscrit +  ' FCFA');
-
-    //                     } else {
-    //                         console.error('Aucun détail trouvé pour ce contrat.');
-    //                     }
-    //                 } else {
-    //                     alert('Erreur : ' + response.message);
-    //                 }
-    //             },
-    //             error: function(xhr) {
-    //                 console.error(xhr.responseText);
-    //                 alert('Erreur lors de la récupération des informations du contrat.');
-    //             }
-    //         });
-    //     }
-    // });
     $(document).ready(function () {
         // Déclencher l'événement "change" sur le champ de sélection pour le premier contrat
         $("#single-select-fiel").trigger("change");
@@ -888,9 +925,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // const confirmIbanPaiementField = document.getElementById('ConfirmIBAN');
     const confirmTelPaiementField =
         document.getElementById("ConfirmTelPaiement");
-    const otpContainer = document.getElementById("OTP");
-    const resendOtpLink = document.querySelector(".resend-otp-link");
+    const otpContainer = document.getElementById("OTP-edit");
+    // const otpContainer = document.getElementById("OTP");
+    const resendOtpLink = document.querySelector(".resend-otp-link-edit");
+    // const resendOtpLink = document.querySelector(".resend-otp-link");
     // const otpInputs = document.querySelectorAll('.otp-input');
+    const otpInputs = document.querySelectorAll('.otp-input');
     const otpTimer = document.createElement("div"); // Timer pour afficher le compte à rebours
     // const montantSouhaite = document.getElementById('montantSouhaite');
     const ibanPaiementSection = document.getElementById("IBANPaiement");
@@ -1112,7 +1152,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let otpInterval;
 
     function startOtpTimer() {
-        otpTimer.classList.add("otp-timer");
+        otpTimer.classList.add("otp-timer-edit");
+        // otpTimer.classList.add("otp-timer");
         otpContainer.appendChild(otpTimer); // Ajouter le timer à l'interface
         updateOtpTimer();
 
@@ -1325,68 +1366,6 @@ document.addEventListener("DOMContentLoaded", function () {
          btnContratSuivant.disabled = false;
     }
 
-    // montantSouhaiteField.addEventListener("input", function (e) {
-    //     let value = e.target.value.replace(/\s/g, "").replace(/[^0-9]/g, ""); // Supprime espaces et caractères non numériques
-
-    //     if (value) {
-    //         e.target.value = parseInt(value, 10).toLocaleString("fr-FR"); // Formate avec séparateurs de milliers
-    //     } else {
-    //         e.target.value = ""; // Champ vide si suppression complète
-    //     }
-
-    //     // Vérifier si le montant souhaité est valide
-    //     const montantSouhaite = parseInt(value, 10) || 0; // Valeur saisie ou 0 si vide
-
-    //     const capital = parseFloat(capitalField.value.replace(/\s/g, "")) || 0; // Supprimer les espaces avant conversion
-    //     const TotalEncaissement =
-    //         parseFloat(TotalEncaissementField.value.replace(/\s/g, "")) || 0; // Supprimer les espaces avant conversion
-    //     // const moitieCapital = capital / 2;
-    //     const moitieCapital = TotalEncaissement / 2;
-    //     const moitieCapitalFormate = moitieCapital.toLocaleString("fr-FR");
-
-    //     // Réinitialiser les messages d'erreur et de succès
-    //     msgError.text("").hide();
-    //     msgSuccess.text("").hide();
-    //     countError.text("").hide();
-    //     countSuccess.text("").hide();
-
-    //     if (montantSouhaite > moitieCapital || montantSouhaite <= 0) {
-    //         msgError
-    //             .text(
-    //                 `Selon les termes du contrat, le montant souhaité doit être inférieur ou égal à ${moitieCapitalFormate} FCFA.`
-    //             )
-    //             .show();
-    //         montantSouhaiteField.classList.add("is-invalid");
-    //         montantSouhaiteField.classList.remove("is-valid");
-    //         // desactiver le bouton
-    //         btnContratSuivant.disabled = true;
-    //     } else if (montantSouhaiteField.value.trim() === "") {
-    //         montantSouhaiteField.classList.remove("is-invalid");
-    //         montantSouhaiteField.classList.remove("is-valid");
-    //         // desactiver le bouton
-    //         btnContratSuivant.disabled = true;
-    //     } else if (montantSouhaite <= moitieCapital && montantSouhaite > 0) {
-    //         msgSuccess
-    //             .text(
-    //                 `Le montant définitif sera calculé en fonction de la situation du contrat.`
-    //             )
-    //             .show();
-    //         montantSouhaiteField.classList.remove("is-invalid");
-    //         montantSouhaiteField.classList.add("is-valid");
-    //         // activer le bouton
-    //         btnContratSuivant.disabled = false;
-    //     }
-    // });
-
-    // montantSouhaiteField.addEventListener("blur", function (e) {
-    //     if (e.target.value.trim() !== "") {
-    //         e.target.value = parseInt(
-    //             e.target.value.replace(/\s/g, ""),
-    //             10
-    //         ).toLocaleString("fr-FR");
-    //     }
-    // });
-    
     
     AutresInfos.addEventListener("input", function () {
         const charLimit = 400; // Limite en caractères
@@ -1460,30 +1439,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
-            // Vérification du montant souhaité par rapport au capital
-            // const montantSouhaite = parseFloat(montantSouhaiteField.value) || 0;
-            // const capital = parseFloat(capitalField.value) || 0;
-            // const TotalEncaissement =
-            //     parseFloat(TotalEncaissementField.value.replace(/\s/g, "")) ||
-            //     0; // Supprimer les espaces avant conversion
-            // const moitieCapital = TotalEncaissement / 2;
-            // // const moitieCapital = capital / 2;
-            // const moitieCapitalFormate = moitieCapital.toLocaleString("fr-FR");
-
-            // if (montantSouhaite > moitieCapital || montantSouhaite <= 0) {
-            //     alert(
-            //         `Selon les termes du contrat, le montant souhaité doit être supérieur à 0 et inferieur ou égal à ${moitieCapitalFormate} FCFA.`
-            //     );
-            //     msgError
-            //         .text(
-            //             `Selon les termes du contrat, le montant souhaité doit être supérieur à 0 et inferieur ou égal à ${moitieCapitalFormate} FCFA.`
-            //         )
-            //         .show();
-            //     // ajouter une bordure rouge si le montant souhaité est invalide
-            //     montantSouhaiteField.classList.add("is-invalid");
-            //     montantSouhaiteField.classList.remove("is-valid");
-            //     return; // Arrêter si le montant souhaité n'est pas valide
-            // }
+            
             // Vérification et envoi de l'OTP
             if (
                 currentContainer.contains(telPaiementField) &&
@@ -1632,56 +1588,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
-
-//     // Ajouter un gestionnaire pour le lien "Renvoyer le code"
-// document.addEventListener('DOMContentLoaded', function () {
-//     const resendOtpLink = document.querySelector('.resend-otp-link'); // Sélection du lien
-//     const telPaiementField = document.getElementById('TelPaiement'); // Champ téléphone principal
-
-//     async function resendOtp(phoneNumber) {
-//         try {
-//             const response = await fetch('/api/send-otp', {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-//                 },
-//                 body: JSON.stringify({ TelPaiement: phoneNumber }),
-//             });
-
-//             const result = await response.json();
-
-//             if (response.ok) {
-//                 alert(`Le code OTP a été renvoyé sur le numéro ${phoneNumber}.`);
-//                 return true;
-//             } else {
-//                 alert(result.error || "Une erreur s'est produite lors de l'envoi du code OTP.");
-//                 return false;
-//             }
-//         } catch (error) {
-//             alert("Une erreur s'est produite lors du renvoi du code OTP.");
-//             console.error(error);
-//             return false;
-//         }
-//     }
-
-//     // Écouter l'événement de clic sur le lien "Renvoyer le code"
-//     resendOtpLink.addEventListener('click', async function (event) {
-//         event.preventDefault(); // Empêcher le comportement par défaut du lien
-
-//         const phoneNumber = telPaiementField.value.trim();
-
-//         // Vérifier que le champ de téléphone n'est pas vide et valide
-//         const phoneRegex = /^[0-9]{13}$/; // Modifier selon votre format
-//         if (!phoneNumber || !phoneRegex.test(phoneNumber)) {
-//             alert("Veuillez vérifier que le numéro de téléphone est valide avant de renvoyer le code.");
-//             return;
-//         }
-
-//         // Renvoi de l'OTP
-//         await resendOtp(phoneNumber);
-//     });
-// });
 
 document.addEventListener("DOMContentLoaded", function () {
     // const selectLieuRDV = document.getElementById('single-select-optgroup-field');
@@ -2712,47 +2618,3 @@ $("#AttestationPerte-file-upload").FancyFileUpload({
 
 // Fin upload doc
 
-// Debut OTP input
-// document.addEventListener('DOMContentLoaded', function() {
-//     const otpInputs = document.querySelectorAll('.otp-input');
-//     const ribInputs = document.querySelectorAll('.rib-input');
-
-//     otpInputs.forEach((input, index) => {
-//         input.addEventListener('input', () => {
-//             if (input.value.length === 1 && index < otpInputs.length - 1) {
-//                 otpInputs[index + 1].focus();
-//             }
-//         });
-
-//         input.addEventListener('keydown', (e) => {
-//             if (e.key === 'Backspace' && index > 0 && input.value === '') {
-//                 otpInputs[index - 1].focus();
-//             }
-//         });
-//     });
-
-//     ribInputs.forEach((input, index) => {
-//         input.addEventListener('input', function () {
-//             // Filtrer uniquement les lettres et chiffres
-//             this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
-
-//             // Passer au champ suivant si un caractère est saisi
-//             if (this.value.length === 1 && index < ribInputs.length - 1) {
-//                 ribInputs[index + 1].focus();
-//             }
-
-//         });
-
-//         input.addEventListener('keydown', function (e) {
-//             // Gérer la suppression et revenir au champ précédent
-//             if (e.key === 'Backspace' && this.value === '' && index > 0) {
-//                 ribInputs[index - 1].focus();
-//             }
-//         });
-//     });
-
-// });
-
-// Fin OTP input
-
-// Fin js perso prestation

@@ -6,7 +6,7 @@
     <div class="card-body">
         <div class="card mb-3">
             <div class="card-header"> 
-               <h5 class="mb-0">Documents relatives aux contrats</h5>
+               <h5 class="mb-0">Documents relatifs aux contrats</h5>
             </div>
             <div class="card-body">
                 <div class="row">
