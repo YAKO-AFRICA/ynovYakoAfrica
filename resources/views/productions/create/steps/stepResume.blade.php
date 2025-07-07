@@ -528,6 +528,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const operation_type = document.getElementById('operation_type').value;
             const csrfToken = document.querySelector('input[name="_token"]').value;
 
+            // fetch('http://192.168.11.8:8001/api/send-otp', {
             fetch('https://apiotp.yakoafricassur.com/api/send-otp', {
                     method: 'POST',
                     headers: {
@@ -619,6 +620,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
+            // fetch('http://192.168.11.8:8001/api/verify-otp', {
             fetch('https://apiotp.yakoafricassur.com/api/verify-otp', {
                     method: 'POST',
                     headers: {
@@ -709,6 +711,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
             try {
+                // const response = await fetch("http://192.168.11.8:8001/api/send-otp", {
                 const response = await fetch("https://apiotp.yakoafricassur.com/api/send-otp", {
                     method: "POST",
                     headers: {

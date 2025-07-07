@@ -688,7 +688,7 @@
                                             <td>
                                                 <ul>
                                                     @foreach ($productGarantie as $item)
-                                                        <li>{{ $item->MonLibelle }}</li>
+                                                        <li>{{ $item->libelle }}</li>
                                                     @endforeach
                                                 </ul>
                                             </td>

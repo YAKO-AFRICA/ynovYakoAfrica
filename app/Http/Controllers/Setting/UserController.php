@@ -99,6 +99,12 @@ class UserController extends Controller
             $type = 2;
         }
 
+<<<<<<< HEAD
+        // $id = Membre::max('idmembre') + 2;
+        $id = now()->format('mdHis');
+
+        Log::info("ID du membre : $id");
+=======
         // $id = Membre::max('idmembre') + 1;
 
         // $existe = Membre::where('idmembre', $id)->firstOrFail();
@@ -116,6 +122,7 @@ class UserController extends Controller
         } while (Membre::where('idmembre', $id)->exists() && User::where('idmembre', $id)->exists());
 
 
+>>>>>>> 249025b7a8b61bacf13d8e1667a7f0831d220896
 
 
         DB::beginTransaction();

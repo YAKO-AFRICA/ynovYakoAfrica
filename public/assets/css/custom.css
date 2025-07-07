@@ -296,3 +296,17 @@ a {
   .ribbon {
       clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
   }
+
+.form-control:focus, .form-select:focus {
+    background: white;
+    border-color: #003c17;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 0 0.2rem rgba(4, 78, 28, 0.25);
+}
+
+.account-number-input:focus {
+    background: white;
+    border-color: #003c17;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 0 0.2rem rgba(4, 78, 28, 0.25);
+}

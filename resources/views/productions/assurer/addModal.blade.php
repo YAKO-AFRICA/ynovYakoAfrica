@@ -119,7 +119,7 @@
                                     <select class="form-select" name="lienParente" id="lienParente"
                                         aria-label="Default select example">
 
-                                        <option selected value="">Sélectionner le lien de Parenté</option>
+                                        <option selected value="" disabled>Sélectionner le lien de Parenté</option>
 
                                         @foreach ($filliations as $item)
                                             <option value="{{ $item->CodeFiliation }}">{{ $item->MonLibelle }}</option>

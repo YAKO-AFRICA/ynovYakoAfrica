@@ -16,6 +16,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 text-center justify-content-center">
+                                {{-- {!! QrCode::size(200)->generate(url('http://192.168.11.8:8002/signature/'.$token['token'].'/'.$token['operation_type'].'/'.$token['key_uuid'])) !!} --}}
                                 {!! QrCode::size(200)->generate(url('https://apisign.yakoafricassur.com/signature/'.$token['token'].'/'.$token['operation_type'].'/'.$token['key_uuid'])) !!}
                             </div>
                         </div>

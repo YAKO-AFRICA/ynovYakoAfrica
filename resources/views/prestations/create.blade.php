@@ -324,6 +324,7 @@
 
         // Polling toutes les 3 secondes pour vérifier l'état de la signature
         pollingInterval = setInterval(() => {
+            // fetch(`http://192.168.11.8:8002/api/check-signature-status/${keyUuid}/${operationType}`)
             fetch(`https://apisign.yakoafricassur.com/api/check-signature-status/${keyUuid}/${operationType}`)
                 .then(response => response.json())
                 .then(data => {

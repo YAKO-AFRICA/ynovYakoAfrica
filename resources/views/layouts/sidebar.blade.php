@@ -86,11 +86,10 @@
             
             
                 
-            @can('Voir e-pret')
+            {{-- @can('Voir e-pret')
             <li class="menu-label ">E-Prêt</li>
             <li>
                 <a href="{{ route('epret.simulateur')}}">
-                {{-- <a href="{{ route('epret.create')}}"> --}}
                     <div class="parent-icon"><i class="bx bx-dollar-circle fs-5"></i>
                     </div>
                     <div class="menu-title">Simulateur</div>
@@ -103,7 +102,7 @@
                     <div class="menu-title">Mes demandes</div>
                 </a>
             </li>
-            @endcan
+            @endcan --}}
 
             @can('Voir e-prestation')
                 <li class="menu-label">E-Prestation</li>
@@ -162,7 +161,7 @@
                 @endcan
                 
                 
-                @can('Voir le rapport des pret')
+                {{-- @can('Voir le rapport des pret')
                     <li>
                         <a href="{{ route('report.ePret')}}">
                             <div class="parent-icon"><i class="fadeIn animated bx bx-bitcoin"></i>
@@ -170,7 +169,7 @@
                             <div class="menu-title">Pret</div>
                         </a>
                     </li>
-                @endcan
+                @endcan --}}
                 @can('Voir le rapport des pret')
                     <li>
                         <a href="{{ route('report.eProspection')}}">
@@ -272,6 +271,24 @@
                     <div class="menu-title">Support</div>
                 </a>
             </li>
+            @endcan
+            @can('Voir le support')
+                <li class="menu-label">ASSISTANCE</li>
+            
+                {{-- <li>
+                    <a href="">
+                        <div class="parent-icon"><i class="bx bx-folder"></i>
+                        </div>
+                        <div class="menu-title">Documentation</div>
+                    </a>
+                </li> --}}
+                <li>
+                    <a href="{{ route('ticket.tickets.index') }}">
+                        <div class="parent-icon"><i class="bx bx-support"></i>
+                        </div>
+                        <div class="menu-title">Support</div>
+                    </a>
+                </li>
             @endcan
         </div>
     </ul>

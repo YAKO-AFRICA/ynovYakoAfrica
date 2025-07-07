@@ -137,7 +137,7 @@ class HomeController extends Controller
                 $dataMigrer[$mois] = $total;
             }
 
-            $allContratsDistinct = Contrat::select('libelleproduit', DB::raw('COUNT(*) as nombre'), DB::raw('SUM(prime) as total_prime'))
+            $allContratsDistinct = Contrat::where('partenaire', $user->codepartenaire)->select('libelleproduit', DB::raw('COUNT(*) as nombre'), DB::raw('SUM(prime) as total_prime'))
             ->groupBy('codeproduit', 'libelleproduit')
             ->get();
 
@@ -193,31 +193,4 @@ class HomeController extends Controller
         'productLabels' => $productLabels]);
     }
 }
-
-
-// $totalContrats = Contrat::count();
-            // $contratsEtape2 = Contrat::where('etape', 2)->count();
-            // $contratsEtape2Week = Contrat::where('etape', 2)
-            //     ->whereBetween('saisiele', [
-            //         now()->startOfWeek(),
-            //         now()->endOfWeek(),
-            //     ])->count();
-
-            // $contratsMigrer = Contrat::where('etape', 3)->count();
-            // $contratsRejetter = Contrat::where('etape', 4)->count();
-
-            // $data = collect([
-            //     'totalContrats' => $totalContrats,
-            //     'contratsEtape2' => $contratsEtape2,
-            //     'contratsEtape2Week' => $contratsEtape2Week,
-            //     'contratsMigrer' => $contratsMigrer,
-            //     'contratsRejetter' => $contratsRejetter,
-            // ]);
-
-
-            // $myContratsWeek = Contrat::where('saisiepar', $user->idmembre)
-            // ->whereBetween('saisiele', [
-            //     now()->startOfWeek(),
-            //     now()->endOfWeek(), 
-            // ])->get();
 

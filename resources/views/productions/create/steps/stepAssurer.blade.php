@@ -62,27 +62,6 @@
                     @if (!empty($GarantiesOptionnelles))
                         <td>
                             <ul>
-                                {{-- @foreach ($GarantiesOptionnelles as $item)
-                                    <li>
-                                        <label class="form-label">
-                                            Souhaitez-vous souscrire à la garantie {{ $item->libelle }} ?
-                                        </label>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio"
-                                                name="GarantiesOptionnelles[{{ $item->id }}]"
-                                                id="OuiGarantiesOptionnelles{{ $item->id }}" data-gar-value="{{ $item->codeproduitgarantie }}" value="Oui">
-                                            <label class="form-check-label"
-                                                for="OuiGarantiesOptionnelles{{ $item->id }}">Oui</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio"
-                                                name="GarantiesOptionnelles[{{ $item->id }}]"
-                                                id="NonGarantiesOptionnelles{{ $item->id }}" data-gar-value="{{ $item->codeproduitgarantie }}" value="Non">
-                                            <label class="form-check-label"
-                                                for="NonGarantiesOptionnelles{{ $item->id }}">Non</label>
-                                        </div>
-                                    </li>
-                                @endforeach --}}
                                 @foreach ($GarantiesOptionnelles as $item)
                                     <li>
                                         <label class="form-label">
@@ -111,29 +90,40 @@
                                 @endforeach
 
                                 <script>
-                                    document.addEventListener('DOMContentLoaded', function() {
-                                        // Récupérer les données de simulation depuis le sessionStorage
-                                        const simulationData = JSON.parse(sessionStorage.getItem('garantiesData'));
-                                        
-                                        // Parcourir toutes les options de garanties optionnelles
-                                        document.querySelectorAll('.garantie-optionnelle').forEach(radio => {
-                                            const garValue = radio.getAttribute('data-gar-value');
-                                        
-                                            if (garValue === 'SENIOR' && simulationData) {
-                                                const hasSenior = simulationData.some(item => item.codeGarantie === 'SENIOR');
-                                                
-                                                if (hasSenior) {
-                                                    if (radio.value === 'Oui') {
-                                                        radio.checked = true;
-                                                    }
-                                                    // Rendre tous les boutons radio en lecture seule
-                                                    radio.readOnly = true;
-                                                    radio.parentElement.style.opacity = '0.7';
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const simulationData = JSON.parse(sessionStorage.getItem('simulationData'));
+                                    console.log('Données de simulation:', simulationData);
+
+                                    const hasSenior = simulationData?.garantieData?.some(item => item.codeGarantie === 'SENIOR');
+
+                                    document.querySelectorAll('.garantie-optionnelle').forEach(radio => {
+                                        const garValue = radio.getAttribute('data-gar-value');
+
+                                        if (garValue === 'SENIOR') {
+                                            if (hasSenior) {
+                                                // Si garantie SENIOR existe → coche "Oui"
+                                                if (radio.value === 'Oui') {
+                                                    radio.checked = true;
+                                                } else {
+                                                    radio.checked = false;
+                                                }
+                                            } else {
+                                                // Sinon → coche "Non"
+                                                if (radio.value === 'Non') {
+                                                    radio.checked = true;
+                                                } else {
+                                                    radio.checked = false;
                                                 }
                                             }
-                                        });
+
+                                            // Rendre les deux boutons non modifiables
+                                            radio.disabled = true;
+                                            radio.parentElement.style.opacity = '0.7';
+                                        }
                                     });
+                                });
                                 </script>
+
                             </ul>
     
                         </td>
