@@ -134,6 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let newFormData = new FormData();
             formData.forEach((value, key) => newFormData.append(key, value));
             newFormData.set("codeGarantie", garantie.codeproduitgarantie);
+            newFormData.set("CodeProduitFormule", "YKE_2018_V1");
 
             fetch("https://api.yakoafricassur.com/enov/prime-garantie", {
                 method: "POST",

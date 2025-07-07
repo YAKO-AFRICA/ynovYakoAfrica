@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\OTPController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Setting\SiteWebController;
 use App\Http\Controllers\Admin\PrestationController;
 
 /*
@@ -28,6 +29,36 @@ Route::post('/getPrestations', [PrestationController::class, 'getPrestations'])-
 Route::post('/send-otpByOrangeAPI', [OTPController::class, 'sendOtpByOrangeAPI']);
 Route::post('/send-otpByInfobipAPI', [OTPController::class, 'sendOtpByInfobipAPI']);
 Route::post('/verify-otp', [OTPController::class, 'verifyOtp']);
+
+
+Route::get('/sitewebs/list', [SiteWebController::class, 'index'])->name('sitewebs.list');
+Route::get('/sitewebs/update', [SiteWebController::class, 'update'])->name('sitewebs.update');
+Route::apiResource('sitewebs', SiteWebController::class);
+    
+    // Route supplémentaire pour changer l'état
+Route::patch('sitewebs/{siteWeb}/toggle-status', [SiteWebController::class, 'toggleStatus']);
+
+
+
+
+// Liste tous les sites web
+Route::get('/sitewebs/list', [SiteWebController::class, 'index'])->name('sitewebs.list');
+
+// Enregistre un nouveau site web
+Route::post('/sitewebs', [SiteWebController::class, 'store'])->name('sitewebs.store');
+
+// Affiche un site web spécifique
+Route::get('/sitewebs/{siteweb}', [SiteWebController::class, 'show'])->name('sitewebs.show');
+
+// Met à jour un site web spécifique
+Route::put('/sitewebs/update/{id}', [SiteWebController::class, 'update'])->name('sitewebs.update');
+// Route::patch('/sitewebs/{siteweb}', [SiteWebController::class, 'update']);
+
+// Supprime un site web spécifique
+Route::delete('/sitewebs/delete/{id}', [SiteWebController::class, 'destroy'])->name('sitewebs.destroy');
+
+// Route supplémentaire pour changer l'état
+Route::patch('/sitewebs/{siteweb}/toggle-status', [SiteWebController::class, 'toggleStatus'])->name('sitewebs.toggle-status');
 
 
 

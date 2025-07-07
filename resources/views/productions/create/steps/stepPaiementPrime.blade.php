@@ -50,24 +50,42 @@
                         <div class="col-12 mb-3">
                             <label for="banque" class="form-label">Ma banque ou organisme de prélèvement</label>
                             <select class="form-select" id="banque" name="organisme">
-                                <option selected value="">Selectionnez la banque</option>
+                                <option selected value="" disabled>Selectionnez la banque</option>
                                 @foreach ($societes as $item)
                                     <option value="{{ $item->MonLibelle }}">{{ $item->MonLibelle ?? '' }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-12 mb-3">
-                            <label for="Agence" class="form-label">Agence</label>
-                            <select class="form-select" id="Agence" name="agence">
-                                <option  selected value="">Selectionnez l'agence</option>
-                                @foreach ($agences as $item)
-                                    <option value="{{ $item->NOM_LONG }}">{{ $item->NOM_LONG ?? '' }}</option>
-                                @endforeach
-                            </select>
+                        
+                        <div class="col-12 mb-3 row w-100">
+                            <div class="col-sm-6 col-md-2 col-lg-2">
+                                <label class="form-label small">Code Banque</label>
+                                <input type="text" class="form-control account-number-input" id="codebanque" 
+                                    placeholder="30003" maxlength="5" pattern="[0-9]{5}" name="codebanque">
+                            </div> 
+                            <div class="col-sm-6 col-md-3 col-lg-3">
+                                <label class="form-label small">Code Guichet</label>
+                                <input type="text" class="form-control account-number-input" id="codeguichet" 
+                                    placeholder="02005" maxlength="5" pattern="[0-9]{5}" name="codeguichet" required>
+                            </div> 
+                            <div class="col-sm-8 col-md-5 col-lg-5">
+                                <label class="form-label small">Numéro de compte</label>
+                                <input type="text" class="form-control account-number-input" id="numerocompte" 
+                                    placeholder="00123456789" maxlength="12" pattern="[0-9]{12}" name="numerocompte" required>
+                            </div> 
+                            <div class="col-sm-4 col-md-2 col-lg-2">
+                                <label class="form-label small">Clé RIB</label>
+                                <input type="text" class="form-control account-number-input" id="rib" 
+                                    placeholder="12" maxlength="2" pattern="[0-9]{2}" name="rib" required>
+                            </div>
                         </div>
                         <div class="col-12 mb-3">
-                            <label for="Matricule" class="form-label">Mon N° de compte (Matricule)</label>
-                            <input type="text" class="form-control" id="Matricule" name="numerocompte">
+                            <label class="form-label">
+                                <i class="bx bxs-show me-2"></i>Aperçu du numéro complet
+                            </label>
+                            <div class="form-control bg-secondary text-white" id="numero_complet" style=" text-align: center; font-size: 18px;">
+                                _____ - _____ - ___________ - __
+                            </div>
                         </div>
                     </div>
 
@@ -146,7 +164,7 @@
                                 <label for="primepricipale" class="form-label">Je souhaite payer une prime de
                                     : <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="primepricipale" name="primepricipale"
-                                    min="1000" required>
+                                    min="100" required>
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="duree" class="form-label">Durée de mes cotisations (en année, entre 6
@@ -270,22 +288,30 @@
         </div>
     </div><!---end row-->
 
-    {{-- <script>
-        document.getElementById("primepricipale").addEventListener("input", function() {
-            const primeInput = document.getElementById("primepricipale");
-            const primeError = document.getElementById("primepricipale-error");
-    
-            // Vérifiez si la valeur est inférieure au minimum autorisé
-            if (parseInt(primeInput.value) < parseInt(primeInput.min)) {
-                primeError.style.display = "block";
-            } else {
-                primeError.style.display = "none";
-            }
+
+    <script>
+        // Fonction pour mettre à jour l'aperçu du numéro complet
+        function updateAccountPreview() {
+            const codeBanque = document.getElementById('codebanque').value || '_____';
+            const codeGuichet = document.getElementById('codeguichet').value || '_____';
+            const numeroCompte = document.getElementById('numerocompte').value || '___________';
+            const cleRib = document.getElementById('rib').value || '__';
+            
+            const preview = `${codeBanque} - ${codeGuichet} - ${numeroCompte} - ${cleRib}`;
+            document.getElementById('numero_complet').textContent = preview;
+        }
+
+        // Écouteurs d'événements pour la mise à jour en temps réel
+        document.getElementById('codebanque').addEventListener('input', updateAccountPreview);
+        document.getElementById('codeguichet').addEventListener('input', updateAccountPreview);
+        document.getElementById('numerocompte').addEventListener('input', updateAccountPreview);
+        document.getElementById('rib').addEventListener('input', updateAccountPreview);
+
+        // Validation des champs numériques
+        document.querySelectorAll('.account-number-input').forEach(input => {
+            input.addEventListener('input', function() {
+                this.value = this.value.replace(/\D/g, '');
+            });
         });
-    </script> --}}
-
-    
-
-
-
+    </script>
 </div>

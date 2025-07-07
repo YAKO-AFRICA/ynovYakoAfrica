@@ -33,7 +33,7 @@ class ProspectController extends Controller
 
     public function index(Request $request)
     {
-        $query = Prospect::where('userAdd_uuid', auth()->user()->uuid)->orderBy('id', 'desc');
+        $query = Prospect::where('userAdd_uuid', auth()->user()->id)->orderBy('id', 'desc');
 
         if ($request->has('code') && !empty($request->code)) {
             $query->where('code', 'like', '%' . $request->code . '%');

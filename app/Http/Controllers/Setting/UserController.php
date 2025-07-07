@@ -98,7 +98,10 @@ class UserController extends Controller
             $type = 2;
         }
 
-        $id = Membre::max('idmembre') + 2;
+        // $id = Membre::max('idmembre') + 2;
+        $id = now()->format('mdHis');
+
+        Log::info("ID du membre : $id");
 
 
         DB::beginTransaction();

@@ -28,8 +28,13 @@
 
     </div>
 
-    <div class="ms-auto gx-3">
-        <div class="btn-group">
+    
+
+</div>
+
+<div class="ms-auto">
+    <div class="d-flex justify-content-end my-4">
+        <div class="btn-group gap-1 gap-md-2 gap-lg-3">
         
             @if ($contrat->etape != 2)
             <form action="{{ route('prod.transmettreContrat', $contrat->id)}}" method="post" class="submitForm">
@@ -46,7 +51,6 @@
 
         </div>
     </div>
-
 </div>
 
 <!--end breadcrumb-->

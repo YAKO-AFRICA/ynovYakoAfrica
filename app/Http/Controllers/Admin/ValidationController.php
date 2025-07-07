@@ -152,6 +152,16 @@ class ValidationController extends Controller
         DB::beginTransaction();
         try {
                 $contrat = Contrat::find($id);
+
+                if (!$contrat->duree || !$contrat->periodicite) {
+                    return response()->json([
+                        'type' => 'error',
+                        'urlback' => 'back',
+                        'message' => "Impossible de valider cette proposition ! Le contrat doit avoir une 'durée' et une 'périodicité'.",
+                        'code' => 422,
+                    ]);
+                }
+
     
                 if ($contrat) {
                     $contrat->update(
@@ -173,7 +183,7 @@ class ValidationController extends Controller
                         'action' => "Voir",
                     ];
         
-                    $usersToNotify = User::all();
+                    $usersToNotify = User::where('idmembre', Auth::user()->membre->idmembre)->get();
                     Notification::send($usersToNotify, new SystemeNotify($details_log));
 
                     DB::commit();
@@ -214,7 +224,7 @@ class ValidationController extends Controller
 
         set_time_limit(300);
         $CodeProduit = Contrat::where('id', $id)->first()->codeproduit;
-        $productGarantie = ProduitGarantie::where('CodeProduit',$CodeProduit)->get();
+        $productGarantie = ProduitGarantie::where('CodeProduit',$CodeProduit)->where('branche', 'IND')->get();
         $motifs = MotifRejet::where('etat', 'actif')->get();
 
         $contrat = Contrat::where('id', $id)->first();
@@ -222,66 +232,7 @@ class ValidationController extends Controller
         return view('productions.validations.show', compact('contrat', 'productGarantie', 'motifs'));
     }
 
-    // public function rejetContrat(Request $request, string $id)
-    // {
-    //     DB::beginTransaction();
-    //     try {
-    //             $contrat = Contrat::find($id);
-    
-    //             if ($contrat) {
-    //                 $contrat->update(
-    //                     [
-    //                         'annulerle' => now(),
-    //                         'etape' => 4,
-    //                         'motifrejet' => $request->motifrejet,
-    //                         'rejeterpar' => Auth::user()->membre->idmembre
-    //                     ]
-    //                 );
 
-    //                 $users = User::all();
-    //                 $user = auth()->user()->idmembre;
-    //                 $details_log = [
-    //                     // 'url' => url()->current(),
-    //                     'url' => route('prod.show', $id),
-    //                     'user' => $user,
-    //                     'date' => date('Y-m-d H:i:s'),
-    //                     'title' => "Rejet de la proposition",
-    //                     'action' => "Voir la proposition rejetée ".$id, 
-    //                 ];
-    
-    //                 foreach ($users as $user) {
-    //                     $user->notify(new SystemeNotify($details_log));
-    //                 }
-        
-
-
-    //                 DB::commit();
-                
-    //                 return response()->json([
-    //                     'type' => 'success',
-    //                     'urlback' => \route('prod.validation.prodByPartner', $contrat->partenaire),
-    //                     'message' => "Proposition N° " . $id . " rejetée avec succès!",
-    //                     'code' => 200,
-    //                 ]);
-    //             } else {
-    //                 return response()->json([
-    //                     'type' => 'error',
-    //                     'urlback' => 'back',
-    //                     'message' => "Erreur lors du rejet de la proposition N° " . $id . "!",
-    //                     'code' => 200,
-    //                 ]);
-    //             }
-       
-    //         } catch (\Throwable $th) {
-    //             DB::rollBack();
-    //             return response()->json([
-    //                 'type' => 'error',
-    //                 'urlback' => '',
-    //                 'message' => "Erreur système! $th",
-    //                 'code' => 500,
-    //             ]);
-    //         }
-    // }
 
     public function rejetContrat(Request $request, string $id)
     {
@@ -295,6 +246,7 @@ class ValidationController extends Controller
                 'code' => 404,
             ]);
         }
+        
 
         DB::beginTransaction();
         try {

@@ -832,6 +832,7 @@ class ProductionController extends Controller
 
            // Dans votre contrôleur
             $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$contrat->id."/E-SOUSCRIPTION";
+            // $imageUrl = "http://192.168.11.8:8002/api/get-signature/".$contrat->id."/E-SOUSCRIPTION";
             $imageData = file_get_contents($imageUrl);
             $base64Image = base64_encode($imageData);
             $imageSrc = 'data:image/png;base64,'.$base64Image;
@@ -1028,7 +1029,7 @@ class ProductionController extends Controller
     public function edit(string $id)
     {
         $contrat = Contrat::where('id', $id)->with('adherent', 'assures', 'beneficiaires', 'produit')->first();
-        $productGarantie = ProduitGarantie::where('CodeProduit', $contrat->codeproduit)->get();
+        $productGarantie = ProduitGarantie::where('CodeProduit', $contrat->codeproduit)->where('branche', 'IND')->get();
         $product = Product::where('CodeProduit', $contrat->codeproduit)->first();
         $villes =  TblVille::get();
         $professions =  TblProfession::select('MonLibelle')->get();
@@ -1114,7 +1115,7 @@ class ProductionController extends Controller
                 'sound' => 'son1.wav' // Ajout du fichier son
             ];
 
-            $usersToNotify = User::all();
+            $usersToNotify = User::where('idmembre', Auth::user()->membre->idmembre)->get();
             Notification::send($usersToNotify, new SystemeNotify($details_log));
             DB::commit();
 

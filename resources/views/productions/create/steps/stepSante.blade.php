@@ -937,7 +937,7 @@
 
             </div>
 
-        @elseif($product->CodeProduit == 'YKE_2008')
+        @elseif($product->CodeProduit == 'YKE_2018')
             <div class="col-12">
                 <div class="card" style="width: 100%">
 
@@ -1060,7 +1060,7 @@
 
                                     <div class="row">
 
-                        class='bx bx-left-arrow-alt'></i>Precedent</button>
+                                        <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
 
                                             <label for="" class="form-label">Hypertension artérielle</label>
 
