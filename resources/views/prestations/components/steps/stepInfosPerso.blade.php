@@ -93,7 +93,6 @@
                             class='bx bx-right-arrow-alt fs-4 ms-2'></i></button>
                     </div>
                 </div>
-                
             </div>
         
         </div>

@@ -238,7 +238,7 @@
     @include('productions.assurer.addModal', ['CodeProduit' => $product->CodeProduit])
     @include('productions.beneficiaires.add')
 
-    <script>
+<script>
     let pollingInterval;
 
     const qrCodeModal = document.getElementById('qrCodeModal');
