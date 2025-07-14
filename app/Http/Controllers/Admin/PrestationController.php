@@ -574,13 +574,7 @@ class PrestationController extends Controller
             }
             
             $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$prestation->code."/E-PRESTATION";
-            // if ($imageUrl != null || $imageUrl != '') {
-            //     $imageData = file_get_contents($imageUrl);
-            //     $base64Image = base64_encode($imageData);
-            //     $imageSrc = 'data:image/png;base64,'.$base64Image;
-            // } else {
-            //     $imageSrc = '';
-            // }
+            
             $imageSrc = '';
             try {
                 $response = Http::timeout(5)->get($imageUrl);
