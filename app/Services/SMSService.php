@@ -6,47 +6,6 @@ use GuzzleHttp\Client;
 
 use Illuminate\Support\Facades\Http;
 
-// class SmsController extends Controller
-// {
-//     public function sendSms($to, $message)
-//     {
-//         $url = 'https://pe822m.api.infobip.com/sms/2/text/advanced';
-//         $headers = [
-//             'Authorization' => 'App 6e1ce0e1d0517647162e12b7132386c7-21df76e5-acb1-43c6-a4df-e84d91c5535c',
-//             'Content-Type' => 'application/json',
-//             'Accept' => 'application/json',
-//         ];
-//         $body = [
-//             'messages' => [
-//                 [
-//                     'destinations' => [
-//                         ['to' => $to]
-//                     ],
-//                     'from' => '447491163443',
-//                     'text' => $message
-//                 ]
-//             ]
-//         ];
-
-//         try {
-//             $response = Http::withHeaders($headers)
-//                 ->post($url, $body);
-
-//             if ($response->successful()) {
-//                 return $response->json(); // Retourne la réponse en format JSON
-//             } else {
-//                 return [
-//                     'status' => $response->status(),
-//                     'reason' => $response->body(),
-//                 ];
-//             }
-//         } catch (\Exception $e) {
-//             return [
-//                 'error' => $e->getMessage(),
-//             ];
-//         }
-//     }
-// }
 class SMSService
 {
 
@@ -156,43 +115,6 @@ class SMSService
         }
     }
 
-    // public function sendOtp($phoneNumber, $otp)
-    // {
-    //     // $url = "https://z32vrw.api.infobip.com/sms/2/text/advanced";
-    //     $url = "https://api.orange.com/oauth/v3/token";
-    //     $clientId = 'xjxWRml44RnoZ5dvMFIfQl3e18rGA7tv';
-    //     $clientSecret = 'wQkC6YbNdM5AMXig';
-    //     // $url = "{$this->baseUrl}/sms/3/messages";
-    //     $headers = [
-    //                 'Authorization' => "Basic ".base64_encode("$clientId:$clientSecret"),
-    //                 'Content-Type' => 'application/json',
-    //                 'Accept' => 'application/json',
-    //     ];
-
-    //     $body = [
-    //         "messages" => [
-    //             [
-    //                 // "from" => 2250789078557,
-    //                 "from" => "SMS 701280",
-    //                 "destinations" => [
-    //                     ["to" => $phoneNumber]
-    //                 ],
-    //                 "text" => "Votre code de confirmation de votre numéro est : $otp"
-    //             ]
-    //         ]
-    //     ];
-
-    //     try {
-            
-    //         $response = Http::withHeaders($headers)
-    //             ->post($url, $body);
-
-    //         return json_decode($response->getBody(), true);
-    //     } catch (\Exception $e) {
-    //         return ['error' => $e->getMessage()];
-    //     }
-    // }
-    // public function sendOtpByInfobipAPI($phoneNumber, $otp, $from="YAKO AFRICA")
 
     public function sendOtpByInfobipAPI($phoneNumber, $otp, $from="YAKO AFRICA")
     {
