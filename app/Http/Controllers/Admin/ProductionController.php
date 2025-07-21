@@ -20,6 +20,7 @@ use App\Models\Prospect;
 use App\Models\TblVille;
 use App\Models\Signature;
 use App\Models\TblAgence;
+use App\Mail\CustomerMail;
 use App\Models\Filliation;
 use App\Models\Profession;
 use App\Models\TblSociete;
@@ -35,18 +36,19 @@ use BaconQrCode\Encoder\QrCode;
 use Endroid\QrCode\Label\Label;
 use App\Models\DeclarationSante;
 use App\Models\TblSecteurActivite;
+
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Log;
-
 use App\Http\Controllers\Controller;
 use App\Notifications\SystemeNotify;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+
 use Endroid\QrCode\Encoding\Encoding;
 use BaconQrCode\Renderer\ImageRenderer;
-
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Notification;
 use Endroid\QrCode\Writer\ValidationException;
@@ -708,6 +710,19 @@ class ProductionController extends Controller
                 throw new \Exception("Erreur lors de la génération du bulletin : " . $bulletinData['message']);
             }
 
+            $mailData = [
+                'title' => 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉',
+                'btnLink' => $bulletinData['file_url'],
+                'btnText' => 'Télécharger mon bulletin',
+                'documents' => $bulletinData['file_url'],
+            ];
+
+            $to = $request->email;
+
+            $emailSubject = 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉';
+
+            Mail::to($to)->send(new CustomerMail($mailData, $emailSubject));
+
             $details_log = [
                 'url' => route('prod.show', $idContrat),
                 'user' => auth()->user()->membre->nom . ' ' . auth()->user()->membre->prenom,
@@ -831,8 +846,8 @@ class ProductionController extends Controller
             );
 
            // Dans votre contrôleur
-            $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$contrat->id."/E-SOUSCRIPTION";
-            // $imageUrl = "http://192.168.11.8:8002/api/get-signature/".$contrat->id."/E-SOUSCRIPTION";
+            $imageUrl = env('SIGN_API') . "api/get-signature/" . $idContrat . "/E-SOUSCRIPTION";
+            
             $imageData = file_get_contents($imageUrl);
             $base64Image = base64_encode($imageData);
             $imageSrc = 'data:image/png;base64,'.$base64Image;
@@ -1144,6 +1159,34 @@ class ProductionController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function sendMail(Request $request)
+    {
+        try {
+            $mailData = [
+                'title' => 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉',
+                'btnLink' => 'https://yaavtest.yakoafricassur.com/root/images/login-images/login-cover.jpg',
+                'btnText' => 'Télécharger mon bulletin',
+                'documents' => "https://yaavtest.yakoafricassur.com/root/images/login-images/login-cover.jpg",
+            ];
+
+            $emailSubject = 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉';
+
+            Mail::to('jhon001doe@gmail.com')->send(new CustomerMail($mailData, $emailSubject));
+
+            return response()->json([
+                'type' => 'success',
+                'message' => "Mail envoyé avec succès!",
+                'code' => 200,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'type' => 'error',
+                'message' => "Erreur d'envoi du mail! " . $e->getMessage(),
+                'code' => 500,
+            ]);
+        }
     }
 }
 

@@ -16,6 +16,7 @@ class Equipe extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'id',
         'codeequipe',
         'libelleequipe',
         'codezone',

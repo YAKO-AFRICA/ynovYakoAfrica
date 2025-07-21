@@ -223,7 +223,7 @@ class BulletinController extends Controller
         $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($qrCodeImage);
 
 
-        $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$contrat->id."/E-SOUSCRIPTION";
+        $imageUrl = env('SIGN_API') . "api/get-signature/" . $id . "/E-SOUSCRIPTION";
         $imageSrc = null;
          try {
             $response = Http::timeout(5)->get($imageUrl);

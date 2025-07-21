@@ -76,33 +76,6 @@
                 </a>
             </li>
             @endcan
-            {{-- <li>
-                <a href="{{ route('prospect.suivies')}}">
-                    <div class="parent-icon"><i class="fadeIn animated bx bx-clipboard"></i>
-                    </div>
-                    <div class="menu-title">Suivie Prospection</div>
-                </a>
-            </li> --}}
-            
-            
-                
-            {{-- @can('Voir e-pret')
-            <li class="menu-label ">E-Prêt</li>
-            <li>
-                <a href="{{ route('epret.simulateur')}}">
-                    <div class="parent-icon"><i class="bx bx-dollar-circle fs-5"></i>
-                    </div>
-                    <div class="menu-title">Simulateur</div>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('epret.index')}}">
-                    <div class="parent-icon"><i class="fadeIn animated bx bx-archive-in"></i>
-                    </div>
-                    <div class="menu-title">Mes demandes</div>
-                </a>
-            </li>
-            @endcan --}}
 
             @can('Voir e-prestation')
                 <li class="menu-label">E-Prestation</li>
@@ -159,17 +132,6 @@
                         </a>
                     </li>
                 @endcan
-                
-                
-                {{-- @can('Voir le rapport des pret')
-                    <li>
-                        <a href="{{ route('report.ePret')}}">
-                            <div class="parent-icon"><i class="fadeIn animated bx bx-bitcoin"></i>
-                            </div>
-                            <div class="menu-title">Pret</div>
-                        </a>
-                    </li>
-                @endcan --}}
                 @can('Voir le rapport des pret')
                     <li>
                         <a href="{{ route('report.eProspection')}}">
@@ -182,16 +144,23 @@
                 
             @endcan
 
-            
-            {{-- @endcan
-
-            @can(' 	Voir e-prestation') --}}
-                
-            
-            
-            {{-- @endcan
-
-            @can('Voir les paramettre') --}}
+            @can('Voir Collaborateur')
+            <strong><li class="menu-label">Collaborateurs</li></strong>
+            <li>
+                <a href="{{ route('setting.indexCollaborateur')}}">
+                    <div class="parent-icon"><i class="bx bx-user-circle"></i>
+                    </div>
+                    <div class="menu-title">Collaborateurs</div>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('setting.role')}}">
+                    <div class="parent-icon"><i class="fadeIn animated bx bx-user-check"></i>
+                    </div>
+                    <div class="menu-title">Role</div>
+                </a>
+            </li>
+            @endcan
                 
            @can('Voir les paramettres')
             <li class="menu-label">Paramètre</li>
@@ -216,20 +185,16 @@
                     <div class="menu-title">Equipe</div>
                 </a>
             </li>
+
             <li>
                 <a href="{{ route('setting.user.index')}}">
                     <div class="parent-icon"><i class="bx bx-user-circle"></i>
                     </div>
-                    <div class="menu-title">Utilisateur</div>
+                    <div class="menu-title">Utilisateurs</div>
                 </a>
             </li>
-            <li>
-                <a href="{{ route('setting.role')}}">
-                    <div class="parent-icon"><i class="fadeIn animated bx bx-user-check"></i>
-                    </div>
-                    <div class="menu-title">Role</div>
-                </a>
-            </li>
+            
+            
             <li>
                 <a href="{{ route('setting.partner.index')}}">
                     <div class="parent-icon"><i class="fadeIn animated bx bx-book-content"></i>
@@ -271,24 +236,6 @@
                     <div class="menu-title">Support</div>
                 </a>
             </li>
-            @endcan
-            @can('Voir le support')
-                <li class="menu-label">ASSISTANCE</li>
-            
-                {{-- <li>
-                    <a href="">
-                        <div class="parent-icon"><i class="bx bx-folder"></i>
-                        </div>
-                        <div class="menu-title">Documentation</div>
-                    </a>
-                </li> --}}
-                <li>
-                    <a href="{{ route('ticket.tickets.index') }}">
-                        <div class="parent-icon"><i class="bx bx-support"></i>
-                        </div>
-                        <div class="menu-title">Support</div>
-                    </a>
-                </li>
             @endcan
         </div>
     </ul>

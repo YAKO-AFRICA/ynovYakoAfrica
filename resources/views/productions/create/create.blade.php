@@ -146,9 +146,72 @@
 @include('productions.components.searchModal')
 @include('productions.create.steps.signModal')
 
+@include('productions.assurer.addModal', ['CodeProduit' => $product->CodeProduit])
+@include('productions.beneficiaires.add')
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script>
     let garantiesProduct = @json($productGarantie);
 </script>
+
+<script>
+    const SIGN_API = "{{ config('services.sign_api') }}";
+</script>
+
+<script>
+    let pollingInterval;
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const qrCodeModal = document.getElementById('qrCodeModal');
+
+        if (!qrCodeModal) {
+            console.error("Modal #qrCodeModal non trouvé !");
+            return;
+        }
+
+        qrCodeModal.addEventListener('shown.bs.modal', function () {
+            const keyUuid = "{{ $keyUuid }}";
+            const operationType = "{{ $operationType }}";
+
+            pollingInterval = setInterval(() => {
+                fetch(`https://apisigntest.yakoafricassur.com/api/check-signature-status/${keyUuid}/${operationType}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Statut de la signature :", data);
+
+                        if (data.status === 'completed') {
+                            clearInterval(pollingInterval);
+
+                            const modalInstance = bootstrap.Modal.getInstance(qrCodeModal);
+                            if (modalInstance) {
+                                modalInstance.hide();
+                            }
+
+                            swal.fire({
+                                icon: 'success',
+                                title: 'Signature terminée avec succès !',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+
+                            // alert("Signature terminée avec succès !");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Erreur de polling :", error);
+                    });
+            }, 3000); // toutes les 3 secondes
+        });
+
+        qrCodeModal.addEventListener('hidden.bs.modal', function () {
+            console.log("Modal fermé : arrêt du polling.");
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+            }
+        });
+    });
+</script>
+
 
 
 
@@ -194,7 +257,7 @@
 </script>
 
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -235,47 +298,8 @@
 </script>
 
 
-    @include('productions.assurer.addModal', ['CodeProduit' => $product->CodeProduit])
-    @include('productions.beneficiaires.add')
+    
 
-<script>
-    let pollingInterval;
 
-    const qrCodeModal = document.getElementById('qrCodeModal');
-
-    qrCodeModal.addEventListener('shown.bs.modal', function () {
-        const keyUuid = "{{ $keyUuid }}"; // Variable Blade pour key_uuid
-        const operationType = "{{ $operationType }}"; // Variable Blade pour operation_type
-
-        // Polling toutes les 3 secondes pour vérifier l'état de la signature
-        pollingInterval = setInterval(() => {
-            // fetch(`http://192.168.11.8:8002/api/check-signature-status/${keyUuid}/${operationType}`)
-            fetch(`https://apisign.yakoafricassur.com/api/check-signature-status/${keyUuid}/${operationType}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status == 'completed') {
-                        clearInterval(pollingInterval);
-
-                        // Masquer la modale si la signature est terminée
-                        const modal = bootstrap.Modal.getInstance(qrCodeModal);
-                        modal.hide();
-
-                        // Afficher un message indiquant que la signature est terminée
-                        alert("Signature terminée avec succès !");
-                    }
-                })
-                .catch(error => {
-                    console.error("Erreur de polling :", error);
-                });
-        }, 3000); // toutes les 3 secondes
-    });
-
-    // Si la modale est fermée, on arrête le polling
-    qrCodeModal.addEventListener('hidden.bs.modal', function () {
-        if (pollingInterval) {
-            clearInterval(pollingInterval);
-        }
-    });
-</script>
 
 @endsection

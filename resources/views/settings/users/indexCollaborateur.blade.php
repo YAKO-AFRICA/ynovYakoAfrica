@@ -11,7 +11,7 @@
                     </li>
                     <li class="breadcrumb-item " aria-current="page">Settings</li>
                     <li class="breadcrumb-item " aria-current="page"><a href="{{ route('setting.user.index') }}">Utilisateurs</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ $codepartenaire }}</li>
+                    <li class="breadcrumb-item active" aria-current="page">YAKO AFRICASUUR</li>
                 </ol>
             </nav>
         </div>
@@ -25,13 +25,6 @@
   
     <div class="card">
         <div class="card-body">
-            
-
-            <div class="d-lg-flex align-items-center mb-4 gap-3">
-                <div class="position-relative">
-                </div>
-              {{-- <div class="ms-auto"><a href="javascript:;" class="btn btn-primary radius-30 mt-2 mt-lg-0" data-bs-toggle="modal" data-bs-target="#addUsers"><i class="bx bxs-plus-square"></i>Ajouter un utilisateur</a></div> --}}
-            </div>
             <div class="table-responsive">
                 @php
                     // Colonnes par défaut
@@ -91,7 +84,6 @@
                         'Parent utilisateur' => 'user_parent',
                     ];
 
-                    // Colonnes activées par l'utilisateur (issu d'une session ou requête)
                     $activeColumns = session('activeColumns', []);
                 @endphp
 
@@ -103,18 +95,16 @@
                                 <th>{{ $defaultColumn }}</th>
                             @endforeach
 
-                            <!-- Affiche les colonnes dynamiques activées -->
                             @foreach ($activeColumns as $colKey)
                                 <th>{{ array_search($colKey, $additionalColumns) }}</th>
                             @endforeach
 
                             <th>Actions</th>
                             
-                            
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($membresbypartenaire as $item)
+                        @forelse ($collaborateurs as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->nom ?? "" }} {{ $item->prenom ?? "" }}</td>
@@ -122,7 +112,6 @@
                             <td>{{ $item->codeagent ?? "" }}</td>
                             <td>{{ $item->typ_membre ?? "" }}</td>
 
-                            <!-- Remplissage des colonnes dynamiques activées -->
                             @foreach ($activeColumns as $colKey)
                                 <td>{{ $item->$colKey ?? '' }}</td>
                             @endforeach
@@ -147,14 +136,13 @@
                                 </div>
                             </td>
                         </tr>
-                        {{-- @include('settings.users.editModal') --}}
                         @empty
                         <tr>
                             <td colspan="{{ count($defaultColumns) + count($activeColumns) + 1 }}">Aucun utilisateur trouvé</td>
                         </tr>
                         @endforelse
 
-                        @foreach ($membresbypartenaire as $item)
+                        @foreach ($collaborateurs as $item)
                             @include('settings.users.editModal', ['item' => $item])
                         @endforeach
                     </tbody>

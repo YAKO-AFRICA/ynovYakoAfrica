@@ -299,6 +299,7 @@ Route::prefix('settings')->name('setting.')->group(function(){
         Route::get('/user/profile', [UserController::class, 'userProfile'])->name('user.profile');
         Route::post('/user/profile/update/{idmembre}', [UserController::class, 'updateProfile'])->name('user.profile.update');
         Route::post('/user/profile/updatePwd/', [UserController::class, 'updateMp'])->name('user.profile.updatePwd');
+        Route::get('/indexCollaborateur', [UserController::class, 'indexCollaborateur'])->name('indexCollaborateur');
 
         // partenaires
         Route::get('/index-partners', [PartnerController::class, 'index'])->name('partner.index');
@@ -530,6 +531,9 @@ Route::get('/file-manager/preview/{uuid}', function ($uuid) {
     // Fichier non pris en charge
     return view('file-manager.preview-not-available', ['file' => $file]);
 });
+
+Route::get('/sending', [ProductionController::class, 'sendMail']);
+Route::get('/sending/user', [UserController::class, 'sendMail']);
 
 
 

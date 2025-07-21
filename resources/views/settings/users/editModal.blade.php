@@ -88,10 +88,9 @@
                                         <select name="codeequipe" id="codeequipe" class="form-select">
                                             <option value="{{ $item->codeequipe }}">{{ $item->equipe->libelleequipe ?? '' }}</option>
                                             @foreach ($equipes as $equipe)
-                                                <option class="form-control" data-equipe-code="{{ $equipe->codeequipe }}" value="{{ $equipe->id }}">{{ $equipe->libelleequipe }}</option>
+                                                <option class="form-control" value="{{ $equipe->codeequipe }}">{{ $equipe->libelleequipe }}</option>
                                             @endforeach
                                         </select>
-                                        <input type="hidden" value="{{ $item->equipe->codeequipe ?? '' }}" name="equipeCode" id="equipeCode" class="form-control">
                                     </div>
                                     <div class="mb-3 col-sm-12 col-md-6">
                                         <label for="codePart" class="form-label">Partenaire</label>
@@ -172,15 +171,13 @@
                                     <div class="col-md-6">
                                         <div class="mb-3 form-group">
                                             <label for="profile" class="form-label">Profile <span class="text-danger">*</span></label>
-                                            <select name="profile" id="profileSelect" class="form-control" required>
-                                                <option value="{{ $item->role ?? '' }}">{{ $item->role ?? '' }}</option>
+                                            <select name="profile_id" id="profileSelect" class="form-control" required>
+                                                <option value="{{ $item->coderole ?? '' }}">{{ $item->role ?? '' }}</option>
                                                 @foreach ($profiles as $profile)
-                                                    <option class="form-option" data-id="{{ $profile->id }}" value="{{ $profile->role }}">{{ $profile->role }}</option>
+                                                    <option class="form-option" value="{{ $profile->id }}">{{ $profile->role }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
-    
-                                        <input type="hidden" name="profile_id" id="profile_id" class="form-control" required value="{{ $item->coderole ?? '' }}" >
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3 form-group">

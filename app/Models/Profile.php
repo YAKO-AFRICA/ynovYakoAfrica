@@ -9,6 +9,7 @@ class Profile extends Model
 {
     use HasFactory;
 
+    
     protected $table = 'roless';
     public $incrementing = true;
     public $timestamps = false;
@@ -19,6 +20,38 @@ class Profile extends Model
         'role'
     ];
 
+
+    // protected $fillable = [
+    //     'id',
+    //     'uuid',
+    //     'idmembre',
+    //     'nom',
+    //     'prenom',
+    //     'telephone',
+    //     'email',
+    //     'adresse',
+    //     'lieuresidence',
+    //     'lieunaissance',
+    //     'profession',
+    //     'nomagence',
+    //     'sexe',
+    //     'role',
+    //     'photo_url',
+    //     'codereseau',
+    //     'codezone',
+    //     'codeequipe',
+    //     'codeagent',
+    //     'branche',
+    //     'partenaire',
+    //     'codepartenaire',
+    //     'agence',
+    //     'lastUpdate',
+    //     'etat',
+    //     'deleted_at',
+    //     'created_at',
+    //     'updated_at',
+        
+    // ];
 
 
 }

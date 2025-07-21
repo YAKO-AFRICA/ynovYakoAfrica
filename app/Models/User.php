@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Membre;
+use App\Models\Profile;
 use Illuminate\Support\Str;
 use BaconQrCode\Encoder\QrCode;
 use Laravel\Sanctum\HasApiTokens;
@@ -26,13 +27,20 @@ class User extends Authenticatable
      */
     protected $connection = 'mysql';
     protected $fillable = [
+        'uuid',
         'idmembre',
         'email',
+        'profile_uuid',
         'login',
+        'etat',
         'id_role',
+        'role',
         'password',
         'codepartenaire',
         'branche',
+        'lastlogin',
+        'group_uuid',
+        'qr_code_token',
     ];
 
     /**
@@ -58,6 +66,11 @@ class User extends Authenticatable
     public function membre()
     {
         return $this->belongsTo(Membre::class, 'idmembre', 'idmembre');
+    }
+
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class, 'profile_uuid', 'uuid');
     }
 
     public function role()

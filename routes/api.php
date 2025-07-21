@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\OTPController;
@@ -65,6 +66,49 @@ Route::delete('/sitewebs/delete/{id}', [SiteWebController::class, 'destroy'])->n
 
 // Route supplémentaire pour changer l'état
 Route::patch('/sitewebs/{siteweb}/toggle-status', [SiteWebController::class, 'toggleStatus'])->name('sitewebs.toggle-status');
+
+
+
+
+
+
+
+
+
+
+
+
+
+// avoir tout les user collaborateurs de yako africa
+Route::get('/collaborateurs/users', function(Request $request) {
+
+    $requiredToken = "azertyuiopqsddfghjklmwxcvbn";
+    
+    $providedToken = $request->header('Authorization');
+    
+    if (!$providedToken || $providedToken !== $requiredToken) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Accès non autorisé. Token requis.'
+        ], 401);
+    }
+
+    try {
+        $users = User::where('codepartenaire', 'LLV')->orderby('created_at', 'desc')->get();
+
+        return response()->json([
+            'users' => $users,
+            'success' => true,
+            'message' => 'liste des collaborateurs'
+        ]);
+
+    } catch(\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ], 500);
+    }
+});
 
 
 

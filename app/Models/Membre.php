@@ -74,6 +74,8 @@ class Membre extends Model
         'ispartmaster',
         'isadmin',
         'user_parent',
+        'updated_by',
+        'created_by'
     ];
 
     public $timestamps = false;
@@ -89,7 +91,7 @@ class Membre extends Model
     }
     public function equipe()
     {
-        return $this->belongsTo(Equipe::class, 'codeequipe', 'id');
+        return $this->belongsTo(Equipe::class, 'codeequipe', 'codeequipe');
     }
 
     public function zone()

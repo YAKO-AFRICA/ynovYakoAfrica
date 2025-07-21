@@ -63,32 +63,39 @@
                                 <div class="mb-3 col-sm-12 col-md-6">
                                     <label for="codereseau" class="form-label">Réseau de commercialisation</label>
                                     <select name="codereseau" id="codereseau" class="form-select">
-                                        <option value="">-- Choisir une option --</option>
+                                        <option value="" disabled selected>-- Choisir une option --</option>
                                         @foreach ($reseaux as $item)
-                                            <option class="form-control" value="{{ $item->id }}">{{ $item->libelle }}</option>
+                                            <option class="form-control" value="{{ $item->id }}">{{ $item->libelle ?? "" }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="mb-3 col-sm-12 col-md-6">
                                     <label for="codezone" class="form-label">Zone/Departement</label>
                                     <select name="codezone" id="codezone" class="form-select" id="">
-                                        <option value="">-- Choisir une zone --</option>
+                                        <option value="" disabled selected>-- Choisir une zone --</option>
                                         @foreach ($zones as $zone)
                                             <option class="form-control" value="{{ $zone->id }}">{{ $zone->libellezone }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="mb-3 col-sm-12 col-md-6">
+                                
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6 col-lg-6">
                                     <label for="codeequipe" class="form-label">Equipe/Agence</label>
                                     <select name="codeequipe" id="codeequipe" class="form-select">
-                                        <option value="">-- Choisir une equipe --</option>
+                                       
+                                        <option value="" disabled selected>-- Choisir une équipe --</option>
                                         @foreach ($equipes as $equipe)
-                                            <option class="form-control" data-equipe-code="{{ $equipe->codeequipe }}" value="{{ $equipe->id }}">{{ $equipe->libelleequipe }}</option>
+                                            <option class="form-control" value="{{ $equipe->codeequipe }}">
+                                                {{ $equipe->libelleequipe }}
+                                            </option>
                                         @endforeach
                                     </select>
-                                    <input type="hidden" name="equipeCode" id="equipeCode" class="form-control">
                                 </div>
-                                <div class="mb-3 col-sm-12 col-md-6">
+
+                                <div class="col-sm-12 col-md-6 col-lg-6">
                                     <label for="codePart" class="form-label">Partenaire</label>
                                     <select name="codePart" id="codePart" class="form-select" id="">
                                         <option value="">-- Choisir une partenaire --</option>
@@ -162,7 +169,7 @@
                             <div class="mb-3">
                                 <label for="branche" class="form-label">Branche <span class="text-danger">*</span></label>
                                 <select name="branche" class="form-select" id="">
-                                    <option value="">-- Choisir une option --</option>
+                                    <option value="" disabled selected>-- Choisir une option --</option>
                                     <option value="BANKASS">BANKASS</option>
                                     <option value="COURTAGE">COURTAGE</option>
                                     <option value="COM">COM</option>
@@ -173,15 +180,14 @@
                                 <div class="col-md-6">
                                     <div class="mb-3 form-group">
                                         <label for="profile" class="form-label">Profile <span class="text-danger">*</span></label>
-                                        <select name="profile" id="profileSelect" class="form-control" required>
-                                            <option value="">-- Choisir une option --</option>
+                                        <select name="profile_id" id="profileSelect" class="form-control" required>
+                                            <option value="" disabled selected>-- Choisir une option --</option>
+                                            
                                             @foreach ($profiles as $profile)
-                                                <option class="form-option" data-id="{{ $profile->id }}" value="{{ $profile->role }}">{{ $profile->role }}</option>
+                                                <option class="form-option" value="{{ $profile->id }}">{{ $profile->role }}</option>
                                             @endforeach
                                         </select>
                                     </div>
-
-                                    <input type="hidden" name="profile_id" id="profile_id" class="form-control" required value="" >
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3 form-group">
@@ -252,37 +258,12 @@
     </div>
 </div>
 
+    
+
+
+
 <script>
     let currentStep = 1;
-
-    document.addEventListener("DOMContentLoaded", function() {
-        const profileSelect = document.getElementById("profileSelect");
-        const profileIdInput = document.getElementById("profile_id");
-
-        profileSelect.addEventListener("change", function() {
-            const selectedOption = profileSelect.options[profileSelect.selectedIndex];
-            const profileId = selectedOption.getAttribute("data-id") || "";
-
-            console.log("Selected Profile ID:", profileId);
-            profileIdInput.value = profileId;
-        });
-    });
-
-    document.addEventListener("DOMContentLoaded", function() {
-        const equipeSelect = document.getElementById("codeequipe");
-        const equipeCode = document.getElementById("equipeCode");
-
-        equipeSelect.addEventListener("change", function() {
-            const selectedOption = equipeSelect.options[equipeSelect.selectedIndex];
-            const equipeCodeValue = selectedOption.getAttribute("data-equipe-code") || "";
-
-            console.log("Selected Equipe Code:", equipeCodeValue);
-            equipeCode.value = equipeCodeValue;
-        });
-    })
-
-
-
     const showStep = (stepAdd) => {
         // Show the correct step
         document.querySelectorAll('.step').forEach(el => el.classList.add('d-none'));

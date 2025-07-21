@@ -557,8 +557,14 @@ document.addEventListener("DOMContentLoaded", function() {
                         // Afficher un message
                         const lastTwo = telephone.slice(-4);
                         const firstTwo = telephone.slice(0, 2);
-                        alert('Un code de confirmation a été envoyé par SMS au numéro +' +
-                            indicatif + firstTwo + '**' + lastTwo);
+                        swal.fire({
+                            icon: 'success',
+                            title: 'Code de confirmation envoyé',
+                            text: 'Un code de confirmation a été envoyé par SMS au numéro +' +
+                                indicatif + firstTwo + '**' + lastTwo,
+                        })
+                        // alert('Un code de confirmation a été envoyé par SMS au numéro +' +
+                        //     indicatif + firstTwo + '**' + lastTwo);
 
                         startOtpTimer();
                     } else {
@@ -635,7 +641,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.status == 200) {
-                        alert('Votre numéro de téléphone a été vérifié avec succès.');
+                        swal.fire({
+                            icon: 'success',
+                            title: 'Code de confirmation correct',
+                            text: 'Votre numéro de téléphone a été vérifié avec succès.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        // alert('Votre numéro de téléphone a été vérifié avec succès.');
                         otpInputs.forEach(input => {
                             input.classList.remove("is-invalid");
                             input.classList.add("is-valid");

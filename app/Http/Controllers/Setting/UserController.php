@@ -16,6 +16,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 ini_set('memory_limit', '1024M');
 
@@ -24,17 +25,36 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function indexCollaborateur()
+    {
+        $collaborateurs = Membre::orderby('created_at', 'desc')->with('zone', 'equipe', 'reseau')
+        ->where('codepartenaire', 'LLV')->get();
+
+
+        $reseaux = Reseau::where('codepartenaire', 'LLV')->get();
+        $reseauId = $reseaux->pluck('id');
+
+        $zones = Zone::whereIn('codereseau', $reseauId)->get();
+        $zoneId = $zones->pluck('id');
+
+        $equipes = Equipe::whereIn('codezone', $zoneId)->get();
+
+        $partners = Partner::where('code','LLV')->get();
+
+        $roles = Role::all();
+        
+        $profiles = Profile::all();
+
+        return view('settings.users.indexCollaborateur', compact('collaborateurs', 'reseaux', 'zones', 'equipes', 'partners', 'roles', 'profiles'));
+    }
     public function index()
     {
-
-        // $membres = Membre::orderby('idmembre', 'desc')->where('typ_membre','!=','3')->get();
         
-
-        $membres = Membre::orderby('idmembre', 'desc')
-        ->where('typ_membre', '!=', '3')
+        $membres = Membre::orderby('created_at', 'desc')
+        ->where('typ_membre', '!=', '3')->where('codepartenaire','!=', 'llv')
         ->get()
         ->groupBy('codepartenaire');
-
 
         $reseaux = Reseau::all();
         $zones = Zone::all();
@@ -50,7 +70,6 @@ class UserController extends Controller
     {
         $membresbypartenaire = Membre::orderby('idmembre', 'desc')->with('zone', 'equipe', 'reseau')
         ->where('codepartenaire', $id)->get();
-
 
         $reseaux = Reseau::all();
         $zones = Zone::all();
@@ -89,7 +108,6 @@ class UserController extends Controller
     public function store(Request $request)
     {
 
-        // \dd($request->all());
 
         if ($request->codePart == "092") {
             $partenaire = "BNI";
@@ -99,30 +117,39 @@ class UserController extends Controller
             $type = 2;
         }
 
-<<<<<<< HEAD
-        // $id = Membre::max('idmembre') + 2;
-        $id = now()->format('mdHis');
+        $id = now()->format('YmdHis') . Str::random(2);
 
-        Log::info("ID du membre : $id");
-=======
-        // $id = Membre::max('idmembre') + 1;
-
-        // $existe = Membre::where('idmembre', $id)->firstOrFail();
-
-        // if($existe){
-        //     $id + 1;
-        // }
-        // do {
-        //     $id = Membre::max('idmembre') + 1;
-        // } while (Membre::where('idmembre', $id )->exists() && User::where('idmembre', $id )->exists());
-
-        // random de 6 caractere en chiffre
         do {
             $id = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
         } while (Membre::where('idmembre', $id)->exists() && User::where('idmembre', $id)->exists());
 
+        Log::info($id);
 
->>>>>>> 249025b7a8b61bacf13d8e1667a7f0831d220896
+        switch ($request->profile_id) {
+            case 5:
+                $role = 'Conseiller';
+                break;
+            case 6:
+                $role = 'Manager';
+                break;
+            case 7:
+                $role = 'Responsable';
+                break;
+            case 8:
+                $role = 'Superviseur';
+                break;
+            case 9:
+                $role = 'Administrateur';
+                break;
+            default:
+                $role = 'Inconnu';
+                break;
+        }
+
+        $agence = Equipe::select('codeequipe','libelleequipe','id')->where('codeequipe', $request->codeequipe)->first();
+        log::info($agence);
+
+
 
 
         DB::beginTransaction();
@@ -135,21 +162,24 @@ class UserController extends Controller
                 'codepartenaire' => $request->codePart,
                 'partenaire' => $partenaire,
                 'codezone' => $request->codezone,
-                'codeequipe' => $request->codeequipe, // id agence // equipe
+                'codeequipe' => $agence->id, // id agence // equipe
                 'sexe' => $request->sexe,
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
                 'datenaissance' => $request->datenaissance,
                 'profession' => $request->profession,
-                'agence' => $request->equipeCode,  // equipe es une aagence // code
+                'agence' => $request->codeequipe,  // equipe es une aagence // code
+                'nomagence' => $agence->libelleequipe,
                 'branche' => $request->branche,
                 'login' => $request->login,
-                'role' => $request->profile,
+                'role' => $role,
                 'coderole' => $request->profile_id,
                 'pass' => $request->pass,
                 'email' => $request->email,
                 'cel' => $request->cel,
                 'tel' => $request->tel,
+                'created_at' => now(),
+                'created_by' => Auth::user()->membre->nom . ' ' . Auth::user()->membre->prenom,
             ])->save();
 
             if($membre){
@@ -165,12 +195,12 @@ class UserController extends Controller
 
                 $role = Role::find($request->role_id);
                 $user->assignRole($role);
-
                 $user->syncRoles([$role->id]);
 
                 DB::commit();
-                
             }
+
+            $this->sendMail($request->email, $request->pass);
 
             DB::commit();
 
@@ -179,6 +209,7 @@ class UserController extends Controller
                     'type'=>'success',
                     'urlback'=>"back",
                     'message'=>"Enregistré avec succes!",
+                    'data'=>$membre,
                     'code'=>200,
                 ];
                 DB::commit();
@@ -204,6 +235,113 @@ class UserController extends Controller
         }
         return response()->json($dataResponse);
     }
+
+    private function sendMail($email, $plainPassword)
+    {
+
+        $mailData = [
+            'title' => 'Identifiant de connexion ! 🎉',
+            'btnLink' => url('/'),
+            'btnText' => 'Veuillez vous connecter pour finaliser',
+            'body' => "
+                <div style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;\">
+                                        <div style=\"background: linear-gradient(135deg, #076835 0%, #f7a400 100%); padding: 20px; border-radius: 10px 10px 0 0; text-align: center;\">
+                        <h2 style=\"color: white; margin: 0; font-size: 24px;\">🎉 Bienvenue sur YNOV !</h2>
+                        <p style=\"color: #e8f0fe; margin: 10px 0 0 0; font-size: 16px;\">Votre compte a été créé avec succès</p>
+                    </div>
+                    
+                    <div style=\"background: white; padding: 30px; border: 1px solid #e0e0e0; border-top: none;\">
+                        <p style=\"margin: 0 0 20px 0; font-size: 16px;\">Bonjour,</p>
+                        
+                        <p style=\"margin: 0 0 20px 0; font-size: 16px;\">
+                            Félicitations ! Votre compte YNOV a été créé avec succès. Nous sommes ravis de vous accueillir dans notre communauté.
+                        </p>
+                        
+                        <div style=\"background: #f8f9fa; border-left: 4px solid #1a73e8; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0;\">
+                            <h3 style=\"margin: 0 0 15px 0; color: #1a73e8; font-size: 18px;\">🔑 Vos identifiants de connexion</h3>
+                            <div style=\"background: white; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0;\">
+                                <p style=\"margin: 0 0 10px 0; font-size: 16px;\">
+                                    <strong style=\"color: #1a73e8;\">📧 Email :</strong> 
+                                    <span style=\"background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-family: monospace;\">{$email}</span>
+                                </p>
+                                <p style=\"margin: 0; font-size: 16px;\">
+                                    <strong style=\"color: #1a73e8;\">🔐 Mot de passe :</strong> 
+                                    <span style=\"background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-family: monospace;\">{$plainPassword}</span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div style=\"background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;\">
+                            <p style=\"margin: 0; font-size: 14px; color: #856404;\">
+                                <strong>⚠️ Important :</strong> Pour des raisons de sécurité, nous vous recommandons fortement de changer votre mot de passe lors de votre première connexion.
+                            </p>
+                        </div>
+                        
+                        <p style=\"margin: 20px 0; font-size: 16px; text-align: center;\">
+                            Cliquez sur le bouton ci-dessous pour vous connecter et finaliser votre inscription :
+                        </p>
+                        
+                        <div style=\"text-align: center; margin: 30px 0;\">
+                            <a href=\"" . url('/') . "\" style=\"
+                                background: #076835;
+                                color: white;
+                                padding: 15px 30px;
+                                text-decoration: none;
+                                border-radius: 8px;
+                                font-weight: bold;
+                                font-size: 16px;
+                                display: inline-block;
+                                box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+                                transition: all 0.3s ease;
+                            \">
+                                🚀 Se connecter maintenant
+                            </a>
+                        </div>
+                        
+                        <div style=\"background: #e8f5e8; border: 1px solid #c3e6c3; padding: 15px; border-radius: 8px; margin: 20px 0;\">
+                            <p style=\"margin: 0; font-size: 14px; color: #155724;\">
+                                <strong>💡 Astuce :</strong> Marquez cet email comme favori pour retrouver facilement vos identifiants si nécessaire.
+                            </p>
+                        </div>
+                        
+                        <hr style=\"border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;\">
+                        
+                        <p style=\"margin: 20px 0 0 0; font-size: 16px;\">
+                            Si vous avez des questions ou besoin d'assistance, notre équipe support est là pour vous aider. N'hésitez pas à nous contacter.
+                        </p>
+                        
+                        <p style=\"margin: 20px 0 0 0; font-size: 16px;\">
+                            Cordialement,<br>
+                                                        <strong style=\"color: #076835;\">L'équipe YakoAfrica</strong> 🌍
+                        </p>
+                    </div>
+                    
+                    <div style=\"background: #f8f9fa; padding: 15px; border-radius: 0 0 10px 10px; text-align: center; border: 1px solid #e0e0e0; border-top: none;\">
+                        <p style=\"margin: 0; font-size: 12px; color: #666;\">
+                            © 2025 YAKOAFRICA - Tous droits réservés<br>
+                            <span style=\"color: #999;\">Cet email a été envoyé automatiquement, merci de ne pas y répondre.</span>
+                        </p>
+                    </div>
+                </div>
+            "
+        ];
+
+        $emailSubject = 'Identifiant de connexion ! 🎉';
+
+        Mail::send([], [], function ($message) use ($email, $emailSubject, $mailData) {
+            $message->to($email)
+                ->subject($emailSubject)
+                ->html($mailData['body']);
+        });
+
+        return response()->json([
+            'type' => 'success',
+            'message' => "Mail envoyé avec succès!",
+            'code' => 200,
+        ]);
+
+    }
+
     /**
      * Display the specified resource.
      */
@@ -226,8 +364,34 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
 
-        Log::info("ID du membre : $id");
-        Log::info("code reseau : $request->codereseau");
+        $membreUpdating = Membre::where('idmembre', $id)->first();
+
+        switch ($request->profile_id) {
+            case 5:
+                $role = 'Conseiller';
+                break;
+            case 6:
+                $role = 'Manager';
+                break;
+            case 7:
+                $role = 'Responsable';
+                break;
+            case 8:
+                $role = 'Superviseur';
+                break;
+            case 9:
+                $role = 'Administrateur';
+                break;
+            default:
+                $role = 'Inconnu';
+                break;
+        }
+
+
+        Log::info("membreUpdating : $membreUpdating->codeequipe" );
+        $agence = Equipe::where('id', $membreUpdating->codeequipe)->first();
+        
+        Log::info("Agence : $agence" );
 
         DB::beginTransaction();
 
@@ -235,26 +399,32 @@ class UserController extends Controller
             $membre = Membre::where('idmembre', $id)->update([
                 'codereseau' => $request->codereseau,
                 'codezone' => $request->codezone,
-                'codeequipe' => $request->codeequipe,
+                'codeequipe' => $agence->id,
                 'sexe' => $request->sexe,
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
                 'datenaissance' => $request->datenaissance,
                 'profession' => $request->profession,
-                'agence' => $request->equipeCode,
+                'agence' => $agence->codeequipe,  // equipe es une aagence // code
+                'nomagence' => $agence->libelleequipe,
                 'branche' => $request->branche,
                 'login' => $request->login,
-                'role' => $request->profile,
-                'coderole' => $request->role_id, // ou profile_id selon cohérence
+                'role' => $role,
+                'coderole' => $request->profile_id,
+                'pass' => $request->pass,
                 'email' => $request->email,
                 'cel' => $request->cel,
                 'tel' => $request->tel,
+                'updated_at' => now(),
+                'updated_by' => Auth::user()->membre->nom . ' ' . Auth::user()->membre->prenom,
             ]);
 
             if ($membre) {
                 Log::info("Membre mis à jour");
 
                 $userAssign = User::where('idmembre', $id)->first();
+
+                Log::info("userAssign : $userAssign");
                 if ($userAssign) {
                     Log::info("User assigné trouvé");
 
@@ -265,10 +435,12 @@ class UserController extends Controller
                         'branche' => $request->branche
                     ]);
 
-                    $role = Role::find($request->role_id);
+                    $role_id = Role::find($request->role_id);
+
+                    Log::info("role : $role_id");
                     if ($role) {
-                        $userAssign->assignRole($role);
-                        $userAssign->syncRoles([$role->id]);
+                        $userAssign->assignRole($role_id);
+                        $userAssign->syncRoles([$role_id->id]);
                         Log::info("Rôle synchronisé");
                     }
                 }

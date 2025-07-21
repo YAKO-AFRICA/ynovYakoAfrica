@@ -14,6 +14,8 @@ return [
     |
     */
 
+    'sign_api' => env('SIGN_API'),
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),

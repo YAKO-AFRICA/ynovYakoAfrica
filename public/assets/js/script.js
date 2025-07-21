@@ -2011,9 +2011,15 @@ document.addEventListener("DOMContentLoaded", function () {
                         input.classList.remove("is-invalid");
                         input.classList.add("is-valid"); // Ajouter une bordure verte
                     });
-                    alert(
-                        "Votre numéro de téléphone a été vérifié avec succès."
-                    );
+                    swal.fire({
+                        icon: "success",
+                        title: "Votre numéro de téléphone a été vérifié avec succès.",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                    // alert(
+                    //     "Votre numéro de téléphone a été vérifié avec succès."
+                    // );
 
                     // Passer à l'étape suivante après un délai d'une seconde
                     setTimeout(() => {
@@ -2027,7 +2033,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         input.classList.add("is-invalid"); // Ajouter une bordure rouge
                         input.value = "";
                     });
-                    alert("Le code de vérification est invalide ou a expiré.");
+                    swal.fire({
+                        icon: "error",
+                        title: "Le code de vérification est invalide ou a expiré.",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    })
+                    // alert("Le code de vérification est invalide ou a expiré.");
                 }
             })
             .catch((error) => {
@@ -2104,9 +2116,15 @@ document.addEventListener("DOMContentLoaded", function () {
                         input.classList.remove("is-invalid");
                         input.classList.add("is-valid"); // Ajouter une bordure verte
                     });
-                    alert(
-                        "Votre numéro de téléphone a été vérifié avec succès."
-                    );
+                    swal.fire({
+                        icon: "success",
+                        title: "Votre numéro de téléphone a été vérifié avec succès.",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    })
+                    // alert(
+                    //     "Votre numéro de téléphone a été vérifié avec succès."
+                    // );
 
                     // Passer à l'étape suivante après un délai d'une seconde
                     setTimeout(() => {
