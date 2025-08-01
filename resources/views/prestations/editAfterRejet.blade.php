@@ -310,38 +310,6 @@
     @include('prestations.components.modals.addDocPrest')
 
     <script>
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     // Récupérer les éléments nécessaires
-        //     const typeFileSelect = document.getElementById('typeFile');
-        //     const docNameInput = document.getElementById('DocName');
-        //     const typedocName = document.getElementById('typeDocName');
-        //     let typeDocFile = document.getElementById('typeDocFile');
-
-        //     // Cacher l'élément au chargement
-        //     typeDocFile.classList.add('d-none');
-
-        //     // Fonction pour mettre à jour la valeur du champ caché et afficher l'input file
-        //     function updateDocName() {
-        //         const selectedValue = typeFileSelect.value;
-        //         docNameInput.value = selectedValue; // Met à jour avec la valeur sélectionnée
-        //         typedocName.textContent = selectedValue; // Met à jour l'affichage du type sélectionné
-
-        //         if (selectedValue !== "") { // Vérifie si une option est bien sélectionnée
-        //             typeDocFile.classList.remove('d-none');
-        //         } else {
-        //             typeDocFile.classList.add('d-none');
-        //         }
-        //     }
-
-        //     // Ajouter un événement 'change' sur le select
-        //     typeFileSelect.addEventListener('change', updateDocName);
-
-        //     // Initialiser la valeur au chargement de la page
-        //     updateDocName();
-        // });
-
-
-
         function previewFilesPrest(event, previewAreaId) {
             const files = event.target.files;
             const previewArea = document.getElementById(previewAreaId);

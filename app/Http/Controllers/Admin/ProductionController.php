@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Models\User;
+use App\Models\Tblotp;
 use App\Models\Assurer;
 use App\Models\Contrat;
 use App\Models\Product;
@@ -24,6 +25,7 @@ use App\Mail\CustomerMail;
 use App\Models\Filliation;
 use App\Models\Profession;
 use App\Models\TblSociete;
+use App\Models\TblDocument;
 use Illuminate\Support\Str;
 use App\Models\Beneficiaire;
 use Illuminate\Http\Request;
@@ -34,19 +36,19 @@ use App\Models\AssureGarantie;
 use App\Models\ProduitGarantie;
 use BaconQrCode\Encoder\QrCode;
 use Endroid\QrCode\Label\Label;
+
 use App\Models\DeclarationSante;
+
 use App\Models\TblSecteurActivite;
-
 use Illuminate\Support\Facades\DB;
-
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Notifications\SystemeNotify;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
-
 use Endroid\QrCode\Encoding\Encoding;
 use BaconQrCode\Renderer\ImageRenderer;
 use Illuminate\Support\Facades\Session;
@@ -407,6 +409,8 @@ class ProductionController extends Controller
         DB::beginTransaction();
         try { 
 
+            Log::info($request->all());
+
             // Gestion de la civilité pour l'adhérent et l'assuré
             $sexe = $request->civilite === "Monsieur" ? "M" : "F";
             $sexeassur = $request->civiliteAssur === "Monsieur" ? "M" : "F";
@@ -492,7 +496,6 @@ class ProductionController extends Controller
             // recupere & creer les assurer de la session
 
             $assures = json_decode($request->input('assures'), true);
-            Log::info("assures". $assures);
 
             if ($assures) {
                 foreach ($assures as $assure) {
@@ -698,9 +701,18 @@ class ProductionController extends Controller
             ])->save();
 
             $sign = Signature::where('key_uuid', $request->tokGenerate)->first();
-            $sign->update([
-                'reference_key' => $idContrat
-            ]);  
+
+            if ($sign) {
+                $sign->update(['reference_key' => $idContrat]); 
+            }
+             
+
+            // $otpGenerate = Tblotp::where('codeOTP', $request->otpGenerate)->first();
+            // if($otpGenerate){
+            //     $otpGenerate->update([
+            //         'operation_key' => $idContrat,
+            //     ]);
+            // }
 
             
             $bulletinData = $this->generateBulletin($idContrat);
@@ -833,10 +845,14 @@ class ProductionController extends Controller
     }
 
 
+    
 
     private function generateBulletin($idContrat)
     {
         try {
+            $piece_recto = '';
+            $piece_verso = '';
+            $allFiles = [];
             // Récupérer les données nécessaires au bulletin
             $contrat = Contrat::findOrFail($idContrat);
 
@@ -845,7 +861,6 @@ class ProductionController extends Controller
                 new SvgImageBackEnd()
             );
 
-           // Dans votre contrôleur
             $imageUrl = env('SIGN_API') . "api/get-signature/" . $idContrat . "/E-SOUSCRIPTION";
             
             $imageData = file_get_contents($imageUrl);
@@ -853,9 +868,11 @@ class ProductionController extends Controller
             $imageSrc = 'data:image/png;base64,'.$base64Image;
 
 
-            $qrContent = "Contrat bien enregistré\n";
-            $qrContent .= "Date: " . $contrat->saisiele . "\n";
-            $qrContent .= "Réf. Contrat: " . $contrat->id;
+            // $qrContent = "Contrat bien enregistré\n";
+            // $qrContent .= "Date: " . $contrat->saisiele . "\n";
+            // $qrContent .= "Réf. Contrat: " . $contrat->id;
+            $qrContent = url("production/showQrCode/" . $contrat->id);
+
             
             $writer = new Writer($renderer);
         
@@ -959,11 +976,91 @@ class ProductionController extends Controller
             $finalBulletinPath = $bulletinDir . 'bulletin_' . $contrat->id . '.pdf';
             $finalPdf->Output($finalBulletinPath, 'F');
 
+            // new code 
+            $destinationPath = base_path(env('UPLOADS_PATH'));
+            $fileName = $idContrat . '-' . now()->timestamp.'-' .'Bulletin_de_souscription' . '.pdf';
+            $finalPdf->Output($destinationPath . $fileName, 'F');
+
+            $allFiles[] = [
+                'codecontrat' => $contrat->id,
+                'filename' => $fileName,
+                'libelle' => "Bulletin de souscription",
+                'saisiele' => now(),
+                'saisiepar' => Auth::user()->membre->idmembre,
+                'source' => "ES",
+            ];
+
+            $imageUrl = env('SIGN_API') . "api/get-piece/" . $contrat->id . "/E-SOUSCRIPTION";
+            try {
+                $response = Http::timeout(5)->get($imageUrl);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+
+                    if (!empty($data['error']) && $data['error'] === true) {
+                        Log::info('Pièce non trouvée pour le contrat N°: ' . $contrat->id);
+                    } else {
+                        $piece_recto = $data['recto_path'] ?? '';
+                        $piece_verso = $data['verso_path'] ?? '';
+                    }
+                } else {
+                    Log::error('Erreur HTTP lors de l\'appel de l\'API signature. Réponse : ', $response->json());
+                }
+            } catch (\Exception $e) {
+                Log::error('Exception lors de la récupération de la signature : ' . $e->getMessage());
+            }
+
+            // Vérifier qu'on a bien les deux images
+            if ($piece_recto && $piece_verso) {
+
+                // Télécharger le contenu recto/verso
+                $rectoContent = Http::get($piece_recto)->body();
+                $versoContent = Http::get($piece_verso)->body();
+
+                // Encoder en base64 pour les afficher dans un PDF
+                $rectoBase64 = base64_encode($rectoContent);
+                $versoBase64 = base64_encode($versoContent);
+
+                // Créer la vue PDF avec les deux images
+                $html = view('productions.cni', [
+                    'rectoContent' => $rectoBase64,
+                    'versoContent' => $versoBase64
+                ])->render();
+
+                // Nom du fichier PDF
+                $newFileName = $idContrat . '-' . now()->timestamp . '-piece_justificative.pdf';
+                // $mergedFilePath = base_path(env('UPLOADS_PATH'));
+
+                // Générer le PDF
+                $pdf = Pdf::loadHTML($html)->setPaper('a4', 'portrait');
+                $pdf->save($destinationPath . $newFileName);
+
+                // Sauvegarder les infos du fichier
+                $allFiles[] = [
+                    'codecontrat' => $contrat->id,
+                    'filename' => $newFileName,
+                    'libelle' => "Pièce justificative d'identité",
+                    'saisiele' => now(),
+                    'saisiepar' => Auth::user()->membre->idmembre,
+                    'source' => "ES",
+                ];
+            } else {
+                Log::warning("Recto/Verso manquants pour le contrat {$contrat->id}");
+            }
+
+            
+
+            // enregistrer le bulletin dans la base de données
+            foreach ($allFiles as $file) {
+                TblDocument::create($file);
+            }
+
             // Supprimer le fichier temporaire du bulletin
             unlink($tempBulletinPath);
 
-            // Définir l'URL publique pour le fichier final
-            $fileUrl = asset("documents/bulletin/bulletin_{$contrat->id}.pdf");
+           // Définir l'URL publique pour le fichier final
+            $fileUrl = url("storage/documents/{$fileName}");
+            // $fileUrl = asset("documents/bulletin/lffun_bulletin_{$contrat->id}.pdf");
 
             return [
                 'success' => true,
@@ -1158,7 +1255,44 @@ class ProductionController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $contrat = Contrat::where('id', $id)->first();
+
+            $assures = Assurer::where('codecontrat', $contrat->id)->get();
+            $beneficiaires = Beneficiaire::where('codecontrat', $contrat->id)->get();
+            $garanties = AssureGarantie::where('codecontrat', $contrat->id)->get();
+            $documents = Document::where('codecontrat', $contrat->id)->get();
+            foreach ($assures as $assure) {
+                $assure->delete();
+            }
+            foreach ($beneficiaires as $beneficiaire) {
+                $beneficiaire->delete();
+            }
+            foreach ($documents as $document) {
+                $path = base_path(env('UPLOADS_PATH') . $document->filename);
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+                $document->delete();
+            }
+            foreach ($garanties as $garantie) {
+                $garantie->delete();
+            }
+            $contrat->delete();
+            return response()->json([
+                'type' => 'success',
+                'urlback' => 'back',
+                'message' => "Supprimé avec succès!",
+                'code' => 200,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur système! $th",
+                'code' => 500,
+            ]);
+        }
     }
 
     public function sendMail(Request $request)
@@ -1187,6 +1321,14 @@ class ProductionController extends Controller
                 'code' => 500,
             ]);
         }
+    }
+
+
+    public function showQrCode($id)
+    {
+        $contrat = Contrat::where('id', $id)->first();
+
+        return view('components.showQrCode', compact('contrat'));
     }
 }
 

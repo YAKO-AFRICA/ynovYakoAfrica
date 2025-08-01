@@ -335,9 +335,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 const result = await response.json();
 
                 if (response.ok) {
-                    alert(
-                        `Un message contenant un code de confirmation a été envoyé sur le numéro ${phoneNumber}.`
-                    );
+                    swal.fire({
+
+                        icon: "success",
+                        title: "Code de confirmation envoyé !",
+                        text: "Un code de confirmation a été envoyé sur le numéro " + phoneNumber,
+                        showConfirmButton: true,
+                        confirmButtonText: "OK",
+                        timer: 2000
+                        
+                    })
+                    // alert(
+                    //     `Un message contenant un code de confirmation a été envoyé sur le numéro ${phoneNumber}.`
+                    // );
                     startOtpTimer(); // Démarrer le décompte après l'envoi de l'OTP
                     return true;
                 } else {
@@ -370,9 +380,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 const result = await response.json();
 
                 if (response.ok) {
-                    alert(
-                        `Un message contenant un code de confirmation a été envoyé sur le numéro ${phoneNumber}.`
-                    );
+                    swal.fire({
+
+                        icon: "success",
+                        title: "Code de confirmation envoyé !",
+                        text: "Un code de confirmation a été envoyé sur le numéro " + phoneNumber,
+                        showConfirmButton: true,
+                        confirmButtonText: "OK",
+                        timer: 2000
+                        
+                    })
+                    
                     startOtpTimer(); // Démarrer le décompte après l'envoi de l'OTP
                     return true;
                 } else {
@@ -1090,9 +1108,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 const result = await response.json();
 
                 if (response.ok) {
-                    alert(
-                        `Un message contenant un code de confirmation a été envoyé sur le numéro ${phoneNumber}.`
-                    );
+                    swal.fire({
+
+                        icon: "success",
+                        title: "Code de confirmation envoyé !",
+                        text: "Un code de confirmation a été envoyé sur le numéro " + phoneNumber,
+                        showConfirmButton: true,
+                        confirmButtonText: "OK",
+                        timer: 2000
+                        
+                    })
+                    
                     startOtpTimer(); // Démarrer le décompte après l'envoi de l'OTP
                     return true;
                 } else {
@@ -1125,9 +1151,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 const result = await response.json();
 
                 if (response.ok) {
-                    alert(
-                        `Un message contenant un code de confirmation a été envoyé sur le numéro ${phoneNumber}.`
-                    );
+                    swal.fire({
+
+                        icon: "success",
+                        title: "Code de confirmation envoyé !",
+                        text: "Un code de confirmation a été envoyé sur le numéro " + phoneNumber,
+                        showConfirmButton: true,
+                        confirmButtonText: "OK",
+                        timer: 2000
+                        
+                    })
                     startOtpTimer(); // Démarrer le décompte après l'envoi de l'OTP
                     return true;
                 } else {

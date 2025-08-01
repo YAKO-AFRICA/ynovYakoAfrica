@@ -233,16 +233,16 @@
                                         
                                         <label for="TelPaiement" class="form-label">N° de téléphone sur lequel vous
                                             souhaitez recevoir le paiement <span class="star">*</span></label>
-                                        <input type="number" class="form-control" name="TelPaiement"
+                                        <input type="number" class="form-control no-copy no-paste no-cut" name="TelPaiement"
                                             id="TelPaiement"
-                                            placeholder="Veuillez saisir le N° de téléphone sur lequel vous souhaitez recevoir le paiement">
+                                            placeholder="Veuillez saisir le N° de téléphone sur lequel vous souhaitez recevoir le paiement" copy="false">
                                             <small><i id="telMsgError" class="text-danger"></i></small>
                                             <small><i id="telMsgSuccess" class="text-success"></i></small>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <label for="ConfirmTelPaiement" class="form-label">Confirmer le N° de
                                             téléphone <span class="star">*</span></label>
-                                        <input type="number" class="form-control" name="ConfirmTelPaiement"
+                                        <input type="number" class="form-control no-copy no-paste no-cut" name="ConfirmTelPaiement"
                                             id="ConfirmTelPaiement"
                                             placeholder="Veuillez resaisir le N° de téléphone sur lequel vous souhaitez recevoir le paiement">
                                             <small><i id="telConfirmMsgError" class="text-danger"></i></small>

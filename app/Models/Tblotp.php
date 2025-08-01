@@ -15,6 +15,7 @@ class Tblotp extends Model
         'codeOTP',
         'used',
         'operation_type',
+        'operation_key',
         'contact_method',
         'contact',
         'otp_attempts',

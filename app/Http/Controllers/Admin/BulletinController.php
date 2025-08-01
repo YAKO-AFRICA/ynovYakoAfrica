@@ -213,9 +213,11 @@ class BulletinController extends Controller
             new SvgImageBackEnd()
         );
 
-        $qrContent = "Signature Electronique\n";
-        $qrContent .= "Date: " . $contrat->saisiele . "\n";
-        $qrContent .= "Réf. Contrat: " . $contrat->id;
+        // $qrContent = "Signature Electronique\n";
+        // $qrContent .= "Date: " . $contrat->saisiele . "\n";
+        // $qrContent .= "Réf. Contrat: " . $contrat->id;
+
+        $qrContent = url("production/showQrCode/" . $contrat->id);
         
         $writer = new Writer($renderer);
     

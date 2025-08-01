@@ -111,10 +111,10 @@
                                             <a class="deleteConfirmation ms-3" data-uuid="{{$item->id}}"
                                                 data-type="confirmation_redirect" data-placement="top"
                                                 data-token="{{ csrf_token() }}"
-                                                data-url="{{route('setting.destroy.partner',$item->id)}}"
-                                                data-title="Vous êtes sur le point de supprimer {{$item->code}} "
+                                                data-url="{{route('prod.destroy',$item->id)}}"
+                                                data-title="Vous êtes sur le point de supprimer la proposition N° {{$item->id}} "
                                                 data-id="{{$item->id}}" data-param="0"
-                                                data-route="{{route('setting.destroy.partner',$item->id)}}"><i
+                                                data-route="{{route('prod.destroy',$item->id)}}"><i
                                                     class='bx bxs-trash' style="cursor: pointer"></i>
                                             </a>
                                         @endcan

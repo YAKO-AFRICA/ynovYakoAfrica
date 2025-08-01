@@ -125,6 +125,7 @@
                         <input type="hidden" id="beneficiariesInput" name="beneficiaires">
                         <input type="hidden" id="simulationDataInput" name="inputSessionData">
                         <input type="hidden" id="tokGenerate" name="tokGenerate" value="{{ $tok }}">
+                        <input type="hidden" id="otpGenerate" name="otpGenerate" value="">
 
                         <input type="hidden" id="codeproduitvalue" name="codeproduit" value="{{ $product->CodeProduit }}">
                     
@@ -174,7 +175,8 @@
             const operationType = "{{ $operationType }}";
 
             pollingInterval = setInterval(() => {
-                fetch(`https://apisigntest.yakoafricassur.com/api/check-signature-status/${keyUuid}/${operationType}`)
+                // fetch(`https://apisigntest.yakoafricassur.com/api/check-signature-status/${keyUuid}/${operationType}`)
+                fetch(`${SIGN_API}api/check-signature-status/${keyUuid}/${operationType}`)
                     .then(response => response.json())
                     .then(data => {
                         console.log("Statut de la signature :", data);

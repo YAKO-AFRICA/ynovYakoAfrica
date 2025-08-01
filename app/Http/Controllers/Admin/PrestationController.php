@@ -573,7 +573,7 @@ class PrestationController extends Controller
                 mkdir($externalUploadDir, 0777, true);
             }
             
-            $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$prestation->code."/E-PRESTATION";
+            $imageUrl = env('SIGN_API') . "api/get-signature/".$prestation->code."/E-PRESTATION";
             
             $imageSrc = '';
             try {
@@ -1231,7 +1231,7 @@ class PrestationController extends Controller
             if (!is_dir($externalUploadDir)) {
                 mkdir($externalUploadDir, 0777, true);
             }
-            $imageUrl = "https://apisign.yakoafricassur.com/api/get-signature/".$prestation->code."/E-PRESTATION";
+            $imageUrl = env('SIGN_API') . "api/get-signature/".$prestation->code."/E-PRESTATION";
             // if ($imageUrl != null || $imageUrl != '') {
             //     $imageData = file_get_contents($imageUrl);
             //     $base64Image = base64_encode($imageData);

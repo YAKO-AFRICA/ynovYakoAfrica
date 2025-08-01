@@ -253,7 +253,9 @@
 </div>
 
 
-
+<script>
+    const OTP_API = "{{ config('services.otp_api') }}";
+</script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const stepElement = document.getElementById("test-l-6");
@@ -528,8 +530,8 @@ document.addEventListener("DOMContentLoaded", function() {
             const operation_type = document.getElementById('operation_type').value;
             const csrfToken = document.querySelector('input[name="_token"]').value;
 
-            // fetch('http://192.168.11.8:8001/api/send-otp', {
-            fetch('https://apiotp.yakoafricassur.com/api/send-otp', {
+            // fetch('https://apiotp.yakoafricassur.com/api/send-otp', {
+            fetch(`${OTP_API}api/send-otp`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -626,8 +628,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
-            // fetch('http://192.168.11.8:8001/api/verify-otp', {
-            fetch('https://apiotp.yakoafricassur.com/api/verify-otp', {
+            // fetch('https://apiotp.yakoafricassur.com/api/verify-otp', {
+            fetch(`${OTP_API}api/verify-otp`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -641,6 +643,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.status == 200) {
+
+                        document.getElementById('otpGenerate').value = otp;
+                        
+                        alert(document.getElementById('otpGenerate').value);
+
                         swal.fire({
                             icon: 'success',
                             title: 'Code de confirmation correct',
@@ -724,8 +731,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
             try {
-                // const response = await fetch("http://192.168.11.8:8001/api/send-otp", {
-                const response = await fetch("https://apiotp.yakoafricassur.com/api/send-otp", {
+                
+                // const response = await fetch("https://apiotp.yakoafricassur.com/api/send-otp", {
+                const response = await fetch(`${OTP_API}api/send-otp`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -745,8 +753,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     // Afficher un message
                     const lastTwo = telephone.slice(-4);
                     const firstTwo = telephone.slice(0, 2);
-                    alert('Le code de confirmation a été réenvoyé par SMS au numéro +' + indicatif +
-                        firstTwo + '**' + lastTwo);
+                    swal.fire({
+                        icon: 'success',
+                        title: 'Code de confirmation envoyé',
+                        text: 'Le code de confirmation a été réenvoyé par SMS au numéro +' + indicatif +
+                        firstTwo + '**' + lastTwo,
+                    })
+                    // alert('Le code de confirmation a été réenvoyé par SMS au numéro +' + indicatif +
+                    //     firstTwo + '**' + lastTwo);
                     startOtpTimer();
                 } else {
                     alert("Une erreur s'est produite lors de l'envoi de l'OTP.");

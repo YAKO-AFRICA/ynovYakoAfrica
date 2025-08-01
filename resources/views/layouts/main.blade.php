@@ -423,6 +423,46 @@
             })
         </script>
 
+        <script>
+            const noCopy = document.querySelector('.no-copy');
+            const noCut = document.querySelector('.no-cut');
+            const noPaste = document.querySelector('.no-paste');
+
+            noCopy.addEventListener('copy', function(event) {
+                event.preventDefault();
+                swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'La copie de ce champ est désactivée.',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+
+            });
+
+            noCut.addEventListener('cut', function(e) {
+                e.preventDefault();
+                swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'La coupe de ce champ est désactivée.',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            });
+
+            noPaste.addEventListener('paste', function(e) {
+                e.preventDefault();
+                swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'La coller de ce champ est désactivée.',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            });
+        </script>
+
 
         
 

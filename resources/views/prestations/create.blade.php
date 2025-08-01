@@ -339,8 +339,12 @@
                         const modal = bootstrap.Modal.getInstance(qrCodeModal);
                         modal.hide();
 
-                        // Afficher un message indiquant que la signature est terminée
-                        alert("Signature terminée avec succès !");
+                        swal.fire({
+                            icon: 'success',
+                            title: 'Signature terminée avec succès !',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
                     }
                 })
                 .catch(error => {

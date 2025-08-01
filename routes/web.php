@@ -116,8 +116,7 @@ Route::prefix('tickets')->name('ticket.')->group(function(){
 
 Route::prefix('production')->name('prod.')->group(function(){
     Route::middleware('guest','PreventBackHistory')->group(function(){
-
-
+        Route::get('/showQrCode/{id}', [ProductionController::class, 'showQrCode'])->name('showQrCode');
     });
     Route::middleware(['auth'])->group(function () {
         Route::get('/index', [ProductionController::class, 'index'])->name('index');
@@ -125,6 +124,7 @@ Route::prefix('production')->name('prod.')->group(function(){
         Route::post('/transmettreContrat/{id}', [ProductionController::class, 'transmettreContrat'])->name('transmettreContrat');
         Route::get('/edit/{id}', [ProductionController::class, 'edit'])->name('edit');
         Route::post('/update/{id}', [ProductionController::class, 'update'])->name('contrat.update');
+        Route::post('/destroy/{id}', [ProductionController::class, 'destroy'])->name('destroy');
         Route::get('/create/stepProduct', [ProductionController::class, 'stepProduct'])->name('stepProduct');
         Route::post('search-adherent', [ProductionController::class, 'searchAdherant'])->name('search.adherent');
         Route::get('/create/add/{codeproduit}', [ProductionController::class, 'create'])->name('create');

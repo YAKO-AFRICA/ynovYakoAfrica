@@ -15,6 +15,7 @@ return [
     */
 
     'sign_api' => env('SIGN_API'),
+    'otp_api' => env('OTP_API'),
 
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),

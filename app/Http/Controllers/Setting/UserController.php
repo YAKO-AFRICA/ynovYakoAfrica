@@ -334,6 +334,14 @@ class UserController extends Controller
                 ->html($mailData['body']);
         });
 
+        // if (count(Mail::failures()) > 0) {
+        //     return response()->json([
+        //         'type' => 'error',
+        //         'message' => "Échec de l'envoi du mail à cette adresse: " . implode(', ', Mail::failures()),
+        //         'code' => 500,
+        //     ]);
+        // }
+
         return response()->json([
             'type' => 'success',
             'message' => "Mail envoyé avec succès!",
