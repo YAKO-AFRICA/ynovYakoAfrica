@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\OTPController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Setting\SiteWebController;
 use App\Http\Controllers\Admin\PrestationController;
+use App\Http\Controllers\Sites\SitePropositionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,8 +47,6 @@ Route::apiResource('sitewebs', SiteWebController::class);
 Route::patch('sitewebs/{siteWeb}/toggle-status', [SiteWebController::class, 'toggleStatus']);
 
 
-
-
 // Liste tous les sites web
 Route::get('/sitewebs/list', [SiteWebController::class, 'index'])->name('sitewebs.list');
 
@@ -66,17 +65,6 @@ Route::delete('/sitewebs/delete/{id}', [SiteWebController::class, 'destroy'])->n
 
 // Route supplémentaire pour changer l'état
 Route::patch('/sitewebs/{siteweb}/toggle-status', [SiteWebController::class, 'toggleStatus'])->name('sitewebs.toggle-status');
-
-
-
-
-
-
-
-
-
-
-
 
 
 // avoir tout les user collaborateurs de yako africa
@@ -109,6 +97,12 @@ Route::get('/collaborateurs/users', function(Request $request) {
         ], 500);
     }
 });
+
+
+Route::post('/save-site-simulateur-data', [SitePropositionController::class, 'saveSiteSimulateurData']);
+
+
+
 
 
 

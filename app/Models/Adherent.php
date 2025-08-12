@@ -16,6 +16,7 @@ class Adherent extends Model
 
     protected $fillable = [
         'id',
+        'situationMatrimoniale',
         'civilite',
         'nom',
         'prenom',

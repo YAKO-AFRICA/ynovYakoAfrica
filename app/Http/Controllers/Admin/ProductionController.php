@@ -376,6 +376,8 @@ class ProductionController extends Controller
         return response()->json(['message' => 'Données enregistrées en session avec succès.', 'data' => $garanties], 200);
     }
 
+
+
     
 
     public function ykePrime(Request $request)

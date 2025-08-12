@@ -1,24 +1,13 @@
-<div id="test-l-1" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger1">
-    <h5 class="mb-1">Informations personnelles de l'adhérent</h5>
-    <p class="mb-4">Veuillez entrer vos informations personnelles pour commencer l'adhésion en tenant compte des champs
-        obligatoire (<span class="star">*</span>).</p>
-
-
-    <div class="col-12 d-flex justify-content-center align-items-center">
-
-        <div class="d-flex justify-content-between mb-3">
-            <div>
-                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#RechercherClientModal">
-                    <i class="bx bx-search"></i> Rechercher un adhérent existant
-                </button>
-            </div>
-        </div>
-    </div>
-    <hr>
-        
+<style>
+    .readonly {
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        cursor: not-allowed;
+    }
+</style>
     <div class="row g-3 mb-3">
-        <div class="col-12">
-            <label class="form-label">Civilité <span class="star">*</span></label> <br>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <label class="form-label">Civilité <span class="text-danger">*</span></label> <br>
 
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="civilite" id="inlineRadio1" value="Madame" autocomplete="on" required data-invalid-message="Veuillez cocher la civilité">
@@ -36,6 +25,49 @@
                 <span class="text-danger"> Veuillez cocher la civilité </span>
             @enderror
         </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <label class="form-label">Situation matrimoniale <span class="text-danger">*</span></label> <br>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="radioCelibataire" value="celibataire" required>
+                <label class="form-check-label" for="radioCelibataire">Célibataire</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="radioMarie" value="marie">
+                <label class="form-check-label" for="radioMarie">Marié(e)</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="radioVeuf" value="veuf">
+                <label class="form-check-label" for="radioVeuf">Veuf / Veuve</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="radioDivorce" value="divorce">
+                <label class="form-check-label" for="radioDivorce">Divorcé(e)</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="radioSepare" value="separe">
+                <label class="form-check-label" for="radioSepare">Séparé(e)</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="radioUnionLibre" value="union_libre">
+                <label class="form-check-label" for="radioUnionLibre">Union libre</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="radioPacs" value="pacs">
+                <label class="form-check-label" for="radioPacs">PACS</label>
+            </div>
+
+            @error('situation_matrimoniale')
+                <span class="text-danger">Veuillez sélectionner une situation matrimoniale</span>
+            @enderror
+        </div>
+
     </div>
     <!---end row-->
     <div class="row g-3 mb-3">
@@ -98,6 +130,10 @@
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="naturepiece" id="Passport" value="Passport" autocomplete="on" required>
                 <label class="form-check-label" for="Passport">Passport</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="naturepiece" id="carteSejour" value="Carte de sejour" autocomplete="on" required>
+                <label class="form-check-label" for="carteSejour">Carte de séjour</label>
             </div>
 
             @error('naturepiece')
@@ -165,7 +201,7 @@
         <div class="col-12 col-lg-4">
             <label class="form-label">Mobile <span class="text-danger">*</span></label><br>
             <div class="input-group mb-3">
-                <input type="text" name="mobile" class="form-control" autocomplete="on" required maxlength="10">
+                <input type="tel" name="mobile" class="form-control" autocomplete="on" required minlength="10" maxlength="15">
             </div>
 
             @error('mobile')
@@ -177,14 +213,14 @@
         <div class="col-12 col-lg-4">
             <label class="form-label">Mobile 2</label><br>
             <div class="input-group mb-3">
-                <input type="text" id="mobile1" name="mobile1" class="form-control" autocomplete="on" maxlength="10">
+                <input type="tel" id="mobile1" name="mobile1" class="form-control" autocomplete="on" minlength="10" maxlength="15">
             </div>
         </div>
         <div class="col-12 col-lg-4">
 
             <label class="form-label">Telephone</label><br>
             <div class="input-group mb-3">
-                <input type="text" id="telephone" name="telephone" class="form-control" autocomplete="on" maxlength="10">
+                <input type="tel" id="telephone" name="telephone" class="form-control" autocomplete="on" minlength="10" maxlength="15">
             </div>
         </div>
     </div>
@@ -200,7 +236,7 @@
             <div class="col-12 col-lg-4">
                 <label class="form-label">Contact <span class="text-danger">*</span></label><br>
                 <div class="input-group mb-3">
-                    <input type="text" name="contactpersonneressource" class="form-control" aria-label="Text input with select" required maxlength="10">
+                    <input type="tel" name="contactpersonneressource" class="form-control" aria-label="Text input with select" required minlength="10" maxlength="15">
                 </div>
             </div>
         </div>
@@ -213,53 +249,13 @@
             <div class="col-12 col-lg-4">
                 <label class="form-label">Contact </label><br>
                 <div class="input-group mb-3">
-                    <input type="text" name="contactpersonneressource2" class="form-control" aria-label="Text input with select" maxlength="10">
+                    <input type="tel" name="contactpersonneressource2" class="form-control" aria-label="Text input with select" minlength="10" maxlength="15">
                 </div>
             </div>
         </div>
     </fieldset>
 
-
-    <div class="d-flex justify-content-between">
-        <div class="">
-            <button onclick="event.preventDefault(); stepper1.previous()" class="btn border-btn btn-previous-form"><i
-                class='bx bx-left-arrow-alt'></i>Precedent</button>
-        </div>
-
-        <div class="">
-            <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i class='bx bx-right-arrow-alt'></i></button>
-        </div>
-    </div>
-
-    <script>
-        // Ajout d'un événement onclick sur le bouton "Suivant"
-        document.querySelector('.btn-next-form').addEventListener('click', function(event) {
-        event.preventDefault();
-        // Validez les champs obligatoires de l'étape actuelle
-        if (validateStep1()) {
-            // Si les champs sont valides, passez à l'étape suivante
-            stepper1.next();
-        }
-        });
-
-        // Fonction pour valider les champs de l'étape 1
-        function validateStep1() {
-            var civilite = document.querySelector('input[name="civilite"]:checked');
-            var nom = document.querySelector('input[name="nom"]').value;
-            var prenom = document.querySelector('input[name="prenom"]').value;
-            if (!civilite) {
-                document.querySelector('.error-message').innerHTML = 'Veuillez cocher la civilité';
-                return false;
-            }
-            if(!nom){
-                document.querySelector('.error-message').innerHTML = 'Veuillez saisir le nom';
-                return false;
-            }
-            return true;
-        }
-    </script>
-
-    <script>
+     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const dateInput = document.getElementById('Date_naissance');
             const ageMin = {{ $product->AgeMiniAdh ?? '0' }};
@@ -336,4 +332,125 @@
         });
     </script>
 
-</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 🔁 Fonction pour récupérer ou initialiser les données en session
+            function getSessionData() {
+                const raw = sessionStorage.getItem('souscriptionData');
+                let data = {};
+                try {
+                    data = raw ? JSON.parse(raw) : {};
+                } catch (e) {
+                    console.error("Erreur de parsing JSON sessionStorage:", e);
+                }
+
+                if (!data.adherentData) {
+                    data.adherentData = {};
+                }
+
+                return data;
+            }
+
+            // 💾 Fonction pour sauvegarder dans la session
+            function saveSessionData(data) {
+                sessionStorage.setItem('souscriptionData', JSON.stringify(data));
+                console.log("✅ Données enregistrées dans la session :", data);
+            }
+
+            // 🔁 Fonction pour mettre à jour une seule donnée dans adherentData
+            function updateSessionField(name, value) {
+                const data = getSessionData();
+                data.adherentData[name] = value;
+                saveSessionData(data);
+            }
+
+            // 🎯 Liste de tous les champs que tu veux suivre
+            const fieldSelectors = [
+                // radios
+                'input[name="civilite"]',
+                'input[name="situation_matrimoniale"]',
+                'input[name="naturepiece"]',
+
+                // text, email, tel, date
+                'input[name="nom"]',
+                'input[name="prenom"]',
+                'input[name="datenaissance"]',
+                'input[name="numeropiece"]',
+                'input[name="email"]',
+                'input[name="mobile"]',
+                'input[name="mobile1"]',
+                'input[name="telephone"]',
+                'input[name="personneressource"]',
+                'input[name="contactpersonneressource"]',
+                'input[name="personneressource2"]',
+                'input[name="contactpersonneressource2"]',
+
+                // select
+                'select[name="lieunaissance"]',
+                'select[name="lieuresidence"]',
+                'select[name="profession"]',
+                'select[name="employeur"]'
+            ];
+
+            // 📦 Appliquer les écouteurs pour tous ces champs
+            fieldSelectors.forEach(selector => {
+                document.querySelectorAll(selector).forEach(element => {
+                    const type = element.type;
+
+                    if (type === 'radio') {
+                        element.addEventListener('change', function () {
+                            if (this.checked) {
+                                updateSessionField(this.name, this.value);
+                            }
+                        });
+                    } else if (type === 'select-one' || type === 'text' || type === 'email' || type === 'tel' || type === 'date') {
+                        element.addEventListener('input', function () {
+                            updateSessionField(this.name, this.value);
+                        });
+                    }
+                });
+            });
+
+            // ✅ Fonction pour pré-remplir les champs depuis sessionStorage (si existants)
+            // function populateFormFromSession() {
+            //     const data = getSessionData().adherentData;
+
+            //     for (const [key, value] of Object.entries(data)) {
+            //         const input = document.querySelector(`[name="${key}"]`);
+
+            //         if (input) {
+            //             if (input.type === 'radio') {
+            //                 const radioToCheck = document.querySelector(`input[name="${key}"][value="${value}"]`);
+            //                 if (radioToCheck) radioToCheck.checked = true;
+            //             } else {
+            //                 input.value = value;
+            //             }
+            //         }
+            //     }
+            // }
+
+            // populateFormFromSession();
+        });
+    </script>
+
+ <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dataSession = sessionStorage.getItem('souscriptionData');
+
+        if (dataSession) {
+            const data = JSON.parse(dataSession);
+            const simulationData = data.simulationData;
+
+            const dateNaissanceInput = document.getElementById('Date_naissance');
+            if (dateNaissanceInput && simulationData?.birthDate) {
+                dateNaissanceInput.value = simulationData.birthDate;
+                dateNaissanceInput.classList.add('readonly');
+                dateNaissanceInput.setAttribute('readonly', true); // empêche la modification
+            }
+        }
+    });
+</script>
+
+
+
+

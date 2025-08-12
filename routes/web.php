@@ -36,6 +36,7 @@ use App\Http\Controllers\Admin\PrestationController;
 use App\Http\Controllers\Admin\ProductionController;
 use App\Http\Controllers\Admin\ValidationController;
 use App\Http\Controllers\Admin\BeneficiairesController;
+use App\Http\Controllers\Sites\SitePropositionController;
 
 
 /*
@@ -107,8 +108,6 @@ Route::prefix('tickets')->name('ticket.')->group(function(){
         // Route::post('tickets/{ticket}/close', [TicketController::class, 'close'])->name('tickets.close');
         // Route::post('tickets/{ticket}/reopen', [TicketController::class, 'reopen'])->name('tickets.reopen');
         // Route::get('attachments/{attachment}/download', [TicketController::class,'download'])->name('attachments.download');
-
-       
 
     });
 
@@ -536,4 +535,31 @@ Route::get('/sending', [ProductionController::class, 'sendMail']);
 Route::get('/sending/user', [UserController::class, 'sendMail']);
 
 
+
+
+Route::prefix('site')->name('site.')->group(function(){
+    Route::get('/souscription/{codeMembre}', [SitePropositionController::class, 'stepProduct'])->name('stepProduct');
+    Route::get('/simulateurPrimeDia/{codeProduit}/{userId}', [SitePropositionController::class, 'simulateurPrimeDia'])->name('simulateurPrimeDia');
+    Route::get('/create/{codeProduit}/{codePartner}', [SitePropositionController::class, 'create'])->name('create');
+
+    Route::post('/update-adherent/{id}', [SitePropositionController::class, 'updateAdherent'])->name('update.adherent');
+
+    // assurer 
+    Route::post('/store-assure', [SitePropositionController::class, 'storeAssure'])->name('store.assure');
+
+    // benef
+    Route::post('/store-beneficiaire', [SitePropositionController::class, 'storeBeneficiaire'])->name('store.beneficiaire');
+    Route::post('/update/benef-terme/{id}', [SitePropositionController::class, 'updateBeneficiaireTerme'])->name('benef-terme.update');
+    Route::post('/update/benef-deces/{id}', [SitePropositionController::class, 'updateBenefDeces'])->name('benef-deces.update');
+
+    // Documents
+    Route::post('/store-documents', [SitePropositionController::class, 'storeDocuments'])->name('store.document');
+    Route::post('/destroy-document/{id}', [SitePropositionController::class, 'destroyDocument'])->name('destroy.document');
+
+    // contrat
+    Route::post('/store/contrat', [SitePropositionController::class, 'storeContrat'])->name('store.contrat');
+    Route::post('/storeSessionContratData', [SitePropositionController::class, 'storeSessionContratData'])->name('storeSessionContratData');
+    Route::get('/showContratSite/{idContrat}', [SitePropositionController::class, 'showContratSite'])->name('showContratSite');
+
+});
 

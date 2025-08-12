@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 
 <head>
 	<!-- Required meta tags -->
@@ -40,54 +40,41 @@
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    
 
 
+    
+	<title>YNOV - Plateforme de souscription en ligne</title>
     <style>
-            .select2-container--default .select2-selection--single {
+        .page-wrapper-site {
+            height: 100%;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        input[readonly],
+        textarea[readonly],
+        select[readonly] {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            cursor: no-drop;
+        }
+
+        input[readonly]:hover,
+        textarea[readonly]:hover,
+        select[readonly]:hover {
+            cursor: no-drop;
+        }
+        .select2-container--default .select2-selection--single {
                 height: 38px !important;
                 display: flex;
                 align-items: center;
             }
 
-            .select2-container--default .select2-selection--single .select2-selection__rendered {
-                line-height: 38px !important;
-            }
-    </style>
-
-    <style>
-        /* Style des notifications */
-        .unread-notification {
-            background-color: rgba(13, 110, 253, 0.05);
-            border-left: 3px solid #ff0000;
-        }
-        
-        .read-notification {
-            opacity: 0.7;
-        }
-        
-        .notification-item:hover {
-            background-color: #f8f9fa !important;
-        }
-        
-        .notification-list::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .notification-list::-webkit-scrollbar-thumb {
-            background-color: #dee2e6;
-            border-radius: 3px;
-        }
-        
-        .alert-count {
-            font-size: 0.65rem;
-            padding: 0.25em 0.4em;
-            min-width: 1.5em;
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 38px !important;
         }
     </style>
 
-    
-	<title>YNOV - Plateforme de souscription en ligne</title>
 </head>
 
 <body >
@@ -100,58 +87,31 @@
     </div>
         <!--wrapper-->
         <div class="wrapper">
-            
-        @php
-            $unreadNotifications = auth()->user()->unreadNotifications;
-            $allNotifications = auth()->user()->notifications;
 
-        @endphp
-
-            <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100"></div>
-            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-                <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-url="">
-                    <div class="toast-header">
-                        <strong class="me-auto" id="toast-title">Notification</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div class="toast-body" id="toast-body"></div>
-                </div>
-            </div>
-
-            
-            @include('layouts.sidebar')
-
-            <div class="page-wrapper">
+            <div class="page-wrapper-site" >
                 <div class="page-content" id="app">
-                    @yield('content')
+                     <!--content-->
+                     @yield('content')
                 </div>
-
             </div>
            
             <!--start overlay-->
-            <div class="overlay toggle-icon"></div>
+            {{-- <div class="overlay toggle-icon"></div> --}}
             <!--end overlay-->
             <!--Start Back To Top Button-->
-            <a href="javaScript:;" class="back-to-top"><i class='bx bxs-up-arrow-alt'></i></a>
+            {{-- <a href="javaScript:;" class="back-to-top"><i class='bx bxs-up-arrow-alt'></i></a> --}}
             <!--End Back To Top Button-->
-            <footer class="page-footer">
+            {{-- <footer class="page-footer">
                 <p class="mb-0">Copyright © 2024 DSI. Tous droits réservés.</p>
-            </footer>
+            </footer> --}}
         </div>
 
-        
-
-
         {{-- js custome file --}}
+        <script src="{{ asset('assets/root/resume.js')}}"></script>
         <script src="{{ asset('assets/js/custom.js')}}"></script>
-        <script src="{{ asset('root/resume.js')}}"></script>
-        <script src="{{ asset('assets/root/simulateur/primes.js')}}"></script>
-        <script src="{{ asset('assets/root/simulateur/doihooSimulateur.js')}}"></script>
-        <script src="{{ asset('assets/root/simulateur/simulateurKDS.js')}}"></script>
-        <script src="{{ asset('assets/root/simulateur/simulateurCADE.js')}}"></script>
         <script src="{{ asset('assets/root/simulateur/simulateur.js')}}"></script>
-        <script src="{{ asset('assets/root/simulateur/ykeSimulateur.js')}}"></script>
-        <script src="{{ asset('assets/js/fieldsForm.js')}}"></script>
+        {{-- <script src="{{ asset('assets/root/coris/capital.js')}}"></script> --}}
+        
         <!-- Bootstrap JS -->
         <script src="{{ asset('assets/js/bootstrap.bundle.min.js')}}"></script>
         <!--plugins-->
@@ -181,10 +141,16 @@
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         {{-- <script src="{{ mix('js/app.js') }}"></script> --}}
 
-        <script type="module" src="{{ asset('api/request.js') }}"></script>
+        <script>
+            $(document).ready(function() {
+                $('.selection').select2({
+                    placeholder: "Choisir",
+                    allowClear: true,
+                    width: '100%'
+                });
+            });
+        </script>
 
-
- 
 
 
         <script>
@@ -195,66 +161,24 @@
                     lengthChange: true,
                     buttons: ['copy', 'excel', 'pdf', 'print'],
                     language: {
-                                search: "Recherche :",
-                                lengthMenu: "Afficher _MENU_ lignes",
-                                zeroRecords: "Aucun enregistrement trouvé",
-                                info: "Affichage de _START_ à _END_ sur _TOTAL_ enregistrements",
-                                infoEmpty: "Aucun enregistrement disponible",
-                                infoFiltered: "(filtré à partir de _MAX_ enregistrements)",
-                                paginate: {
-                                    first: "Premier",
-                                    last: "Dernier",
-                                    next: "Suivant",
-                                    previous: "Précédent",
-                                },
-                            },
+                        search: "Recherche :",
+                    },
                 });
 
                 table.buttons().container()
                     .appendTo('#example2_wrapper .col-md-6:eq(0)');
             });
-            $(document).ready(function() {
-    
-
-                var table = $('#example3').DataTable({
-                    lengthChange: true,
-                    buttons: ['copy', 'excel', 'pdf', 'print'],
-                    language: {
-                                search: "Recherche :",
-                                lengthMenu: "Afficher _MENU_ lignes",
-                                zeroRecords: "Aucun enregistrement trouvé",
-                                info: "Affichage de _START_ à _END_ sur _TOTAL_ enregistrements",
-                                infoEmpty: "Aucun enregistrement disponible",
-                                infoFiltered: "(filtré à partir de _MAX_ enregistrements)",
-                                paginate: {
-                                    first: "Premier",
-                                    last: "Dernier",
-                                    next: "Suivant",
-                                    previous: "Précédent",
-                                },
-                            },
-                });
-
-                table.buttons().container()
-                    .appendTo('#example3_wrapper .col-md-6:eq(0)');
-            });
         </script>
+
         <script>
             $(document).ready(function() {
-                $('.selection').select2({
-                    placeholder: "Choisir",
-                    allowClear: true,
-                    width: '100%',
-                });
+                $('.js-example-basic-single').select2();
             });
-        </script>
-
-        
+        </script>
 
         <script src="{{ asset('assets/js/script.js')}}"></script>
         <script src="{{ asset('assets/js/app.js')}}"></script>
         <script src="{{ asset('assets/js/main.js')}}"></script>
-        <script src="{{ asset('assets/js/user.js')}}"></script>
 
         
         
@@ -268,22 +192,23 @@
             });
         
             $(".time-picker").flatpickr({
-                    enableTime: true,
-                    noCalendar: true,
-                    dateFormat: "Y-m-d H:i",
-                });
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "Y-m-d H:i",
+            });
         
             $(".date-time").flatpickr({
-                    enableTime: true,
-                    dateFormat: "Y-m-d H:i",
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
             });
         
             $(".date-format").flatpickr({
-            altFormat: "j F, Y",
-            dateFormat: "d-m-Y", // Format réel de la date envoyée (10-12-2024)
-            minDate: "today", // La date minimale est aujourd'hui
-            // locale: "fr" // Définit la langue en français
-        });
+                // altInput: true, // Affiche un champ alternatif lisible par l'utilisateur
+                altFormat: "j F, Y", // Format alternatif en français (ex: 10 décembre, 2024)
+                dateFormat: "d-m-Y", // Format réel de la date envoyée (10-12-2024)
+                minDate: "today", // La date minimale est aujourd'hui
+                // locale: "fr" // Définit la langue en français
+            });
         
             $(".date-range").flatpickr({
                 mode: "range",
@@ -301,10 +226,39 @@
         
         </script>
 
-        
+        <script>
+             $(document).ready(function () {
+                $('#codeproduit').on('change', function () {
+                    const codeProduit = $(this).find(':selected').data('code-value'); // Récupère data-code-value
+                    const formuleSelect = $('#codeproduitformule');
 
-    
+                    console.log('codeProduit:', codeProduit);
 
+                    // Réinitialise le menu déroulant des formules
+                    formuleSelect.html('<option value="">-- Choisir une option --</option>');
+
+                    if (codeProduit) {
+                        // Requête AJAX
+                        $.ajax({
+                            url: `/formules/${codeProduit}`,
+                            type: 'GET',
+                            success: function (data) {
+                                console.log('Données reçues de l\'API :', data); // Inspectez ce qui est reçu
+                                data.forEach(item => {
+                                    formuleSelect.append(`<option value="${item.CodeProduitFormule}">${item.MonLibelle}</option>`);
+                                });
+                            },
+
+                            error: function (xhr, status, error) {
+                                console.error('Erreur AJAX :', xhr.responseText);
+                                alert('Erreur lors de la récupération des formules.');
+                            }
+                        });
+                    }
+                });
+            });
+
+        </script>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
@@ -316,7 +270,7 @@
             const nextBtn = document.getElementById("nextBtn");
             const submitBtn = document.getElementById("submit");
             let currentStep = 0;
-            
+
             // Met à jour l'affichage des étapes du formulaire et du stepper
             function updateFormAndStepper() {
                 // Mettre à jour les étapes du formulaire
@@ -331,7 +285,7 @@
 
                 // Gérer la visibilité des boutons
                 prevBtn.style.display = currentStep > 0 ? "inline-block" : "none";
-                prevBtn.style.display = currentStep < formSteps.length - 1 ? "inline-block" : "none";
+                prevBtn.style.display = currentStep < formSteps.length - 2 ? "inline-block" : "none";
                 nextBtn.style.display = currentStep < formSteps.length - 2 ? "inline-block" : "none";
                 submitBtn.style.display = currentStep === formSteps.length - 2 ? "inline-block" : "none";
             }
@@ -412,60 +366,16 @@
         });
     </script>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const container = document.querySelector('.app-container');
-                if (container) {
-                    new PerfectScrollbar(container);
-                } else {
-                    console.warn("L'élément '.app-container' est introuvable !");
-                }
-            })
-        </script>
-
-        <script>
-            const noCopy = document.querySelector('.no-copy');
-            const noCut = document.querySelector('.no-cut');
-            const noPaste = document.querySelector('.no-paste');
-
-            noCopy.addEventListener('copy', function(event) {
-                event.preventDefault();
-                swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'La copie de ce champ est désactivée.',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-
-            });
-
-            noCut.addEventListener('cut', function(e) {
-                e.preventDefault();
-                swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'La coupe de ce champ est désactivée.',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-            });
-
-            noPaste.addEventListener('paste', function(e) {
-                e.preventDefault();
-                swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'La coller de ce champ est désactivée.',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-            });
-        </script>
-
-
-        
-
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.app-container');
+            if (container) {
+                new PerfectScrollbar(container);
+            } else {
+                console.warn("L'élément '.app-container' est introuvable !");
+            }
+        })
+    </script>
     </body>
 
 </html>
