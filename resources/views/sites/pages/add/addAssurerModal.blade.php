@@ -60,9 +60,10 @@
                         </div>
                         <div class="col-12 col-lg-6">
                             <label class="form-label">Lieu de naissance <span class="text-danger">*</span></label>
-                            <select class="form-select lieunaissance" name="assurerLieunaissance" id="assurerLieunaissance" required>
+                            <input type="text" name="assurerLieunaissance" id="assurerLieunaissance" class="form-control" required>
+                            {{-- <select class="form-select lieunaissance" name="assurerLieunaissance" id="assurerLieunaissance" required>
                                 <option value="" disabled selected>Sélectionner le lieu</option>
-                            </select>
+                            </select> --}}
                         </div>
 
                         <!-- Filiation et Sexe -->
@@ -102,13 +103,18 @@
                         </div>
 
                         <!-- Lieu de résidence -->
-                        <div class="col-12">
-                            <label class="form-label">Lieu de résidence <span class="text-danger">*</span></label>
-                            <select class="form-select lieuresidence" name="assurerLieuresidence" id="assurerLieuresidence" required>
-                                <option value="" disabled selected>Sélectionner le lieu</option>
-                                
-                                <!-- Ajoutez d'autres options ici -->
-                            </select>
+                        
+
+                        <div class="row my-3 col-sm-12 col-md-12 col-lg-12">
+                            <div class="col-sm-12 col-md-6 col-lg-8">
+                                <label class="form-label">Lieu de résidence <span class="text-danger">*</span></label>
+                                <input type="text" name="assurerLieuresidence" id="assurerLieuresidence" class="form-control" required>
+                               
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                                <label for="justifResidence" class="form-label">Justificatif de résidence <span class="text-danger">*</span></label>
+                                <input type="file" name="justifResidence" class="form-control" id="justifResidence" required accept="pdf/*,image/*">
+                            </div>
                         </div>
 
                         <!-- Profession et Employeur -->
@@ -122,9 +128,9 @@
                             <label class="form-label">Secteur d'activités</label>
                             <select class="form-select" name="assurerEmployeur" id="assurerEmployeur">
                                 <option value="" disabled selected>Sélectionner le secteur</option>
-                                <option value="Public">Public</option>
-                                <option value="Privé">Privé</option>
-                                <option value="Informel">Informel</option>
+                                @foreach ($secteurActivites as $secteurActivite)
+                                    <option value="{{ $secteurActivite->MonLibelle }}">{{ $secteurActivite->MonLibelle }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -135,15 +141,15 @@
                         </div>
                         <div class="col-12 col-lg-4">
                             <label class="form-label">Téléphone</label>
-                            <input type="tel" name="assurerTelephone" id="assurerTelephone" class="form-control">
+                            <input type="tel" name="assurerTelephone" id="assurerTelephone" class="form-control" minlength="10" maxlength="15">
                         </div>
                         <div class="col-12 col-lg-4">
                             <label class="form-label">Téléphone 2</label>
-                            <input type="tel" name="assurerTelephone1" id="assurerTelephone1" class="form-control">
+                            <input type="tel" name="assurerTelephone1" id="assurerTelephone1" class="form-control" minlength="10" maxlength="15">
                         </div>
                         <div class="col-12 col-lg-4">
                             <label class="form-label">Mobile <span class="text-danger">*</span></label>
-                            <input type="tel" name="assurerMobile" id="assurerMobile" class="form-control" required>
+                            <input type="tel" name="assurerMobile" id="assurerMobile" class="form-control" minlength="10" maxlength="15" required>
                         </div>
                     </div>
                 </div>

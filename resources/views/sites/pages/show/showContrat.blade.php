@@ -74,8 +74,265 @@
             }
         }
     </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+
+        .success-message {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 420px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 10px 20px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            backdrop-filter: blur(10px);
+            animation: slideInSuccess 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: top right;
+        }
+
+        @keyframes slideInSuccess {
+            0% {
+                transform: translateX(100%) translateY(-50%) scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0) translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .success-icon-wrapper {
+            background: linear-gradient(145deg, #22c55e, #16a34a);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 8px 16px rgba(34, 197, 94, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .success-icon {
+            color: white;
+            font-size: 24px;
+            animation: checkmark 0.6s ease-in-out 0.3s both;
+        }
+
+        @keyframes checkmark {
+            0% {
+                transform: scale(0) rotate(45deg);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .close-button {
+            background: rgba(107, 114, 128, 0.1);
+            border: none;
+            border-radius: 12px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #6b7280;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .close-button:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            transform: scale(1.1);
+        }
+
+        .success-content {
+            margin-left: 0;
+        }
+
+        .success-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0 0 1rem 0;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .success-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #4b5563;
+            margin-bottom: 1rem;
+        }
+
+        .success-highlight {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .success-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.05), rgba(22, 163, 74, 0.05));
+            border-radius: 12px;
+            border-left: 3px solid #22c55e;
+        }
+
+        .step-icon {
+            color: #22c55e;
+            margin-right: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .step-text {
+            font-size: 0.9rem;
+            color: #374151;
+            line-height: 1.5;
+        }
+
+        .company-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+
+        .company-icon {
+            font-size: 1rem;
+        }
+
+        /* Animation pour mobile */
+        @media (max-width: 640px) {
+            .success-message {
+                top: 1rem;
+                right: 1rem;
+                left: 1rem;
+                max-width: none;
+                padding: 1.5rem;
+            }
+
+            @keyframes slideInSuccess {
+                0% {
+                    transform: translateY(-100%) scale(0.9);
+                    opacity: 0;
+                }
+                100% {
+                    transform: translateY(0) scale(1);
+                    opacity: 1;
+                }
+            }
+        }
+
+        /* Effet de fermeture */
+        .success-message.fade-out {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.8) translateX(100%);
+                opacity: 0;
+            }
+        }
+    </style>
+
+    
 </head>
 <body>
+
+    <!-- Code Laravel Blade optimisé -->
+    <div id="success-message" class="success-message">
+        <div class="success-header">
+            <div class="success-icon-wrapper">
+                <i class="fas fa-check success-icon"></i>
+            </div>
+            <button class="close-button" onclick="closeSuccessMessage()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="success-content">
+            <h3 class="success-title">Contrat enregistré avec succès !</h3>
+            
+            <div class="success-steps">
+                <div class="step-item">
+                    <i class="fas fa-envelope step-icon"></i>
+                    <span class="step-text">E-mail de bienvenue envoyé avec votre bulletin d'adhésion</span>
+                </div>
+                <div class="step-item">
+                    <i class="fas fa-file-contract step-icon"></i>
+                    <span class="step-text">Documents et informations complémentaires inclus dans le mail</span>
+                </div>
+                <div class="step-item">
+                    <i class="fas fa-bell step-icon"></i>
+                    <span class="step-text">Apres traitement de votre demande, vous recevrez des Notifications automatiques avec les informations sur votre contrat d'adhésion</span>
+                </div>
+                
+            </div>
+
+            <div class="company-badge">
+                <i class="fas fa-heart company-icon"></i>
+                <span>Merci d'avoir choisi <strong>YAKO AFRICA</strong></span>
+            </div>
+        </div>
+    </div>
    
 
     <!-- Main Content -->
@@ -97,31 +354,7 @@
             <!-- Action Buttons -->
             <div class="d-flex justify-content-end my-4">
                 <div class="btn-group gap-2">
-                    @can('Modifier une souscription')
-                        @if (!in_array($contrat->etape, [2, 3]))
-                            <a href="{{ route('prod.edit', $contrat->id) }}" class="btn btn-primary btn-sm">
-                                <i class="bx bx-edit me-1"></i>
-                                <span class="d-none d-sm-inline">Modifier</span>
-                            </a>
-                        @endif
-                    @endcan
-
-                    @can('Transmettre une souscription')
-                        @if (!in_array($contrat->etape, [2, 3]))
-                            <form action="{{ route('prod.transmettreContrat', $contrat->id)}}" method="post" class="d-inline m-0 submitForm">
-                                @csrf
-                                <button type="submit" class="btn btn-primary btn-sm">
-                                    <i class="bx bx-send me-1"></i>
-                                    <span class="d-none d-sm-inline">Transmettre</span>
-                                </button>
-                            </form>
-                        @endif
-                    @endcan
                     
-                    <a href="{{ route('prod.generate.bulletin', $contrat->id) }}" target="_blank" class="btn btn-primary btn-sm">
-                        <i class="bx bx-download me-1"></i>
-                        <span class="d-none d-sm-inline">Bulletin</span>
-                    </a>
                 </div>
             </div>
 
@@ -147,7 +380,7 @@
                                     <div class="bs-stepper-circle">2</div>
                                     <div class="">
                                         <h5 class="mb-0 steper-title @if ($contrat->etape == 2) text-primary @endif">
-                                            <i class="bx bx-send me-1"></i> Transmise
+                                            <i class="bx bx-send me-1"></i> En cours de traitement
                                         </h5>
                                         <p class="mb-0 steper-sub-title">{{ $contrat->transmisle ?? ''}}</p>
                                     </div>
@@ -207,9 +440,9 @@
                                     <a href="javascript:;" class="list-group-item py-2 nav-menu-item" data-target="edit-beneficiaire">
                                         <i class='bx bx-gift me-2'></i> Bénéficiaires
                                     </a>
-                                    <a href="javascript:;" class="list-group-item py-2 nav-menu-item" data-target="edit-Info-complementaire">
+                                    {{-- <a href="javascript:;" class="list-group-item py-2 nav-menu-item" data-target="edit-Info-complementaire">
                                         <i class='bx bx-info-circle me-2'></i> Informations
-                                    </a>
+                                    </a> --}}
                                 </div>
                             </div>
                         </div>
@@ -703,7 +936,7 @@
                     </section>
 
                     <!-- Additional Info Section -->
-                    <section id="edit-Info-complementaire" class="section-content d-none mb-4">
+                    {{-- <section id="edit-Info-complementaire" class="section-content d-none mb-4">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="section-title mb-4">
@@ -803,7 +1036,7 @@
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </section> --}}
                 </div>
             </div>
         </div>
@@ -856,5 +1089,24 @@
             });
         });
     </script>
+
+    <script>
+        function closeSuccessMessage() {
+            const message = document.getElementById('success-message');
+            message.classList.add('fade-out');
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 500);
+        }
+
+        // setTimeout(() => {
+        //     const message = document.getElementById('success-message');
+        //     if (message && message.style.display !== 'none') {
+        //         closeSuccessMessage();
+        //     }
+        // }, 8000);
+    </script>
 </body>
 </html>
+
+    

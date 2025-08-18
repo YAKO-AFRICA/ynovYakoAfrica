@@ -37,96 +37,136 @@
     </table>
 </div>
 
+
+
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
     const radioOui = document.getElementById('estAssureOui');
-
-    radioOui.addEventListener('change', function () {
-        if (this.checked) {
-            // Appel à une fonction qui va insérer les données dans le tableau
-            ajouterAssureDepuisAdherent();
-        }
-    });
-
-});
-</script>
-
-<script>
-    // On injecte les données PHP dans du JS
-    
-
-    function ajouterAssureDepuisAdherent() {
-
-        const adherentData = sessionStorage.getItem('souscriptionData') ? JSON.parse(sessionStorage.getItem('souscriptionData')).adherentData : null;
-
-        // console.log('Données de l\'adherent:', adherentData.civilite);
-        if (!adherentData) return;
-
-        // Créer une ligne de tableau
-        const tbody = document.getElementById('tableAssuresBody');
-
-        // Nettoyer d’abord la table (si on ne veut qu’un seul assuré)
-        tbody.innerHTML = ''; // Supprimer cette ligne si vous voulez pouvoir ajouter plusieurs assurés
-
-        const tr = document.createElement('tr');
-        tr.setAttribute('data-id', adherentData.numeropiece);
-
-        tr.innerHTML = `
-            <td>${adherentData.civilite} ${adherentData.nom} ${adherentData.prenom}</td>
-            <td>${adherentData.datenaissance}</td>
-            <td>${adherentData.lieuresidence}</td>
-            <td>${adherentData.mobile}</td>
-            <td>${adherentData.numeropiece}</td>
-            <td>
-                <button type="button" class="btn btn-danger btn-sm" onclick="supprimerLigne(this)">Supprimer</button>
-            </td>
-        `;
-
-        
-
-        tbody.appendChild(tr);
-
-        // Mettre à jour le sessionStorage
-        const souscriptionData = JSON.parse(sessionStorage.getItem('souscriptionData'));
-        souscriptionData.assureData = [adherentData];
-        sessionStorage.setItem('souscriptionData', JSON.stringify(souscriptionData));
-
-        console.log('Données de l\'adherent ajoutées au tableau:', souscriptionData);
-    }
-
-    function supprimerLigne(btn) {
-        const row = btn.closest('tr');
-        const id = row.getAttribute('data-id'); // identifiant unique (n° de pièce)
-        row.remove();
-
-        // Mise à jour dans le sessionStorage
-        let souscriptionData = JSON.parse(sessionStorage.getItem('souscriptionData'));
-
-        if (souscriptionData && souscriptionData.assureData) {
-            // Filtrer pour enlever celui qui correspond à l'identifiant
-            souscriptionData.assureData = souscriptionData.assureData.filter(assure => assure.numeropiece !== id);
-            sessionStorage.setItem('souscriptionData', JSON.stringify(souscriptionData));
-
-            console.log(`Assuré avec la pièce ${id} supprimé de la session.`);
-        }
-    }
-
-
-    
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+    const radioNon = document.getElementById('estAssureNon');
     const storeAssurerBtn = document.getElementById('storeAssurerBtn');
     const assurerForm = document.getElementById('assurerForm');
 
-    storeAssurerBtn.addEventListener('click', function () {
-        // Valider les champs requis du formulaire
-        // if (!assurerForm.checkValidity()) {
-        //     assurerForm.reportValidity();
-        //     return;
-        // }
+    // Fonction pour récupérer les données de la session
+    function getSouscriptionData() {
+        return JSON.parse(sessionStorage.getItem('souscriptionData')) || {};
+    }
 
+    // Fonction pour sauvegarder les données dans la session
+    function saveSouscriptionData(data) {
+        sessionStorage.setItem('souscriptionData', JSON.stringify(data));
+    }
+
+    // Fonction pour vérifier si le type de contrat est Individuel
+    function isContratIndividuel() {
+        const souscriptionData = getSouscriptionData();
+        return souscriptionData.simulationData?.type === "Individuel";
+    }
+
+    // Fonction pour vérifier la date de naissance du premier assuré
+    function verifierPremierAssure(dateNaissance) {
+        console.log('🔎 Vérification de la date de naissance du premier assuré :', dateNaissance);
+        const souscriptionData = getSouscriptionData();
+        if (!souscriptionData.assureData || souscriptionData.assureData.length === 0) {
+            // C'est le premier assuré, on vérifie la date
+            if (dateNaissance !== souscriptionData.simulationData?.birthDate) {
+                swal.fire({
+                    icon: 'warning',
+                    title: 'Désolé',
+                    text: 'L"assuré principale doit avoir la meme date de naissance que celle du simulateur.',
+                    confirmButtonText: 'Fermer'
+                })
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Fonction pour ajouter un assuré dans le tableau et la session
+    function ajouterAssure(assure) {
+        const souscriptionData = getSouscriptionData();
+        souscriptionData.assureData = souscriptionData.assureData || [];
+
+        // Vérifier si le contrat est Individuel et qu'il y a déjà un assuré
+        if (isContratIndividuel() && souscriptionData.assureData.length >= 1) {
+            swal.fire({
+                icon: 'warning',
+                title: 'Désolé',
+                text: 'Un seul assuré est autorisé pour un contrat individuel.',
+                confirmButtonText: 'Fermer'
+            })
+            return false;
+        }
+
+        // Vérifier si l'assuré existe déjà (par numéro de pièce)
+        const existeDeja = souscriptionData.assureData.some(a => a.numeropiece === assure.numeropiece);
+        if (existeDeja) {
+            swal.fire({
+                icon: 'warning',
+                title: 'Désolé',
+                text: 'Cet assuré est déjà présent dans la liste.',
+                confirmButtonText: 'Fermer'
+            })
+            return false;
+        }
+
+        // Vérification pour le premier assuré
+        if (!verifierPremierAssure(assure.datenaissance)) {
+            return false;
+        }
+
+        // Ajouter l'assuré
+        souscriptionData.assureData.push(assure);
+        saveSouscriptionData(souscriptionData);
+
+        // Mettre à jour le tableau
+        ajouterAssureDansTableau(assure);
+        return true;
+    }
+
+    // Gestion du changement de l'état "souscripteur est assuré"
+    radioOui.addEventListener('change', function() {
+        if (this.checked) {
+            const souscriptionData = getSouscriptionData();
+            const adherentData = souscriptionData.adherentData;
+            
+            if (!adherentData) {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Veuillez d\'abord renseigner les informations du souscripteur.',
+                })
+                radioNon.checked = true;
+                return;
+            }
+
+            // Vérifier si on peut ajouter cet assuré
+            if (!ajouterAssure(adherentData)) {
+                radioNon.checked = true;
+            }
+        }
+    });
+
+    radioNon.addEventListener('change', function() {
+        if (this.checked) {
+            const souscriptionData = getSouscriptionData();
+            if (souscriptionData.adherentData) {
+                // Supprimer le souscripteur de la liste des assurés s'il y est
+                const numeropiece = souscriptionData.adherentData.numeropiece;
+                const index = (souscriptionData.assureData || []).findIndex(a => a.numeropiece === numeropiece);
+                
+                if (index !== -1) {
+                    souscriptionData.assureData.splice(index, 1);
+                    saveSouscriptionData(souscriptionData);
+                    
+                    // Supprimer visuellement du tableau
+                    document.querySelector(`#tableAssuresBody tr[data-id="${numeropiece}"]`)?.remove();
+                }
+            }
+        }
+    });
+
+    // Gestion de l'ajout d'un assuré via le modal
+    storeAssurerBtn.addEventListener('click', function () {
         // Récupérer les données du formulaire
         const formData = {
             civilite: document.querySelector('input[name="assurerCivilite"]:checked')?.value || '',
@@ -144,55 +184,72 @@ document.addEventListener('DOMContentLoaded', function () {
             email: document.getElementById('assurerEmail').value,
             telephone: document.getElementById('assurerTelephone').value,
             telephone1: document.getElementById('assurerTelephone1').value,
-            mobile: document.getElementById('assurerMobile').value
+            mobile: document.getElementById('assurerMobile').value,
+            justifResidence: document.getElementById('justifResidence').files
         };
 
-        // Ajouter dans le tableau
-        ajouterAssureDansTableau(formData);
+        // Vérifier si on peut ajouter cet assuré
+        if (ajouterAssure(formData)) {
+            // Fermer le modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('createAssurerModal'));
+            modal.hide();
 
-        // Ajouter dans la sessionStorage
-        let souscriptionData = JSON.parse(sessionStorage.getItem('souscriptionData')) || {};
-        souscriptionData.assureData = souscriptionData.assureData || [];
+            // Réinitialiser le formulaire
+            assurerForm.reset();
+        }
+    });
 
-        // Vérifier si déjà existant (sur la base du numéro de pièce)
-        const exist = souscriptionData.assureData.some(a => a.numeropiece === formData.numeropiece);
-        if (!exist) {
-            souscriptionData.assureData.push(formData);
+    // Fonction pour ajouter un assuré dans le tableau HTML
+    function ajouterAssureDansTableau(assure) {
+        const tbody = document.getElementById('tableAssuresBody');
+
+        // Si type = Individuel → on vide avant d'ajouter
+        if (isContratIndividuel()) {
+            tbody.innerHTML = '';
         }
 
-        sessionStorage.setItem('souscriptionData', JSON.stringify(souscriptionData));
+        const tr = document.createElement('tr');
+        tr.setAttribute('data-id', assure.numeropiece);
 
-        console.log('Données d ajoutées au tableau:', souscriptionData);
+        tr.innerHTML = `
+            <td>${assure.civilite} ${assure.nom} ${assure.prenom}</td>
+            <td>${assure.datenaissance}</td>
+            <td>${assure.lieuresidence}</td>
+            <td>${assure.mobile || assure.telephone}</td>
+            <td>${assure.numeropiece}</td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm" onclick="supprimerLigne(this)">Supprimer</button>
+            </td>
+        `;
 
-        // Fermer le modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('createAssurerModal'));
-        modal.hide();
+        tbody.appendChild(tr);
+    }
 
-        // Réinitialiser le formulaire
-        assurerForm.reset();
-    });
+    // Initialisation: charger les assurés existants au chargement de la page
+    function initialiserTableauAssures() {
+        const souscriptionData = getSouscriptionData();
+        const assures = souscriptionData.assureData || [];
+        
+        // Vider le tableau
+        document.getElementById('tableAssuresBody').innerHTML = '';
+        
+        // Remplir avec les assurés existants
+        assures.forEach(assure => {
+            ajouterAssureDansTableau(assure);
+        });
+        
+        // Cocher "Oui" si le souscripteur est dans la liste des assurés
+        if (souscriptionData.adherentData && assures.some(a => a.numeropiece === souscriptionData.adherentData.numeropiece)) {
+            radioOui.checked = true;
+        } else {
+            radioNon.checked = true;
+        }
+    }
+    
+    initialiserTableauAssures();
 });
 
-function ajouterAssureDansTableau(assure) {
-    const tbody = document.getElementById('tableAssuresBody');
-
-    const tr = document.createElement('tr');
-    tr.setAttribute('data-id', assure.numeropiece);
-
-    tr.innerHTML = `
-        <td>${assure.civilite} ${assure.nom} ${assure.prenom}</td>
-        <td>${assure.datenaissance}</td>
-        <td>${assure.lieuresidence}</td>
-        <td>${assure.mobile}</td>
-        <td>${assure.numeropiece}</td>
-        <td>
-            <button type="button" class="btn btn-danger btn-sm" onclick="supprimerLigne(this)">Supprimer</button>
-        </td>
-    `;
-
-    tbody.appendChild(tr);
-}
-
+// Fonction globale pour supprimer une ligne
 function supprimerLigne(btn) {
     const row = btn.closest('tr');
     const id = row.getAttribute('data-id');

@@ -60,7 +60,7 @@ class SitePropositionController extends Controller
     public function simulateurPrimeDia($codeProduit, $userId)
     {
 
-        $user = User::where('idmembre', $userId)->first();
+        $user = User::where('idmembre', $userId)->with('membre')->first();
 
         $product = Product::where('CodeProduit', $codeProduit)->first();
         return view('sites.pages.steps.stepSimulateur', compact('product', 'user'));
@@ -285,7 +285,7 @@ class SitePropositionController extends Controller
 
             if ($assureData) {
                 foreach ($assureData as $assure) {
-                    Log::info("assure: ".json_encode($assure));
+                    Log::info("assureeeeeeeeeeeeee: ".json_encode($assure));
                     $datenaissanceAssur = isset($assure['datenaissance']) ? Carbon::parse($assure['datenaissance'])->format('Y-m-d H:i:s') : null;
                     $idAssureInsert = Assurer::max('id') + 1;
 
@@ -334,6 +334,31 @@ class SitePropositionController extends Controller
                         'refcontratsource' => $idContrat,
                         'estmigre' => 0,
                     ])->save();
+
+                    if ($request->file('justifResidence')) {
+
+                        $files = $request->file('justifResidence');
+
+                        if ($files) {
+                            $imageName = $idContrat . '_' . now()->timestamp . '.' . $files->getClientOriginalExtension();
+
+                            Log::info("imageName". $imageName);
+
+                            $destinationPath = base_path(env('UPLOADS_PATH'));
+
+                            $files->move($destinationPath, $imageName);
+
+                            TblDocument::create([
+                                'codecontrat' => $idContrat,
+                                'filename' => $imageName,
+                                'libelle' => "justif de residence",
+                                'saisiele' => now(),
+                                'saisiepar' => $utilisateur['idmembre'] ?? null,
+                                'source' => "ES",
+                            ]);
+                        }
+
+                    }
                     
                 }
             }
@@ -440,6 +465,11 @@ class SitePropositionController extends Controller
                 'Formule' => $simulationData['type'] ?? null,
             ]);
 
+           
+                
+
+            
+
             Log::info("Contrat created: ");
 
             $sign = Signature::where('key_uuid', $contratData['tokGenerate'])->first();
@@ -482,7 +512,8 @@ class SitePropositionController extends Controller
 
                 $dataResponse =[
                     'type'=>'success',
-                    'urlback'=> route('site.showContratSite', $idContrat),
+                    // 'urlback'=> route('site.showContratSite', $idContrat),
+                    'urlback' => route('site.showContratSite', [$idContrat, 'success' => 1]),
                     'url' => $bulletinData['file_url'],
                     'message'=>"Enregistré avec succès!",
                     'code'=>200,

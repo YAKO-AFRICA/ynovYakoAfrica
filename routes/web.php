@@ -5,6 +5,7 @@ use Illuminate\Support\Str;
 use BaconQrCode\Encoder\QrCode;
 use App\Models\TblTypePrestation;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\HomeController;
@@ -563,3 +564,40 @@ Route::prefix('site')->name('site.')->group(function(){
 
 });
 
+
+
+
+
+
+Route::get('/check-af', function () {
+    $baseUrl = 'https://api.thecompaniesapi.com/v2/locations/cities';
+    $page = 1;
+    $africaCities = [];
+
+    do {
+        $response = Http::get($baseUrl, ['page' => $page]);
+
+        if (!$response->ok()) {
+            break; // On arrête si erreur API
+        }
+
+        $data = $response->json();
+
+        // Filtre : uniquement villes Afrique
+        $cities = array_filter($data['cities'] ?? [], function ($city) {
+            return ($city['country']['code'] ?? null) === 'eu';
+        });
+
+
+        // Fusionne avec la liste globale
+        $africaCities = array_merge($africaCities, $cities);
+
+        // Gestion pagination
+        $currentPage = $data['meta']['currentPage'] ?? $page;
+        $lastPage = $data['meta']['lastPage'] ?? $page;
+
+        $page++;
+    } while ($currentPage < $lastPage);
+
+    return array_values($africaCities);
+});

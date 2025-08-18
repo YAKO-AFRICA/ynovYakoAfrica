@@ -131,6 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     if (id === 'conjoint') {
                         benef.nom = 'Conjoint';
+                        benef.prenom = 'Non divorcé, ni séparé de corps';
                         benef.lien = 'Conjoint';
                     }
                     if (id === 'enfants') {
@@ -199,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
             lien,
             mobile,
             email,
-            type: 'deces' // Ou "terme" si nécessaire
+            type: 'deces'
         };
 
         // Récupérer la session et la mettre à jour
@@ -236,7 +237,6 @@ document.addEventListener('DOMContentLoaded', function () {
             modal.hide();
         }
     };
-
 });
 </script>
 

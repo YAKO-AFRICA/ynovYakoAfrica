@@ -250,9 +250,9 @@
             updateProgressBar();
         }
 
-        function changeStep(direction) {
 
-              const souscriptionData = sessionStorage.getItem('souscriptionData');
+        function changeStep(direction) {
+            const souscriptionData = sessionStorage.getItem('souscriptionData');
 
             if (souscriptionData) {
                 try {
@@ -278,21 +278,21 @@
                 } catch (error) {
                     console.error("Erreur JSON parse :", error);
                 }
-
             } else {
                 console.warn("Aucune donnée trouvée dans sessionStorage pour 'souscriptionData'");
             }
+
             if (direction === 1) {
                 const currentStepElement = document.querySelector(`.step[data-step="${currentStep}"]`);
-                
-                // On ne prend que les champs required qui sont visibles (pas dans un modal caché)
+
+                // Vérification des champs requis visibles
                 const requiredFields = Array.from(currentStepElement.querySelectorAll("[required]"))
-                    .filter(field => field.offsetParent !== null); // Filtre les champs cachés
+                    .filter(field => field.offsetParent !== null); 
 
                 let allValid = true;
 
                 requiredFields.forEach(field => {
-                    if ((field.type === "checkbox" || field.type === "radio")) {
+                    if (field.type === "checkbox" || field.type === "radio") {
                         const groupChecked = currentStepElement.querySelectorAll(`[name="${field.name}"]:checked`).length > 0;
                         if (!groupChecked) {
                             allValid = false;
@@ -308,13 +308,28 @@
                     }
                 });
 
+                // ✅ Vérification spécifique pour les champs type="tel"
+                const telFields = currentStepElement.querySelectorAll('input[type="tel"]');
+                telFields.forEach(tel => {
+                    const min = parseInt(tel.getAttribute('minlength') || 0, 10);
+                    const max = parseInt(tel.getAttribute('maxlength') || Infinity, 10);
+                    const length = tel.value.trim().length;
+
+                    if (length > 0 && (length < min || length > max)) {
+                        allValid = false;
+                        tel.classList.add("is-invalid");
+                    } else {
+                        tel.classList.remove("is-invalid");
+                    }
+                });
+
                 if (!allValid) {
                     swal.fire({
                         icon: 'warning',
                         title: 'Attention',
-                        text: 'Veuillez remplir tous les champs obligatoires avant de continuer.',
+                        text: 'Veuillez remplir correctement tous les champs obligatoires avant de continuer.',
                         confirmButtonText: 'OK'
-                    })
+                    });
                     return;
                 }
             }
@@ -328,6 +343,30 @@
 
         showStep(currentStep);
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Pour chaque champ type="tel"
+            document.querySelectorAll('input[type="tel"]').forEach(function(input) {
+                
+                // Empêche la saisie de lettres ou symboles autres que chiffres et +
+                input.addEventListener('keypress', function(e) {
+                    const char = String.fromCharCode(e.which);
+
+                    // Autoriser uniquement chiffres et +
+                    if (!/^[0-9+]$/.test(char)) {
+                        e.preventDefault();
+                    }
+                });
+
+                // Vérification à la sortie du champ
+                input.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^0-9+]/g, ''); // Supprime tout caractère invalide
+                });
+            });
+        });
+    </script>
+
 
     <script>
         let currentStep = 1;
@@ -969,6 +1008,70 @@
             });
         });
     </script>
+
+<script>
+    async function loadCountries() {
+        const baseUrl = "https://api.first.org/data/v1/countries";
+        let countries = [];
+        let limit = 100;
+        let offset = 0;
+        let total = 0;
+
+        do {
+            const response = await fetch(`${baseUrl}?limit=${limit}&offset=${offset}`);
+            const data = await response.json();
+
+            Object.entries(data.data).forEach(([code, info]) => {
+                countries.push(info.country);
+            });
+
+            total = data.total;
+            offset += limit;
+
+        } while (offset < total);
+
+        const data = sessionStorage.getItem('souscriptionData');
+        const souscription = data ? JSON.parse(data) : {};
+
+        document.querySelectorAll('.apiCountry').forEach(select => {
+            // Option par défaut
+            let defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            defaultOption.textContent = "Sélectionner un pays";
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            select.appendChild(defaultOption);
+
+            let listToShow;
+
+            if (souscription.utilisateur.codepartenaire === "DIASPORA") {
+                // Liste fixe en français
+                listToShow = [
+                    "France",
+                    "Italie",
+                    "Allemagne",
+                    "Belgique",
+                    "Côte d'Ivoire"
+                ];
+            } else {
+                listToShow = countries.sort();
+            }
+
+            listToShow.forEach(country => {
+                let option = document.createElement('option');
+                option.value = country;
+                option.textContent = country;
+                select.appendChild(option);
+            });
+        });
+
+
+    }
+
+    // Exécuter après chargement du DOM
+    document.addEventListener('DOMContentLoaded', loadCountries);
+</script>
+
 
 </body>
 

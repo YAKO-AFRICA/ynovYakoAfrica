@@ -93,14 +93,14 @@
                     <div class="mb-3">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="periodicite" type="radio" value="M"
-                                id="Mois" required readonly>
+                                id="Mois" required readonly disabled>
                             <label class="form-check-label" for="Mois">
                                 Mois
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="periodicite" type="radio" value="T"
-                                id="Trimestre">
+                                id="Trimestre" readonly disabled>
                             <label class="form-check-label" for="Trimestre">
                                 Trimestre
                             </label>
@@ -108,7 +108,7 @@
                         
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="periodicite" type="radio" value="S"
-                                id="Semestre">
+                                id="Semestre" readonly disabled>
                             <label class="form-check-label" for="Semestre">
                                 Semestre
                             </label>
@@ -122,7 +122,7 @@
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="periodicite" type="radio" value="U"
-                                id="Versement_unique">
+                                id="Versement_unique" readonly disabled>
                             <label class="form-check-label" for="Versement_unique">
                                 Versement unique
                             </label>
@@ -141,7 +141,7 @@
                                     min="0" required readonly>
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="fraisAdhesion" class="form-label">Fraie d'adhesion :</label>
+                                <label for="fraisAdhesion" class="form-label">Frais d'adhesion :</label>
                                 <input type="number" class="form-control" id="fraisAdhesion" name="fraisAdhesion"
                                     min="0" readonly>
                             </div>

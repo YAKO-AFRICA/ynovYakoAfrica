@@ -339,24 +339,6 @@
             LibProduit = "YAKO FRAIE FUNERAIRE";
         }
 
-
-        // function renderProducts() {
-        //     const container = document.getElementById('products-container');
-        //     container.innerHTML = '';
-
-        //     products.forEach(product => {
-        //         const productCard = document.createElement('div');
-        //         productCard.className = 'product-card';
-        //         productCard.onclick = () => selectProduct(product);
-                
-        //         productCard.innerHTML = `
-        //             <h3>${product.MonLibelle}</h3>
-        //             <div class="product-code">Code: ${product.CodeProduit}</div>
-        //         `;
-                
-        //         container.appendChild(productCard);
-        //     });
-        // }
         function renderProducts() {
             const container = document.getElementById('products-container');
             container.innerHTML = '';
@@ -400,19 +382,6 @@
         }
 
 
-        // function selectProduct(product) {
-        //     selectedProduct = product;
-            
-        //     // Update active state
-        //     document.querySelectorAll('.product-card').forEach(card => {
-        //         card.classList.remove('active');
-        //     });
-        //     event.target.closest('.product-card').classList.add('active');
-            
-        //     // Render product details
-        //     renderProductDetails(product);
-        // }
-
         function renderProductDetails(product) {
             const detailsContainer = document.getElementById('product-details');
             detailsContainer.className = 'product-details';
@@ -447,9 +416,18 @@
                     <p>Protégez-vous dès maintenant avec ce produit d'assurance adapté à vos besoins.</p>
                     
                     <div class="privacy-check">
-                        <input type="checkbox" id="privacy-checkbox" onchange="togglePrivacy()">
-                        <label for="privacy-checkbox">
-                            J'accepte les <a href="https://yakoafricassur.com/politique/securite.html" target="_blank" style="color: #edb440;">conditions générales</a> et la <a href="https://yakoafricassur.com/politique/confident.html" target="_blank" style="color: #edb440;">politique de confidentialité</a>
+                        <input type="checkbox" id="cgu-checkbox" onchange="togglePrivacy()">
+                        <label for="cgu-checkbox">
+                            J’ai lu et compris les 
+                            <a href="" onclick="window.open('{{ asset('root/cgu/CGsoutienFidel.pdf') }}')" style="color: #edb440;">conditions générales</a>
+                        </label>
+                    </div>
+
+                    <div class="privacy-check">
+                        <input type="checkbox" id="confidentialite-checkbox" onchange="togglePrivacy()">
+                        <label for="confidentialite-checkbox">
+                            J’accepte la 
+                            <a href="https://yakoafricassur.com/politique/confident.html" target="_blank" style="color: #edb440;">politique de confidentialité</a>
                         </label>
                     </div>
                     
@@ -460,14 +438,16 @@
             `;
         }
 
+
         function togglePrivacy() {
-            privacyAccepted = document.getElementById('privacy-checkbox').checked;
+            privacyAccepted = document.getElementById('confidentialite-checkbox').checked;
+            cguAccepted = document.getElementById('cgu-checkbox').checked;
             const subscribeBtn = document.getElementById('subscribe-btn');
-            subscribeBtn.disabled = !privacyAccepted;
+            subscribeBtn.disabled = !privacyAccepted || !cguAccepted;
         }
 
         function subscribe() {
-            if (!selectedProduct || !privacyAccepted) {
+            if (!selectedProduct || !privacyAccepted || !cguAccepted) {
                 swal.fire({
                     icon: 'warning',
                     title: 'Veuillez accepter les conditions generales et la politique de confidentialite',
@@ -483,7 +463,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             renderProducts();
         });
-    </script>
+
+    
+     </script>
 </body>
 
 

@@ -298,7 +298,10 @@
 
         const tbodyBenef = document.getElementById('resume-tbody-benef');
 
+        tbodyBenef.innerHTML = '';
+
         if (benefs.length > 0) {
+            
             benefs.forEach(benef => {
                 const row = `
                     <tr>
@@ -317,21 +320,6 @@
         }
         
 
-
-        // Bénéficiaires - Terme & Décès
-        const benefTerme = document.getElementById('display-beneficiaire-terme');
-        const benefDeces = document.getElementById('display-beneficiaire-deces');
-
-        const termeList = benefs.filter(b => b.type === 'terme');
-        const decesList = benefs.filter(b => b.type === 'deces');
-
-        benefTerme.innerHTML = termeList.length
-            ? termeList.map(b => `<p><strong>${b.nom || ''} ${b.prenom || ''}</strong> - ${b.lien || '--'}</p>`).join('')
-            : '<p>--</p>';
-
-        benefDeces.innerHTML = decesList.length
-            ? decesList.map(b => `<p><strong>${b.nom || ''} ${b.prenom || ''}</strong> - ${b.lien || '--'}</p>`).join('')
-            : '<p>--</p>';
     }
 
     // Vérifie si l'étape 5 est active pour déclencher l'affichage
@@ -358,3 +346,21 @@
         attributeFilter: ['class']
     });
 </script>
+
+
+
+
+        {{-- // Bénéficiaires - Terme & Décès
+        // const benefTerme = document.getElementById('display-beneficiaire-terme');
+        // const benefDeces = document.getElementById('display-beneficiaire-deces');
+
+        // const termeList = benefs.filter(b => b.type === 'terme');
+        // const decesList = benefs.filter(b => b.type === 'deces');
+
+        // benefTerme.innerHTML = termeList.length
+        //     ? termeList.map(b => `<p><strong>${b.nom || ''} ${b.prenom || ''}</strong> - ${b.lien || '--'}</p>`).join('')
+        //     : '<p>--</p>';
+
+        // benefDeces.innerHTML = decesList.length
+        //     ? decesList.map(b => `<p><strong>${b.nom || ''} ${b.prenom || ''}</strong> - ${b.lien || '--'}</p>`).join('')
+        //     : '<p>--</p>'; --}}
