@@ -1051,7 +1051,7 @@
                 listToShow = [
                     "France",
                     "Italie",
-                    "Allemagne",
+                    "Pays Bas",
                     "Belgique",
                     "Côte d'Ivoire"
                 ];
