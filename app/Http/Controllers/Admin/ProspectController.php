@@ -492,10 +492,12 @@ class ProspectController extends Controller
     
     
                 return response()->json([
-                    'success' => true,
-                    'message' => 'Prospect créé avec succès',
+                    'type' => 'success',
+                    'urlback' => url("https://web.yakoafricassur.com/"),
+                    'message' => "Enregistré avec succès !",
+                    'code' => 200,
                     'data' => $prospect
-                ], 201);
+                ]);
     
             } catch (\Exception $e) {
                 return response()->json([

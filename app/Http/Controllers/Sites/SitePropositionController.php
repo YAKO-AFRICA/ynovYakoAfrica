@@ -233,6 +233,23 @@ class SitePropositionController extends Controller
         try{  
 
             DB::beginTransaction();
+
+
+            $prefix = '67104860101001170';
+
+            // On récupère le nombre de contrats existants avec ce préfixe et ce produit
+            $increment = Contrat::where('numBullettin', 'like', $prefix . '%')
+                ->where('codeproduit', 'LFFUN')
+                ->count() + 1;
+
+            do {
+                $numBullettin = $prefix . $increment;
+                $numExist = Contrat::where('numBullettin', $numBullettin)->exists();
+                $increment++;
+            } while ($numExist);
+
+
+
             log::info($request->all());
             $data = Session::get('allSessionData');
 
@@ -335,9 +352,19 @@ class SitePropositionController extends Controller
                         'estmigre' => 0,
                     ])->save();
 
-                    if ($request->file('justifResidence')) {
+                    $certifResidence = null;
 
-                        $files = $request->file('justifResidence');
+                    if($request->estAssure === "Oui"){
+                        $certifResidence = $request->file('justifResidenceAdh');
+                    } else {
+                        $certifResidence = $request->file('justifResidence');
+                    }
+
+                    Log::info("certifResidence: ".json_encode($certifResidence));
+
+                    if ($certifResidence !== null) {
+
+                        $files = $certifResidence;
 
                         if ($files) {
                             $imageName = $idContrat . '_' . now()->timestamp . '.' . $files->getClientOriginalExtension();
@@ -359,6 +386,30 @@ class SitePropositionController extends Controller
                         }
 
                     }
+                    // if ($request->file('justifResidence')) {
+
+                    //     $files = $request->file('justifResidence');
+
+                    //     if ($files) {
+                    //         $imageName = $idContrat . '_' . now()->timestamp . '.' . $files->getClientOriginalExtension();
+
+                    //         Log::info("imageName". $imageName);
+
+                    //         $destinationPath = base_path(env('UPLOADS_PATH'));
+
+                    //         $files->move($destinationPath, $imageName);
+
+                    //         TblDocument::create([
+                    //             'codecontrat' => $idContrat,
+                    //             'filename' => $imageName,
+                    //             'libelle' => "justif de residence",
+                    //             'saisiele' => now(),
+                    //             'saisiepar' => $utilisateur['idmembre'] ?? null,
+                    //             'source' => "ES",
+                    //         ]);
+                    //     }
+
+                    // }
                     
                 }
             }
@@ -459,6 +510,8 @@ class SitePropositionController extends Controller
                 // 'nomaccepterpar' => now(),
                 // 'refcontratsource' => now(),
                 'cleintegration' => now()->format('Ymd'),
+
+                'numBullettin' => $numBullettin,
 
                 'estpaye' => 0,
                 'nomsouscipteur' => $adherentData['nom'] . ' ' . $adherentData['prenom'],

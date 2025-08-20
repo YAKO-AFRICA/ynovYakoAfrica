@@ -178,8 +178,8 @@
             <input type="text" name="lieuresidence" class="form-control" id="lieuresidence" required>
         </div>
         <div class="col-12 col-lg-4">
-            <label for="justifResidence" class="form-label">Justificatif de résidence </label>
-            <input type="file" name="justifResidence" class="form-control" id="justifResidence" accept="pdf/*,image/*">
+            <label for="justifResidenceAdh" class="form-label">Justificatif de résidence <span class="text-danger">*</span></label>
+            <input type="file" name="justifResidenceAdh" class="form-control" id="justifResidenceAdh" accept="pdf/*,image/*" required>
         </div>
     </div>
     <!---end row-->
@@ -410,7 +410,7 @@
                 'select[name="paysDeNaissance"]',
                 'select[name="profession"]',
                 'select[name="employeur"]',
-                'input[type="file"]'
+                'input[type="file"]',
             ];
 
             fieldSelectors.forEach(selector => {

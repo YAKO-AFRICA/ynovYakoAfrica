@@ -11,7 +11,7 @@
     <link href="{{ asset('assets/css/custom.css')}}" rel="stylesheet">
 
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
         
 	<!--favicon-->
 	<link rel="icon" href="{{ asset('root/images/logo-icon.png')}}" type="image/png"/>
@@ -209,6 +209,8 @@
         
 
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     
     <script>
         let currentStep = 1;

@@ -27,21 +27,45 @@
                                 Chèque
                             </label>
                         </div>
-                        <div class="form-check form-check-inline">
+                        {{-- <div class="form-check form-check-inline">
                             <input class="form-check-input" name="modepaiement" type="radio" value="Mobile_money"
                                 id="Mobile_money">
                             <label class="form-check-label" for="Mobile_money">
                                 Mobile money
                             </label>
-                        </div>
+                        </div> --}}
                         <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="modepaiement" type="radio"
+                                value="CARTE" id="carte_bancaire">
+                            <label class="form-check-label" for="carte_bancaire">
+                                Carte bancaire
+                            </label>
+                        </div>
+                        {{-- <div class="form-check form-check-inline">
                             <input class="form-check-input" name="modepaiement" type="radio"
                                 value="SOURCE" id="Prelevement_source">
                             <label class="form-check-label" for="Prelevement_source">
                                 Prélèvement à la source
                             </label>
-                        </div>
+                        </div> --}}
                     </div>
+
+                    <div id="carte_mode" class="my-4 p-4 border rounded shadow-sm bg-light text-content-center text-center align-items-center" style="display: none;">
+                        <h4 class="mb-3 text-success">
+                            <i class="fas fa-credit-card me-2"></i> Mode de paiement par carte bancaire
+                        </h4>
+
+                        <p class="text-danger mb-2">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            Ce service n'est pas encore disponible pour le moment
+                        </p>
+
+                        <small class="text-muted">
+                            <i class="fas fa-university me-2"></i>
+                            En attendant, vous pouvez payer par <strong>virement bancaire</strong>
+                        </small>
+                    </div>
+
 
                     <div class="row mb-3" id="mode_bancaire" style="display: none;">
                       
@@ -91,7 +115,7 @@
                 <div class="card-body">
                     <label for="" class="form-label">Je souhaite payer mes primes chaque : <span class="text-danger">*</span></label>
                     <div class="mb-3">
-                        <div class="form-check form-check-inline">
+                        {{-- <div class="form-check form-check-inline">
                             <input class="form-check-input" name="periodicite" type="radio" value="M"
                                 id="Mois" required readonly disabled>
                             <label class="form-check-label" for="Mois">
@@ -112,21 +136,21 @@
                             <label class="form-check-label" for="Semestre">
                                 Semestre
                             </label>
-                        </div>
+                        </div> --}}
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="periodicite" type="radio" value="A"
-                                id="Annee">
-                            <label class="form-check-label" for="Annee" readonly>
+                                id="Annee" checked readonly>
+                            <label class="form-check-label" for="Annee">
                                 Année
                             </label>
                         </div>
-                        <div class="form-check form-check-inline">
+                        {{-- <div class="form-check form-check-inline">
                             <input class="form-check-input" name="periodicite" type="radio" value="U"
                                 id="Versement_unique" readonly disabled>
                             <label class="form-check-label" for="Versement_unique">
                                 Versement unique
                             </label>
-                        </div>
+                        </div> --}}
                     </div>
                     
                     <div class="row">
@@ -195,17 +219,25 @@
 
             const modeBancaire = document.getElementById('mode_bancaire');
             const modeMobile = document.getElementById('mode_mobile');
+            const carteBancaire = document.getElementById('carte_mode');
 
             if (mode === 'VIR' || mode === 'SOURCE') {
                 modeBancaire.style.display = 'block';
                 modeMobile.style.display = 'none';
+                carteBancaire.style.display = 'none';
             } else if (mode === 'Mobile_money') {
                 modeBancaire.style.display = 'none';
                 modeMobile.style.display = 'block';
-            } else {
+                carteBancaire.style.display = 'none';
+            } else if(mode === 'CARTE') {
+                modeBancaire.style.display = 'none';
+                modeMobile.style.display = 'none';
+                carteBancaire.style.display = 'block';
+            }else {
                 // Pour ESP ou CHK, on masque tout
                 modeBancaire.style.display = 'none';
                 modeMobile.style.display = 'none';
+                carteBancaire.style.display = 'none';
             }
         }
 
