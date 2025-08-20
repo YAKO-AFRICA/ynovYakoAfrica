@@ -827,7 +827,7 @@
                                 <div class="row">
                                     <div class="mb-3 col-12">
                                         <label for="birthDate-LFFUN" class="form-label">
-                                            <i class="fas fa-birthday-cake me-2"></i>Date de naissance
+                                            <i class="fas fa-birthday-cake me-2"></i>Date de naissance de l'assuré principal
                                         </label>
                                         <input type="date" class="form-control" id="birthDate-LFFUN" required>
                                     </div>

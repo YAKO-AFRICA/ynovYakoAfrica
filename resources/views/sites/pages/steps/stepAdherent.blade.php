@@ -120,7 +120,7 @@
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="naturepiece" id="Atestation" value="AT"
                 autocomplete="on" required>
-            <label class="form-check-label" for="Atestation">Atestation</label>
+            <label class="form-check-label" for="Atestation">Attestation</label>
         </div>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="naturepiece" id="Passport" value="Passport"
