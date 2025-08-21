@@ -242,7 +242,7 @@
         </section>
 
         <p style="box-sizing: border-box; margin-bottom: 0; margin-top: -15px">
-            Fait à {{ $contrat->adherent->lieuresidence ?? '...............................................................' }} le {{ Carbon\Carbon::parse($contrat->saisiele)->format('d/m/Y') ?? '................................................' }}
+            Fait le {{ Carbon\Carbon::parse($contrat->saisiele)->format('d/m/Y') ?? '................................................' }}
         </p>
 
         <section style="font-size: 12px !important; box-sizing: border-box; margin-top: 20px ; width: 100%">

@@ -151,10 +151,17 @@
 </div>
 
 <div class="row g-3-mb-3">
-        <div class="col-12 col-lg-6">
+        {{-- <div class="col-12 col-lg-6">
             <label for="paysDeNaissance" class="form-label ">Pays de naissance</label>
             <select   class="form-select apiCountry selection" name="paysDeNaissance" id="paysDeNaissance"
                 data-codeproduit="{{ $product->CodeProduit }}" data-placeholder="Sélectionner un Pays" autocomplete="on">
+                <option value="" disabled selected>Sélectionner un Pays</option>
+            </select>
+        </div> --}}
+        <div class="col-12 col-lg-6">
+            <label for="paysDeNaissance" class="form-label">Pays de naissance</label>
+            <select class="form-select apiCountry selection" name="paysDeNaissance" id="paysDeNaissance"
+                data-placeholder="Sélectionner un Pays">
                 <option value="" disabled selected>Sélectionner un Pays</option>
             </select>
         </div>
@@ -179,7 +186,7 @@
         </div>
         <div class="col-12 col-lg-4">
             <label for="justifResidenceAdh" class="form-label">Justificatif de résidence <span class="text-danger">*</span></label>
-            <input type="file" name="justifResidenceAdh" class="form-control" id="justifResidenceAdh" accept="pdf/*,image/*" required>
+            <input type="file" name="justifResidenceAdh" class="form-control" id="justifResidenceAdh" accept="application/pdf,image/jpeg,image/jpg,image/png"  required>
         </div>
     </div>
     <!---end row-->
@@ -195,7 +202,7 @@
             </select>
         </div>
         <div class="col-12 col-lg-6">
-            <label for="employeur" class="form-label">Secteur d'activites</label>
+            <label for="employeur" class="form-label">Secteur d'activités</label>
             <select class="form-select selection" name="employeur" id="employeur" autocomplete="on">
                 <option value="" disabled selected>Sélectionner le secteur d'activites</option>
 
@@ -240,7 +247,7 @@
         </div>
         <div class="col-12 col-lg-4">
 
-            <label class="form-label">Telephone</label><br>
+            <label class="form-label">Téléphone</label><br>
             <div class="input-group mb-3">
                 <input type="tel" id="telephone" name="telephone" class="form-control" autocomplete="on"
                     minlength="10" maxlength="15">
@@ -257,6 +264,7 @@
                 <input type="text" name="personneressource" class="form-control" id="contact_nom"
                     placeholder="Nom et Prénoms" required>
             </div>
+
             <div class="col-12 col-lg-4">
                 <label class="form-label">Contact <span class="text-danger">*</span></label><br>
                 <div class="input-group mb-3">
@@ -264,7 +272,11 @@
                         aria-label="Text input with select" required minlength="10" maxlength="15">
                 </div>
             </div>
+            
+
         </div>
+
+        
 
         <div class="row g-3 mb-3">
             <div class="col-12 col-lg-8">
@@ -332,6 +344,8 @@
                     const villeSelect = document.getElementById('lieuresidence');
                     const lieuSelect = document.getElementById('lieunaissance');
 
+                    data.sort((a, b) => a.MonLibelle.localeCompare(b.MonLibelle, 'fr', { sensitivity: 'base' }));
+
                     data.forEach(ville => {
                         const optionVille = document.createElement('option');
                         optionVille.value = ville.MonLibelle;
@@ -351,6 +365,9 @@
                 .then(response => response.json())
                 .then(data => {
                     const professionSelect = document.getElementById('profession');
+
+                    data.sort((a, b) => a.MonLibelle.localeCompare(b.MonLibelle, 'fr', { sensitivity: 'base' }));
+
                     data.forEach(profession => {
                         const optionProfession = document.createElement('option');
                         optionProfession.value = profession.MonLibelle;

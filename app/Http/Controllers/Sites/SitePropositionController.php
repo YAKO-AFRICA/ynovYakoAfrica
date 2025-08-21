@@ -177,7 +177,7 @@ class SitePropositionController extends Controller
         $product = Product::where('CodeProduit',$codeProduit)->first(); 
         $villes =  TblVille::get();
         $professions =  TblProfession::select('MonLibelle')->get();
-        $secteurActivites =  TblSecteurActivite::select('MonLibelle')->get();
+        $secteurActivites =  TblSecteurActivite::select('MonLibelle')->orderBy('MonLibelle')->get();
         $societes =  TblSociete::select('MonLibelle')->get();
         $agences =  AgenceByParter::where('codePartner',$codePartner )->get();
 
@@ -192,6 +192,7 @@ class SitePropositionController extends Controller
 
 
         try {
+
             $response = Http::withOptions(['timeout' => 60])->get(env('API_GET_COUNTRIES'));
 
             if ($response->successful()) {
@@ -309,13 +310,13 @@ class SitePropositionController extends Controller
                     $sexeassurAdd = $assure['civilite'] === "Monsieur" ? "M" : "F";
                     Assurer::create([
                         'id' => $idAssureInsert,
-                        'civilite' => $assure['civilite'],
-                        'nom' => $assure['nom'],
-                        'prenom' => $assure['prenom'],
-                        'datenaissance' => $datenaissanceAssur,
+                        'civilite' => $assure['civilite'] ?? null,
+                        'nom' => $assure['nom'] ?? null,
+                        'prenom' => $assure['prenom'] ?? null,
+                        'datenaissance' => $datenaissanceAssur ?? null,
                         'codecontrat' => $idContrat,
                         'codeadherent' => $idAdherent,
-                        'lieunaissance' => $assure['lieunaissance'],
+                        'lieunaissance' => $assure['lieunaissance'] ?? null,
                         'numeropiece' => $assure['numeropiece'] ?? null,
                         'naturepiece' => $assure['naturepiece'] ?? null,
                         'lieuresidence' => $assure['lieuresidence'] ?? null,
@@ -326,7 +327,7 @@ class SitePropositionController extends Controller
                         'email' => $assure['email'] ?? null,
                         'sexe' => $sexeassurAdd,
                         'saisieLe' => now(),
-                        'saisiepar' => $utilisateur['idmembre'],
+                        'saisiepar' => $utilisateur['idmembre'] ?? null,
                         'mobile1' => $assure['mobile1'] ?? $assure['telephone1'] ?? null,
                         'telephone1' => $assure['telephone1'] ?? $assure['mobile1'] ?? null,
                     ]);

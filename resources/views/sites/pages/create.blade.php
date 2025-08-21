@@ -27,10 +27,16 @@
 
 
 
+
     
     <style>
         body {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .countryPrefix {
+            widows: 30% !important;
+            max-width: 30% !important;
         }
 
         .select2-container .select2-selection--single {
@@ -369,8 +375,92 @@
         });
     </script>
 
-
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Pour chaque champ type="tel"
+            document.querySelectorAll('input[type="tel"]').forEach(function(input) {
+                
+                // Autoriser uniquement chiffres et +
+                input.addEventListener('keypress', function(e) {
+                    const char = String.fromCharCode(e.which);
+                    if (!/^[0-9+]$/.test(char)) {
+                        e.preventDefault();
+                    }
+                });
+
+                // Nettoyage automatique (supprime caractères invalides mais garde le champ valide)
+                input.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^0-9+]/g, '');
+                });
+            });
+        });
+
+        // --- GESTION MULTISTEP ---
+        let currentStep = 1;
+        let totalSteps = document.querySelectorAll(".step").length;
+
+        function changeStep(direction) {
+            if (direction === 1) {
+                const currentStepElement = document.querySelector(`.step[data-step="${currentStep}"]`);
+                const requiredFields = currentStepElement.querySelectorAll("[required]");
+                let allValid = true;
+
+                requiredFields.forEach(field => {
+                    let isValid = true;
+
+                    if (field.type === "checkbox" || field.type === "radio") {
+                        const groupChecked = currentStepElement.querySelectorAll(`[name="${field.name}"]:checked`).length > 0;
+                        if (!groupChecked) isValid = false;
+                    } 
+                    else if (!field.value.trim()) {
+                        isValid = false;
+                    } 
+                    else if (field.type === "tel") {
+                        // Vérif spécifique pour les téléphones (ex. min 8 chiffres)
+                        const cleanValue = field.value.replace(/\D/g, "");
+                        if (cleanValue.length < 8) {
+                            isValid = false;
+                        }
+                    }
+
+                    // Ajout / retrait de la classe invalid
+                    if (!isValid) {
+                        allValid = false;
+                        field.classList.add("is-invalid");
+                    } else {
+                        field.classList.remove("is-invalid");
+                    }
+                });
+
+                if (!allValid) {
+                    alert("Veuillez remplir correctement tous les champs obligatoires avant de continuer.");
+                    return;
+                }
+            }
+
+            const newStep = currentStep + direction;
+            if (newStep >= 1 && newStep <= totalSteps) {
+                currentStep = newStep;
+                showStep(currentStep);
+            }
+        }
+
+        function showStep(step) {
+            document.querySelectorAll(".step").forEach((el) => {
+                el.classList.remove("active");
+                if (parseInt(el.dataset.step) === step) {
+                    el.classList.add("active");
+                }
+            });
+
+            document.getElementById("prevBtn").disabled = (step === 1);
+            document.getElementById("nextBtn").textContent = (step === totalSteps) ? "Valider" : "Suivant →";
+        }
+    </script>
+
+
+
+    {{-- <script>
         let currentStep = 1;
         let totalSteps = document.querySelectorAll(".step").length;
 
@@ -427,7 +517,7 @@
             document.getElementById("prevBtn").disabled = (step === 1);
             document.getElementById("nextBtn").textContent = (step === totalSteps) ? "Valider" : "Suivant →";
         }
-    </script>
+    </script> --}}
 
     <script>
         const FinalFormSubmit = document.getElementById('FinalFormSubmit');
@@ -599,6 +689,9 @@
             
         });
     </script>
+
+
+
 
     <script>
         const SIGN_API = "{{ config('services.sign_api') }}";
@@ -1013,66 +1106,174 @@
 
 <script>
     async function loadCountries() {
-        const baseUrl = "https://api.first.org/data/v1/countries";
-        let countries = [];
-        let limit = 100;
-        let offset = 0;
-        let total = 0;
+        const baseUrl = "https://apiotp.yakoafricassur.com/api/getAllCountries";
+        const response = await fetch(baseUrl);
+        const json = await response.json();
+        const countries = json.countries;
 
-        do {
-            const response = await fetch(`${baseUrl}?limit=${limit}&offset=${offset}`);
-            const data = await response.json();
+        // Récupération de la session
+        const sessionData = sessionStorage.getItem('souscriptionData');
+        const souscription = sessionData ? JSON.parse(sessionData) : {};
 
-            Object.entries(data.data).forEach(([code, info]) => {
-                countries.push(info.country);
-            });
+        let listToShow;
 
-            total = data.total;
-            offset += limit;
+        if (souscription?.utilisateur?.codepartenaire === "DIASPORA") {
+            // On filtre uniquement les pays de la liste fixe
+            const diasporaList = ["France", "Italy", "Netherlands", "Belgium", "Côte d'Ivoire"];
+            listToShow = countries.filter(c => diasporaList.includes(c.name));
+        } else {
+            // Tous les pays triés alphabétiquement
+            listToShow = countries.sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
+        }
 
-        } while (offset < total);
+        const $select = $(".apiCountry");
 
-        const data = sessionStorage.getItem('souscriptionData');
-        const souscription = data ? JSON.parse(data) : {};
-
-        document.querySelectorAll('.apiCountry').forEach(select => {
-            // Option par défaut
-            let defaultOption = document.createElement('option');
-            defaultOption.value = "";
-            defaultOption.textContent = "Sélectionner un pays";
-            defaultOption.disabled = true;
-            defaultOption.selected = true;
-            select.appendChild(defaultOption);
-
-            let listToShow;
-
-            if (souscription.utilisateur.codepartenaire === "DIASPORA") {
-                // Liste fixe en français
-                listToShow = [
-                    "France",
-                    "Italie",
-                    "Pays Bas",
-                    "Belgique",
-                    "Côte d'Ivoire"
-                ];
-            } else {
-                listToShow = countries.sort();
-            }
-
-            listToShow.forEach(country => {
-                let option = document.createElement('option');
-                option.value = country;
-                option.textContent = country;
-                select.appendChild(option);
-            });
+        // On injecte les pays
+        listToShow.forEach(c => {
+            let option = new Option(c.name, c.country_code, false, false);
+            option.dataset.flag = c.flag;
+            option.dataset.prefix = c.phone_international_prefix ? "+" + c.phone_international_prefix : "";
+            $select.append(option);
         });
 
-
+        // Initialisation Select2 avec drapeau + indicatif
+        $select.select2({
+            templateResult: formatCountry,
+            templateSelection: formatCountry,
+            placeholder: "Sélectionner un pays",
+            allowClear: true
+        });
     }
 
-    // Exécuter après chargement du DOM
-    document.addEventListener('DOMContentLoaded', loadCountries);
+    // Template d’affichage : flag + nom + indicatif
+    function formatCountry(option) {
+        if (!option.id) return option.text;
+        let flag = $(option.element).data("flag") || "";
+        let prefix = $(option.element).data("prefix") || "";
+        return $(
+            `<span style="display:flex;align-items:center;gap:8px;">
+                <span>${flag}</span>
+                <span>${option.text} ${prefix ? "(" + prefix + ")" : ""}</span>
+            </span>`
+        );
+    }
+
+    document.addEventListener("DOMContentLoaded", loadCountries);
 </script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const countries = @json($detailCountries);
+
+            // Fonction pour créer le select pays
+            function createCountrySelect() {
+                const select = document.createElement('select');
+                select.className = "form-select form-select-sm country-select countryPrefix";
+                select.required = true;
+
+                // Première option
+                const defaultOpt = document.createElement('option');
+                defaultOpt.value = "";
+                defaultOpt.selected = true;
+                defaultOpt.textContent = "🌍 Pays";
+                select.appendChild(defaultOpt);
+
+                // Ajouter les pays
+                countries.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.phone_international_prefix;
+                    opt.textContent = `+${c.phone_international_prefix} ${c.flag}`;
+                    if (c.phone_international_prefix === "225") opt.selected = true; // Côte d'Ivoire par défaut
+                    select.appendChild(opt);
+                });
+
+                return select;
+            }
+
+            // Fonction de formatage
+            function formatNumber(number) {
+                const digits = number.replace(/\D/g, '');
+                return digits.replace(/(\d{2})(?=\d)/g, '$1 ').trim();
+            }
+
+            // Fonction de détection
+            function detectCountryFromPhone(input, value) {
+                const select = input.parentElement.querySelector('.countryPrefix');
+                const statusDiv = input.parentElement.querySelector('.prefix-status');
+                const cleanedValue = value.replace(/\s+/g, '').replace(/^00/, '+');
+
+                if (cleanedValue.startsWith('+')) {
+                    const country = countries.find(c => cleanedValue.startsWith('+' + c.phone_international_prefix));
+                    if (country) {
+                        const prefix = '+' + country.phone_international_prefix;
+                        const rawNumber = cleanedValue.replace(prefix, '');
+                        input.dataset.raw = rawNumber;
+                        input.value = formatNumber(rawNumber);
+                        if (select) select.value = country.phone_international_prefix;
+                        statusDiv.innerHTML = `✅ <strong>${country.name}</strong> détecté (<code>${prefix}</code>)`;
+                        statusDiv.style.color = '#198754';
+                        return;
+                    } else {
+                        statusDiv.innerHTML = `❌ Aucun pays trouvé pour cet indicatif`;
+                        statusDiv.style.color = '#dc3545';
+                        if (select) select.value = '';
+                        return;
+                    }
+                }
+
+                // Pas d’indicatif → utiliser le select actuel
+                input.dataset.raw = cleanedValue.replace(/\D/g, '');
+                input.value = formatNumber(input.dataset.raw);
+                statusDiv.innerHTML = `ℹ Entrez un numéro commençant par l'indicatif si vous voulez une détection automatique`;
+                statusDiv.style.color = '#6c757d';
+            }
+
+            // Appliquer à tous les <input type="tel">
+            document.querySelectorAll('input[type="tel"]').forEach(phoneInput => {
+                // Créer l’input-group si pas déjà présent
+                if (!phoneInput.closest('.input-group')) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = "input-group";
+                    phoneInput.parentNode.insertBefore(wrapper, phoneInput);
+                    wrapper.appendChild(createCountrySelect());
+                    wrapper.appendChild(phoneInput);
+                } else {
+                    // Ajouter le select si absent
+                    if (!phoneInput.parentElement.querySelector('.countryPrefix')) {
+                        phoneInput.parentElement.insertBefore(createCountrySelect(), phoneInput);
+                    }
+                }
+
+                // Ajouter le div status
+                let statusDiv = document.createElement('div');
+                statusDiv.className = 'prefix-status';
+                statusDiv.style.fontSize = '0.9em';
+                statusDiv.style.marginTop = '4px';
+                phoneInput.closest('.col-12, .col').appendChild(statusDiv);
+
+                // Event input
+                phoneInput.addEventListener('input', function() {
+                    detectCountryFromPhone(phoneInput, phoneInput.value);
+                });
+
+                // Nettoyer à la soumission
+                if (phoneInput.form) {
+                    phoneInput.form.addEventListener('submit', function() {
+                        if (phoneInput.dataset.raw) {
+                            phoneInput.value = phoneInput.dataset.raw;
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+
+
+
+
+
 
 
 </body>

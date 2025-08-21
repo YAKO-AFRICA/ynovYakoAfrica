@@ -15,7 +15,7 @@
 
 <!-- Modal Ajouter/Éditer Assuré -->
 <div class="modal fade" id="createAssurerModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl modal-dialog">
         <div class="modal-content">
             <form id="assurerForm">
                 <div class="modal-header">
