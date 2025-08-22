@@ -113,7 +113,7 @@
                             </div>
                             <div class="col-sm-12 col-md-6 col-lg-4">
                                 <label for="justifResidence" class="form-label">Justificatif de résidence <span class="text-danger">*</span></label>
-                                <input type="file" name="justifResidence" class="form-control" id="justifResidence" required accept="pdf/*,image/*">
+                                <input type="file" name="justifResidence" class="form-control" id="justifResidence" required accept="application/pdf,image/jpeg,image/jpg,image/png">
                             </div>
                         </div>
 
