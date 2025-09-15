@@ -351,12 +351,7 @@
                 </div>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="d-flex justify-content-end my-4">
-                <div class="btn-group gap-2">
-                    
-                </div>
-            </div>
+           
 
             <!-- Stepper -->
             <div id="stepper1" class="bs-stepper">
@@ -417,6 +412,15 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+             <!-- Action Buttons -->
+            <div class="d-flex justify-content-end my-4">
+                {{-- <div class="btn-group gap-2">
+                   <button onclick="startPayment()" class="btn btn-success btn-lg">
+                    <i class="fas fa-credit-card me-2"></i>Payer ma premieère prime
+                </button> --}}
+                {{-- </div> --}}
             </div>
 
             <!-- Main Content -->
@@ -1041,6 +1045,57 @@
             </div>
         </div>
     </div>
+        <!-- Script TouchPay -->
+
+       
+       
+
+        
+ 
+
+        {{-- <script type="text/javascript">
+             function calltouchpay() {
+                const order_number = "code001";
+                // const agency_code = "CILLV4645";
+                // const secure_code = "6d406c6434f24cf81530405a1cbba17f2fa253dcb5af7c24e1db5ca1089cc2fb";
+
+                // const domain_name = 'yakoafricassur.com';
+
+                const agency_code = "JSBEY11380";
+                const secure_code = "UYnhBAw9f0A5DshXN8MKA6dg2VZSGs35VrXjETMZSGbJhGlhtw";
+                const domain_name = 'yakoafricassur.com';
+                const url_redirection_success = window.location.href + '/payment/success';
+                const url_redirection_failed = window.location.href + '/payment/failed';
+                // const amount = 200;
+                const amount = 10;
+                const city = "";
+                const email = "ndouajm@gmail.com" || "";
+                const clientFirstname = "prenoms" || "";
+                const clientLastname = "nom" || "";
+                const clientPhone = "0789078557" || "";
+
+                sendPaymentInfos(
+                    order_number,
+                    agency_code,
+                    secure_code,
+                    domain_name,
+                    url_redirection_success,
+                    url_redirection_failed,
+                    amount,
+                    city,
+                    email,
+                    clientFirstname,
+                    clientLastname,
+                    clientPhone
+                );
+            }
+
+            async function startPayment() {
+               
+                calltouchpay();
+            }
+        </script> --}}
+
 
     <!-- JavaScript -->
     <script src="{{ asset('assets/js/jquery.min.js')}}"></script>
@@ -1057,6 +1112,12 @@
     <script src="{{ asset('assets/plugins/bs-stepper/js/main.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('assets/js/app.js')}}"></script>
+
+     <script src=https://touchpay.gutouch.com/touchpay/script/prod_touchpay-0.0.1.js
+  type="text/javascript"></script>
+
+
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1108,5 +1169,7 @@
     </script>
 </body>
 </html>
+
+
 
     

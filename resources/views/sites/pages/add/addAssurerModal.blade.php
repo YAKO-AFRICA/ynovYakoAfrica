@@ -71,11 +71,10 @@
                             <label class="form-label">Filiation</label>
                             {{-- <input type="text" name="assurerFiliation" id="assurerFiliation" class="form-control"> --}}
                             <select id="assurerFiliation" class="form-select" name="assurerFiliation">
-
-                                <option selected value="">Sélectionner le lien de Parenté</option>
-                                <option value="Conjoint">Conjoint</option>
-                                <option value="Enfant">Enfant</option>
-                                <option value="Autre">Autre</option>
+                                <option selected value="" disabled>Sélectionner le lien de Parenté</option>
+                                @foreach ($filliations as $filliation)
+                                    <option value="{{ $filliation->MonLibelle }}">{{ $filliation->MonLibelle }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-12 col-lg-6">
@@ -111,10 +110,18 @@
                                 <input type="text" name="assurerLieuresidence" id="assurerLieuresidence" class="form-control" required>
                                
                             </div>
-                            <div class="col-sm-12 col-md-6 col-lg-4">
-                                <label for="justifResidence" class="form-label">Justificatif de résidence <span class="text-danger">*</span></label>
-                                <input type="file" name="justifResidence" class="form-control" id="justifResidence" required accept="application/pdf,image/jpeg,image/jpg,image/png">
-                            </div>
+                            @if ($codePartner == "DIRECTENTREPRISE")
+                                <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <label for="justifResidence" class="form-label">Justificatif de résidence </label>
+                                    <input type="file" name="justifResidence" class="form-control" id="justifResidence" accept="application/pdf,image/jpeg,image/jpg,image/png">
+                                </div>
+                            @else
+                                <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <label for="justifResidence" class="form-label">Justificatif de résidence <span class="text-danger">*</span></label>
+                                    <input type="file" name="justifResidence" class="form-control" id="justifResidence" required accept="application/pdf,image/jpeg,image/jpg,image/png">
+                                </div>
+                            @endif
+                            
                         </div>
 
                         <!-- Profession et Employeur -->

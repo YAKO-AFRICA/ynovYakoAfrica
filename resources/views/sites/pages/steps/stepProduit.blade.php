@@ -334,7 +334,11 @@
         if (user['codepartenaire'] === "DIASPORA") {
             ageMax = 80;
             LibProduit = "YAKO OBSEQUE DIASPORA";
-        }else{
+        }else if (user['codepartenaire'] === "DIRECTENTREPRISE") {
+            ageMax = 50;
+            LibProduit = "YAKO SOUTIEN FIDEL";
+        }
+        else{
             ageMax = 64;
             LibProduit = "YAKO FRAIE FUNERAIRE";
         }
@@ -446,6 +450,11 @@
             subscribeBtn.disabled = !privacyAccepted || !cguAccepted;
         }
 
+        const userData = @json($user);
+        const userCode = userData['codepartenaire'];
+
+
+
         function subscribe() {
             if (!selectedProduct || !privacyAccepted || !cguAccepted) {
                 swal.fire({
@@ -456,7 +465,16 @@
                 return;
             }
 
-            window.location.href = '/site/simulateurPrimeDia/'+selectedProduct.CodeProduit + '/' + user.idmembre;
+            if(!userData && userCode === "DIASPORA")
+            {
+                window.location.href = '/site/simulateurPrimeDia/'+selectedProduct.CodeProduit + '/' + user.idmembre;
+            } else if(userCode === "DIRECTENTREPRISE")
+            
+            {
+                window.location.href = '/site/simulateurPrimeDirectE/'+selectedProduct.CodeProduit + '/' + user.idmembre;
+            } else {
+                window.location.href = '/site/simulateurPrimeDia/'+selectedProduct.CodeProduit + '/' + user.idmembre;
+            }
         }
 
         // Initialize the page

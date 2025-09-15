@@ -10,10 +10,12 @@ use App\Models\Assurer;
 use App\Models\Contrat;
 use App\Models\Product;
 use BaconQrCode\Writer;
+use setasign\Fpdi\Fpdi;
 use App\Models\Adherent;
 use App\Models\TblVille;
 use App\Models\Signature;
 use App\Mail\CustomerMail;
+use App\Models\Filliation;
 use App\Models\TblSociete;
 use App\Models\TblDocument;
 use Illuminate\Support\Str;
@@ -21,7 +23,6 @@ use App\Models\Beneficiaire;
 use Illuminate\Http\Request;
 use App\Models\ReseauProduct;
 use App\Models\TblProfession;
-use setasign\Fpdi\Fpdi;
 use App\Models\AgenceByParter;
 use App\Models\AssureGarantie;
 use App\Models\ProduitGarantie;
@@ -41,22 +42,27 @@ class SitePropositionController extends Controller
 {
     public function stepProduct($codeMembre)
     {
-
         $user = User::where('idmembre', $codeMembre)->first();
 
         $productByReseau = ReseauProduct::select('CodeProduit')
-            ->where('codereseau', $user->membre->codereseau)
-            ->get();
+            ->where('codereseau', $user->membre->codereseau)->get();
 
 
         $codeProduits = $productByReseau->pluck('CodeProduit')->toArray();
-
 
         $products = Product::whereIn('CodeProduit', $codeProduits)->get();
 
         return view('sites.pages.steps.stepProduit', compact('products', 'user'));
     }
 
+    public function simulateurPrimeDirectE($codeProduit, $userId)
+    {
+
+        $user = User::where('idmembre', $userId)->with('membre')->first();
+
+        $product = Product::where('CodeProduit', $codeProduit)->first();
+        return view('sites.pages.steps.directEnt.stepDirectSimulateur', compact('product', 'user', 'codeProduit'));
+    }
     public function simulateurPrimeDia($codeProduit, $userId)
     {
 
@@ -181,6 +187,9 @@ class SitePropositionController extends Controller
         $societes =  TblSociete::select('MonLibelle')->get();
         $agences =  AgenceByParter::where('codePartner',$codePartner )->get();
 
+
+        $filliations =  Filliation::select('MonLibelle')->get();
+
         $tok = Str::random(80);
         $token = [
             'token' => $tok,
@@ -212,7 +221,7 @@ class SitePropositionController extends Controller
         }
         
 
-        return view('sites.pages.create', compact('product', 'villes', 'secteurActivites', 'professions','productGarantie','societes','agences','detailCountries','keyUuid','operationType','token','tok'));
+        return view('sites.pages.create', compact('product', 'villes', 'secteurActivites', 'professions','productGarantie','societes','agences','detailCountries','keyUuid','operationType','token','tok','codePartner','filliations'));
     }
 
     public function storeSessionContratData(Request $request)

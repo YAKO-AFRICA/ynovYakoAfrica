@@ -114,91 +114,50 @@
             <div class="card mx-0">
                 <div class="card-body">
                     <label for="" class="form-label">Je souhaite payer mes primes chaque : <span class="text-danger">*</span></label>
-                    @if ($codePartner === "DIRECTENTREPRISE")
-                        <div class="mb-3">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" name="periodicite" type="radio" value="M"
-                                    id="Mois" required>
-                                <label class="form-check-label" for="Mois">
-                                    Mois
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" name="periodicite" type="radio" value="T"
-                                    id="Trimestre">
-                                <label class="form-check-label" for="Trimestre">
-                                    Trimestre
-                                </label>
-                            </div>
-                            
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" name="periodicite" type="radio" value="S"
-                                    id="Semestre">
-                                <label class="form-check-label" for="Semestre">
-                                    Semestre
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" name="periodicite" type="radio" value="A"
-                                    id="Annee">
-                                <label class="form-check-label" for="Annee">
-                                    Année
-                                </label>
-                            </div>
-                            {{-- <div class="form-check form-check-inline">
-                                <input class="form-check-input" name="periodicite" type="radio" value="U"
-                                    id="Versement_unique" readonly disabled>
-                                <label class="form-check-label" for="Versement_unique">
-                                    Versement unique
-                                </label>
-                            </div> --}}
+                    <div class="mb-3">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="periodicite" type="radio" value="M"
+                                id="Mois" required>
+                            <label class="form-check-label" for="Mois">
+                                Mois
+                            </label>
                         </div>
-                    @else
-                        <div class="mb-3">
-                            {{-- <div class="form-check form-check-inline">
-                                <input class="form-check-input" name="periodicite" type="radio" value="M"
-                                    id="Mois" required readonly disabled>
-                                <label class="form-check-label" for="Mois">
-                                    Mois
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" name="periodicite" type="radio" value="T"
-                                    id="Trimestre" readonly disabled>
-                                <label class="form-check-label" for="Trimestre">
-                                    Trimestre
-                                </label>
-                            </div>
-                            
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" name="periodicite" type="radio" value="S"
-                                    id="Semestre" readonly disabled>
-                                <label class="form-check-label" for="Semestre">
-                                    Semestre
-                                </label>
-                            </div> --}}
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" name="periodicite" type="radio" value="A"
-                                    id="Annee" checked readonly>
-                                <label class="form-check-label" for="Annee">
-                                    Année
-                                </label>
-                            </div>
-                            {{-- <div class="form-check form-check-inline">
-                                <input class="form-check-input" name="periodicite" type="radio" value="U"
-                                    id="Versement_unique" readonly disabled>
-                                <label class="form-check-label" for="Versement_unique">
-                                    Versement unique
-                                </label>
-                            </div> --}}
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="periodicite" type="radio" value="T"
+                                id="Trimestre">
+                            <label class="form-check-label" for="Trimestre">
+                                Trimestre
+                            </label>
                         </div>
-                    @endif
+                        
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="periodicite" type="radio" value="S"
+                                id="Semestre">
+                            <label class="form-check-label" for="Semestre">
+                                Semestre
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="periodicite" type="radio" value="A"
+                                id="Annee">
+                            <label class="form-check-label" for="Annee">
+                                Année
+                            </label>
+                        </div>
+                        {{-- <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="periodicite" type="radio" value="U"
+                                id="Versement_unique" readonly disabled>
+                            <label class="form-check-label" for="Versement_unique">
+                                Versement unique
+                            </label>
+                        </div> --}}
+                    </div>
                     
                     
                     <div class="row">
                             <div class="col-12 mb-3">
                                 <label for="DateEffet" class="form-label">Mon contrat prendra effet le :</label>
-                                <input type="date" class="form-control" id="DateEffet" name="dateEffet" readonly>
+                                <input type="date" class="form-control" id="DateEffet" name="dateEffet">
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="primepricipale" class="form-label">Je souhaite payer une prime de
@@ -218,7 +177,7 @@
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="duree" class="form-label">Durée de mes cotisations :</label>
-                                <input type="number" class="form-control" id="duree" name="duree" min="0" readonly> 
+                                <input type="number" class="form-control" id="duree" name="duree" min="0"> 
                             </div>
                             <input type="hidden" id="tokGenerate" name="tokGenerate" value="{{ $tok }}">
 
@@ -292,21 +251,23 @@
         document.addEventListener('DOMContentLoaded', handleModePaiementChange);
     </script>
 
+
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const data = JSON.parse(sessionStorage.getItem('souscriptionData') || '{}');
-            const sim = data.simulationData || {};
+            const dataPay = JSON.parse(sessionStorage.getItem('souscriptionData') || '{}');
+            const sim = dataPay.simulationData || {};
 
-            if (!sim.type) return;
+            // if (!sim.type) return;
 
             // Remplissage automatique
-            document.querySelector('input[name="periodicite"][value="A"]').checked = true;
+            const periodicite = document.querySelector('input[name="periodicite"]').value;
             document.getElementById('DateEffet').value = new Date().toISOString().split('T')[0];
-            document.getElementById('primepricipale').value = sim.prime?.replace(/\s/g, '') || '';
+            document.getElementById('primepricipale').value = sim.prime;
             document.getElementById('capital').value = sim.capital?.replace(/\s/g, '') || '';
             document.getElementById('duree').value = '1';
 
-            // Frais d'adhésion (à adapter selon ton besoin)
+            // Frais d'adhésion (à adapter selon <t></t>on besoin)
             document.getElementById('fraisAdhesion').value = '0';
 
 
@@ -318,12 +279,12 @@
             const numMobile = document.getElementById('numMobile').value;
 
             // Sauvegarder automatiquement dans souscriptionData.contratData
-            if (!data.contratData) data.contratData = {};
-            Object.assign(data.contratData, {
-                periodicite: 'A',
+            if (!dataPay.contratData) dataPay.contratData = {};
+            Object.assign(dataPay.contratData, {
+                periodicite: periodicite,
                 dateEffet: document.getElementById('DateEffet').value,
-                primepricipale: sim.prime?.replace(/\s/g, ''),
-                capital: sim.capital?.replace(/\s/g, ''),
+                primepricipale: sim.prime,
+                capital: sim.capital,
                 fraisAdhesion: '0',
                 duree: '1',
                 modepaiement: modePaiement,
@@ -334,7 +295,7 @@
                 numMobile: numMobile,
                 tokGenerate: document.getElementById('tokGenerate').value
             });
-            sessionStorage.setItem('souscriptionData', JSON.stringify(data));
+            sessionStorage.setItem('souscriptionData', JSON.stringify(dataPay));
         });
 
         // Sauvegarde dynamique à chaque changement
@@ -353,5 +314,6 @@
                 
             }
         });
-</script>
+        
+    </script>
 

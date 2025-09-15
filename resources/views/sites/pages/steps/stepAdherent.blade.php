@@ -184,10 +184,20 @@
             <label for="lieuresidence" class="form-label">Lieu de résidence <span class="text-danger">*</span></label>
             <input type="text" name="lieuresidence" class="form-control" id="lieuresidence" required>
         </div>
-        <div class="col-12 col-lg-4">
-            <label for="justifResidenceAdh" class="form-label">Justificatif de résidence <span class="text-danger">*</span></label>
-            <input type="file" name="justifResidenceAdh" class="form-control" id="justifResidenceAdh" accept="application/pdf,image/jpeg,image/jpg,image/png"  required>
-        </div>
+
+        @if ($codePartner == "DIRECTENTREPRISE")
+            <div class="col-12 col-lg-4">
+                <label for="justifResidenceAdh" class="form-label">Justificatif de résidence </label>
+                <input type="file" name="justifResidenceAdh" class="form-control" id="justifResidenceAdh" accept="application/pdf,image/jpeg,image/jpg,image/png">
+            </div>
+        @else
+            <div class="col-12 col-lg-4">
+                <label for="justifResidenceAdh" class="form-label">Justificatif de résidence <span class="text-danger">*</span></label>
+                <input type="file" name="justifResidenceAdh" class="form-control" id="justifResidenceAdh" accept="application/pdf,image/jpeg,image/jpg,image/png"  required>
+            </div>
+        @endif
+        
+        
     </div>
     <!---end row-->
     <div class="row g-3 mb-3">

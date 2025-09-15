@@ -142,7 +142,11 @@
                     <div class="step step-block" data-step="2">
                         <h4 class="text-success">Étape 2 : Assuré</h4>
                         <div class="mb-3">
-                             @include('sites.pages.steps.stepAssurer')
+                            @if ($codePartner === "DIRECTENTREPRISE")
+                                @include('sites.pages.steps.directEnt.assureDirect')
+                            @else
+                                @include('sites.pages.steps.stepAssurer')
+                            @endif
                         </div>
                     </div>
 
@@ -159,7 +163,13 @@
                     <div class="step step-block" data-step="4">
                         <h4 class="text-success">Étape 4 : Paiement</h4>
                         <div class="mb-3">
-                            @include('sites.pages.steps.stepPaiement')
+                            @if ($codePartner === "DIRECTENTREPRISE")
+                                
+                                @include('sites.pages.steps.directEnt.stepPaiementDirect')
+                            @else
+                                @include('sites.pages.steps.stepPaiement')
+                                
+                            @endif
                         </div>
                     </div>
 
@@ -198,6 +208,15 @@
         @include('sites.components.otpModal')
         @include('sites.components.signModal')
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const data = JSON.parse(sessionStorage.getItem('souscriptionData'));
+
+            console.log('✅ ffffffffffffffffffffffffffffffffffffff :', data);
+            console.log('✅ souscriptiooooooooooooooooooooo :', data.simulationData);
+        })
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('assets/js/custom.js')}}"></script>
@@ -265,6 +284,7 @@
             if (souscriptionData) {
                 try {
                     const dataToSend = JSON.parse(souscriptionData);
+                console.log('Données de l\'adherent ajoutées au tableau:', dataToSend);
 
                     axios.post("{{ route('site.storeSessionContratData') }}", dataToSend, {
                         headers: {
@@ -1170,7 +1190,7 @@
             function createCountrySelect() {
                 const select = document.createElement('select');
                 select.className = "form-select form-select-sm country-select countryPrefix";
-                select.required = true;
+                // select.required = true;
 
                 // Première option
                 const defaultOpt = document.createElement('option');
