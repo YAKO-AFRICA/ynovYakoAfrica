@@ -93,11 +93,15 @@
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="naturepiece" id="Atestation" value="AT" autocomplete="on" required>
-                <label class="form-check-label" for="Atestation">Atestation</label>
+                <label class="form-check-label" for="Atestation">Attestation </label>
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="naturepiece" id="Passport" value="Passport" autocomplete="on" required>
                 <label class="form-check-label" for="Passport">Passport</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="naturepiece" id="CarteConsulaire" value="CarteConsulaire" autocomplete="on" required>
+                <label class="form-check-label" for="CarteConsulaire">Carte Consulaire</label>
             </div>
 
             @error('naturepiece')
@@ -162,10 +166,10 @@
         </div>
     </div>
     <div class="row g-3 mb-3">
-        <div class="col-12 col-lg-4">
+        <div class="col-12 col-lg-6">
             <label class="form-label">Mobile <span class="text-danger">*</span></label><br>
             <div class="input-group mb-3">
-                <input type="text" name="mobile" class="form-control" autocomplete="on" required maxlength="10">
+                <input type="text" name="mobile" class="form-control" autocomplete="on" required minlength="10" maxlength="14">
             </div>
 
             @error('mobile')
@@ -174,21 +178,38 @@
 
 
         </div>
-        <div class="col-12 col-lg-4">
+        <div class="col-12 col-lg-6">
             <label class="form-label">Mobile 2</label><br>
             <div class="input-group mb-3">
-                <input type="text" id="mobile1" name="mobile1" class="form-control" autocomplete="on" maxlength="10">
+                <input type="text" id="mobile1" name="mobile1" class="form-control" autocomplete="on" minlength="10" maxlength="14">
             </div>
         </div>
-        <div class="col-12 col-lg-4">
-
-            <label class="form-label">Telephone</label><br>
-            <div class="input-group mb-3">
-                <input type="text" id="telephone" name="telephone" class="form-control" autocomplete="on" maxlength="10">
-            </div>
-        </div>
+        
     </div>
+ 
     <!---end row-->
+    <fieldset class="border p-3">
+        <legend class="float-none w-auto px-2"><small>Numéro de mobile spécial</small></legend>
+
+        <div class="row g-3 mb-3">
+            <div class="col-12 col-lg-8">
+                <label for="contact_nom" class="form-label">Type contact </label>
+                <select name="typeNumMSpecial" id="typeNumMSpecial" class="form-select">
+                    <option value="Whatsapp">Whatsapp</option>
+                    <option value="MobileMoney">Mobile Money</option>
+                    <option value="tel">Tél</option>
+                </select>
+            </div>
+            <div class="col-12 col-lg-4">
+                <label class="form-label">Contact </label><br>
+                <div class="input-group mb-3">
+                    <input type="text" id="numSpecial" name="numSpecial" class="form-control" autocomplete="on" minlength="10" maxlength="14">
+                </div>
+            </div>
+        </div>
+
+        
+    </fieldset>
     <fieldset class="border p-3">
         <legend class="float-none w-auto px-2"><small>Personnes à contacter en cas de besoins</small></legend>
 
@@ -200,7 +221,7 @@
             <div class="col-12 col-lg-4">
                 <label class="form-label">Contact <span class="text-danger">*</span></label><br>
                 <div class="input-group mb-3">
-                    <input type="text" name="contactpersonneressource" class="form-control" aria-label="Text input with select" required maxlength="10">
+                    <input type="text" name="contactpersonneressource" class="form-control" aria-label="Text input with select" required minlength="10" maxlength="14">
                 </div>
             </div>
         </div>

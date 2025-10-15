@@ -183,7 +183,7 @@
                         @endforeach
                         <td>
                             <div class="d-flex order-actions">
-                                <a href="{{ route('prod.show', $item->id)}}">
+                                <a href="{{ route('epret.show', $item->id)}}">
                                     <i class='bx bxs-show'></i>
                                 </a>
                                 

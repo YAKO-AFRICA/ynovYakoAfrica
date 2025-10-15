@@ -416,11 +416,11 @@
 
              <!-- Action Buttons -->
             <div class="d-flex justify-content-end my-4">
-                {{-- <div class="btn-group gap-2">
+                <div class="btn-group gap-2">
                    <button onclick="startPayment()" class="btn btn-success btn-lg">
-                    <i class="fas fa-credit-card me-2"></i>Payer ma premieère prime
-                </button> --}}
-                {{-- </div> --}}
+                        <i class="fas fa-credit-card me-2"></i>Payer ma premieère prime
+                    </button>
+                </div>
             </div>
 
             <!-- Main Content -->
@@ -1056,14 +1056,11 @@
         {{-- <script type="text/javascript">
              function calltouchpay() {
                 const order_number = "code001";
-                // const agency_code = "CILLV4645";
-                // const secure_code = "6d406c6434f24cf81530405a1cbba17f2fa253dcb5af7c24e1db5ca1089cc2fb";
+                const agency_code = "CILLV4645";
+                const secure_code = "6d406c6434f24cf81530405a1cbba17f2fa253dcb5af7c24e1db5ca1089cc2fb";
 
-                // const domain_name = 'yakoafricassur.com';
-
-                const agency_code = "JSBEY11380";
-                const secure_code = "UYnhBAw9f0A5DshXN8MKA6dg2VZSGs35VrXjETMZSGbJhGlhtw";
                 const domain_name = 'yakoafricassur.com';
+
                 const url_redirection_success = window.location.href + '/payment/success';
                 const url_redirection_failed = window.location.href + '/payment/failed';
                 // const amount = 200;

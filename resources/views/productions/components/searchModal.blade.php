@@ -331,6 +331,7 @@
             }
 
             // Retourne le premier client trouvé
+            console.log(data.dataPersonne[0]);
             return data.dataPersonne[0];
         }
 
@@ -357,7 +358,7 @@
             setSelectValue('profession', client.Profession);
             
             // Contacts
-            setInputValue('mobile', '');
+            setInputValue('mobile', client.Contact);
             
             // Déclencher les événements change pour les sélecteurs
             triggerChangeEvent('lieunaissance');

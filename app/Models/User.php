@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Membre;
 use App\Models\Profile;
+use App\Models\NotifGroup;
 use Illuminate\Support\Str;
 use BaconQrCode\Encoder\QrCode;
 use Laravel\Sanctum\HasApiTokens;
@@ -63,9 +64,18 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function groupNotif()
+    {
+        return $this->belongsTo(NotifGroup::class, 'group_uuid', 'code_group');
+    }
+    // public function membre()
+    // {
+    //     return $this->belongsTo(Membre::class, 'idmembre', 'idmembre');
+    // }
+
     public function membre()
     {
-        return $this->belongsTo(Membre::class, 'idmembre', 'idmembre');
+        return $this->hasOne(Membre::class, 'idmembre', 'idmembre');
     }
 
     public function profile()

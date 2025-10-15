@@ -545,7 +545,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log("data");
+                    console.log(data);
+                    alert(data.codeOTP);
                     if (data.status == 200) {
                         console.log('OTP envoyé');
                         // Masquer sendOTPForm, afficher verifyOTPForm
@@ -646,7 +647,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                         document.getElementById('otpGenerate').value = otp;
                         
-                        alert(document.getElementById('otpGenerate').value);
+                        // alert(document.getElementById('otpGenerate').value);
 
                         swal.fire({
                             icon: 'success',
@@ -670,13 +671,27 @@ document.addEventListener("DOMContentLoaded", function() {
                         btnNextSante.classList.remove('d-none');
                         myModal.hide();
                     } else if (data.status == 400) {
-                        alert('Le code de confirmation saisi est incorrect.');
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Code de confirmation incorrect',
+                            text: 'Le code de confirmation saisi est incorrect.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        // alert('Le code de confirmation saisi est incorrect.');
                         otpInputs.forEach(input => {
                             input.classList.remove("is-valid");
                             input.classList.add("is-invalid");
                         });
                     } else {
-                        alert('Le code de confirmation a expiré.');
+                        // alert('Le code de confirmation a expiré.');
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Code de confirmation incorrect',
+                            text: 'Le code de confirmation a expiré.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
                         otpInputs.forEach(input => {
                             input.classList.remove("is-valid");
                             input.classList.add("is-invalid");

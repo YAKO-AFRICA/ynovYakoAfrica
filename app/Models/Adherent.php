@@ -33,6 +33,8 @@ class Adherent extends Model
         'mobile',
         'mobile1',
         'telephone',
+        'typeNumMSpecial',
+        'numSpecial',
         'pays',
         'bp',
         'telephone1',

@@ -89,10 +89,15 @@
                 </CENTER>
             </div>
         </section>
-        <section style="height: 40px; margin-top: 15px;">
-            <div style="width: 100%;">
+        <section style="height: 40px; margin-top: 15px; width: 100%">
+            <div style="width: 50%; float: left;">
                 <div style="width: 55%; margin: auto; border: 1px solid #444; padding: 7px; border-radius: 7px;">
-                    <strong style="font-size: 15px">IND-DOI_2301</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
+                    <strong style="font-size: 15px">N° BULLETIN :</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
+                        style="color: red; font-size: 20px">{{ $contrat->numBullettin}}</span></div>
+            </div>
+            <div style="width: 50%; float: right;">
+                <div style="width: 55%; margin: auto; border: 1px solid #444; padding: 7px; border-radius: 7px;">
+                    <strong style="font-size: 15px">N° ID :</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
                         style="color: red; font-size: 20px">{{ $contrat->id}}</span></div>
             </div>
             <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
@@ -103,7 +108,7 @@
                 <!-- Contenu -->
                 <div class="content1" style="margin-top: 0px; padding: 5px;">
                     <h1 style="text-align: center; font-size: 100px; color: #368257; line-height: 0.8">Doiho<span style="color: #F8B133; font-size: 150px">o</span></h1>
-                    <p style="text-align: center; font-size: 38px; color: #368257; line-height: 0.8">EPAGNE À TIRAGE</p>
+                    <p style="text-align: center; font-size: 38px; color: #368257; line-height: 0.8; text-transform: uppercase">épargne à tirage</p>
                 </div>
 
             </div>
@@ -122,7 +127,7 @@
                         <li>Le contrat <strong>DOIHOO</strong> offre deux(2) garanties dénommées "<strong>INVEST</strong>" et "<strong>DOIHOO</strong>" : <br><br>
                             <ul style="text-align: justify; margin-left: 20px">
                                 <li>La Garantie <strong>INVEST</strong> donne droit à une prestation égale à l'épargne constituée (Provision Mathématique).</li>
-                                <li>La Garantie <strong>DOIHOO</strong> permet au Souscripteur de bénéficier par anticipation, à l'occasion d'un tirage au sort, d'une prestation égale à l'épargne à 20% du capital à terme.</li>
+                                <li>La Garantie <strong>DOIHOO</strong> permet au Souscripteur de bénéficier par anticipation, à l'occasion d'un tirage au sort, d'une prestation égale à 20% du capital à terme.</li>
                             </ul><br>
                             <p>Le capital garanti dans le contrat <strong>DOIHOO</strong> est payable en une seule fois (montant unique)</p>
                         </li>
@@ -152,7 +157,7 @@
         </section>
     </div>
     <div class="a4-container">
-        <section style="margin-bottom: 25px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
+        <section style="margin-bottom: 25px; font-family: Arial, sans-serif; ">
             <!-- Titre -->
             <div class="" style="width: 2%; background-color: #747171; padding: 5px; float: left;">
                 <h4 style="color: #fff; font-size: 15px; margin: 0; text-align: center">I</h4>
@@ -163,15 +168,8 @@
             </div>
             <!-- Contenu -->
             <div class="content" style="margin-top: 0px; padding: 10px;">
-                <section style="height: 40px; margin-top: 5px;">
-                    <div style="width: 100%;">
-                        <div style="width: 55%; border: 1px solid #444; padding: 5px; border-radius: 5px;  float: right;">
-                            <strong style="font-size: 10px">N° ID :</strong> &nbsp;&nbsp;<span
-                                style="color: red; font-size: 15px">{{ $contrat->id}}</span></div>
-                    </div>
-                    <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
-                </section>
-                <section style="width: 30%; margin: 5px 0; border: 1px solid #444; padding: 7px; border-radius: 7px">
+               
+                <section style="width: 30%; margin: 5px 0; border: 1px solid #444; padding: 5px; border-radius: 7px">
                     <div style="width: 100%; text-align: center;">
                         <div style="width: 33%; float: left;">
                             <input type="radio" class="radio1" name="civilite" 
@@ -231,22 +229,28 @@
                     <div style="clear: both;"></div>
                 </section>
                 <!-- Colonne gauche -->
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Nom :
-                        </strong><span>{{ $contrat->adherent->nom ?? '....' }}</span></label>
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <label><strong>Prénoms :
-                        </strong><span>{{ $contrat->adherent->prenom ?? '....' }}</span></label>
+                <div style="width: 100%; margin-top: 10px;">
+                    <div style="width: 50%; float: left;">
+                        <label><strong>Nom : </strong><span>{{ $contrat->adherent->nom ?? '....' }}</span></label>
+                    </div>
+                    {{-- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; --}}
+                    <div style="width: 50%; float: right;">
+                        <label><strong>Prénoms : </strong><span>{{ $contrat->adherent->prenom ?? '....' }}</span></label>
+                    </div>
                 </div>
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Né(e) le :
-                        </strong><span>{{ $contrat->adherent->datenaissance ?? '....' }}</span></label> &nbsp;
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <label><strong>à
+                <div style="width: 100%; margin-top: 25px;">
+                    <div style="width: 50%; float: left;">
+                        <label><strong>Né(e) le :
+                        </strong><span>{{ $contrat->adherent->datenaissance ?? '....' }}</span></label>
+                    </div>
+                    <div style="width: 50%; float: left;">
+                        <label><strong>à
                         </strong><span>{{ $contrat->adherent->lieunaissance ?? '....' }}</span></label>
+                    </div>
+                    
                 </div>
 
-                <section style="width: 80%; margin: 5px 0; padding: 7px; border-radius: 7px;">
+                <section style="width: 80%; margin-top: 30px; border-radius: 7px;">
 
                     <div style="width: 100%;">
                         <div style="width: 45%; float: left;"><strong>Situation Matrimoniale :</strong></div>
@@ -263,31 +267,40 @@
                 </section>
 
                 <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Profession :
-                        </strong><span>{{ $contrat->adherent->profession ?? '....' }}</span></label> &nbsp;
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <label><strong>Employeur :
+                     <div style="width: 50%; float: left;">
+                        <label><strong>Profession :
+                        </strong><span>{{ $contrat->adherent->profession ?? '....' }}</span></label>
+                    </div>
+                    <div style="width: 50%; float: right;">
+                        <label><strong>Employeur :
                         </strong><span>{{ $contrat->adherent->employeur ?? '....' }}</span></label>
+                    </div>
                 </div>
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Lieu de residence :
-                        </strong><span>{{ $contrat->adherent->lieuresidence ?? '....' }}</span></label> &nbsp;
-                    
-                </div>
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Téléphone courant :
-                        </strong><span>{{ $contrat->adherent->mobile ?? '....' }}</span></label> &nbsp; &nbsp;
-                    &nbsp;
-                    <label><strong>N° Whatsapp :
-                        </strong><span>{{ $contrat->adherent->telephone ?? '....' }}</span></label>
-                </div>
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Adresse :
+                <div style="width: 100%; margin-top: 25px;">
+                    <div style="width: 50%; float: left;">
+                        <label><strong>Adresse :
                         </strong><span>{{ $contrat->adherent->telephone1 ?? '....' }}</span></label>
-                    &nbsp; &nbsp;
-                    <label><strong>E-mail :
+                    </div>
+                    <div style="width: 50%; float: left;">
+                        <label><strong>E-mail :
                         </strong><span>{{ $contrat->adherent->email ?? '....' }}</span></label>
+                    </div>
                 </div>
+                <div style="width: 100% ; margin-top: 25px;">
+                    <div style="width: 33%; float: left;">
+                        <label><strong>Lieu de residence :
+                        </strong><span>{{ $contrat->adherent->lieuresidence ?? '....' }}</span></label>
+                    </div>
+                    <div style="width: 33%; float: left;">
+                        <label><strong>Téléphone courant :
+                        </strong><span>{{ $contrat->adherent->mobile ?? '....' }}</span></label>
+                    </div>
+                    <div style="width: 33%; float: right;">
+                         <label><strong>N° Whatsapp :
+                        </strong><span>{{ $contrat->adherent->telephone ?? '....' }}</span></label>
+                    </div>
+                </div>
+                
             </div>
         </section>
         <section style="margin-bottom: 25px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
@@ -436,7 +449,7 @@
                         <th>Nom complet</th>
                         <th>filliation</th>
                         <th>Né(e) le</th>
-                        <th>Teléphone</th>
+                        <th>Téléphone</th>
                         <th>Résidence</th>
                     </tr>
                     @foreach ($contrat->beneficiaires as $item)
@@ -453,7 +466,7 @@
 
             </div>
         </section>
-        <section style="margin-bottom: 7px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
+        <section style="margin-bottom: 70px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
             <!-- Titre -->
             <div class="" style="width: 2%; background-color: #747171; padding: 5px; float: left;">
                 <h4 style="color: #fff; font-size: 15px; margin: 0; text-align: center">V</h4>
@@ -468,7 +481,7 @@
                 <label><span>Frais unique d'Adhésion : </span><b>{{ $contrat->fraisadhesion ?? ''}} </b></label> <br><br>
                 <section style="width: 90%; border-radius: 7px; margin-bottom: 7px;">
                     <div style="width: 100%;">
-                        <div style="width: 38%; float: left;"><span>Adhésion aux services en ligne e-Nov : </span></div>
+                        <div style="width: 38%; float: left;"><span>Adhésion aux services en ligne Y-Nov : </span></div>
                         <div style="width: 35%; float: left;"><input type="radio"
                                 class="radio1"><strong>Abonnement mensuel: 500 FCFA</strong></div>
                         <div style="width: 35%; float: left;"><input type="radio"
@@ -497,8 +510,8 @@
                             <br>
                             <li>Conformement à la loi N° 2013-450 du 19 Juin 2013, vous bénéficiez d'un droit d'accès et de rectification des informations qui vous concernent.</li>
                             <br>
-                            <li>Si vous souhaitez exercer ce droit et d'obtenir communication des informations concernant, veuillez adresser un courrier à dpo@yakoafricassur.com accompagné de tout moyen permettant d'établir l'identité de la personne.</li><br>
-                            <li>En signant dans la ribrique, signature, vous consentez de façon expresse et éclairée aux traitement de vos données par les services consernés.</li>
+                            <li>Si vous souhaitez exercer ce droit et obtenir une communication des informations vous concernant, veuillez adresser un courrier à dpo@yakoafricassur.com accompagné de tout moyen permettant d'établir l'identité de la personne.</li><br>
+                            <li>En signant dans la rubrique, signature, vous consentez de façon expresse et éclairée aux traitement de vos données par les services consernés.</li>
                         </ol>
                     </div>
                 </div>

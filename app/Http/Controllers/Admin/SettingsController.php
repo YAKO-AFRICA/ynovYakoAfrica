@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Reseau;
 use App\Models\Product;
+use App\Models\NotifGroup;
 use Illuminate\Http\Request;
 use App\Models\ReseauProduct;
 use App\Models\TblPrestation;
 use App\Models\ProductFormule;
 use App\Models\TblTypePrestation;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\TblProductPrestation;
 
@@ -197,6 +200,86 @@ class SettingsController extends Controller
                 'type' => 'error',
                 'urlback' => '',
                 'message' => "Erreur systeme! $th",
+                'code' => 500,
+            ];
+        }
+        return response()->json($dataResponse);
+    }
+
+    public function NotifGroupIndex()
+    {
+
+        $usersList = User::with(['membre','groupNotif'])->whereHas('membre')->where('email', '!=', '')->paginate(10);
+
+
+        // dd($users);
+        $notifgroups = NotifGroup::where('etat','actif')->get();
+
+        return view('settings.notifgroup.index', compact('usersList', 'notifgroups'));
+       
+    }
+
+    public function editUserGroup(request $request, $id)
+    {
+        try{
+            Log::info("ID de l'utilisateur : $id - Valeur: $request->group_uuid");
+            $saving = User::where(['id'=>$id])->update([
+                'group_uuid' => $request->group_uuid,
+            ]);
+            if ($saving) {
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => "back",
+                    'message' => "Enregistré avec succes!",
+                    'code' => 200,
+                ];
+            } else {
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur d'enregistrement !",
+                    'code' => 500,
+                ];
+            }
+        }catch(\Exception $e){  
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! " . $e->getMessage(),
+                'code' => 500,
+            ];
+        }
+        return response()->json($dataResponse);
+    }
+    public function addGroup(request $request)
+    {
+        try{
+            $saving = NotifGroup::create([
+                'code_group' => Refgenerate(NotifGroup::class, 'G', 'code'),
+                'name' => $request->name,
+                'branche' => $request->branche,
+                'etat' => "actif",
+            ]);
+            if ($saving) {
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => "back",
+                    'message' => "Enregistré avec succes!",
+                    'code' => 200,
+                ];
+            } else {
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur d'enregistrement !",
+                    'code' => 500,
+                ];
+            }
+        }catch(\Exception $e){  
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! " . $e->getMessage(),
                 'code' => 500,
             ];
         }

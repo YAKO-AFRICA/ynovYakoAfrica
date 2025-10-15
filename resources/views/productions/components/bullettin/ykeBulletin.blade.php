@@ -123,7 +123,7 @@
                         </div>
         
                         <div class="postal" style="margin-bottom: 10px;">
-                            <label><strong>Boîte Postale :</strong> {{ $contrat->adherent->codepostal ?? ""}}</label>
+                            <label><strong>Email :</strong> {{ $contrat->adherent->email ?? ""}}</label>
                         </div>
         
                         <div class="employeur" style="margin-bottom: 10px;">

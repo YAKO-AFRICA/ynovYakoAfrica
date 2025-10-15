@@ -28,7 +28,7 @@
             <div class="col product-item">
                 <div class="card">
                     <div class="card-header"> 
-                        <h6 class="text-center text-capitalize"> {{ $product->MonLibelle?? 'N/A' }} </h6>
+                        <h6 class="text-center text-capitalize">  {{ strtoupper($product->MonLibelle ?? 'N/A') }} </h6>
                     </div>
                     <div class="card-body py-1">
                         <p class="card-text">

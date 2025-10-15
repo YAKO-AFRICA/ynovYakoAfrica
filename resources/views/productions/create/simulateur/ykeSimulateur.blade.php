@@ -64,7 +64,7 @@
                                         <label class="form-label">Capital Souscrit</label>
                                         <select name="capitalSouscrit" id="capitalSouscrit" class="form-select" required>
                                             <option value="" selected disabled>Choisissez un capital</option>
-                                            <option value="300000">300 000 FCFA</option>
+                                            {{-- <option value="300000">300 000 FCFA</option> --}}
                                             <option value="500000">500 000 FCFA</option>
                                             <option value="750000">750 000 FCFA</option>
                                             <option value="1000000">1 000 000 FCFA</option>

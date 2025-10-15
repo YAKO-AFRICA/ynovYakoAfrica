@@ -46,22 +46,31 @@
             @endcan
 
             @can('Voir e-souscription')
-            <strong><li class="menu-label">E-Souscription</li></strong>
-            <li>
-                <a href="{{ route('prod.stepProduct')}}">
-                    <div class="parent-icon">
-                        <i class='bx bx-home-alt'></i>
-                    </div>
-                    <div class="menu-title">Nouvelle Proposition</div>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('prod.index')}}">
-                    <div class="parent-icon"><i class="fadeIn animated bx bx-clipboard"></i>
-                    </div>
-                    <div class="menu-title">Mes Propositions</div>
-                </a>
-            </li>
+                <strong><li class="menu-label">E-Souscription</li></strong>
+                <li>
+                    <a href="{{ route('prod.stepProduct')}}">
+                        <div class="parent-icon">
+                            <i class='bx bx-home-alt'></i>
+                        </div>
+                        <div class="menu-title">Nouvelle Proposition</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('prod.index')}}">
+                        <div class="parent-icon"><i class="fadeIn animated bx bx-clipboard"></i>
+                        </div>
+                        <div class="menu-title">Mes Propositions</div>
+                    </a>
+                </li>
+                @can('Chef equipe')
+                <li>
+                    <a href="{{ route('prod.gestionEquip')}}">
+                        <div class="parent-icon"><i class='bx bxl-microsoft-teams'></i>
+                        </div>
+                        <div class="menu-title">Gestion d'equipe</div>
+                    </a>
+                </li>
+                @endcan
             @endcan
 
             {{-- module de gestion de prospection --}}
@@ -216,6 +225,13 @@
                     <div class="menu-title">Produit</div>
                 </a>
             </li>
+           <li>
+                <a href="{{ route('setting.notifGroup.index')}}">
+                    <div class="parent-icon"><i class='bx bx-bell'></i></div>
+                    <div class="menu-title">Groupe de notifier</div>
+                </a>
+            </li>
+
 
             @endcan
 
@@ -251,7 +267,7 @@
 
 
               <div class="top-menu ms-auto ">
-                <ul class="navbar-nav align-items-center gap-1">
+                {{-- <ul class="navbar-nav align-items-center gap-1">
 
                     <li class="nav-item dropdown dropdown-large">
                         <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" data-bs-toggle="dropdown"><span class="alert-count">0</span>
@@ -267,22 +283,51 @@
                             <div class="header-notifications-list header-message-list app-container">
                                 <a class="dropdown-item" href="javascript:;">
                                     <div class="d-flex align-items-center">
-                                        {{-- <div class="user-online">
-                                            <img src="{{ asset('root/images/default.png')}}" class="msg-avatar" alt="user avatar">
-                                        </div> --}}
-                                        {{-- <div class="flex-grow-1">
-                                            <h6 class="msg-name">Daisy Anderson<span class="msg-time float-end">5 sec
-                                        ago</span></h6>
-                                            <p class="msg-info">The standard chunk of lorem</p>
-                                        </div> --}}
                                     </div>
                                 </a>
                             </div>
-                            {{-- <a href="javascript:;">
-                                <div class="text-center msg-footer">
-                                    <button class="btn btn-primary w-100">View All Notifications</button>
+                        </div>
+                    </li>
+                </ul> --}}
+                <ul class="navbar-nav align-items-center gap-1">
+
+                    <li class="nav-item dropdown dropdown-large">
+                        <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" data-bs-toggle="dropdown"><span class="alert-count" id="alert-count"> {{ count($unreadNotifications) ?? 0 }}</span>
+                            <i class='bx bx-bell text-white'></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a href="javascript:;" >
+                                <div class="msg-header" style="background-color: #fff">
+                                    <p class="msg-header-title">Notification{{ count($unreadNotifications) > 1 ? 's' : '' }}</p>
+                                    <p class="msg-header-badge">{{ count($unreadNotifications) ?? 0 }}</p>
                                 </div>
-                            </a> --}}
+                            </a>
+                            <div class="header-notifications-list header-message-list app-container">
+                                 @forelse($allNotifications as $notification)
+                                    <a class="dropdown-item d-block p-3 border-bottom notification-item {{ $notification->read_at ? 'read-notification' : 'unread-notification' }}" 
+                                    href="{{ route('notif.markToRead', $notification->id) }}"
+                                    data-id="{{ $notification->id }}">
+                                        <div class="d-flex align-items-start">
+                                    
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                    <strong class="text-dark">{{ $notification->data['user'] }}</strong>
+                                                    <small class="text-muted">{{ \Carbon\Carbon::parse($notification->data['date'])->diffForHumans() }}</small>
+                                                </div>
+                                                <p class="mb-1 text-wrap">{{ $notification->data['title'] }}</p>
+                                                @if(!$notification->read_at)
+                                                    <span class="badge bg-light-info text-info rounded-pill">Nouveau</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </a>
+                                @empty
+                                    <div class="text-center py-4">
+                                        <i class='bx bx-bell-off fs-1 text-muted mb-2'></i>
+                                        <p class="mb-0 text-muted">Aucune notification disponible</p>
+                                    </div>
+                                @endforelse
+                            </div>
                         </div>
                     </li>
                 </ul>

@@ -156,188 +156,6 @@
             <div class="card-body">
                 <section id="info-contrat" class="section-content">
                     <h5>Détails du Contrat</h5>
-                    {{-- <div class="row">
-                        <div class="col-sm-12 col-md-6 col-lg-6">
-                            <div class="card my-3" style="width: 90%">
-                               
-                                <div class="card-body">
-                                    
-                                    <div class="">
-                                        <div class="mb-3">
-                                            <strong>
-                                                Identification du contrat : 
-                                            </strong>
-                                            <span>{{ $contrat->id ?? '' }}</span>
-                                        </div>
-                                        
-                                        <div class="">
-                                            <strong>
-                                                <label for="" class="form-label">Mode de paiement :</label>
-                                            </strong>
-                                           <span> 
-                                                @switch($contrat->modepaiement)
-                                                @case('VIR') Virement bancaire @break
-                                                @case('ESP') Espèce @break
-                                                @case('CHK') Chèque @break
-                                                @case('Mobile_money') Mobile money @break
-                                                @case('SOURCE') Prélèvement à la source @break
-                                                @default --
-                                                @endswitch
-                                            </span>
-                                        </div>
-
-                                        @if ($contrat->modepaiement === 'VIR' || $contrat->modepaiement === 'SOURCE')
-                                            <div class="row mb-3">
-                                                <div class="col-12 mb-3">
-                                                    <strong>
-                                                        <label for="banque" class="form-label">Ma banque ou organisme de prélèvement</label>
-                                                    </strong>
-                                                    <p>{{ $contrat->organisme ?? '--' }}</p>
-                                                </div>
-                                                <div class="col-12 mb-3">
-                                                    <strong>
-                                                        <label for="Agence" class="form-label">Agence</label>
-                                                    </strong>
-                                                    <p>{{ $contrat->agence ?? '--' }}</p>
-                                                </div>
-                                                <div class="col-12 mb-3">
-                                                    <label for="Matricule" class="form-label">Mon N° de compte (Matricule)</label>
-                                                    <p>{{ $contrat->numerocompte ?? '--' }}</p>
-                                                </div>
-
-                                            </div>
-
-                                        @endif
-
-                                        @if ($contrat->modepaiement === 'Mobile_money')
-
-                                            <div class="mb-3">
-
-                                                <div class="col-12 mb-3">
-
-                                                    <label for="numMobile" class="form-label">Mon N° Mobile</label>
-
-                                                    <p>{{ $contrat->numerocompte ?? '--' }}</p>
-
-                                                </div>
-
-                                            </div>
-
-                                        @endif
-
-                                        <div class="row">
-
-                                            <div class="col-sm-12 col-md-8 col-lg-8">
-
-                                                <strong>
-                                                    <label for="Conseiller" class="form-label">Votre conseiller client</label>
-                                                </strong>
-
-                                                <p>{{ Auth::user()->membre->nom ?? "--" }} {{ Auth::user()->membre->prenom ?? "" }}</p>
-
-                                            </div>
-
-                                            <div class="col-sm-12 col-md-4 col-lg-4">
-
-                                                <strong>
-                                                    <label for="CodeConseiller" class="form-label font-weight-bold">Code</label>
-                                                </strong>
-
-                                                <p>{{ Auth::user()->membre->codeagent ?? "--" }}</p>
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="col-sm-12 col-md-6 col-lg-6">
-                            <div class="card mx-0">
-                                <div class="card-body">
-
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-6 col-lg-6">
-                                            <strong>
-                                                <label class="form-label">Periodicité :</label>
-                                            </strong>
-                                            <p class="">
-                                                @switch($contrat->periodicite)
-                                                    @case('M') Mois @break
-                                                    @case('T') Trimestre @break
-                                                    @case('S') Semestre @break
-                                                    @case('A') Année @break
-                                                    @case('U') Versement unique @break
-                                                    @default --
-                                                @endswitch
-                                            </p>
-                                        </div>
-                                        <div class="col-sm-12 col-md-6 col-lg-6">
-                                            <strong>
-                                                <label for="DateEffet" class="form-label">Date d'effet :</label>
-                                            </strong>
-                                            <p>{{ $contrat->dateeffet ?? '--' }}</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-6 col-lg-6">
-                                            <strong>
-                                                <label for="capital" class="form-label">Capital :</label>
-                                            </strong>
-                                            <p>{{ number_format($contrat->capital ?? 0, 0, ',', ' ') }} FCFA</p>
-                                        </div>
-                                        <div class="col-sm-12 col-md-6 col-lg-6">
-                                            <strong>
-                                                <label for="fraisadhesion" class="form-label">Formule :</label>
-                                            </strong>
-                                            <p>{{ $contrat->Formule ?? '--' }}</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-6 col-lg-6">
-                                            <strong>
-                                                <label for="fraisadhesion" class="form-label">Fraie d'adhesion :</label>
-                                            </strong>
-                                            <p>{{ number_format($contrat->fraisadhesion ?? 0, 0, ',', ' ') }} FCFA</p>
-                                        </div>
-                                        <div class="col-sm-12 col-md-6 col-lg-6">
-                                            <strong>
-                                                <label for="prime" class="form-label">Surprime :</label>
-                                            </strong>
-                                            <p>{{ number_format($contrat->surprime ?? 0, 0, ',', ' ') }} FCFA</p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-6 col-lg-6">
-                                            <strong>
-                                                <label for="prime" class="form-label">Prime :</label>
-                                            </strong>
-                                            <p>{{ number_format($contrat->prime ?? 0, 0, ',', ' ') }} FCFA</p>
-                                        </div>
-                                        <div class="col-sm-12 col-md-6 col-lg-6">
-                                            <strong>
-                                                <label for="prime" class="form-label">Prime Principale :</label>
-                                            </strong>
-                                            <p>{{ number_format($contrat->primepricipale ?? 0, 0, ',', ' ') }} FCFA</p>
-                                        </div>
-                                        
-                                        
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div> --}}
 
                     <div class="card p-4">
                         <div class="row">
@@ -401,8 +219,8 @@
                                     <dt>Capital</dt>
                                     <dd>{{ number_format($contrat->capital ?? 0, 0, ',', ' ') }} FCFA</dd>
                     
-                                    <dt>Formule</dt>
-                                    <dd>{{ $contrat->Formule ?? '--' }}</dd>
+                                    <dt>Duree</dt>
+                                    <dd>{{ $contrat->duree ?? '--' }}</dd>
 
                                     <dt>Code Guichet</dt>
                                     <dd>{{ $contrat->codeguichet ?? '--' }}</dd>
@@ -784,12 +602,8 @@
 
                         <div class="row mb-3">
                             <div class="div col">
-                                <strong>Organisme</strong>
-                                <span>{{ $contrat->organisme ?? 'Non renseigné' }}</span>
-                            </div>
-                            <div class="div col">
                                 <strong>Date de saisie</strong>
-                                <span>{{ $contrat->saisiele ?? 'Non renseigné' }}</span>
+                                <span>{{ Carbon\Carbon::parse($contrat->created_at)->format('D-M-Y H:i') ?? 'Non renseigné' }}</span>
                             </div>
                         </div>
                         <div class="row">

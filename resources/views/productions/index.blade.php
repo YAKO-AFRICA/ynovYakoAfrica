@@ -39,8 +39,6 @@
                             <option value="3">Accepté</option>
                             <option value="4">Rejeté</option>
                         </select>
-
-                       
                     </form>
                 </div>
                 <div class="ms-auto">
@@ -71,7 +69,9 @@
                         <tr class="articleByCat" data-status="{{ strtolower($item->etape) }}">
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->libelleproduit ?? "" }}</td>
-                            <td>{{ $item->dateeffet ?? "" }}</td>
+                            <td>{{ $item->adherent->nom ?? "" }} {{ $item->adherent->prenom ?? "" }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->adherent->datenaissance)->locale('fr')->translatedFormat('d M Y') ?? '' }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->dateeffet)->locale('fr')->translatedFormat('d M Y') ?? '' }}</td>
                             <td>{{ $item->prime ?? "" }}</td>
                             <td>{{ $item->capital ?? 0 }}</td>
                             <td>{{ $item->montantrente ?? 0 }}</td>

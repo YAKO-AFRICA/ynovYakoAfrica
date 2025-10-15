@@ -183,6 +183,47 @@
 
         <script type="module" src="{{ asset('api/request.js') }}"></script>
 
+        <script src=https://touchpay.gutouch.com/touchpay/script/prod_touchpay-0.0.1.js type="text/javascript"></script>
+
+
+        <script>
+            function checkNotifications() {
+                fetch("{{ route('notifications.check') }}")
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+
+                    if (data.count > 0) {
+                        // 🔔 Jouer un son une seule fois
+                        let audio = new Audio('{{ asset("assets/root/sounds/notification.mp3") }}');
+                        audio.play().catch(err => console.log("Audio bloqué :", err));
+
+                        // Mettre à jour un badge ou compteur
+                        document.getElementById('alert-count').innerHTML = data.unreadNotificationsCount;
+
+
+                        // 🎉 Afficher un toast pour chaque notification
+                        data.notifications.forEach(notif => {
+                            Swal.fire({
+                                toast: true,
+                                timerProgressBar: true,
+                                position: 'bottom-end',
+                                icon: 'info',
+                                title: notif.data.title,
+                                html: `<a href="${notif.data.url}" style="color:#0d6efd;text-decoration:underline">Voir plus</a>`,
+                                showConfirmButton: false,
+                                timer: 5000
+                            });
+                        });
+                    }
+                })
+                .catch(error => console.error('Erreur notif:', error));
+            }
+
+            // Vérifie toutes les 40 secondes
+            setInterval(checkNotifications, 40000);
+        </script>
+
 
  
 
@@ -192,6 +233,7 @@
     
 
                 var table = $('#example2').DataTable({
+                    order: [[ 0, "desc" ]],
                     lengthChange: true,
                     buttons: ['copy', 'excel', 'pdf', 'print'],
                     language: {
@@ -217,6 +259,7 @@
     
 
                 var table = $('#example3').DataTable({
+                    order: [[ 0, "desc" ]],
                     lengthChange: true,
                     buttons: ['copy', 'excel', 'pdf', 'print'],
                     language: {

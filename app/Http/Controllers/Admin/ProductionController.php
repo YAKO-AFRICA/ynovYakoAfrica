@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Models\User;
+use App\Models\Membre;
 use App\Models\Tblotp;
 use App\Models\Assurer;
 use App\Models\Contrat;
@@ -35,18 +36,18 @@ use Endroid\QrCode\Logo\Logo;
 use App\Models\AssureGarantie;
 use App\Models\ProduitGarantie;
 use BaconQrCode\Encoder\QrCode;
+
 use Endroid\QrCode\Label\Label;
 
 use App\Models\DeclarationSante;
-
 use App\Models\TblSecteurActivite;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Notifications\SystemeNotify;
 use Endroid\QrCode\Writer\PngWriter;
-use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Endroid\QrCode\Encoding\Encoding;
@@ -73,7 +74,7 @@ class ProductionController extends Controller
         $allPropositionssss = Contrat::where('etape', "!=", "");
         $allPropositions = Contrat::where('saisiepar', Auth::user()->idmembre);
 
-        $defaultColumns = ['#', 'Produit', 'Date Effet', 'Prime', 'Capital', 'Montant Rente', 'Saisir Par', 'Status'];
+        $defaultColumns = ['#', 'Produit','Souscripteur','Age Souscripteur', 'Date Effet', 'Prime', 'Capital', 'Montant Rente', 'Saisir Par', 'Status'];
 
         $additionalColumns = [
             'Mode de Paiement' => 'modepaiement',
@@ -142,6 +143,88 @@ class ProductionController extends Controller
             'allPropositions' => $allPropositions,
         ]);
         return view('productions.index', ['datas' => $datas, 'activeColumns' => $activeColumns, 'defaultColumns' => $defaultColumns, 'additionalColumns' => $additionalColumns]);
+    }
+
+    public function gestionEquip(Request $request)
+    {
+        set_time_limit(300);
+
+        $codeAgence = Membre::where('idmembre', Auth::user()->idmembre)->value('codeequipe');
+        $userOnEquipe = Membre::where('codeequipe', $codeAgence)->get();
+        $equipeIdMembre =  $userOnEquipe->pluck('idmembre')->toArray();
+        
+        $saisiePerEquipe = Contrat::whereIn('saisiepar', $equipeIdMembre)->where('etape','1');
+
+        $defaultColumns = ['#', 'Produit','Souscripteur','Age Souscripteur', 'Date Effet', 'Prime', 'Capital', 'Montant Rente', 'Saisir Par', 'Status'];
+
+        $additionalColumns = [
+            'Mode de Paiement' => 'modepaiement',
+            'Organisme' => 'organisme',
+            'Prime' => 'prime',
+            'Prime Principale' => 'primepricipale',
+            'Capital' => 'capital',
+            'Surprime' => 'surprime',
+            'Date Effet' => 'dateeffet',
+            'N° Compte' => 'numerocompte',
+            'Agence' => 'agence',
+            'Saisie Le' => 'saisiele',
+            'Code Conseiller' => 'codeConseiller',
+            'Nom Agent' => 'nomagent',
+            'Duree' => 'duree',
+            'Periodicite' => 'periodicite',
+            'Code Adherent' => 'codeadherent',
+            'Est Migre' => 'estMigre',
+            'Transmis Le' => 'transmisle',
+            'Annuler Le' => 'annulerle',
+            'Accepter Le' => 'accepterle',
+            'Modifier Le' => 'modifierle',
+            'Modifier Par' => 'modifierpar',
+            'Libelle Produit' => 'libelleproduit',
+            'Personne Ressourource' => 'personneressource',
+            'Contact Ressourource' => 'contactpersonneressource',
+            'Beneficiaire Auterme' => 'beneficiaireauterme',
+            'Beneficiaire Audeces' => 'beneficiaireaudeces',
+            'Accepter Par' => 'accepterpar',
+            'Rejeter Par' => 'rejeterpar',
+            'Transmis Par' => 'transmispar',
+            'Personne Ressource 2' => 'personneressource2',
+            'Contact Ressource 2' => 'contactpersonneressource2',
+            'Code Banque' => 'codebanque',
+            'Code Guichet' => 'codeguichet',
+            'Rib' => 'rib',
+            'Id Proposition' => 'idproposition',
+            'Code Proposition' => 'codeproposition',
+            'Branche' => 'branche',
+            'Partenaire' => 'partenaire',
+            'Nom Accepter Par' => 'nomaccepterpar',
+            'Ref Contrat Source' => 'refcontratsource',
+            'Cle Integration' => 'cleintegration',
+            'Code Operation' => 'codeoperation',
+            'N° Police' => 'numeropolice',
+            'Frais Adhesion' => 'fraisadhesion',
+            'Est Paye' => 'estpaye',
+            'Pret Connexe' => 'pretconnexe',
+            'Details' => 'details',
+        ];
+        $activeColumns = session('activeColumns', []);
+
+        $selectedAgents = $request->input('codeMembre');
+
+        if ($selectedAgents) {
+            // Filtrez par statut si un statut est sélectionné
+            $saisiePerEquipe->where('saisiepar', $selectedAgents);
+        }else{
+            $saisiePerEquipe = Contrat::whereIn('saisiepar', $equipeIdMembre)->where('etape','1');
+        }
+
+        $allPropositionsFiltered = $saisiePerEquipe->get();
+
+
+        $datas = collect([
+            'allPropositionsFiltered' => $allPropositionsFiltered,
+            'userOnEquipe' => $userOnEquipe
+        ]);
+        return view('gestionEquip.index' ,['datas' => $datas, 'activeColumns' => $activeColumns, 'defaultColumns' => $defaultColumns, 'additionalColumns' => $additionalColumns]);
     }
 
 
@@ -402,14 +485,44 @@ class ProductionController extends Controller
     public function store(Request $request)
     {
 
+        $data = $request->all();
+
+        Log::info($data);
+
+        // On décode inputSessionData
+        $inputSessionData = json_decode($data['inputSessionData'], true);
+
+        // Maintenant on peut accéder à la périodicité
+        $periodicite = $inputSessionData['infoSimulation']['periodicite'] ?? null;
+
         if (!empty($request->inputSessionData)) {
             $simulationData = json_decode($request->inputSessionData);
-
-            // Log::info('Données de simulation reçues:'. $simulationData);
         }
 
         DB::beginTransaction();
-        try { 
+        try {
+
+            if($request->codeproduit == "DOIHOO"){
+                $prefix = '68111105104111111';
+            } else if ($request->codeproduit == "CAD_EDUCPLUS") {
+                $prefix = '679710069100117';
+            } else if ($request->codeproduit == "YKE_2018") {
+                $prefix = '8901001011692018';
+            } else if ($request->codeproduit == "CADENCE") {
+                $prefix = '679710010111099';
+            } else {
+                $prefix = '679710069100117';
+            }
+
+            $increment = Contrat::where('numBullettin', 'like', $prefix . '%')
+            ->where('codeproduit', $request->codeproduit)->count() + 1;
+
+            do {
+                $numBullettin = $prefix . $increment;
+                $numExist = Contrat::where('numBullettin', $numBullettin)->exists();
+                $increment++;
+            } while ($numExist);
+
 
             Log::info($request->all());
 
@@ -631,13 +744,14 @@ class ProductionController extends Controller
                 }
             }
 
-            // ajout du contrat   numMobile
+            // ajout du contrat  numMobile
 
             if ($request->modepaiement === "Mobile_money") {
                 $numerocompte = $request->numMobile;
             } else {
                 $numerocompte = $request->numerocompte;
             }
+
 
             $product = Product::where('CodeProduit', $request->codeproduit)->first();
 
@@ -646,9 +760,9 @@ class ProductionController extends Controller
                 'dateeffet' => $request->dateEffet,
                 'modepaiement' => $request->modepaiement,
                 'organisme' => $request->organisme,
-                'agence' => $request->agence,
+                'agence' => Auth::user()->membre->codeequipe,
                 'numerocompte' => $numerocompte,
-                'periodicite' => $request->periodicite,
+                'periodicite' => $periodicite,
 
                 'codeConseiller' => Auth::user()->membre->codeagent,
                 'nomagent' => Auth::user()->membre->nom . ' ' . Auth::user()->membre->prenom,
@@ -724,29 +838,38 @@ class ProductionController extends Controller
                 throw new \Exception("Erreur lors de la génération du bulletin : " . $bulletinData['message']);
             }
 
-            $mailData = [
-                'title' => 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉',
-                'btnLink' => $bulletinData['file_url'],
-                'btnText' => 'Télécharger mon bulletin',
-                'documents' => $bulletinData['file_url'],
-            ];
+            // Envoi de l'email 
 
-            $to = $request->email;
+            try {
+                $to = $request->email;
+                $emailSubject = 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉';
 
-            $emailSubject = 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉';
+                $mailData = [
+                    'title' => 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉',
+                    'btnLink' => $bulletinData['file_url'],
+                    'btnText' => 'Télécharger mon bulletin',
+                    'documents' => $bulletinData['file_url'],
+                ];
 
-            Mail::to($to)->send(new CustomerMail($mailData, $emailSubject));
+                Mail::to($to)->send(new CustomerMail($mailData, $emailSubject));
 
-            $details_log = [
-                'url' => route('prod.show', $idContrat),
-                'user' => auth()->user()->membre->nom . ' ' . auth()->user()->membre->prenom,
-                'date' => now(),
-                'title' => "Enregistrement de la proposition ID $idContrat",
-                'action' => "Voir",
-            ];
-            
-            // $usersToNotify = auth()->user();
-            // Notification::send($usersToNotify, new SystemeNotify($details_log)); 
+                // Log si l'envoi est OK
+                $details_log = [
+                    'url' => route('prod.show', $idContrat),
+                    'user' => auth()->user()->membre->nom . ' ' . auth()->user()->membre->prenom,
+                    'date' => now(),
+                    'title' => "Enregistrement de la proposition ID $idContrat",
+                    'action' => "Voir",
+                ];
+                Log::info("Email envoyé avec succès", $details_log);
+
+            } catch (Exception $e) {
+                // Si erreur domaine inconnu ou email invalide
+                Log::error("Erreur d'envoi d'email : " . $e->getMessage(), [
+                    'email' => $to,
+                    'contrat' => $idContrat
+                ]);
+            }
             
             DB::commit();
             
@@ -1228,7 +1351,7 @@ class ProductionController extends Controller
                 'date' => now(),
                 'title' => "Modification de la proposition ID $id ",
                 'action' => "Voir",
-                'sound' => 'son1.wav' // Ajout du fichier son
+                'sound' => 'son1.wav'
             ];
 
             $usersToNotify = User::where('idmembre', Auth::user()->membre->idmembre)->get();

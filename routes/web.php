@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\FileManager;
 use Illuminate\Support\Str;
 use BaconQrCode\Encoder\QrCode;
@@ -26,6 +27,7 @@ use App\Http\Controllers\Setting\MotifController;
 use App\Http\Controllers\Admin\AdherentController;
 use App\Http\Controllers\Admin\BulletinController;
 use App\Http\Controllers\Admin\DocumentController;
+use App\Http\Controllers\Admin\PaiementController;
 use App\Http\Controllers\Admin\ProspectController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Setting\EquipCcontroller;
@@ -133,6 +135,7 @@ Route::prefix('production')->name('prod.')->group(function(){
         Route::get('/createdoihoo/add/{codeproduit}', [ProductionController::class, 'createdoihoo'])->name('createdoihoo');
         Route::get('/createCAD/add/{codeproduit}', [ProductionController::class, 'createCAD'])->name('createCAD');
         Route::post('/store', [ProductionController::class, 'store'])->name('store');
+        Route::get('/gestionEquip/index', [ProductionController::class, 'gestionEquip'])->name('gestionEquip');
         Route::post('/upload-documents', [ProductionController::class, 'upload'])->name('upload.documents');
 
         Route::get('production/assureadd/get', [ProductionController::class, 'addassurgetForm'])->name('production.get.assureadd');
@@ -188,11 +191,7 @@ Route::prefix('production')->name('prod.')->group(function(){
 Route::get('/notifications/mark-as-read/{id}',[MailController::class,'markAsRead'])->name('notif.markToRead');
 
 
-
-
-
 Route::get('/formules/{codeProduit}', [SettingsController::class, 'getFormulesByProduct']);
-
 
 
 Route::prefix('report')->name('report.')->group(function(){
@@ -264,7 +263,6 @@ Route::prefix('rdv')->name('rdv.')->group(function(){
 Route::prefix('settings')->name('setting.')->group(function(){
 
     Route::middleware('guest','PreventBackHistory')->group(function(){
-
 
     });
 
@@ -339,6 +337,11 @@ Route::prefix('settings')->name('setting.')->group(function(){
         Route::post('/store-motif-rejet-prestation', [MotifController::class, 'storeMotifPrestation'])->name('motifRejetPrestation.store');
         Route::post('/update-motif-rejet-prestation/{id}', [MotifController::class, 'updateMotifPrestation'])->name('motifRejetPrestation.update');
         Route::post('/destroy-motif-rejet-prestation/{id}', [MotifController::class, 'destroyMotifPrestation'])->name('destroy.motifRejetPrestation');
+
+        // reglage de notification group
+        Route::get('/index-notif-group', [SettingsController::class, 'NotifGroupIndex'])->name('notifGroup.index');
+        Route::post('/addGroup-notif-group', [SettingsController::class, 'addGroup'])->name('addGroup');
+        Route::post('/editUserGroup-notif/{id}', [SettingsController::class, 'editUserGroup'])->name('editUserGroup');
 
 
 
@@ -462,6 +465,8 @@ route::get('/generate-bulletin-demo', [EpretController::class, 'generateBu'])->n
 
 Route::get('/generate-qr', [ProductionController::class, 'getQrCode'])->name('generate-qr-code');
 
+Route::post('/cretePaiement', [PaiementController::class, 'cretePaiement']);
+
 
 
 
@@ -565,6 +570,8 @@ Route::prefix('site')->name('site.')->group(function(){
 
 });
 
+
+
 Route::get('/payment/success', function () {
     return "Paiement réussi ✅";
 })->name('payment.success');
@@ -572,9 +579,6 @@ Route::get('/payment/success', function () {
 Route::get('/payment/failed', function () {
     return "Paiement échoué ❌";
 })->name('payment.failed');
-
-
-
 
 
 
@@ -611,3 +615,22 @@ Route::get('/check-af', function () {
 
     return array_values($africaCities);
 });
+
+
+Route::get('/notifications/check', function () {
+    $user = auth()->user();
+
+    // date limite = il y a 1 minute
+    $oneMinuteAgo = Carbon::now()->subMinute();
+
+    // On prend uniquement les non lues créées dans la dernière minute
+    $recentUnread = $user->unreadNotifications()
+        ->where('created_at', '>=', $oneMinuteAgo)
+        ->get();
+
+    return response()->json([
+        'count' => $recentUnread->count(),
+        'notifications' => $recentUnread,
+        'unreadNotificationsCount' => $user->unreadNotifications()->count(),
+    ]);
+})->name('notifications.check');

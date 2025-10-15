@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\OTPController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\PaiementController;
 use App\Http\Controllers\Setting\SiteWebController;
 use App\Http\Controllers\Admin\PrestationController;
 use App\Http\Controllers\Sites\SitePropositionController;

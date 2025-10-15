@@ -165,7 +165,6 @@ class ValidationController extends Controller
     
                 if ($contrat) {
                     $contrat->update(
-                        
                         [
                             'accepterle' => now(),
                             'accepterpar' => Auth::user()->membre->idmembre,
@@ -183,7 +182,7 @@ class ValidationController extends Controller
                         'action' => "Voir",
                     ];
         
-                    $usersToNotify = User::where('idmembre', Auth::user()->membre->idmembre)->get();
+                    $usersToNotify = User::where('idmembre', $contrat->saisiepar)->get();
                     Notification::send($usersToNotify, new SystemeNotify($details_log));
 
                     DB::commit();
@@ -259,7 +258,7 @@ class ValidationController extends Controller
 
             // Notifier seulement les utilisateurs concernés (ex: admins)
             $details_log = [
-                'url' => route('prod.show', $id),
+                'url' => '/production/show/' . $id,
                 'user' => \auth()->user()->membre->nom . ' ' . \auth()->user()->membre->prenom,
                 'date' => now(),
                 'title' => "Rejet de la proposition ID $id . \n pour motif: " . $request->motifrejet,
