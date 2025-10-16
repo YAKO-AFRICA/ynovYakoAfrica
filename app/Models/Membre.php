@@ -91,7 +91,7 @@ class Membre extends Model
     }
     public function equipe()
     {
-        return $this->belongsTo(Equipe::class, 'codeequipe', 'codeequipe');
+        return $this->belongsTo(Equipe::class, 'codeequipe', 'id');
     }
 
     public function zone()

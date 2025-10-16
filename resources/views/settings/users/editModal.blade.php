@@ -183,7 +183,7 @@
                                         <div class="mb-3 form-group">
                                             <label for="role_id" class="form-label">Role <span class="text-danger">*</span></label>
                                             <select name="role_id" id="" class="form-control" required>
-                                                <option value="{{ $item->id_role ?? '' }}">{{ $item->role->name ?? "" }}</option>
+                                                <option value="{{ $item->id_role ?? '' }}">{{ $item->role ?? "" }}</option>
                                                 @foreach ($roles as $role)
                                                     <option value="{{ $role->id }}">{{ $role->name ?? "" }}</option>
                                                 @endforeach

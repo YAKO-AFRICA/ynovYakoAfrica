@@ -39,6 +39,7 @@ class UserController extends Controller
         $zoneId = $zones->pluck('id');
 
         $equipes = Equipe::whereIn('codezone', $zoneId)->get();
+        // dd($equipes->libelleequipe);
 
         $partners = Partner::where('code','LLV')->get();
 
@@ -372,7 +373,7 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
 
-        log::info($request->all());
+        // log::info($request->all());
 
         $membreUpdating = Membre::where('idmembre', $id)->first();
 
