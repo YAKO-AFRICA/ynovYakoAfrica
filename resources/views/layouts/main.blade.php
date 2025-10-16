@@ -415,41 +415,6 @@
                 updateFormAndStepper();
             });
 
-             // Gestion du bouton "Submit" pour envoyer le formulaire
-            // submitBtn.addEventListener("click", function (e) {
-            //     e.preventDefault();
-            //     currentStep++;
-            //     updateFormAndStepper();
-
-            //     console.log("Formulaire soumis");
-
-            //     // if (validateCurrentStep()) {
-            //         const formData = new FormData(form);
-
-            //         // Envoi des données via Axios
-            //         axios.post('/epret/store', formData, {
-            //             headers: {
-            //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            //             },
-            //         })
-            //         .then((response) => {
-            //             if (response.data.type === 'success') {
-            //                 alert('Formulaire enregistré avec succès !'); 
-            //                 if (response.data.url) {
-            //                     console.log('URL de redirection:', response.data.url);
-            //                     window.open(response.data.url, '_blank');
-            //                 }
-            //             } else {
-            //                 alert(response.data.message || 'Une erreur s\'est produite.');
-            //             }
-            //         })
-            //         .catch((error) => {
-            //             console.error('Erreur :', error);
-            //             alert('Une erreur est survenue. Veuillez réessayer.');
-            //         });
-            //     // }
-            // });
-
             // Initialiser l'affichage des étapes
             updateFormAndStepper();
         });

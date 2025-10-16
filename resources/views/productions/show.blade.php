@@ -945,7 +945,7 @@
         const clientLastname = contratInfo.adherent.nom || "";
         const clientPhone = contratInfo.adherent.mobile || "";
 
-        fetch('http://ynovyakoafrica.test/cretePaiement', {
+        fetch('{{ config('app.url') }}/cretePaiement', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
