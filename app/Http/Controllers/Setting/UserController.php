@@ -372,6 +372,8 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
 
+        log::info($request->all());
+
         $membreUpdating = Membre::where('idmembre', $id)->first();
 
         switch ($request->profile_id) {
@@ -397,7 +399,7 @@ class UserController extends Controller
 
 
         Log::info("membreUpdating : $membreUpdating->codeequipe" );
-        $agence = Equipe::where('id', $membreUpdating->codeequipe)->first();
+        $agence = Equipe::where('codeequipe', $request->codeequipe)->first();
         
         Log::info("Agence : $agence" );
 
