@@ -150,9 +150,6 @@ class UserController extends Controller
         $agence = Equipe::select('codeequipe','libelleequipe','id')->where('codeequipe', $request->codeequipe)->first();
         log::info($agence);
 
-
-
-
         DB::beginTransaction();
         try {
             $membre = Membre::create([

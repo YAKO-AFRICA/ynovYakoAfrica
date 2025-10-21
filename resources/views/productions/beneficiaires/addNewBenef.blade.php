@@ -48,9 +48,9 @@
                             <label for="lienParente" class="form-label">Lien de Parenté</label>
                             <select name="lienParente" class="form-select">
                                 <option selected value="">Sélectionner le lien de Parenté</option>
-                                <option value="Conjoint">Conjoint</option>
-                                <option value="Enfant">Enfant</option>
-                                <option value="Autre">Autre</option>
+                                 @foreach ($filliations  as $item)
+                                    <option value="{{ $item->CodeFiliation }}">{{ $item->MonLibelle }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>

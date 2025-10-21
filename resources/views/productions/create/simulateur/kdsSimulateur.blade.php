@@ -59,7 +59,7 @@
                         <div class="form-group row">
                             <div class="col-sm-12 col-md-6 mb-3">
                                 <label class="form-label">Code Produit :</label>
-                                <input type="text" class="form-control" id="CodeProduit" name="CodeProduit" value="{{ $product->CodeProduit}}" required>
+                                <input type="text" class="form-control" id="CodeProduit" name="CodeProduit" value="{{ $product->CodeProduit}}" required readonly>
                             </div>
                             <div class="col-sm-12 col-md-6 mb-3">
                                 <label class="form-label">Code Périodicité :</label>
@@ -71,7 +71,7 @@
                                 </select>
                             </div>
                             <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Prime souhaité :</label>
+                                <label class="form-label">Prime souhaitée (F CFA) :</label>
                                 <select name="capitalSouscrit" id="capitalSouscrit" class="form-select" required>
                                     <option value="" selected>Selectionnez une prime</option>
                                     <option value="15000">15 000</option>
@@ -93,7 +93,7 @@
                                 <input type="hidden" class="form-control" id="age" name="age">
                             </div>
                             <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Duree :</label>
+                                <label class="form-label">Durée (Année):</label>
                                 <input type="number" class="form-control" id="duree" name="duree" value="6" min="6" max="99" required>
                             </div>
                         </div>
@@ -140,7 +140,7 @@
                         <table class="table">
                             <tfoot class="table-light">
                                 <tr>
-                                    <td colspan="2" class="text-end fw-bold">Montant Total :</td>
+                                    <td colspan="2" class="text-end fw-bold">Montant Total (F CFA):</td>
                                     <td id="primeTotal" class="fw-bold">0</td>
                                 </tr>
                             </tfoot>

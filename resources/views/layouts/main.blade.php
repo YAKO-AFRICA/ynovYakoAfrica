@@ -84,6 +84,24 @@
             padding: 0.25em 0.4em;
             min-width: 1.5em;
         }
+
+        /* Style global pour tous les champs readonly */
+        input[readonly],
+        textarea[readonly],
+        select[readonly] {
+            background-color: #9a9ea14b !important; /* gris foncé */
+            color: #000 !important;            /* texte blanc */
+            cursor: not-allowed;                  /* curseur interdit */
+            pointer-events: none;                 /* désactive toute interaction souris */
+            opacity: 0.8;                         /* effet légèrement grisé */
+        }
+
+        /* Optionnel : pour que le texte ne soit pas sélectionnable */
+        input[readonly]::selection,
+        textarea[readonly]::selection {
+            background: transparent;
+        }
+
     </style>
 
     

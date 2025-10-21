@@ -3,7 +3,7 @@
     <h5 class="mb-1">Informations sur votre état de santé</h5>
 
     <p class="mb-4">Veuillez cocher les informations relatives à votre état de santé en tenant compte des champs
-        obligatoire.</p>
+        Obligatoires.</p>
 
 
 
@@ -1359,47 +1359,30 @@
                                     <div class="row">
 
                                         <div class="col-12 col-lg-7 col-md-6 col-sm-6 border-r">
-
                                             <label for="" class="form-label">Insuffisance rénale</label>
-
                                         </div>
 
                                         <div class="col-12 col-lg-5 col-md-6 col-sm-6">
-
                                             <div class="form-check form-check-inline">
 
                                                 <input class="form-check-input" name="kidneyFailure" type="radio"
                                                     value="Oui" id="InsuffisanceOui">
 
                                                 <label class="form-check-label" for="InsuffisanceOui">
-
                                                     Oui
-
                                                 </label>
-
                                             </div>
 
                                             <div class="form-check form-check-inline">
-
                                                 <input class="form-check-input" name="kidneyFailure" type="radio"
                                                     value="Non" id="InsuffisanceNon">
-
                                                 <label class="form-check-label" for="InsuffisanceNon">
-
                                                     Non
-
                                                 </label>
-
                                             </div>
-
                                         </div>
-
                                     </div>
-
                                 </div>
-
-
-
                             </div>
 
 
@@ -1451,26 +1434,18 @@
                                     </div>
 
                                 </div>
-
-
-
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
         @endif
 
         <div class="col-12">
 
             <div class="d-flex align-items-center justify-content-between gap-3">
-
                 <button onclick="event.preventDefault(); stepper1.previous()"
-                    class="btn border-btn btn-previous-form"><i class='bx bx-left-arrow-alt'></i>Previous</button>
+                    class="btn border-btn btn-previous-form"><i class='bx bx-left-arrow-alt'></i>Précédent</button>
 
                 <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form d-none" id="btn-next-sante">Suivant<i
                         class='bx bx-right-arrow-alt'></i></button>

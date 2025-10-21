@@ -1,7 +1,7 @@
 <div id="test-l-4" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger4">
-    <h5 class="mb-1">Informations relatives aux modes de paiement et la periodicité</h5>
-    <p class="mb-4">Veuillez entrer les informations relatives aux modes de paiement et la periodicité en tenant compte
-        des champs obligatoire.</p>
+    <h5 class="mb-1">Informations relatives aux modes de paiement et à la périodicité </h5>
+    <p class="mb-4">Veuillez entrer les informations relatives aux modes de paiement et à la périodicité  en tenant compte
+        des champs Obligatoires.</p>
 
     <div class="row g-3">
         <div class="col-12 col-lg-8">
@@ -66,17 +66,17 @@
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <label class="form-label small">Code Guichet</label>
                                 <input type="text" class="form-control account-number-input" id="codeguichet" 
-                                    placeholder="02005" maxlength="5" pattern="[0-9]{5}" name="codeguichet" required>
+                                    placeholder="02005" maxlength="5" pattern="[0-9]{5}" name="codeguichet" >
                             </div> 
                             <div class="col-sm-8 col-md-5 col-lg-5">
                                 <label class="form-label small">Numéro de compte</label>
                                 <input type="text" class="form-control account-number-input" id="numerocompte" 
-                                    placeholder="00123456789" maxlength="12" pattern="[0-9]{12}" name="numerocompte" required>
+                                    placeholder="00123456789" maxlength="12" pattern="[0-9]{12}" name="numerocompte" >
                             </div> 
                             <div class="col-sm-4 col-md-2 col-lg-2">
                                 <label class="form-label small">Clé RIB</label>
                                 <input type="text" class="form-control account-number-input" id="rib" 
-                                    placeholder="12" maxlength="2" pattern="[0-9]{2}" name="rib" required>
+                                    placeholder="12" maxlength="2" pattern="[0-9]{2}" name="rib" >
                             </div>
                         </div>
                         <div class="col-12 mb-3">
@@ -238,34 +238,33 @@
                                 <input type="date" class="form-control" id="DateEffet" name="dateEffet">
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="primepricipale" class="form-label">Je souhaite payer une prime de
-                                    :</label>
-                                <input type="number" class="form-control" id="primepricipale" name="primepricipale"
-                                    min="0" required>
+                                <label for="primepricipale" class="form-label input-group-label">Je souhaite payer une prime de :</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="primepricipale" name="primepricipale" min="0" required>
+                                    <span class="input-group-text">FCFA</span>
+                                </div>
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="fraisAdhesion" class="form-label">Fraie d'adhesion :</label>
-                                <input type="number" class="form-control" id="fraisAdhesion" name="fraisAdhesion"
-                                    min="0">
+                                <label for="fraisAdhesion" class="form-label">Frais d’adhésion :</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="fraisAdhesion" name="fraisAdhesion"
+                                        min="0">
+                                    <span class="input-group-text">FCFA</span>
+                                </div>
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="capital" class="form-label">Capital souscrit :</label>
-                                <input type="text" class="form-control" id="capital" name="capital" required>
-                                
-                                    {{-- <select name="capital" id="capital" class="form-select" required>
-                                        <option value="" selected>Selectionnez le capital souscrit</option>
-                                        <option value="300000">300 000</option>
-                                        <option value="500000">500 000</option>
-                                        <option value="750000">750 000</option>
-                                        <option value="1000000">1 000 000</option>
-                                        <option value="1250000">1 250 000</option>
-                                        <option value="1500000">1 500 000</option>
-                                        <option value="2000000">2 000 000</option>
-                                    </select> --}}
+                                <label for="capital" class="form-label">Capital souscrit (en FCFA) :</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="capital" name="capital" required>
+                                    <span class="input-group-text">FCFA</span>
+                                </div>
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="duree" class="form-label">Durée de mes cotisations :</label>
-                                <input type="number" class="form-control" id="duree" name="duree" min="0"> 
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="duree" name="duree" min="0"> 
+                                    <span class="input-group-text">mois</span>
+                                </div>
                             </div>
 
                         @endif
@@ -281,7 +280,7 @@
         <div class="col-12">
             <div class="d-flex align-items-center justify-content-between gap-3">
                 <button onclick="event.preventDefault(); stepper1.previous()"
-                    class="btn border-btn btn-previous-form"><i class='bx bx-left-arrow-alt'></i>Precedent</button>
+                    class="btn border-btn btn-previous-form"><i class='bx bx-left-arrow-alt'></i>Précédent</button>
                 <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i
                         class='bx bx-right-arrow-alt'></i></button>
             </div>

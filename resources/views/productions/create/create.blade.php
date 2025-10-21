@@ -71,7 +71,7 @@
                         <div class="step-trigger etape" role="tab" id="stepper1trigger4" aria-controls="test-l-4">
                             <div class="bs-stepper-circle">4</div>
                             <div class="text-center">
-                                <p class="mb-0 steper-sub-title">Paiement & Prériodicité</p>
+                                <p class="mb-0 steper-sub-title">Paiement & Périodicité</p>
                             </div>
                         </div>
                     </div>

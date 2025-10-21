@@ -134,7 +134,7 @@
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="naturepieceAssur" id="AtestationAssur" value="AT">
-                                            <label class="form-check-label" for="AtestationAssur">Atestation</label>
+                                            <label class="form-check-label" for="AtestationAssur">Attestation</label>
 
                                         </div>
 
@@ -142,7 +142,7 @@
 
                                             <input class="form-check-input" type="radio" name="naturepieceAssur" id="PassportAssur" value="Passport">
 
-                                            <label class="form-check-label" for="PassportAssur">Passport</label>
+                                            <label class="form-check-label" for="PassportAssur">Passeport</label>
 
                                         </div> 
 

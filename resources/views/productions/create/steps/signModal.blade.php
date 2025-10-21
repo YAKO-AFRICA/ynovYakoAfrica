@@ -6,10 +6,33 @@
                 {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
             </div>
 
+            <style>
+            /* Cacher le QRCode sur les petits écrans (mobile) */
+            #signature-qrcode {
+                display: none;
+            }
+
+            /* Afficher le QRCode à partir des écrans ≥ 768px */
+            @media (min-width: 768px) {
+                #signature-qrcode {
+                    display: block;
+                }
+
+                #signature-iframe {
+                    display: none;
+                }
+            }
+        </style>
+
             <div class="modal-body">
                 
-
-                <div class="card p-2">
+                <div class="card p-2" id="signature-iframe">
+                    
+                    <iframe
+                        src="{{ url(config('services.sign_api') . 'signature/' . $token['token'] . '/' . $token['operation_type'] . '/' . $token['key_uuid']) }}"
+                        frameborder="0" style="width: 100%; height: 60vh"></iframe>
+                </div>
+                <div class="card p-2" id="signature-qrcode">
                     <div class="card-header text-center">
                         <h4>Veuillez scanner ce code QR pour éffectuer votre signature</h4>
                     </div>

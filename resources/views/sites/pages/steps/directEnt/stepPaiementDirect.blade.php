@@ -215,6 +215,65 @@
     </script>
 
     <script>
+function handleModePaiementChange() {
+    const mode = document.querySelector('input[name="modepaiement"]:checked')?.value;
+
+    const modeBancaire = document.getElementById('mode_bancaire');
+    const modeMobile = document.getElementById('mode_mobile');
+    const carteBancaire = document.getElementById('carte_mode');
+
+    // Champs bancaires
+    const champsBancaires = [
+        document.getElementById('codebanque'),
+        document.getElementById('codeguichet'),
+        document.getElementById('numerocompte'),
+        document.getElementById('rib')
+    ];
+
+    // Champ mobile
+    const champMobile = document.getElementById('numMobile');
+
+    if (mode === 'VIR' || mode === 'SOURCE') {
+        modeBancaire.style.display = 'block';
+        modeMobile.style.display = 'none';
+        if (carteBancaire) carteBancaire.style.display = 'none';
+
+        // Rendre les champs bancaires obligatoires
+        champsBancaires.forEach(champ => champ?.setAttribute('required', true));
+        if (champMobile) champMobile.removeAttribute('required');
+    } 
+    else if (mode === 'Mobile_money') {
+        modeBancaire.style.display = 'none';
+        modeMobile.style.display = 'block';
+        if (carteBancaire) carteBancaire.style.display = 'none';
+
+        // Rendre le champ mobile obligatoire, et non les champs bancaires
+        champMobile?.setAttribute('required', true);
+        champsBancaires.forEach(champ => champ?.removeAttribute('required'));
+    } 
+    else {
+        // ESP, CHQ, etc. => rien de requis
+        modeBancaire.style.display = 'none';
+        modeMobile.style.display = 'none';
+        if (carteBancaire) carteBancaire.style.display = 'none';
+
+        // Retirer tous les required
+        champsBancaires.forEach(champ => champ?.removeAttribute('required'));
+        champMobile?.removeAttribute('required');
+    }
+}
+
+// Écouteurs sur tous les boutons radio de modepaiement
+document.querySelectorAll('input[name="modepaiement"]').forEach(input => {
+    input.addEventListener('change', handleModePaiementChange);
+});
+
+// Initialiser l'affichage correct au chargement
+document.addEventListener('DOMContentLoaded', handleModePaiementChange);
+</script>
+
+
+    {{-- <script>
         function handleModePaiementChange() {
             const mode = document.querySelector('input[name="modepaiement"]:checked')?.value;
 
@@ -249,7 +308,7 @@
 
         // Initialiser l'affichage correct au chargement (au cas où il y aurait une valeur déjà cochée)
         document.addEventListener('DOMContentLoaded', handleModePaiementChange);
-    </script>
+    </script> --}}
 
 
 

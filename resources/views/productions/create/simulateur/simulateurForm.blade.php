@@ -57,7 +57,7 @@
                         <div class="form-group row">
                             <div class="col-sm-12 col-md-6 mb-3">
                                 <label class="form-label">Code Produit :</label>
-                                <input type="text" class="form-control" id="CodeProduit" name="CodeProduit" value="{{ $product->CodeProduit}}" required>
+                                <input type="text" class="form-control" id="CodeProduit" name="CodeProduit" value="{{ $product->CodeProduit}}" required readonly>
                             </div>
                             <div class="col-sm-12 col-md-6 mb-3">
                                 <label class="form-label">Durée Cotisation :</label>

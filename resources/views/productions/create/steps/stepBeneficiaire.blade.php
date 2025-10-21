@@ -1,7 +1,7 @@
 <div id="test-l-3" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger3">
     <h5 class="mb-1">Informations du ou des bénéficiaire(s)</h5>
     <p class="mb-4">Veuillez entrer les informations relatives au(x) bénéficiaire(s) en tenant compte des champs
-        obligatoire.</p>
+        Obligatoires.</p>
 
     <div class="row g-3">
 
@@ -12,7 +12,7 @@
                 <div class="card-body">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="addBeneficiary" value="adherent" name="addBeneficiary" required>
-                        <label class="form-check-label" for="addBeneficiary" >Adherent</label>
+                        <label class="form-check-label" for="addBeneficiary" >Adhérent</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="Conjoint" id="conjoint1">
@@ -96,7 +96,7 @@
             <div class="d-flex align-items-center justify-content-between gap-3">
                 <button onclick="event.preventDefault(); stepper1.previous()"
                     class="btn border-btn btn-previous-form"><i
-                        class='bx bx-left-arrow-alt'></i>Precedent</button>
+                        class='bx bx-left-arrow-alt'></i>Précédent</button>
                 <button onclick="event.preventDefault(); stepper1.next()"
                     class="btn btn-two btn-next-form">Suivant<i
                         class='bx bx-right-arrow-alt'></i></button>

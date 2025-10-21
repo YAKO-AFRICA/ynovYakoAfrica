@@ -1,7 +1,7 @@
 <div id="test-l-1" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger1">
     <h5 class="mb-1">Informations personnelles de l'adhérent</h5>
     <p class="mb-4">Veuillez entrer vos informations personnelles pour commencer l'adhésion en tenant compte des champs
-        obligatoire (<span class="star">*</span>).</p>
+        Obligatoires (<span class="star">*</span>).</p>
 
 
     <div class="col-12 d-flex justify-content-center align-items-center">
@@ -97,7 +97,7 @@
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="naturepiece" id="Passport" value="Passport" autocomplete="on" required>
-                <label class="form-check-label" for="Passport">Passport</label>
+                <label class="form-check-label" for="Passport">Passeport</label>
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="naturepiece" id="CarteConsulaire" value="CarteConsulaire" autocomplete="on" required>
@@ -119,7 +119,7 @@
             @enderror
         </div>
         <div class="col-12 col-lg-4">
-            <label for="lieuresidence" class="form-label">Lieu de residence <span class="text-danger">*</span></label>
+            <label for="lieuresidence" class="form-label">Lieu de Résidence <span class="text-danger">*</span></label>
             <select class="form-select selection" name="lieuresidence" id="lieuresidence" autocomplete="on" required>
                 <option value="" disabled selected>Sélectionner le lieu</option>
 
@@ -142,9 +142,9 @@
             </select>
         </div>
         <div class="col-12 col-lg-6">
-            <label for="employeur" class="form-label">Secteur d'activites</label>
+            <label for="employeur" class="form-label">Secteur d'd’activités</label>
             <select class="form-select selection" name="employeur" id="employeur" autocomplete="on">
-                <option value="" disabled selected>Sélectionner le secteur d'activites</option>
+                <option value="" disabled selected>Sélectionner le secteur d'd’activités</option>
 
                 @foreach($secteurActivites as $secteurActivite)
                     <option value="{{ $secteurActivite->MonLibelle }}">{{ $secteurActivite->MonLibelle }}</option>
@@ -155,8 +155,8 @@
     </div>
     <div class="row g-3 mb-3">
         <div class="col-12">
-            <label for="email" class="form-label">Email </label>
-            <input type="email" name="email" class="form-control" id="email" placeholder="Email" autocomplete="on">
+            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+            <input type="email" name="email" class="form-control" id="email" placeholder="Email" autocomplete="on" required>
 
             @error('email')
 
@@ -165,53 +165,69 @@
             @enderror
         </div>
     </div>
-    <div class="row g-3 mb-3">
-        <div class="col-12 col-lg-6">
-            <label class="form-label">Mobile <span class="text-danger">*</span></label><br>
-            <div class="input-group mb-3">
-                <input type="text" name="mobile" class="form-control" autocomplete="on" required minlength="10" maxlength="14">
-            </div>
-
-            @error('mobile')
-                <span class="text-danger"> Veuillez remplir votre numéro de mobile </span>
-            @enderror
-
-
-        </div>
-        <div class="col-12 col-lg-6">
-            <label class="form-label">Mobile 2</label><br>
-            <div class="input-group mb-3">
-                <input type="text" id="mobile1" name="mobile1" class="form-control" autocomplete="on" minlength="10" maxlength="14">
-            </div>
-        </div>
-        
-    </div>
- 
-    <!---end row-->
     <fieldset class="border p-3">
-        <legend class="float-none w-auto px-2"><small>Numéro de mobile spécial</small></legend>
-
-        <div class="row g-3 mb-3">
-            <div class="col-12 col-lg-8">
-                <label for="contact_nom" class="form-label">Type contact </label>
-                <select name="typeNumMSpecial" id="typeNumMSpecial" class="form-select">
+        <legend class="float-none w-auto px-2"><small>Numéro de téléphone</small></legend>
+        <div class="row col-12 col-lg-12">
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <label for="contact_nom" class="form-label">Type Mobile 1 <span class="text-danger">*</span> </label>
+                <select name="typMobileOne" id="typMobileOne" class="form-select" required>
                     <option value="Whatsapp">Whatsapp</option>
                     <option value="MobileMoney">Mobile Money</option>
-                    <option value="tel">Tél</option>
+                    <option value="Wave">Wave</option>
+                    <option value="Tel">Tél</option>
                 </select>
             </div>
-            <div class="col-12 col-lg-4">
-                <label class="form-label">Contact </label><br>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <label class="form-label">Mobile 1 <span class="text-danger">*</span></label><br>
                 <div class="input-group mb-3">
-                    <input type="text" id="numSpecial" name="numSpecial" class="form-control" autocomplete="on" minlength="10" maxlength="14">
+                    <input type="text" name="mobile" class="form-control" autocomplete="on" required minlength="10" maxlength="14" required>
+                </div>
+                @error('mobile')
+                    <span class="text-danger"> Veuillez remplir votre numéro de mobile </span>
+                @enderror
+            </div>
+        </div>
+        <div class="row col-sm-12 col-md-12 col-lg-12">
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <label for="contact_nom" class="form-label">Type Mobile 2 </label>
+                <select name="typMobileTwo" id="typMobileTwo" class="form-select" required>
+                    <option value="Whatsapp">Whatsapp</option>
+                    <option value="MobileMoney">Mobile Money</option>
+                    <option value="Wave">Wave</option>
+                    <option value="Tel">Tél</option>
+                </select>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <label class="form-label">Mobile 2 </label><br>
+                <div class="input-group mb-3">
+                    <input type="text" name="mobile1" class="form-control" autocomplete="on" required minlength="10" maxlength="14" >
+                </div>
+                @error('mobile1')
+                    <span class="text-danger"> Veuillez remplir votre numéro de mobile </span>
+                @enderror
+            </div>
+        </div>
+        <div class="row g-3 mb-3 col-sm-12 col-md-12 col-lg-12">
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <label for="contact_nom" class="form-label">Type contact 3 </label>
+                <select name="typMobileThree" id="typMobileThree" class="form-select">
+                    <option value="Whatsapp">Whatsapp</option>
+                    <option value="MobileMoney">Mobile Money</option>
+                    <option value="Wave">Wave</option>
+                    <option value="Tel">Tél</option>
+                </select>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <label class="form-label">Contact 3 </label><br>
+                <div class="input-group mb-3">
+                    <input type="text" id="telephone" name="telephone" class="form-control" autocomplete="on" minlength="10" maxlength="14">
                 </div>
             </div>
         </div>
-
-        
     </fieldset>
+    
     <fieldset class="border p-3">
-        <legend class="float-none w-auto px-2"><small>Personnes à contacter en cas de besoins</small></legend>
+        <legend class="float-none w-auto px-2"><small>Personnes à contacter en cas de Besoin</small></legend>
 
         <div class="row g-3 mb-3">
             <div class="col-12 col-lg-8">
@@ -244,7 +260,7 @@
     <div class="d-flex justify-content-between">
         <div class="">
             <button onclick="event.preventDefault(); stepper1.previous()" class="btn border-btn btn-previous-form"><i
-                class='bx bx-left-arrow-alt'></i>Precedent</button>
+                class='bx bx-left-arrow-alt'></i>Précédent</button>
         </div>
 
         <div class="">
@@ -317,7 +333,7 @@
         });
     </script>
 
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function () {
             const apiUrl = 'https://api.yakoafricassur.com/enov/villes';
             const apiProfessions = 'https://api.yakoafricassur.com/enov/professions';
@@ -355,6 +371,60 @@
                     });
                 });
         });
-    </script>
+    </script> --}}
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const apiUrl = 'https://api.yakoafricassur.com/enov/villes';
+        const apiProfessions = 'https://api.yakoafricassur.com/enov/professions';
+
+        // Fonction utilitaire pour mettre en majuscule uniquement la première lettre
+        function capitalizeFirstLetter(str) {
+            if (!str) return '';
+            return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+        }
+
+        // Chargement des villes
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const villeSelect = document.getElementById('lieuresidence');
+                const lieuSelect = document.getElementById('lieunaissance');
+                
+                data.forEach(ville => {
+                    const libelleFormate = capitalizeFirstLetter(ville.MonLibelle);
+
+                    const optionVille = document.createElement('option');
+                    optionVille.value = libelleFormate;
+                    optionVille.textContent = libelleFormate;
+                    villeSelect.appendChild(optionVille);
+
+                    const optionLieu = document.createElement('option');
+                    optionLieu.value = libelleFormate;
+                    optionLieu.textContent = libelleFormate;
+                    lieuSelect.appendChild(optionLieu);
+                });
+            })
+            .catch(error => console.error('Erreur chargement villes:', error));
+
+        // Chargement des professions
+        fetch(apiProfessions)
+            .then(response => response.json())
+            .then(data => {
+                const professionSelect = document.getElementById('profession');
+                
+                data.forEach(profession => {
+                    const libelleFormate = capitalizeFirstLetter(profession.MonLibelle);
+
+                    const optionProfession = document.createElement('option');
+                    optionProfession.value = libelleFormate;
+                    optionProfession.textContent = libelleFormate;
+                    professionSelect.appendChild(optionProfession);
+                });
+            })
+            .catch(error => console.error('Erreur chargement professions:', error));
+    });
+</script>
+
 
 </div>

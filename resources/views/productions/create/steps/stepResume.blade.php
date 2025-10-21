@@ -233,7 +233,7 @@
         <div class="col-12">
             <div class="d-flex align-items-center justify-content-between gap-3">
                 <button onclick="event.preventDefault(); stepper1.previous()"
-                    class="btn border-btn btn-previous-form"><i class='bx bx-left-arrow-alt'></i>Previous</button>
+                    class="btn border-btn btn-previous-form"><i class='bx bx-left-arrow-alt'></i>Précédent</button>
 
                 {{-- <button class="btn btn-success px-4" type="submit">Submit</button> --}}
 
@@ -546,7 +546,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
-                    alert(data.codeOTP);
                     if (data.status == 200) {
                         console.log('OTP envoyé');
                         // Masquer sendOTPForm, afficher verifyOTPForm

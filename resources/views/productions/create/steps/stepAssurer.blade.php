@@ -1,6 +1,6 @@
 <div id="test-l-2" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger2">
     <h5 class="mb-1">Informations de l'assuré(e)</h5>
-    <p class="mb-4">Veuillez entrer les informations relatives à l'assuré(e) en tenant compte des champs obligatoire.
+    <p class="mb-4">Veuillez entrer les informations relatives à l'assuré(e) en tenant compte des champs Obligatoires.
     </p>
     @php
         $GarantiesOptionnelles = $productGarantie->where('estobligatoire', 0)->all();
@@ -142,7 +142,7 @@
         {{-- <div class="col-12"> --}}
         <div class="d-flex align-items-center justify-content-between gap-3">
             <button onclick="event.preventDefault(); stepper1.previous()" class="btn border-btn btn-previous-form"><i
-                    class='bx bx-left-arrow-alt'></i>Precedent</button>
+                    class='bx bx-left-arrow-alt'></i>Précédent</button>
             <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i
                     class='bx bx-right-arrow-alt'></i></button>
         </div>

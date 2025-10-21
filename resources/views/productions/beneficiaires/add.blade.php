@@ -46,9 +46,10 @@
                             <label for="lienParente" class="form-label">Lien de Parenté</label>
                             <select id="lienParente" class="form-select">
                                 <option selected value="">Sélectionner le lien de Parenté</option>
-                                <option value="Conjoint">Conjoint</option>
-                                <option value="Enfant">Enfant</option>
-                                <option value="Autre">Autre</option>
+                              
+                                @foreach ($filliations  as $item)
+                                    <option value="{{ $item->CodeFiliation }}">{{ $item->MonLibelle }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -66,7 +67,7 @@
                     <div class="row g-3 mb-3">
                         <div class="col-12">
                             <label for="partBenef" class="form-label">Part en %</label>
-                            <input type="number" id="partBenef" class="form-control" placeholder="Part du bénéficiaire">
+                            <input type="number" id="partBenef" class="form-control" placeholder="Part du bénéficiaire" min="0" max="100">
                         </div>
                     </div>
                     <input type="hidden" id="beneficiariesInput" name="beneficiaires">

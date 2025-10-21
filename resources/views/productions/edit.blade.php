@@ -261,16 +261,9 @@
                     @include('productions.beneficiaires.info' , ['codecontrat' => $contrat->id])
 
                 </section>
-
-                
-
             </div>
-
         </div>
-
     </div>
-
-
 
     @include('productions.components.addDoc')
 
@@ -359,14 +352,14 @@
 
         const url_redirection_success = window.location.href + '/payment/success';
         const url_redirection_failed = window.location.href + '/payment/failed';
-        const amount = 100;
+        const amount = contratInfo.prime;
         const city = "";
         const email = contratInfo.adherent.email || "";
         const clientFirstname = contratInfo.adherent.prenom || "";
         const clientLastname = contratInfo.adherent.nom || "";
         const clientPhone = contratInfo.adherent.mobile || "";
 
-        fetch('http://ynovyakoafrica.test/cretePaiement', {
+        fetch('{{ config('app.url') }}/cretePaiement', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
