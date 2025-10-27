@@ -8,12 +8,12 @@
             <div class="modal-body">
                 <form id="clientForm">
                     @csrf
-                    
+
                     <!-- Progress Bar -->
                     <div class="progress mb-4">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" id="formProgress" style="width: 0%; background-color: #1e4520" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" id="formProgress" style="width: 0%; background-color: #1e4520"></div>
                     </div>
-                    
+
                     <!-- Steps Indicators -->
                     <ul class="nav nav-pills mb-4 justify-content-center" id="formSteps" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -37,192 +37,160 @@
                             </button>
                         </li>
                     </ul>
-                    
+
                     <div class="tab-content" id="formStepsContent">
-                        <!-- Step 1: Personal Information -->
-                        <div class="tab-pane fade show active" id="step1" role="tabpanel" aria-labelledby="step1-tab">
-                            <div class="card mb-4">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0">Informations Personnelles</h6>
+                        <!-- STEP 1 : INFORMATIONS PERSONNELLES -->
+                        <div class="tab-pane fade show active" id="step1" role="tabpanel">
+                            <fieldset class="border p-3 rounded mb-4">
+                                <legend class="float-none w-auto px-3">Informations Personnelles</legend>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="first_name" class="form-label">Prénom <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="first_name" name="first_name" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="last_name" class="form-label">Nom <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="last_name" name="last_name" required>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="first_name" class="form-label">Prénom <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="first_name" name="first_name" required>
-                                            <div class="invalid-feedback">Veuillez saisir le prénom</div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label for="last_name" class="form-label">Nom <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="last_name" name="last_name" required>
-                                            <div class="invalid-feedback">Veuillez saisir le nom</div>
-                                        </div>
+                            </fieldset>
+
+                            <fieldset class="border p-3 rounded mb-4">
+                                <legend class="float-none w-auto px-3">Fiche signalétique</legend>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="gender" class="form-label">Sexe</label>
+                                        <select class="form-select" id="gender" name="gender">
+                                            <option value="">Sélectionner...</option>
+                                            <option value="M">Masculin</option>
+                                            <option value="F">Féminin</option>
+                                        </select>
                                     </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email">
-                                        <div class="invalid-feedback">Veuillez saisir un email valide</div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label for="birth_date" class="form-label">Date de Naissance</label>
+                                        <input type="date" class="form-control" id="birth_date" name="birth_date">
                                     </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="mobile" class="form-label">Téléphone Mobile</label>
-                                        <input type="tel" class="form-control" id="mobile" name="mobile" maxlength="10" pattern="[0-9]{10}">
-                                        <div class="invalid-feedback">Veuillez saisir un numéro valide (10 chiffres)</div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label for="marital_status" class="form-label">Situation Matrimoniale</label>
+                                        <select class="form-select" id="marital_status" name="marital_status">
+                                            <option value="">Sélectionner...</option>
+                                            <option value="celibataire">Célibataire</option>
+                                            <option value="marie">Marié(e)</option>
+                                            <option value="divorce">Divorcé(e)</option>
+                                            <option value="veuf">Veuf(ve)</option>
+                                        </select>
                                     </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="adress" class="form-label">Adresse</label>
-                                        <textarea class="form-control" id="adress" name="adress" rows="2"></textarea>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="city" class="form-label">Ville</label>
-                                        <select name="city" id="city" class="form-select modal-selecti">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="city" class="form-label">Ville de Résidence</label>
+                                        <select name="city" id="city" class="form-select">
                                             <option value="" disabled selected>Sélectionner...</option>
                                             @foreach ($villes as $item)
                                                 <option value="{{ $item->idville }}">{{ $item->libelleVillle }}</option>
                                             @endforeach
                                         </select>
                                     </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="adress" class="form-label">Adresse complète</label>
+                                        <textarea class="form-control" id="adress" name="adress" rows="2"></textarea>
+                                    </div>
                                 </div>
-                            </div>
-                            
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="mobile" class="form-label">Téléphone Mobile</label>
+                                        <input type="tel" class="form-control" id="mobile" name="mobile" maxlength="10" pattern="[0-9]{10}">
+                                    </div>
+                                </div>
+                            </fieldset>
+
                             <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-primary next-step" data-next="step2" style="background-color: #1e4520; border-color: #1e4520">
+                                <button type="button" class="btn btn-primary next-step" data-next="step2" style="background-color:#1e4520;border-color:#1e4520;">
                                     Suivant <i class="fas fa-arrow-right ms-2"></i>
                                 </button>
                             </div>
                         </div>
-                        
-                        <!-- Step 2: Professional Information -->
-                        <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="step2-tab">
-                            <div class="card mb-4">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0">Informations Professionnelles</h6>
+
+                        <!-- STEP 2 : INFORMATIONS PROFESSIONNELLES -->
+                        <div class="tab-pane fade" id="step2" role="tabpanel">
+                            <fieldset class="border p-3 rounded mb-4">
+                                <legend class="float-none w-auto px-3">Informations Professionnelles</legend>
+                                <div class="mb-3">
+                                    <label for="profession_uuid" class="form-label">Profession</label>
+                                    <select class="form-select" id="profession_uuid" name="profession_uuid">
+                                        <option value="">Sélectionner...</option>
+                                        @foreach ($professions as $item)
+                                            <option value="{{ $item->id }}">{{ $item->MonLibelle }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                                <div class="card-body">
-                                    <div class="mb-3">
-                                        <label for="profession_uuid" class="form-label">Profession</label>
-                                        <select class="form-select modal-selo" id="profession_uuid" name="profession_uuid">
-                                            <option value="">Sélectionner...</option>
-                                            @foreach ($professions as $item)
-                                                <option class="form-optio" value="{{ $item->id }}">{{ $item->MonLibelle }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="secteurActivity_uuid" class="form-label">Secteur d'Activité</label>
-                                        <select class="form-select" id="secteurActivity_uuid" name="secteurActivity_uuid">
-                                            <option value="">Sélectionner...</option>
-                                            @foreach ($secteurActivites as $item)
-                                                <option value="{{ $item->uuid }}">{{ $item->MonLibelle  }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="natureProspect" class="form-label">Nature du Prospect <span class="text-danger">*</span></label>
-                                        <select class="form-select" id="natureProspect" name="natureProspect" required>
-                                            <option value="" disabled selected>Sélectionner...</option>
-                                            <option value="Suspect">Suspect</option>
-                                            <option value="Prospect">Prospect</option>
-                                            <option value="Déjà client">Déjà client</option>
-                                        </select>
-                                        <div class="invalid-feedback">Veuillez sélectionner une nature</div>
-                                    </div>
+
+                                <div class="mb-3">
+                                    <label for="secteurActivity_uuid" class="form-label">Secteur d'Activité</label>
+                                    <select class="form-select" id="secteurActivity_uuid" name="secteurActivity_uuid">
+                                        <option value="">Sélectionner...</option>
+                                        @foreach ($secteurActivites as $item)
+                                            <option value="{{ $item->uuid }}">{{ $item->MonLibelle }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                            </div>
-                            
+                            </fieldset>
+
                             <div class="d-flex justify-content-between">
-                                <button type="button" class="btn btn-secondary prev-step" data-prev="step1">
-                                    <i class="fas fa-arrow-left me-2"></i> Précédent
-                                </button>
-                                <button type="button" class="btn btn-primary next-step" data-next="step3" style="background-color: #1e4520; border-color: #1e4520">
-                                    Suivant <i class="fas fa-arrow-right ms-2"></i>
-                                </button>
+                                <button type="button" class="btn btn-secondary prev-step" data-prev="step1"><i class="fas fa-arrow-left me-2"></i>Précédent</button>
+                                <button type="button" class="btn btn-primary next-step" data-next="step3" style="background-color:#1e4520;border-color:#1e4520;">Suivant <i class="fas fa-arrow-right ms-2"></i></button>
                             </div>
                         </div>
-                        
-                        <!-- Step 3: Insurance Information -->
-                        <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="step3-tab">
-                            <div class="card mb-4">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0">Informations Assurance</h6>
+
+                        <!-- STEP 3 : INFORMATIONS ASSURANCE -->
+                        <div class="tab-pane fade" id="step3" role="tabpanel">
+                            <fieldset class="border p-3 rounded mb-4">
+                                <legend class="float-none w-auto px-3">Informations Assurance</legend>
+
+                                <div class="mb-3">
+                                    <label for="products" class="form-label">Produits à souscrire</label>
+                                    <select multiple class="form-select" id="products" name="products[]">
+                                        @foreach ($product as $item)
+                                            <option value="{{ $item->IdProduit }}">{{ $item->MonLibelle }}</option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-muted">Maintenez Ctrl (ou Cmd sur Mac) pour sélectionner plusieurs produits.</small>
                                 </div>
-                                <div class="card-body">
-                                    <div class="mb-3">
-                                        <label for="products" class="form-label">Produit</label>
-                                        <select class="form-select" id="products" name="products[]" multiple>
-                                            @foreach ($product as $item)
-                                                <option value="{{ $item->IdProduit }}">
-                                                    {{ $item->MonLibelle }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="typeCompagnie" class="form-label">Type de Compagnie</label>
-                                        <select class="form-select" id="typeCompagnie" name="typeCompagnie">
-                                            <option value="">Sélectionner...</option>
-                                            <option value="assurance">Assurance</option>
-                                            <option value="banque">Banque</option>
-                                            <option value="microfinance">Microfinance</option>
-                                        </select>
-                                    </div>
+
+                                <div id="selectedProducts" class="mt-3">
+                                    <strong>Produits sélectionnés :</strong>
+                                    <ul id="productList" class="list-group mt-2"></ul>
                                 </div>
-                            </div>
-                            
+                            </fieldset>
+
                             <div class="d-flex justify-content-between">
-                                <button type="button" class="btn btn-secondary prev-step" data-prev="step2">
-                                    <i class="fas fa-arrow-left me-2"></i> Précédent
-                                </button>
-                                <button type="button" class="btn btn-primary next-step" data-next="step4" style="background-color: #1e4520; border-color: #1e4520">
-                                    Suivant <i class="fas fa-arrow-right ms-2"></i>
-                                </button>
+                                <button type="button" class="btn btn-secondary prev-step" data-prev="step2"><i class="fas fa-arrow-left me-2"></i>Précédent</button>
+                                <button type="button" class="btn btn-primary next-step" data-next="step4" style="background-color:#1e4520;border-color:#1e4520;">Suivant <i class="fas fa-arrow-right ms-2"></i></button>
                             </div>
                         </div>
-                        
-                        <!-- Step 4: Status and Finalization -->
-                        <div class="tab-pane fade" id="step4" role="tabpanel" aria-labelledby="step4-tab">
-                            <div class="card mb-4">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0">Finalisation</h6>
+
+                        <!-- STEP 4 : FINALISATION -->
+                        <div class="tab-pane fade" id="step4" role="tabpanel">
+                            <fieldset class="border p-3 rounded mb-4">
+                                <legend class="float-none w-auto px-3">Finalisation</legend>
+
+                                <div class="mb-3">
+                                    <label for="note" class="form-label">Notes / Observations</label>
+                                    <textarea class="form-control" id="note" name="note" rows="3"></textarea>
                                 </div>
-                                <div class="card-body">
-                                    <div class="mb-3">
-                                        <label for="lieuEvenement" class="form-label">Lieu de prospection</label>
-                                        <input type="text" class="form-control" id="lieuEvenement" name="lieuEvenement">
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="status" class="form-label">Statut <span class="text-danger">*</span></label>
-                                        <select class="form-select" id="status" name="status" required>
-                                            <option value="" disabled selected>Sélectionner...</option>
-                                            <option value="nouveau">Nouveau</option>
-                                            <option value="en_cours">En cours</option>
-                                            <option value="finalise">Finalisé</option>
-                                            <option value="annule">Annulé</option>
-                                        </select>
-                                        <div class="invalid-feedback">Veuillez sélectionner un statut</div>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="note" class="form-label">Notes</label>
-                                        <textarea class="form-control" id="note" name="note" rows="3"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            
+                            </fieldset>
+
                             <div class="d-flex justify-content-between">
-                                <button type="button" class="btn btn-secondary prev-step" data-prev="step3">
-                                    <i class="fas fa-arrow-left me-2"></i> Précédent
-                                </button>
-                                <button type="submit" class="btn btn-success" id="saveClientBtn" style="background-color: #1e4520; border-color: #1e4520">
-                                    <i class="fas fa-save me-2"></i> Enregistrer
-                                </button>
+                                <button type="button" class="btn btn-secondary prev-step" data-prev="step3"><i class="fas fa-arrow-left me-2"></i>Précédent</button>
+                                <button type="submit" class="btn btn-success" id="saveClientBtn" style="background-color:#1e4520;border-color:#1e4520;"><i class="fas fa-save me-2"></i>Enregistrer</button>
                             </div>
                         </div>
                     </div>
@@ -231,6 +199,25 @@
         </div>
     </div>
 </div>
+
+<!-- Script dynamique pour affichage des produits sélectionnés -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const productSelect = document.getElementById("products");
+    const productList = document.getElementById("productList");
+
+    productSelect.addEventListener("change", function() {
+        productList.innerHTML = "";
+        Array.from(this.selectedOptions).forEach(opt => {
+            const li = document.createElement("li");
+            li.textContent = opt.textContent;
+            li.classList.add("list-group-item");
+            productList.appendChild(li);
+        });
+    });
+});
+</script>
+
 
 <style>
     /* Style personnalisé pour les étapes */

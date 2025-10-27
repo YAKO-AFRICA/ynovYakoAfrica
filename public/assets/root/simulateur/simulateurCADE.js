@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const calculations = garanties.map(async coverage => {
                 const tableMatch = state.primesTable.find(
-                    t => t.CodeProduitGarantie === coverage.codeproduitgarantie
+                    t => t.CodeProduitGarantie === coverage.codeproduitgarantie,
                 );
                 if (!tableMatch) return null;
 

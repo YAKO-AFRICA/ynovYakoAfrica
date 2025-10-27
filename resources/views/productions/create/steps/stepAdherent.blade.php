@@ -190,7 +190,7 @@
         <div class="row col-sm-12 col-md-12 col-lg-12">
             <div class="col-sm-12 col-md-6 col-lg-6">
                 <label for="contact_nom" class="form-label">Type Mobile 2 </label>
-                <select name="typMobileTwo" id="typMobileTwo" class="form-select" required>
+                <select name="typMobileTwo" id="typMobileTwo" class="form-select">
                     <option value="Whatsapp">Whatsapp</option>
                     <option value="MobileMoney">Mobile Money</option>
                     <option value="Wave">Wave</option>
@@ -200,7 +200,7 @@
             <div class="col-sm-12 col-md-6 col-lg-6">
                 <label class="form-label">Mobile 2 </label><br>
                 <div class="input-group mb-3">
-                    <input type="text" name="mobile1" class="form-control" autocomplete="on" required minlength="10" maxlength="14" >
+                    <input type="text" name="mobile1" class="form-control" autocomplete="on" minlength="10" maxlength="14" >
                 </div>
                 @error('mobile1')
                     <span class="text-danger"> Veuillez remplir votre numéro de mobile </span>

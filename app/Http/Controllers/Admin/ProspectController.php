@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
+use PDF;
 use Carbon\Carbon;
+use Dompdf\Dompdf;
 use App\Models\User;
 use App\Models\Membre;
 use App\Models\Product;
 use App\Models\Prospect;
+
+
 use App\Models\TblVille;
-use PDF;
-
-
-use Dompdf\Dompdf;
 use App\Models\Profession;
 use Illuminate\Support\Str;
 // use BaconQrCode\Encoder\QrCode;
@@ -22,6 +22,7 @@ use App\Models\TblSecteurActivite;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ProspectController extends Controller
@@ -68,6 +69,22 @@ class ProspectController extends Controller
         }
 
         return view('prospects.index', compact('allPropects', 'villes', 'professions', 'secteurActivites', 'product'));
+    }
+
+    public function create()
+    {
+
+        $response = Http::withOptions(['timeout' => 60])->get(config('services.base_url_api') . '/enov/villes');
+
+        if ($response->successful()) {
+            $villes = $response->json();
+        } else {
+            $villes = [];
+        }
+
+        $product = Product::all();
+        $professions = Profession::select('MonLibelle')->get();
+        return view('prospects.create', compact('villes', 'professions', 'product'));
     }
 
     /**

@@ -134,9 +134,10 @@
                         <div class="card-header">
                             <div class="ms-auto">
                                 @can('Demarrer une propection')
-                                    <button type="button" class="btn btn-outline-secondary float-end" data-bs-target="#addnewPropect" data-bs-toggle="modal">
+                                    {{-- <button type="button" class="btn btn-outline-secondary float-end" data-bs-target="#addnewPropect" data-bs-toggle="modal">
                                         <i class="bx bxs-plus-square"></i> Nouvelle prospection
-                                    </button>
+                                    </button> --}}
+                                    <a class="btn btn-utline-info" href="{{route('prospect.create')}}">Nouvelle prospection </a>
                                 @endcan
                                 
                             </div>

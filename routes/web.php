@@ -390,6 +390,7 @@ Route::prefix('prospect')->name('prospect.')->group(function(){
     });
     Route::middleware(['auth','PreventBackHistory'])->group(function () {
         Route::get('/index', [ProspectController::class, 'index'])->name('index');
+        Route::get('/create', [ProspectController::class, 'create'])->name('create');
         Route::get('/suivies', [ProspectController::class, 'suivies'])->name('suivies');
         Route::get('/show/{id}', [ProspectController::class, 'show'])->name('show');
 

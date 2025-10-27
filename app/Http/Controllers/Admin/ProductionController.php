@@ -28,6 +28,7 @@ use App\Models\Profession;
 use App\Models\TblSociete;
 use App\Models\TblDocument;
 use Illuminate\Support\Str;
+use App\Models\Banqueagence;
 use App\Models\Beneficiaire;
 use Illuminate\Http\Request;
 use App\Models\ReseauProduct;
@@ -35,18 +36,18 @@ use App\Models\TblProfession;
 use Endroid\QrCode\Logo\Logo;
 use App\Models\AssureGarantie;
 use App\Models\ProduitGarantie;
+
 use BaconQrCode\Encoder\QrCode;
 
 use Endroid\QrCode\Label\Label;
-
 use App\Models\DeclarationSante;
 use App\Models\TblSecteurActivite;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Notifications\SystemeNotify;
-use Endroid\QrCode\Writer\PngWriter;
 
+use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -365,7 +366,8 @@ class ProductionController extends Controller
         $villes = TblVille::select('libelleVillle')->get();
         $professions = Profession::select('MonLibelle')->get();
         $secteurActivites = TblSecteurActivite::select('MonLibelle')->get();
-        $societes = TblSociete::select('MonLibelle')->get();
+        // $societes = TblSociete::select('MonLibelle')->get();
+        $societes = Banqueagence::all();
         $agences = TblAgence::select('NOM_LONG')->get();
         $filliations = Filliation::select('MonLibelle')->get();
        
@@ -458,10 +460,6 @@ class ProductionController extends Controller
 
         return response()->json(['message' => 'Données enregistrées en session avec succès.', 'data' => $garanties], 200);
     }
-
-
-
-    
 
     public function ykePrime(Request $request)
     {
@@ -1273,7 +1271,8 @@ class ProductionController extends Controller
         $villes =  TblVille::get();
         $professions =  TblProfession::select('MonLibelle')->get();
         $secteurActivites =  TblSecteurActivite::select('MonLibelle')->get();
-        $societes =  TblSociete::select('MonLibelle')->get();
+        // $societes =  TblSociete::select('MonLibelle')->get();
+        $societes = Banqueagence::all();
         $agences =  TblAgence::select('NOM_LONG')->get();
         $filliations =  Filliation::select('MonLibelle')->get();
         return view('productions.edit', compact('contrat', 'product', 'villes', 'secteurActivites', 'professions', 'productGarantie', 'societes', 'agences','filliations'));

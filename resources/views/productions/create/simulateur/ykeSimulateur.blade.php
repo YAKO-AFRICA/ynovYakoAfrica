@@ -19,8 +19,6 @@
         pointer-events: none;
     }
 
-   
-    
     .form-check-label {
         margin-left: 5px;
     }
@@ -71,6 +69,9 @@
                                             <option value="1250000">1 250 000 FCFA</option>
                                             <option value="1500000">1 500 000 FCFA</option>
                                             <option value="2000000">2 000 000 FCFA</option>
+                                            <option value="3000000">3 000 000 FCFA</option>
+                                            <option value="4000000">4 000 000 FCFA</option>
+                                            <option value="5000000">5 000 000 FCFA</option>
                                         </select>
                                     </div>
                                     
@@ -153,8 +154,8 @@
                         </table>
                         <table class="table">
                             <tr>
-                                <td><strong class="text-uppercase">Frais d'adhésion</strong></td>
-                                <td><span class="text-success fs-6">+</span> <strong> {{ number_format(7500, 0, ',', ' ')}}</strong> FCFA</td>
+                                <td><strong class="text-uppercase fs-6">Frais d'adhésion </strong><small class="text-muted text-danger">(payable une seul fois)</small></td>
+                                <td><span class="text-success">+</span> <strong> {{ number_format(7500, 0, ',', ' ')}}</strong> FCFA</td>
                             </tr>
                         </table>
                         <div class="ribbon">Prime Totale</div>

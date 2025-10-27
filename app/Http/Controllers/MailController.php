@@ -8,7 +8,6 @@ class MailController extends Controller
 {
     public function markAsRead($id)
     {
-        
         $notification = auth()->user()->notifications()->where('id', $id)->first();
 
         if ($notification) {

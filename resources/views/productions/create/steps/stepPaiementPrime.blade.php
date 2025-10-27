@@ -44,24 +44,35 @@
                                 Prélèvement à la source
                             </label>
                         </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="modepaiement" type="radio"
+                            value="BANK" id="Prelevement_bank">
+                            <label class="form-check-label" for="Prelevement_bank">
+                                Prélèvement bancaire
+                            </label>
+                        </div>
                     </div>
 
                     <div class="row mb-3" id="mode_bancaire" style="display: none;">
+
                         <div class="col-12 mb-3">
                             <label for="banque" class="form-label">Ma banque ou organisme de prélèvement</label>
-                            <select class="form-select" id="banque" name="organisme">
+                            <select class="form-select selection" id="banque" name="organisme" onchange="ChangeEtat()">
                                 <option selected value="" disabled>Selectionnez la banque</option>
                                 @foreach ($societes as $item)
-                                    <option value="{{ $item->MonLibelle }}">{{ $item->MonLibelle ?? '' }}</option>
+                                    <option value="{{ $item->NOM_LONG }}" data-code-guichet="{{ $item->CodeGuichet }}" data-code-banque="{{ $item->CODEBANQUE }}" >
+                                        {{ $item->NOM_LONG ?? '' }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
+
                         
                         <div class="col-12 mb-3 row w-100">
                             <div class="col-sm-6 col-md-2 col-lg-2">
                                 <label class="form-label small">Code Banque</label>
                                 <input type="text" class="form-control account-number-input" id="codebanque" 
-                                    placeholder="30003" maxlength="5" pattern="[0-9]{5}" name="codebanque">
+                                    placeholder="30003" maxlength="5" pattern="[0-9]{5}" name="codebanque" >
                             </div> 
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <label class="form-label small">Code Guichet</label>
@@ -93,6 +104,12 @@
                         <div class="col-12 mb-3">
                             <label for="numMobile" class="form-label">Mon N° Mobile</label>
                             <input type="text" class="form-control" id="numMobile" name="numMobile">
+                        </div>
+                    </div>
+                    <div class="mb-3" id="mode_source" style="display: none;">
+                        <div class="col-12 mb-3">
+                            <label for="matricule" class="form-label">N° Mecano / N° Matricule</label>
+                            <input type="text" class="form-control" id="matricule" name="matricule">
                         </div>
                     </div>
 
@@ -287,8 +304,25 @@
         </div>
     </div><!---end row-->
 
+    <script>
+        function ChangeEtat() {
+            
+            // Pour récupérer la valeur sélectionnée et le data-code-guichet
+            const select = document.getElementById('banque');
+            const selectedOption = select.options[select.selectedIndex];
+
+            const codeGuichet = selectedOption.getAttribute('data-code-guichet');
+            const codeBanque = selectedOption.getAttribute('data-code-banque');
+
+            document.getElementById('codeguichet').value = codeGuichet || '00000';
+            document.getElementById('codebanque').value = codeBanque || '00000';
+        }
+        </script>
+
 
     <script>
+
+
         // Fonction pour mettre à jour l'aperçu du numéro complet
         function updateAccountPreview() {
             const codeBanque = document.getElementById('codebanque').value || '_____';

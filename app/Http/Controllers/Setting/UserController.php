@@ -160,7 +160,7 @@ class UserController extends Controller
                 'codepartenaire' => $request->codePart,
                 'partenaire' => $partenaire,
                 'codezone' => $request->codezone,
-                'codeequipe' => $agence->id, // id agence // equipe
+                'codeequipe' => $request->codeequipe, // id agence // equipe
                 'sexe' => $request->sexe,
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,

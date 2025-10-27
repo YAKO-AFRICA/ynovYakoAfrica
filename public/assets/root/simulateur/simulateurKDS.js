@@ -16,9 +16,21 @@ document.addEventListener("DOMContentLoaded", function () {
     let ageOptions = [];
     let debounceTimer;
     
+    // Fonction pour déterminer la tranche d'âge automatiquement
+    function getTrancheAge(ageSaisie) {
+        if (ageSaisie <= 29) return "30";
+        if (ageSaisie >= 30 && ageSaisie <= 34) return "35";
+        if (ageSaisie >= 35 && ageSaisie <= 39) return "40";
+        if (ageSaisie >= 40 && ageSaisie <= 44) return "45";
+        if (ageSaisie >= 45 && ageSaisie <= 49) return "50";
+        if (ageSaisie >= 50 && ageSaisie <= 54) return "55";
+        return ""; // Retourne une chaîne vide si l'âge est hors plage
+    }
+    
     // Charger les garanties optionnelles
     function loadOptionalGaranties() {
         optionalGarantiesDiv.innerHTML = '<h5 class="mb-3">Garanties optionnelles</h5>';
+        console.log("garanties", garanties);
         
         garanties.forEach(garantie => {
             if (garantie.estobligatoire === 0) {
@@ -35,6 +47,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 
                 // Ajouter un événement pour le changement d'état
                 checkbox.addEventListener('change', function() {
+                    // Stocker l'état de la checkbox SURETÉ
+                    if (garantie.codeproduitgarantie === 'SUR') {
+                        sessionStorage.setItem('valueSureteCheck', this.checked);
+                    }
                     triggerAutoUpdate();
                 });
                 
@@ -92,27 +108,18 @@ document.addEventListener("DOMContentLoaded", function () {
                         triggerAutoUpdate();
                     });
                     
-                    // Tranche d'âge
-                    const ageLabel = document.createElement('label');
-                    ageLabel.textContent = 'Tranche d\'âge :';
-                    ageLabel.className = 'form-label';
+                    // Champ caché pour la tranche d'âge (calculée automatiquement)
+                    const ageHiddenInput = document.createElement('input');
+                    ageHiddenInput.type = 'hidden';
+                    ageHiddenInput.className = 'sur-age-hidden';
+                    ageHiddenInput.name = `sur_age_assure_${garantie.id}`;
+                    ageHiddenInput.id = `sur_age_assure_${garantie.id}`;
                     
-                    const ageSelect = document.createElement('select');
-                    ageSelect.className = 'form-select mb-2 sur-age';
-                    ageSelect.name = `sur_age_assure_${garantie.id}`;
-                    ageSelect.id = `sur_age_assure_${garantie.id}`;
-                    
-                    const defaultAgeOption = document.createElement('option');
-                    defaultAgeOption.value = '';
-                    defaultAgeOption.textContent = '-- Sélectionnez une tranche d\'âge --';
-                    defaultAgeOption.selected = true;
-                    defaultAgeOption.disabled = true;
-                    ageSelect.appendChild(defaultAgeOption);
-                    
-                    // Ajouter un événement pour le changement d'âge
-                    ageSelect.addEventListener('change', function() {
-                        triggerAutoUpdate();
-                    });
+                    // Affichage de la tranche d'âge calculée
+                    const ageDisplay = document.createElement('div');
+                    ageDisplay.className = 'form-control-plaintext mb-2 p-2 bg-light';
+                    ageDisplay.id = `sur_age_display_${garantie.id}`;
+                    ageDisplay.textContent = 'Tranche d\'âge : Non calculée';
                     
                     // Informations API
                     const apiInfoDiv = document.createElement('div');
@@ -132,8 +139,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Assemblage des éléments
                     surContainer.appendChild(capitalLabel);
                     surContainer.appendChild(capitalSelect);
-                    surContainer.appendChild(ageLabel);
-                    surContainer.appendChild(ageSelect);
+                    surContainer.appendChild(ageDisplay);
+                    surContainer.appendChild(ageHiddenInput);
                     surContainer.appendChild(apiInfoDiv);
                     
                     div.appendChild(surContainer);
@@ -142,9 +149,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     checkbox.addEventListener('change', function() {
                         surContainer.style.display = this.checked ? 'block' : 'none';
                         apiInfoDiv.style.display = this.checked ? 'block' : 'none';
+
                         
-                        if (this.checked && currentCodeGroupe) {
-                            loadAgeOptions(ageSelect, currentCodeGroupe);
+                        
+                        // Mettre à jour l'affichage de la tranche d'âge si la case est cochée
+                        if (this.checked) {
+                            
+                            updateSureteAgeDisplay(garantie.id);
                         }
                     });
                 }
@@ -154,75 +165,38 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     
-    // Fonction pour charger les options d'âge
-    function loadAgeOptions(selectElement, codeGroupe) {
-        // Afficher un indicateur de chargement
-        selectElement.innerHTML = '';
-        const defaultOption = document.createElement('option');
-        defaultOption.value = '';
-        defaultOption.textContent = '-- Chargement en cours --';
-        defaultOption.disabled = true;
-        defaultOption.selected = true;
-        selectElement.appendChild(defaultOption);
+    // Fonction pour mettre à jour l'affichage de la tranche d'âge SURETÉ
+    function updateSureteAgeDisplay(garantieId) {
+        const ageSaisie = parseInt(ageInput.value);
+        const ageDisplay = document.getElementById(`sur_age_display_${garantieId}`);
+        const ageHiddenInput = document.getElementById(`sur_age_assure_${garantieId}`);
         
-        fetch("https://api.yakoafricassur.com/enov/get-age-prime-web", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": authToken
-            },
-            body: JSON.stringify({
-                CodeGroupe: codeGroupe
-            }),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Erreur lors de la requête get-age-prime-web");
-            }
-            return response.json();
-        })
-        .then(dataAge => {
-            selectElement.innerHTML = '';
-            
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = '-- Sélectionnez une tranche --';
-            defaultOption.disabled = true;
-            defaultOption.selected = true;
-            selectElement.appendChild(defaultOption);
-            
-            if (dataAge.error === false && dataAge.dataTableAge && dataAge.dataTableAge.length > 0) {
-                ageOptions = dataAge.dataTableAge;
-                
-                dataAge.dataTableAge.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.AgeAssure;
-                    option.textContent = item.Titre;
-                    selectElement.appendChild(option);
-                });
-                
-                // Déclencher une mise à jour après le chargement des options
-                triggerAutoUpdate();
+        if (!isNaN(ageSaisie)) {
+            const trancheAge = getTrancheAge(ageSaisie);
+            if (trancheAge) {
+                ageDisplay.textContent = `Tranche d'âge : ${trancheAge} ans (calculée automatiquement)`;
+                ageHiddenInput.value = trancheAge;
             } else {
-                const errorOption = document.createElement('option');
-                errorOption.textContent = 'Aucune tranche disponible';
-                selectElement.appendChild(errorOption);
+                ageDisplay.textContent = 'Tranche d\'âge : Hors plage autorisée';
+                ageHiddenInput.value = '';
             }
-        })
-        .catch(error => {
-            console.error("Erreur API get-age-prime-web :", error);
-            selectElement.innerHTML = '';
-            
-            const errorOption = document.createElement('option');
-            errorOption.textContent = 'Erreur de chargement';
-            selectElement.appendChild(errorOption);
-        });
+        } else {
+            ageDisplay.textContent = 'Tranche d\'âge : Veuillez saisir l\'âge d\'abord';
+            ageHiddenInput.value = '';
+        }
+    }
+    
+    // Fonction pour charger les options d'âge (maintenue pour compatibilité, mais non utilisée pour SURETÉ)
+    function loadAgeOptions(selectElement, codeGroupe) {
+        // Cette fonction est conservée mais ne sera plus utilisée pour SURETÉ
+        // car la tranche d'âge est maintenant calculée automatiquement
     }
     
     // Fonction pour calculer la prime SURETÉ via API
     async function calculatePrimeForSurete(garantieId) {
         const capital = document.getElementById(`sur_capital_${garantieId}`).value;
-        const ageAssure = document.getElementById(`sur_age_assure_${garantieId}`).value;
+        const ageHiddenInput = document.getElementById(`sur_age_assure_${garantieId}`);
+        const ageAssure = ageHiddenInput.value; // Récupère la valeur du champ caché
         const duree = dureeInput.value;
         
         if (!capital || !ageAssure || !duree || !currentCodeGroupe || !currentCodeTable) {
@@ -280,6 +254,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         ageInput.value = age;
+        
+        // Mettre à jour l'affichage de la tranche d'âge pour toutes les garanties SURETÉ cochées
+        document.querySelectorAll('.garantie-option:checked').forEach(checkbox => {
+            if (checkbox.value === 'SUR') {
+                const garantieId = checkbox.dataset.garantieId;
+                updateSureteAgeDisplay(garantieId);
+            }
+        });
+        
         triggerAutoUpdate();
     });
     
@@ -309,15 +292,6 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.error === false && data.dataTablePrime && data.dataTablePrime.length > 0) {
                 currentCodeGroupe = data.dataTablePrime[0].CodeGRoupeIntervalle;
                 currentCodeTable = data.dataTablePrime[0].codeTable;
-
-                // Recharger les options d'âge pour les garanties SUR cochées
-                document.querySelectorAll('.garantie-option:checked').forEach(checkbox => {
-                    if (checkbox.value === 'SUR') {
-                        const garantieId = checkbox.dataset.garantieId;
-                        const ageSelect = document.getElementById(`sur_age_assure_${garantieId}`);
-                        loadAgeOptions(ageSelect, currentCodeGroupe);
-                    }
-                });
                 
                 // Déclencher une mise à jour après avoir obtenu les nouvelles données
                 triggerAutoUpdate();
@@ -354,6 +328,7 @@ document.addEventListener("DOMContentLoaded", function () {
         
         // Vérifier l'âge pour chaque garantie
         let ageValid = true;
+        console.log("Garanties:", garanties);
         garanties.forEach(garantie => {
             if (age < garantie.agemin || age > garantie.agemax) {
                 ageValid = false;
@@ -389,7 +364,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 age: age,
                 fraisAdhesion: fraieadhesion,
                 duree: duree,
-            }
+                
+            },
+            codeProduit: document.getElementById("CodeProduit").value,
+            valueSureteCheck: sessionStorage.getItem('valueSureteCheck') === 'true' 
         };
         
         // Traiter les garanties obligatoires
@@ -453,7 +431,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 switch(garantieCode) {
                     case 'SUR':
                         const surCapital = parseFloat(document.getElementById(`sur_capital_${garantieId}`).value);
-                        const selectedAge = document.getElementById(`sur_age_assure_${garantieId}`).value;
+                        const ageHiddenInput = document.getElementById(`sur_age_assure_${garantieId}`);
+                        const selectedAge = ageHiddenInput.value; // Récupère la tranche calculée automatiquement
                         
                         if (!selectedAge) {
                             continue;
@@ -467,7 +446,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         surDetails = {
                             capitalSouhaite: surCapital,
                             ageAssure: selectedAge,
-                            duree: duree
+                            duree: duree,
+                            trancheCalculee: true // Indique que la tranche a été calculée automatiquement
                         };
                         break;
                     case 'DECESACC':
@@ -536,21 +516,22 @@ document.addEventListener("DOMContentLoaded", function () {
     // Charger les garanties optionnelles au démarrage
     loadOptionalGaranties();
 
-
     // function pour reiniatialisé le simulateur
     resetBtn.addEventListener('click', function() {
-
         dureeInput.value = '6';
         capitalSouscritInput.value = '';
         codePeriodiciteInput.value = '';
         dateNaissanceInput.value = '';
+        ageInput.value = '';
         resultDiv.innerHTML = "";
         const selectedOptions = document.querySelectorAll('.garantie-option:checked');
         selectedOptions.forEach(option => option.checked = false);
         
+        // Réinitialiser également l'état de SURETÉ
+        sessionStorage.removeItem('valueSureteCheck');
         sessionStorage.removeItem('simulateurData');
         sessionStorage.removeItem('simulationData');
-
+        
     });
     
     // Déclencher le changement de périodicité au chargement pour initialiser les données

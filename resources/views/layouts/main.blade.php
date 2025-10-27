@@ -201,7 +201,7 @@
 
         <script type="module" src="{{ asset('api/request.js') }}"></script>
 
-        <script src=https://touchpay.gutouch.com/touchpay/script/prod_touchpay-0.0.1.js type="text/javascript"></script>
+        {{-- <script src=https://touchpay.gutouch.com/touchpay/script/prod_touchpay-0.0.1.js type="text/javascript"></script> --}}
 
 
         <script>
@@ -316,6 +316,31 @@
         <script src="{{ asset('assets/js/app.js')}}"></script>
         <script src="{{ asset('assets/js/main.js')}}"></script>
         <script src="{{ asset('assets/js/user.js')}}"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const today = new Date().toISOString().split('T')[0]; // date actuelle au format YYYY-MM-DD
+                const dateInputs = document.querySelectorAll('input[name="dateEffet"]');
+
+                dateInputs.forEach(input => {
+                    // Empêche la sélection d'une date antérieure
+                    input.setAttribute('min', today);
+
+                    // Vérifie la valeur à la saisie
+                    input.addEventListener('change', function () {
+                        if (this.value < today) {
+                            swal.fire({
+                                icon: 'error',
+                                title: 'Date antérieure non autorisée',
+                                text: 'Veuillez choisir une date posterieure ou la date actuelle.',
+                            })
+                            this.value = ''; // vide le champ
+                        }
+                    });
+                });
+            });
+        </script>
+
 
         
         

@@ -120,15 +120,15 @@
 
                 <div class="card-body">
                     <div class="container">
-                        <table class="table table-bordered table-striped">
-                            <thead class="table-light">
+                        <table class="table table-bordered table-striped ">
+                            <thead class="table-light ">
                                 <tr>
                                     <th>Garantie</th>
                                     <th>Prime</th>
                                     <th>Capital</th>
                                 </tr>
                             </thead>
-                            <tbody id="result">
+                            <tbody id="result" class="">
                                 <!-- Les résultats seront affichés ici -->
                                 <tr>
                                     <td colspan="3" class="text-center">Veuillez remplir les informations de simulation</td>

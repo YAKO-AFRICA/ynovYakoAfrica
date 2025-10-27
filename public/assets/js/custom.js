@@ -207,28 +207,35 @@ $(".wrapper").on('submit', '.submitForm', function (e) {
 //     });
 // });
 
-document.addEventListener('DOMContentLoaded', function () {
-    const modePaiementRadios = document.querySelectorAll('input[name="modepaiement"]');
-    const modeBancaire = document.getElementById('mode_bancaire');
+    document.addEventListener('DOMContentLoaded', function () {
+        const modePaiementRadios = document.querySelectorAll('input[name="modepaiement"]');
+        const modeBancaire = document.getElementById('mode_bancaire');
+        const modeSource = document.getElementById('mode_source');
+        const modeMobile = document.getElementById('mode_mobile');
 
-    // Fonction pour afficher ou masquer le bloc "mode_bancaire"
-    function toggleModeBancaire() {
-        const selectedRadio = document.querySelector('input[name="modepaiement"]:checked');
-        if (selectedRadio && (selectedRadio.value === 'VIR' || selectedRadio.value === 'SOURCE')) {
-            modeBancaire.style.display = 'block';
-        } else {
-            modeBancaire.style.display = 'none';
+        // Fonction pour afficher ou masquer le bloc "mode_bancaire"
+        function toggleModeBancaire() {
+            const selectedRadio = document.querySelector('input[name="modepaiement"]:checked');
+            if (selectedRadio && (selectedRadio.value === 'VIR' || selectedRadio.value === 'BANK')) {
+                modeBancaire.style.display = 'block';
+                modeSource.style.display = 'none';
+            }else if (selectedRadio && (selectedRadio.value === 'SOURCE')) {
+                modeSource.style.display = 'block';
+                modeBancaire.style.display = 'none';
+            } else {
+                modeBancaire.style.display = 'none';
+                modeSource.style.display = 'none';
+            }
         }
-    }
 
-    // Vérifier l'état initial au chargement de la page
-    toggleModeBancaire();
+        // Vérifier l'état initial au chargement de la page
+        toggleModeBancaire();
 
-    // Ajouter un gestionnaire d'événement pour les changements
-    modePaiementRadios.forEach((radio) => {
-        radio.addEventListener('change', toggleModeBancaire);
+        // Ajouter un gestionnaire d'événement pour les changements
+        modePaiementRadios.forEach((radio) => {
+            radio.addEventListener('change', toggleModeBancaire);
+        });
     });
-});
 
     document.querySelectorAll('input[name="modepaiement"]').forEach((radio) => {
         radio.addEventListener('change', function () {

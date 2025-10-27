@@ -59,7 +59,7 @@
 
                                     @foreach ($societes as $item)
 
-                                        <option value="{{ $item->MonLibelle }}">{{ $item->MonLibelle ?? ""}}</option>
+                                        <option value="{{ $item->NOM_LONG }}">{{ $item->NOM_LONG ?? ""}}</option>
 
                                     @endforeach
 

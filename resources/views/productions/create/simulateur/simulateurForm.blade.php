@@ -135,7 +135,7 @@
                         </table>
                         <table class="table">
                             <tr>
-                                <td><strong class="text-uppercase">Frais d'adhésion</strong></td>
+                                <td><strong class="text-uppercase">Frais d'adhésion</strong><small class="text-muted text-danger">(payable une seul fois)</small></td>
                                 <td><span class="text-success fs-6">+</span> <strong> {{ number_format(7500, 0, ',', ' ')}}</strong> FCFA</td>
                             </tr>
                         </table>

@@ -103,7 +103,6 @@
     
                         <div id="step-group-2" class="step-edit d-none">
                             <fieldset class="border p-3" style="width: 100%;">
-    
                                 <legend class="float-none w-auto px-2"><small><h5 class="mb-4">Étape 2 : Informations personnelles</h5></small></legend>
                                 
                                 <div class="mb-3">
@@ -165,6 +164,7 @@
                                         <option value="BANKASS">BANKASS</option>
                                         <option value="COURTAGE">COURTAGE</option>
                                         <option value="COM">COM</option>
+                                        <option value="IND">IND</option>
                                     </select>
                                 </div>
                                 <div class="row">
