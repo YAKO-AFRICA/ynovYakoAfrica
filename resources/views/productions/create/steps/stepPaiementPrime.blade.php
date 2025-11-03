@@ -1,7 +1,7 @@
 <div id="test-l-4" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger4">
-    <h5 class="mb-1">Informations relatives aux modes de paiement et à la périodicité </h5>
-    <p class="mb-4">Veuillez entrer les informations relatives aux modes de paiement et à la périodicité  en tenant compte
-        des champs Obligatoires.</p>
+    <h5 class="mb-1">Informations relatives aux modes de paiement et à la périodicité</h5>
+    <p class="mb-4">Veuillez entrer les informations relatives aux modes de paiement et à la périodicité en tenant compte
+        des champs obligatoires.</p>
 
     <div class="row g-3">
         <div class="col-12 col-lg-8">
@@ -169,13 +169,13 @@
                             <div class="col-12 mb-3">
                                 <label for="duree" class="form-label">Durée de mes cotisations (en année, entre 6
                                     et 60) :
-                                    :</label>
+                                    </label>
                                 <input type="number" min="6" max="60" class="form-control"
                                     id="duree" name="duree" required>
                             </div>
                             <div class="col-12 mb-4">
                                 <label for="montantrente" class="form-label">Montant de la Rente (en FCFA) :
-                                    : <span class="text-danger">*</span></label>
+                                    <span class="text-danger">*</span></label>
                                 <select name="montantrente" id="montantrente" class="form-select" required>
                                     <option value="" selected>Selectionnez le montant de la rente</option>
                                     <option value="50000">50 000</option>

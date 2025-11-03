@@ -1,6 +1,6 @@
 <div id="test-l-2" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger2">
     <h5 class="mb-1">Informations de l'assuré(e)</h5>
-    <p class="mb-4">Veuillez entrer les informations relatives à l'assuré(e) en tenant compte des champs Obligatoires.
+    <p class="mb-4">Veuillez entrer les informations relatives à l'assuré(e) en tenant compte des champs obligatoires.
     </p>
     @php
         $GarantiesOptionnelles = $productGarantie->where('estobligatoire', 0)->all();

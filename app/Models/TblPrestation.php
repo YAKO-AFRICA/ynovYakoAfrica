@@ -20,6 +20,7 @@ class TblPrestation extends Model
         'idOtp',
         'idcontrat',
         'typeprestation',
+        'prestationlibelle',
         'idclient',
         'nom',
         'prenom',

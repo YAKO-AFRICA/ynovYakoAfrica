@@ -2,28 +2,6 @@
 
 @section('content')
     <style>
-        /* Conteneur des champs de saisie pour placer l'icône */
-        /* Applique le style aux éléments en lecture seule */
-        input[readonly],
-        textarea[readonly],
-        select[readonly] {
-            background-color: #f0f0f0;
-            /* Couleur de fond gris pour les champs en readonly */
-            border: 1px solid #ccc;
-            /* Bordure gris clair */
-            /* cursor: not-allowed;        Curseur indiquant que l'action est interdite */
-            cursor: no-drop;
-            pointer-events: none;
-            /* Empêche toute interaction avec ces éléments */
-        }
-
-        /* Remplacer le curseur par l'emoji 🚫 lors du survol des champs readonly */
-        input[readonly]:hover,
-        textarea[readonly]:hover,
-        select[readonly]:hover {
-            cursor: no-drop;
-            /* cursor: wait; */
-        }
         @media (min-width: 992px) { /* lg breakpoint */
         .w-lg-20 {
             max-width: 20%;
@@ -41,7 +19,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
                     <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Editer la prestation apres rejet</li>
+                    <li class="breadcrumb-item active" aria-current="page">Editer la prestation après rejet</li>
                 </ol>
             </nav>
         </div>
@@ -240,7 +218,7 @@
                                     <div class="bs-stepper-circle">2</div>
                                     <div class="">
                                         <h5 class="mb-0 steper-title">Information sur prestation</h5>
-                                        <p class="mb-0 steper-sub-title">Entrer les Information liée à la prestation</p>
+                                        <p class="mb-0 steper-sub-title">Informations liées à la prestation</p>
                                     </div>
                                 </div>
                             </div>
@@ -293,6 +271,8 @@
                                 <form action="{{ route('prestation.update', $prestation->code) }}" id="EditPrestationForm" method="post"
                                     class="submitForm">
                                     @csrf
+
+                                    <input type="hidden" id="OTP_API" name="OTP_API" value="{{ config('services.otp_api') }}">
                                     @include('prestations.components.stepsEdit.stepInfosPerso')
                         
                                     @include('prestations.components.stepsEdit.stepInfosPrest')

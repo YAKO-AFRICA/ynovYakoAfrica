@@ -1,30 +1,8 @@
 @extends('layouts.main')
 
 @section('content')
-    <style>
-        /* Conteneur des champs de saisie pour placer l'icône */
-        /* Applique le style aux éléments en lecture seule */
-        input[readonly],
-        textarea[readonly],
-        select[readonly] {
-            background-color: #f0f0f0;
-            /* Couleur de fond gris pour les champs en readonly */
-            border: 1px solid #ccc;
-            /* Bordure gris clair */
-            /* cursor: not-allowed;        Curseur indiquant que l'action est interdite */
-            cursor: no-drop;
-            pointer-events: none;
-            /* Empêche toute interaction avec ces éléments */
-        }
-
-        /* Remplacer le curseur par l'emoji 🚫 lors du survol des champs readonly */
-        input[readonly]:hover,
-        textarea[readonly]:hover,
-        select[readonly]:hover {
-            cursor: no-drop;
-            /* cursor: wait; */
-        }
-        @media (min-width: 992px) { /* lg breakpoint */
+<style>
+    @media (min-width: 992px) { /* lg breakpoint */
         .w-lg-20 {
             max-width: 20%;
         }
@@ -32,7 +10,7 @@
             max-width: 25% !important;
         }
     }
-    </style>
+</style>
     <!--start stepper one-->
     <!--breadcrumb-->
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -70,7 +48,7 @@
                             <div class="bs-stepper-circle">2</div>
                             <div class="">
                                 <h5 class="mb-0 steper-title">Information sur prestation</h5>
-                                <p class="mb-0 steper-sub-title">Entrer les Information liée à la prestation</p>
+                                <p class="mb-0 steper-sub-title">Informations liées à la prestation</p>
                             </div>
                         </div>
                     </div>
@@ -94,6 +72,7 @@
                         @csrf
                         @include('prestations.components.steps.stepInfosPerso')
                         <input type="hidden" id="tokGenerate" name="tokGenerate" value="{{ $tok }}">
+                        <input type="hidden" id="OTP_API" name="OTP_API" value="{{ config('services.otp_api') }}">
                         @php
                             $keyUuid = $token['key_uuid'];
                             $operationType = $token['operation_type'];
@@ -118,6 +97,15 @@
             btn.addEventListener("click", function(event) {
                 event.preventDefault();
 
+                Swal.fire({
+                    title: 'Traitement en cours...',
+                    text: 'Veuillez patienter...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    },
+                });
+
                 const formData = new FormData(form);
 
                 axios.post('{{ route('prestation.store') }}', formData)
@@ -125,23 +113,43 @@
                         if (response.data.type === "success") {
                             // alert(response.data.message);
 
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Succès',
+                                showConfirmButton: true,
+                                confirmButtonText: 'OK',
+                                text: response.data.message,
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    if (response.data.url) {
+                                        window.open(response.data.url, '_blank');
+                                    }
 
+                                    if (response.data.urlback) {
+                                        window.location.href = response.data.urlback;
+                                    }
+                                }
+                            });
 
-                            if (response.data.url) {
-                                window.open(response.data.url, '_blank');
-                            }
-
-                            if (response.data.urlback) {
-                                window.location.href = response.data.urlback;
-                            }
                         } else {
-                            throw new Error(response.data.message ||
-                                "Erreur lors de l'enregistrement.");
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Erreur...',
+                                showConfirmButton: true,
+                                confirmButtonText: 'Reessayer',
+                                text: response.data.message,
+                            });
                         }
                     })
                     .catch(function(error) {
                         console.error(error);
-                        alert(error.response?.data?.message || "Une erreur est survenue.");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erreur...',
+                            showConfirmButton: true,
+                            confirmButtonText: 'Reessayer',
+                            text: response?.data?.message || "Une erreur est survenue.",
+                        });
                     });
             });
         });

@@ -222,19 +222,18 @@
                                         <td>
                                             <div class="d-flex order-actions">
                                                 {{-- <a href="{{ route('prestation.show', $prestation->code) }}" class="ms-2 border"><i class='bx bxs-show'></i></a> --}}
-                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModal{{ $prestation->code }}"
+                                                <a href="{{ route('prestation.show', $prestation->code) }}"
                                                     class="ms-2 border"><i class='bx bxs-show'></i></a>
 
-                                                    <a href="{{ route('prestation.edit', $prestation->code) }}" class="ms-3 border {{ $prestation->etape != 0 ? 'disabled-link' : '' }}" 
+                                                    <a href="{{ route('prestation.edit', $prestation->code) }}" class="ms-3 border disabled-link" 
                                                         data-bs-toggle="tooltip" data-bs-placement="top" 
-                                                        title="{{ $prestation->etape != 0 ? 'Impossible de modifier la demande une fois transmise' : '' }}">
+                                                        title="Impossible de modifier la demande une fois transmise">
                                                          <i class='bx bxs-edit'></i>
                                                      </a>
-                                                    <a href="javascript:;" class="deleteConfirmation border ms-3 {{$prestation->etape != 0 ? 'disabled-link' : ''}}" data-uuid="{{$prestation->code}}"
+                                                    <a href="javascript:;" class="deleteConfirmation border ms-3 {{$prestation->etape == 0 || $prestation->etape == 3 ? '' : 'disabled-link'}}" data-uuid="{{$prestation->code}}"
                                                         data-type="confirmation_redirect" data-placement="top"
                                                         data-token="{{ csrf_token() }}" data-bs-toggle="tooltip" data-bs-placement="top" 
-                                                        title="{{ $prestation->etape != 0 ? 'Impossible de supprimer la demande une fois transmise' : '' }}"
+                                                        title="{{ $prestation->etape == 0 || $prestation->etape == 3 ? 'Impossible de supprimer la demande' : '' }}"
                                                         data-url="{{route('prestation.destroy',$prestation->code)}}"
                                                         data-title="Vous êtes sur le point de supprimer la prestation {{$prestation->code}} "
                                                         data-id="{{$prestation->code}}" data-param="0"

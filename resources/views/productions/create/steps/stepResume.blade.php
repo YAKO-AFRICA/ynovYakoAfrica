@@ -547,7 +547,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 .then(data => {
                     console.log(data);
                     if (data.status == 200) {
-                        console.log('OTP envoyé');
                         // Masquer sendOTPForm, afficher verifyOTPForm
                         OTPSendID.classList.add('d-none');
                         OTPVerifyID.classList.remove('d-none');

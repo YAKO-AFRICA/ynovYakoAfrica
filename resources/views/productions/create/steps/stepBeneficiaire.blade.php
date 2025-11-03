@@ -1,7 +1,7 @@
 <div id="test-l-3" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger3">
     <h5 class="mb-1">Informations du ou des bénéficiaire(s)</h5>
     <p class="mb-4">Veuillez entrer les informations relatives au(x) bénéficiaire(s) en tenant compte des champs
-        Obligatoires.</p>
+        obligatoires.</p>
 
     <div class="row g-3">
 
@@ -29,7 +29,7 @@
                     <div class="form-check" data-bs-toggle="modal" data-bs-target="#addBenefModal">
                         <input class="form-check-input" type="checkbox" value="autre" id="Autres1" data-situation="terme-contrat">
                         <label class="form-check-label" for="Autres1">
-                            Autres, Préciser
+                            Autres, Préciser (ajouter des bénéficiaires)
                         </label>
                     </div>
                 </div>

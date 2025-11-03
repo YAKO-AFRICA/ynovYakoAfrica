@@ -17,6 +17,11 @@ return [
     'sign_api' => env('SIGN_API'),
     'otp_api' => env('OTP_API'),
 
+    'api' => [
+        'encaissement_bis' => env('API_ENCAISSEMENT_BIS'),
+        'filiations' => env('API_FILIATIONS'),
+    ],
+
     'touchpay' => [
         'agency_code' => env('TOUCHPAY_AGENCY_CODE'),
         'secure_code' => env('TOUCHPAY_SECURE_CODE'),

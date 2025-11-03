@@ -161,7 +161,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
+
 document.addEventListener("DOMContentLoaded", function () {
+    const OTP_API = document.getElementById("OTP_API").value;
     const steps = document.querySelectorAll(".etape, .etapePrest"); // Sélectionner toutes les étapes
     const nextButtons = document.querySelectorAll(".next-btn"); // Boutons "Next"
     // const submitdrvButtons = document.querySelectorAll('.submitdrv-btn'); // Boutons "Next"
@@ -314,101 +317,149 @@ document.addEventListener("DOMContentLoaded", function () {
         return isValid;
     }
 
-    // Fonction pour soumettre l'OTP
+    // Fonction pour envoyer l'OTP
     async function sendOtp(phone) {
-        let phoneNumber = "225" + phone;
-        let firstTwoDigits = phone.substring(0, 2); // Extraire les deux premiers chiffres de phone
+        const phoneNumber = phone.trim();
+        // const firstTwoDigits = phone.substring(0, 2); // pour logique opérateur future
 
-        if (firstTwoDigits == "07" || firstTwoDigits == "05") {
-            try {
-                const response = await fetch("/api/send-otpByOrangeAPI", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document
-                            .querySelector('meta[name="csrf-token"]')
-                            .getAttribute("content"),
-                    },
-                    body: JSON.stringify({ TelPaiement: phoneNumber }),
+        try {
+            const response = await fetch(`${OTP_API}api/send-otp`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: JSON.stringify({
+                    telIndicatif: "225",
+                    telephone: phoneNumber,
+                    operation_type: "Demande de prestation"
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.status === 200) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Code de confirmation envoyé !",
+                    text: `Un code de confirmation a été envoyé sur le numéro ${phoneNumber}`,
+                    showConfirmButton: true,
+                    confirmButtonText: "OK",
+                    timer: 2000
                 });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    swal.fire({
-
-                        icon: "success",
-                        title: "Code de confirmation envoyé !",
-                        text: "Un code de confirmation a été envoyé sur le numéro " + phoneNumber,
-                        showConfirmButton: true,
-                        confirmButtonText: "OK",
-                        timer: 2000
-                        
-                    })
-                    // alert(
-                    //     `Un message contenant un code de confirmation a été envoyé sur le numéro ${phoneNumber}.`
-                    // );
-                    startOtpTimer(); // Démarrer le décompte après l'envoi de l'OTP
-                    return true;
-                } else {
-                    alert(
-                        "Une erreur s'est produite lors de l'envoi du code de confirmation."
-                    );
-                    // alert(result.error || "Une erreur s'est produite lors de l'envoi du code de confirmation.");
-                    return false;
-                }
-            } catch (error) {
-                alert(
-                    "Une erreur s'est produite lors de l'envoi du code de confirmation."
-                );
-                console.error(error);
+                startOtpTimer(); // Démarre le compte à rebours OTP
+                return true;
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Erreur",
+                    text: "Une erreur s'est produite lors de l'envoi du code de confirmation.",
+                });
                 return false;
             }
-        } else if (firstTwoDigits == "01") {
-            try {
-                const response = await fetch("/api/send-otpByInfobipAPI", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document
-                            .querySelector('meta[name="csrf-token"]')
-                            .getAttribute("content"),
-                    },
-                    body: JSON.stringify({ TelPaiement: phoneNumber }),
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    swal.fire({
-
-                        icon: "success",
-                        title: "Code de confirmation envoyé !",
-                        text: "Un code de confirmation a été envoyé sur le numéro " + phoneNumber,
-                        showConfirmButton: true,
-                        confirmButtonText: "OK",
-                        timer: 2000
-                        
-                    })
-                    
-                    startOtpTimer(); // Démarrer le décompte après l'envoi de l'OTP
-                    return true;
-                } else {
-                    alert(
-                        result.error ||
-                            "Une erreur s'est produite lors de l'envoi du code de confirmation."
-                    );
-                    return false;
-                }
-            } catch (error) {
-                alert(
-                    "Une erreur s'est produite lors de l'envoi du code de confirmation."
-                );
-                console.error(error);
-                return false;
-            }
+        } catch (error) {
+            console.error(error);
+            Swal.fire({
+                icon: "error",
+                title: "Erreur de connexion",
+                text: "Impossible de contacter le serveur OTP. Veuillez réessayer.",
+            });
+            return false;
         }
     }
+    // async function sendOtp(phone) {
+    //     let phoneNumber = "225" + phone;
+    //     let firstTwoDigits = phone.substring(0, 2); // Extraire les deux premiers chiffres de phone
+
+    //     if (firstTwoDigits == "07" || firstTwoDigits == "05") {
+    //         try {
+    //             const response = await fetch("/api/send-otpByOrangeAPI", {
+    //                 method: "POST",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                     "X-CSRF-TOKEN": document
+    //                         .querySelector('meta[name="csrf-token"]')
+    //                         .getAttribute("content"),
+    //                 },
+    //                 body: JSON.stringify({ TelPaiement: phoneNumber }),
+    //             });
+
+    //             const result = await response.json();
+
+    //             if (response.ok) {
+    //                 swal.fire({
+
+    //                     icon: "success",
+    //                     title: "Code de confirmation envoyé !",
+    //                     text: "Un code de confirmation a été envoyé sur le numéro " + phoneNumber,
+    //                     showConfirmButton: true,
+    //                     confirmButtonText: "OK",
+    //                     timer: 2000
+                        
+    //                 })
+    //                 // alert(
+    //                 //     `Un message contenant un code de confirmation a été envoyé sur le numéro ${phoneNumber}.`
+    //                 // );
+    //                 startOtpTimer(); // Démarrer le décompte après l'envoi de l'OTP
+    //                 return true;
+    //             } else {
+    //                 alert(
+    //                     "Une erreur s'est produite lors de l'envoi du code de confirmation."
+    //                 );
+    //                 // alert(result.error || "Une erreur s'est produite lors de l'envoi du code de confirmation.");
+    //                 return false;
+    //             }
+    //         } catch (error) {
+    //             alert(
+    //                 "Une erreur s'est produite lors de l'envoi du code de confirmation."
+    //             );
+    //             console.error(error);
+    //             return false;
+    //         }
+    //     } else if (firstTwoDigits == "01") {
+    //         try {
+    //             const response = await fetch("/api/send-otpByInfobipAPI", {
+    //                 method: "POST",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                     "X-CSRF-TOKEN": document
+    //                         .querySelector('meta[name="csrf-token"]')
+    //                         .getAttribute("content"),
+    //                 },
+    //                 body: JSON.stringify({ TelPaiement: phoneNumber }),
+    //             });
+
+    //             const result = await response.json();
+
+    //             if (response.ok) {
+    //                 swal.fire({
+    //                     icon: "success",
+    //                     title: "Code de confirmation envoyé !",
+    //                     text: "Un code de confirmation a été envoyé sur le numéro " + phoneNumber,
+    //                     showConfirmButton: true,
+    //                     confirmButtonText: "OK",
+    //                     timer: 2000
+                        
+    //                 })
+                    
+    //                 startOtpTimer(); // Démarrer le décompte après l'envoi de l'OTP
+    //                 return true;
+    //             } else {
+    //                 alert(
+    //                     result.error ||
+    //                         "Une erreur s'est produite lors de l'envoi du code de confirmation."
+    //                 );
+    //                 return false;
+    //             }
+    //         } catch (error) {
+    //             alert(
+    //                 "Une erreur s'est produite lors de l'envoi du code de confirmation."
+    //             );
+    //             console.error(error);
+    //             return false;
+    //         }
+    //     }
+    // }
 
     // Fonction pour démarrer le compte à rebours pour l'expiration de l'OTP
     let otpExpirationTime = 3 * 60; // 5 minutes en secondes
@@ -652,7 +703,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (montantSouhaite > moitieCapital || montantSouhaite <= 0) {
             msgError
                 .text(
-                    `Selon les termes du contrat, le montant souhaité doit être inférieur ou égal à ${moitieCapitalFormate} FCFA.`
+                    `Selon les termes du contrat, vous ne pouvez pas demander ce montant.`
                 )
                 .show();
             montantSouhaiteField.classList.add("is-invalid");
@@ -769,11 +820,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (montantSouhaite > moitieCapital || montantSouhaite <= 0) {
                 alert(
-                    `Selon les termes du contrat, le montant souhaité doit être supérieur à 0 et inferieur ou égal à ${moitieCapitalFormate} FCFA.`
+                    `Selon les termes du contrat, vous ne pouvez pas demander ce montant.`
                 );
+                // alert(
+                //     `Selon les termes du contrat, le montant souhaité doit être supérieur à 0 et inferieur ou égal à ${moitieCapitalFormate} FCFA.`
+                // );
                 msgError
                     .text(
-                        `Selon les termes du contrat, le montant souhaité doit être supérieur à 0 et inferieur ou égal à ${moitieCapitalFormate} FCFA.`
+                        `Selon les termes du contrat, vous ne pouvez pas demander ce montant.`
                     )
                     .show();
                 // ajouter une bordure rouge si le montant souhaité est invalide
@@ -799,7 +853,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             } else {
                 const phoneNumber = telOtpField.value.trim();
-                console.log("phoneNumber = ", phoneNumber);
                 // si tous les champs required ne sont pas renseignés bloqué l'envoi de l'OTP
                 if (!validateStep(currentContainer)) {
                     return;
@@ -849,11 +902,11 @@ document.addEventListener("DOMContentLoaded", function () {
         DetailContratBtn.style.display = "none";
         if (idcontrat) {
             $.ajax({
-                url: "/api/fetch-contract-details", // Route Laravel
+                url: "/api/fetch-contract-details", // Route Laravel ghfghfgh
                 type: "POST",
                 data: {
                     idcontrat: idcontrat,
-                    _token: "{{ csrf_token() }}", // Le token CSRF pour sécuriser la requête
+                    _token: document.querySelector('meta[name="csrf-token"]').content, // Le token CSRF pour sécuriser la requête
                 },
                 dataType: "json", // Assurez-vous que la réponse attendue est en JSON
                 success: function (response) {
@@ -932,6 +985,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 document.addEventListener("DOMContentLoaded", function () {
+    const OTP_API = document.getElementById("OTP_API").value;
     const steps = document.querySelectorAll(".etapeEdit, .etapeEditPrest"); // Sélectionner toutes les étapes
     const nextButtons = document.querySelectorAll(".next-btn"); // Boutons "Next"
     // const submitdrvButtons = document.querySelectorAll('.submitdrv-btn'); // Boutons "Next"
@@ -1087,96 +1141,54 @@ document.addEventListener("DOMContentLoaded", function () {
         return isValid;
     }
 
-    // Fonction pour soumettre l'OTP
+   
     async function sendOtp(phone) {
-        let phoneNumber = "225" + phone;
-        let firstTwoDigits = phone.substring(0, 2); // Extraire les deux premiers chiffres de phone
+        const phoneNumber = phone.trim();
+        // const firstTwoDigits = phone.substring(0, 2); // pour logique opérateur future
 
-        if (firstTwoDigits == "07" || firstTwoDigits == "05") {
-            try {
-                const response = await fetch("/api/send-otpByOrangeAPI", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document
-                            .querySelector('meta[name="csrf-token"]')
-                            .getAttribute("content"),
-                    },
-                    body: JSON.stringify({ TelPaiement: phoneNumber }),
+        try {
+            const response = await fetch(`${OTP_API}api/send-otp`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: JSON.stringify({
+                    telIndicatif: "225",
+                    telephone: phoneNumber,
+                    operation_type: "Demande de prestation"
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.status === 200) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Code de confirmation envoyé !",
+                    text: `Un code de confirmation a été envoyé sur le numéro ${phoneNumber}`,
+                    showConfirmButton: true,
+                    confirmButtonText: "OK",
+                    timer: 2000
                 });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    swal.fire({
-
-                        icon: "success",
-                        title: "Code de confirmation envoyé !",
-                        text: "Un code de confirmation a été envoyé sur le numéro " + phoneNumber,
-                        showConfirmButton: true,
-                        confirmButtonText: "OK",
-                        timer: 2000
-                        
-                    })
-                    
-                    startOtpTimer(); // Démarrer le décompte après l'envoi de l'OTP
-                    return true;
-                } else {
-                    alert(
-                        "Une erreur s'est produite lors de l'envoi du code de confirmation."
-                    );
-                    // alert(result.error || "Une erreur s'est produite lors de l'envoi du code de confirmation.");
-                    return false;
-                }
-            } catch (error) {
-                alert(
-                    "Une erreur s'est produite lors de l'envoi du code de confirmation."
-                );
-                console.error(error);
+                startOtpTimer(); // Démarre le compte à rebours OTP
+                return true;
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Erreur",
+                    text: "Une erreur s'est produite lors de l'envoi du code de confirmation.",
+                });
                 return false;
             }
-        } else if (firstTwoDigits == "01") {
-            try {
-                const response = await fetch("/api/send-otpByInfobipAPI", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document
-                            .querySelector('meta[name="csrf-token"]')
-                            .getAttribute("content"),
-                    },
-                    body: JSON.stringify({ TelPaiement: phoneNumber }),
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    swal.fire({
-
-                        icon: "success",
-                        title: "Code de confirmation envoyé !",
-                        text: "Un code de confirmation a été envoyé sur le numéro " + phoneNumber,
-                        showConfirmButton: true,
-                        confirmButtonText: "OK",
-                        timer: 2000
-                        
-                    })
-                    startOtpTimer(); // Démarrer le décompte après l'envoi de l'OTP
-                    return true;
-                } else {
-                    alert(
-                        result.error ||
-                            "Une erreur s'est produite lors de l'envoi du code de confirmation."
-                    );
-                    return false;
-                }
-            } catch (error) {
-                alert(
-                    "Une erreur s'est produite lors de l'envoi du code de confirmation."
-                );
-                console.error(error);
-                return false;
-            }
+        } catch (error) {
+            console.error(error);
+            Swal.fire({
+                icon: "error",
+                title: "Erreur de connexion",
+                text: "Impossible de contacter le serveur OTP. Veuillez réessayer.",
+            });
+            return false;
         }
     }
 
@@ -1528,9 +1540,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     $(document).ready(function () {
         // Déclencher l'événement "change" sur le champ de sélection pour le premier contrat
-        $("#single-select-fiel").trigger("change");
+        $("#idcontratEdit").trigger("change");
     });
-    $(document).on("change", "#single-select-fiel", function () {
+    $(document).on("change", "#idcontratEdit", function () {
         const idcontrat = $(this).val(); // Récupérer l'ID du contrat sélectionné
         const spinner = document.getElementById("spinner"); // Spinner pour l'indicateur de chargement
         const DetailContratBtn = document.getElementById("DetailContratBtn"); // Spinner pour l'indicateur de chargement
@@ -1545,7 +1557,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 type: "POST",
                 data: {
                     idcontrat: idcontrat,
-                    _token: "{{ csrf_token() }}", // Le token CSRF pour sécuriser la requête
+                    _token: document.querySelector('meta[name="csrf-token"]').content, // Le token CSRF pour sécuriser la requête
                 },
                 dataType: "json", // Assurez-vous que la réponse attendue est en JSON
                 success: function (response) {
@@ -1620,6 +1632,7 @@ document.addEventListener("DOMContentLoaded", function () {
             DetailContratBtn.style.display = "none";
         }
     });
+
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -1887,16 +1900,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+
 document.addEventListener("DOMContentLoaded", function () {
+
     // Bouton pour passer à l'étape suivante
-    document
-        .querySelector(".next-step-btnEdit")
+    document.querySelector(".next-step-btnEdit")
         .addEventListener("click", function (event) {
             event.preventDefault(); // Empêche l'action par défaut du bouton
 
             // Valider tous les champs de l'étape actuelle
             if (validateStep1()) {
                 // Si les champs sont valides, attendre 2 secondes avant de passer à l'étape suivante
+                
                 setTimeout(() => {
                     stepper1.next();
                 }, 1000); // 1 seconde
@@ -1979,12 +1994,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    const ibanPaiementField = document.getElementById("IBAN");
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//     const ibanPaiementField = document.getElementById("IBAN");
+// });
 
 
 document.addEventListener("DOMContentLoaded", function () {
+
+    const OTP_API = document.getElementById("OTP_API").value;
     // Initialisation du timer
     // let otpTimer = document.getElementById('otp-timer');
     // let timeLeft = 5 * 60; // 5 minutes en secondes
@@ -2019,25 +2036,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         let phoneNumber = "225" + phone;
 
-        fetch("/api/verify-otp", {
+        fetch(`${OTP_API}api/verify-otp`, {
+        // fetch("/api/verify-otp", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-TOKEN": document
-                    .querySelector('meta[name="csrf-token"]')
-                    .getAttribute("content"),
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
             },
             body: JSON.stringify({
-                TelPaiement: phoneNumber,
+                telephone: phoneNumber,
                 otp: otp,
             }),
         })
             .then((response) => response.json())
             .then((data) => {
-                if (
-                    data.message ===
-                    "Votre numéro de téléphone a été vérifié avec succès."
-                ) {
+                if (data.status == 200) {
                     // L'OTP est valide, on passe à l'étape suivante
                     nextStepBtn.disabled = false; // Activer le bouton "Suivant"
                     otpInputs.forEach((input) => {
@@ -2050,9 +2063,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         showConfirmButton: false,
                         timer: 1500,
                     });
-                    // alert(
-                    //     "Votre numéro de téléphone a été vérifié avec succès."
-                    // );
 
                     // Passer à l'étape suivante après un délai d'une seconde
                     setTimeout(() => {
@@ -2090,6 +2100,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+    const OTP_API = document.getElementById("OTP_API").value;
     // Initialisation du timer
     // let otpTimer = document.getElementById('otp-timer');
     // let timeLeft = 5 * 60; // 5 minutes en secondes
@@ -2124,25 +2135,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         let phoneNumber = "225" + phone;
 
-        fetch("/api/verify-otp", {
+        fetch(`${OTP_API}api/verify-otp`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-TOKEN": document
-                    .querySelector('meta[name="csrf-token"]')
-                    .getAttribute("content"),
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
             },
             body: JSON.stringify({
-                TelPaiement: phoneNumber,
+                telephone: phoneNumber,
                 otp: otp,
+                
             }),
         })
             .then((response) => response.json())
             .then((data) => {
-                if (
-                    data.message ===
-                    "Votre numéro de téléphone a été vérifié avec succès."
-                ) {
+                if (data.status == 200) {
                     // L'OTP est valide, on passe à l'étape suivante
                     nextStepBtn.disabled = false; // Activer le bouton "Suivant"
                     otpInputs.forEach((input) => {
@@ -2155,9 +2162,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         showConfirmButton: false,
                         timer: 1500,
                     })
-                    // alert(
-                    //     "Votre numéro de téléphone a été vérifié avec succès."
-                    // );
 
                     // Passer à l'étape suivante après un délai d'une seconde
                     setTimeout(() => {
@@ -2171,7 +2175,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         input.classList.add("is-invalid"); // Ajouter une bordure rouge
                         input.value = "";
                     });
-                    alert("Le code de vérification est invalide ou a expiré.");
+                    swal.fire({
+                        icon: "error",
+                        title: "Le code de vérification est invalide ou a expiré.",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    })
                 }
             })
             .catch((error) => {
@@ -2188,226 +2197,82 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// marquage de certain champs comme requis
-document.addEventListener("DOMContentLoaded", function () {
-    const moyenPaiementInputs = document.querySelectorAll(
-        'input[name="moyenPaiement"]'
-    );
-    const operateurSection = document.getElementById("Operateur");
-    const telPaiementSection = document.getElementById("TelephonePaiement");
-    const otpSection = document.querySelector(".otp-container");
-    const ibanPaiementSection = document.getElementById("IBANPaiement");
-    const nextBtn = document.querySelector("#nextPhone"); // Bouton "next" spécifique pour Mobile Money
-    const operateurInputs = document.querySelectorAll(
-        'input[name="Operateur"]'
-    );
 
-    moyenPaiementInputs.forEach((input) => {
-        input.addEventListener("change", function () {
+document.addEventListener('DOMContentLoaded', function () {
+    const moyenPaiementInputs = document.querySelectorAll('input[name="moyenPaiement"]');
+    const operateurSection = document.getElementById('Operateur');
+    const telPaiementSection = document.getElementById('TelephonePaiement');
+    const otpSection = document.querySelector('.otp-container');
+    const ibanPaiementSection = document.getElementById('IBANPaiement');
+    const nextBtn = document.querySelector('#nextPhone'); // Bouton "next" spécifique pour Mobile Money
+    const operateurInputs = document.querySelectorAll('input[name="Operateur"]');
+
+    moyenPaiementInputs.forEach(input => {
+        input.addEventListener('change', function () {
             if (input.value === "Mobile_Money") {
                 // Afficher les sections Mobile Money
-                operateurSection.classList.remove("d-none");
-                telPaiementSection.classList.remove("d-none");
+                operateurSection.classList.remove('d-none');
+                telPaiementSection.classList.remove('d-none');
                 // otpSection.parentElement.classList.remove('d-none');
-                ibanPaiementSection.classList.add("d-none"); // Cacher IBAN
+                ibanPaiementSection.classList.add('d-none'); // Cacher IBAN
 
                 // Ajouter les attributs requis
-                setRequired([
-                    "Operateur",
-                    "TelPaiement",
-                    "ConfirmTelPaiement",
-                    "FicheID-file-uploa",
-                ]);
-                setRequired([
-                    "otp_1",
-                    "otp_2",
-                    "otp_3",
-                    "otp_4",
-                    "otp_5",
-                    "otp_6",
-                ]);
-                removeRequired(["IBAN", "ConfirmIBAN", "RIB-file-uploa"]);
+                setRequired(['Operateur', 'TelPaiement', 'ConfirmTelPaiement', 'FicheID-file-uploa']);
+                setRequired(['otp_1', 'otp_2', 'otp_3', 'otp_4', 'otp_5', 'otp_6']);
+                removeRequired(['IBAN', 'ConfirmIBAN', 'RIB-file-uploa']);
 
                 // Vérifier la sélection d'un opérateur
                 toggleNextBtn();
             } else if (input.value === "Virement_Bancaire") {
                 // Afficher la section IBAN
-                ibanPaiementSection.classList.remove("d-none");
-                operateurSection.classList.add("d-none"); // Cacher opérateur
-                telPaiementSection.classList.add("d-none"); // Cacher téléphone
+                ibanPaiementSection.classList.remove('d-none');
+                operateurSection.classList.add('d-none'); // Cacher opérateur
+                telPaiementSection.classList.add('d-none'); // Cacher téléphone
                 // otpSection.parentElement.classList.remove('d-none'); // Cacher OTP
 
                 // Ajouter les attributs requis
-                setRequired(["IBAN", "ConfirmIBAN", "RIB-file-uploa"]);
-                removeRequired([
-                    "Operateur",
-                    "TelPaiement",
-                    "ConfirmTelPaiement",
-                    "FicheID-file-uploa",
-                ]);
+                setRequired(['IBAN', 'ConfirmIBAN', 'RIB-file-uploa']);
+                removeRequired(['Operateur', 'TelPaiement', 'ConfirmTelPaiement', 'FicheID-file-uploa']);
                 // removeRequired(['otp_1', 'otp_2', 'otp_3', 'otp_4', 'otp_5', 'otp_6']);
-                setRequired([
-                    "otp_1",
-                    "otp_2",
-                    "otp_3",
-                    "otp_4",
-                    "otp_5",
-                    "otp_6",
-                ]);
+                setRequired(['otp_1', 'otp_2', 'otp_3', 'otp_4', 'otp_5', 'otp_6']);
 
                 // Masquer le bouton "next" pour Mobile Money
-                nextBtn.classList.add("d-none");
+                nextBtn.classList.add('d-none');
             }
         });
     });
 
     // Vérifier si un opérateur est sélectionné pour afficher/masquer le bouton
-    operateurInputs.forEach((input) => {
-        input.addEventListener("change", toggleNextBtn);
+    operateurInputs.forEach(input => {
+        input.addEventListener('change', toggleNextBtn);
     });
 
     function toggleNextBtn() {
-        const isSelected = Array.from(operateurInputs).some(
-            (input) => input.checked
-        );
+        const isSelected = Array.from(operateurInputs).some(input => input.checked);
         if (isSelected) {
-            nextBtn.classList.remove("d-none");
+            nextBtn.classList.remove('d-none');
         } else {
-            nextBtn.classList.add("d-none");
+            nextBtn.classList.add('d-none');
         }
     }
 
     // Fonctions pour gérer les champs requis
     function setRequired(fields) {
-        fields.forEach((id) => {
-            const field =
-                document.getElementById(id) ||
-                document.querySelector(`input[name="${id}"]`);
-            if (field) field.setAttribute("required", true);
+        fields.forEach(id => {
+            const field = document.getElementById(id) || document.querySelector(`input[name="${id}"]`);
+            if (field) field.setAttribute('required', true);
         });
     }
 
     function removeRequired(fields) {
-        fields.forEach((id) => {
-            const field =
-                document.getElementById(id) ||
-                document.querySelector(`input[name="${id}"]`);
-            if (field) field.removeAttribute("required");
+        fields.forEach(id => {
+            const field = document.getElementById(id) || document.querySelector(`input[name="${id}"]`);
+            if (field) field.removeAttribute('required');
         });
     }
 });
 
-// // affichage des éléments en fonction du moyen de paiement coché
 
-document.addEventListener("DOMContentLoaded", function () {
-    const moyenPaiementInputs = document.querySelectorAll(
-        'input[name="moyenPaiement"]'
-    );
-    const operateurSection = document.getElementById("Operateur");
-    const telPaiementSection = document.getElementById("TelephonePaiement");
-    const otpSection = document.querySelector(".otp-container");
-    const ibanPaiementSection = document.getElementById("IBANPaiement");
-    const nextBtn = document.querySelector("#nextPhone"); // Bouton "next" spécifique pour Mobile Money
-    const operateurInputs = document.querySelectorAll(
-        'input[name="Operateur"]'
-    );
-
-    moyenPaiementInputs.forEach((input) => {
-        input.addEventListener("change", function () {
-            if (input.value === "Mobile_Money") {
-                // Afficher les sections Mobile Money
-                operateurSection.classList.remove("d-none");
-                telPaiementSection.classList.remove("d-none");
-                // otpSection.parentElement.classList.remove('d-none');
-                ibanPaiementSection.classList.add("d-none"); // Cacher IBAN
-
-                // Ajouter les attributs requis
-                setRequired([
-                    "Operateur",
-                    "TelPaiement",
-                    "ConfirmTelPaiement",
-                    "FicheID-file-uploa",
-                ]);
-                setRequired([
-                    "otp_1",
-                    "otp_2",
-                    "otp_3",
-                    "otp_4",
-                    "otp_5",
-                    "otp_6",
-                ]);
-                removeRequired(["IBAN", "ConfirmIBAN", "RIB-file-uploa"]);
-
-                // Vérifier la sélection d'un opérateur
-                toggleNextBtn();
-            } else if (input.value === "Virement_Bancaire") {
-                // Afficher la section IBAN
-                ibanPaiementSection.classList.remove("d-none");
-                operateurSection.classList.add("d-none"); // Cacher opérateur
-                telPaiementSection.classList.add("d-none"); // Cacher téléphone
-                // otpSection.parentElement.classList.remove('d-none'); // Cacher OTP
-
-                // Ajouter les attributs requis
-                setRequired(["IBAN", "ConfirmIBAN", "RIB-file-uploa"]);
-                removeRequired([
-                    "Operateur",
-                    "TelPaiement",
-                    "ConfirmTelPaiement",
-                    "FicheID-file-uploa",
-                ]);
-                // removeRequired(['otp_1', 'otp_2', 'otp_3', 'otp_4', 'otp_5', 'otp_6']);
-                setRequired([
-                    "otp_1",
-                    "otp_2",
-                    "otp_3",
-                    "otp_4",
-                    "otp_5",
-                    "otp_6",
-                ]);
-
-                // Masquer le bouton "next" pour Mobile Money
-                nextBtn.classList.add("d-none");
-            }
-        });
-    });
-
-    // Vérifier si un opérateur est sélectionné pour afficher/masquer le bouton
-    operateurInputs.forEach((input) => {
-        input.addEventListener("change", toggleNextBtn);
-    });
-
-    function toggleNextBtn() {
-        const isSelected = Array.from(operateurInputs).some(
-            (input) => input.checked
-        );
-        if (isSelected) {
-            nextBtn.classList.remove("d-none");
-        } else {
-            nextBtn.classList.add("d-none");
-        }
-    }
-
-    // Fonctions pour gérer les champs requis
-    function setRequired(fields) {
-        fields.forEach((id) => {
-            const field =
-                document.getElementById(id) ||
-                document.querySelector(`input[name="${id}"]`);
-            if (field) field.setAttribute("required", true);
-        });
-    }
-
-    function removeRequired(fields) {
-        fields.forEach((id) => {
-            const field =
-                document.getElementById(id) ||
-                document.querySelector(`input[name="${id}"]`);
-            if (field) field.removeAttribute("required");
-        });
-    }
-});
-
-// affichage des éléments en fonction du moyen de paiement coché
 document.addEventListener("DOMContentLoaded", function () {
     const mobileMoneyCheckbox = document.getElementById("mobileMoney");
     const virementBancaireCheckbox =
@@ -2482,190 +2347,5 @@ document.addEventListener("DOMContentLoaded", function () {
     toggleElements();
 });
 
-// recupere les rdv
-document.addEventListener("DOMContentLoaded", function () {
-    const selectContrat = document.getElementById("idcontratRdv");
-    const tableRdv = document.getElementById("example3"); // Table complète
-    const tableRdvBody = tableRdv.querySelector("tbody");
-    const getRdvUrl = "/api/getRdv";
-    let dataTableInstance = null;
 
-    const formatDate = (dateString) => {
-        if (!dateString) return "-";
-        const date = new Date(dateString);
-        return date.toLocaleDateString("fr-FR", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-        });
-    };
-
-    const clearTable = () => {
-        if (dataTableInstance) {
-            dataTableInstance.destroy(); // Détruire DataTables
-            dataTableInstance = null;
-        }
-        tableRdvBody.innerHTML = ""; // Nettoyer le contenu du tableau
-    };
-
-    selectContrat.addEventListener("change", function () {
-        const idcontrat = selectContrat.value;
-        const spinner = document.getElementById("spinner");
-        if (spinner) {
-            spinner.style.display = "block";
-        }
-
-        if (idcontrat === "Veuillez sélectionner un contrat") {
-            clearTable();
-            tableRdvBody.innerHTML = `
-                <tr>
-                    <td colspan="9" class="text-center">Veuillez sélectionner un contrat pour voir les rdv.</td>
-                </tr>`;
-            return;
-        }
-
-        fetch(getRdvUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": document
-                    .querySelector('meta[name="csrf-token"]')
-                    .getAttribute("content"),
-            },
-            body: JSON.stringify({ idcontratPrest: idcontrat }),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(
-                        "Erreur lors de la récupération des données"
-                    );
-                }
-                return response.json();
-            })
-            .then((data) => {
-                clearTable(); // Toujours nettoyer la table avant de réinitialiser
-                if (data.status === "success") {
-                    const rdvs = data.data;
-                    if (rdvs.length > 0) {
-                        tableRdvBody.innerHTML = rdvs
-                            .map(
-                                (rdv) => `
-                            <tr>
-                                <td>${rdv.codedmd || "-"}</td>
-                                <td>${rdv.titre || "-"}</td>
-                                <td>${rdv.police || "-"}</td>
-                                <td>${rdv.motifrdv || "-"}</td>
-                                <td>${rdv.ville.libelleVilleBureau || "-"}</td>
-                                <td>${rdv.daterdv || "-"}</td>
-                                <td>${rdv.tel || "-"}</td>
-                                <td>${rdv.email || "-"}</td>
-                                <td>
-                                    ${
-                                        rdv.etat == "1"
-                                            ? '<div class="badge rounded-pill text-danger bg-light-danger p-2 text-uppercase px-3"><i class="bx bxs-circle me-1"></i>En attente</div>'
-                                            : rdv.etat == "2"
-                                            ? '<div class="badge rounded-pill text-warning bg-light-warning p-2 text-uppercase px-3"><i class="bx bxs-circle me-1"></i>En cours</div>'
-                                            : rdv.etat == "3"
-                                            ? '<div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3"><i class="bx bxs-circle me-1"></i>Terminé</div>'
-                                            : "-"
-                                    }
-                                </td>
-                                <td>${rdv.dateajou || "-"}</td>
-                            </tr>`
-                            )
-                            .join("");
-                        // Initialiser DataTables après l'ajout des lignes
-                        dataTableInstance = $(tableRdv).DataTable({
-                            lengthChange: true,
-                            language: {
-                                search: "Recherche :",
-                                lengthMenu: "Afficher _MENU_ lignes",
-                                zeroRecords: "Aucun enregistrement trouvé",
-                                info: "Affichage de _START_ à _END_ sur _TOTAL_ enregistrements",
-                                infoEmpty: "Aucun enregistrement disponible",
-                                infoFiltered:
-                                    "(filtré à partir de _MAX_ enregistrements)",
-                                paginate: {
-                                    first: "Premier",
-                                    last: "Dernier",
-                                    next: "Suivant",
-                                    previous: "Précédent",
-                                },
-                            },
-                        });
-                    } else {
-                        tableRdvBody.innerHTML = `
-                            <tr>
-                                <td colspan="9" class="text-center">Aucun rdv pris pour ce contrat.</td>
-                            </tr>`;
-                    }
-                } else {
-                    tableRdvBody.innerHTML = `
-                        <tr>
-                            <td colspan="9" class="text-center text-danger">Aucun rdv pris pour ce contrat</td>
-                        </tr>`;
-                }
-
-                if (spinner) {
-                    spinner.style.display = "none";
-                }
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-                clearTable();
-                if (spinner) {
-                    spinner.style.display = "none";
-                }
-                tableRdvBody.innerHTML = `
-                    <tr>
-                        <td colspan="9" class="text-center text-danger">Aucun rdv pris pour ce contrat</td>
-                    </tr>`;
-            });
-    });
-});
-
-$("#Police-file-upload").FancyFileUpload({
-    params: {
-        action: "fileuploader",
-    },
-    // maxfilesize: 1000000
-});
-$("#bulletin-file-upload").FancyFileUpload({
-    params: {
-        action: "fileuploader",
-    },
-    // maxfilesize: 1000000
-});
-$("#RIB-file-upload").FancyFileUpload({
-    params: {
-        action: "fileuploader",
-    },
-    // maxfilesize: 1000000
-});
-$("#CNIrecto-file-upload").FancyFileUpload({
-    params: {
-        action: "fileuploader",
-    },
-    // maxfilesize: 1000000
-});
-$("#CNIverso-file-upload").FancyFileUpload({
-    params: {
-        action: "fileuploader",
-    },
-    // maxfilesize: 1000000
-});
-$("#FicheID-file-upload").FancyFileUpload({
-    params: {
-        action: "fileuploader",
-    },
-    // maxfilesize: 1000000
-});
-$("#AttestationPerte-file-upload").FancyFileUpload({
-    params: {
-        action: "fileuploader",
-    },
-    // maxfilesize: 1000000
-});
-
-// Fin upload doc
 

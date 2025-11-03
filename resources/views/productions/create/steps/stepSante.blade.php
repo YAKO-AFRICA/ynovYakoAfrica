@@ -3,7 +3,7 @@
     <h5 class="mb-1">Informations sur votre état de santé</h5>
 
     <p class="mb-4">Veuillez cocher les informations relatives à votre état de santé en tenant compte des champs
-        Obligatoires.</p>
+        obligatoires.</p>
 
 
 
@@ -14,7 +14,7 @@
                 <div class="card" style="width: 100%">
                     <div class="card-header">
                         <h5 class="mb-0">Êtes-vous sous traitement médicale pour l'une de ces maladies ou
-                            souffrez-vous de l'une de ces maladies</h5>
+                            souffrez-vous de l'une de ces maladies ?</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -469,7 +469,7 @@
 
                         <h5 class="mb-0">Êtes-vous sous traitement médicale pour l'une de ces maladies ou
                             souffrez-vous
-                            de l'une de ces maladies</h5>
+                            de l'une de ces maladies ?</h5>
 
                     </div>
 

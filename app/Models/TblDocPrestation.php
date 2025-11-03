@@ -13,6 +13,7 @@ class TblDocPrestation extends Model
     protected $table = 'tbl_doc_prestations';
     protected $fillable = [
         'idPrestation',
+        'filename',
         'libelle',
         'path',
         'type',

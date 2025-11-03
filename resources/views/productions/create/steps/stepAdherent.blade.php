@@ -1,7 +1,7 @@
 <div id="test-l-1" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger1">
     <h5 class="mb-1">Informations personnelles de l'adhérent</h5>
     <p class="mb-4">Veuillez entrer vos informations personnelles pour commencer l'adhésion en tenant compte des champs
-        Obligatoires (<span class="star">*</span>).</p>
+        obligatoires (<span class="star">*</span>).</p>
 
 
     <div class="col-12 d-flex justify-content-center align-items-center">
@@ -119,7 +119,7 @@
             @enderror
         </div>
         <div class="col-12 col-lg-4">
-            <label for="lieuresidence" class="form-label">Lieu de Résidence <span class="text-danger">*</span></label>
+            <label for="lieuresidence" class="form-label">Lieu de résidence <span class="text-danger">*</span></label>
             <select class="form-select selection" name="lieuresidence" id="lieuresidence" autocomplete="on" required>
                 <option value="" disabled selected>Sélectionner le lieu</option>
 
@@ -142,9 +142,9 @@
             </select>
         </div>
         <div class="col-12 col-lg-6">
-            <label for="employeur" class="form-label">Secteur d'd’activités</label>
+            <label for="employeur" class="form-label">Secteur d’activités</label>
             <select class="form-select selection" name="employeur" id="employeur" autocomplete="on">
-                <option value="" disabled selected>Sélectionner le secteur d'd’activités</option>
+                <option value="" disabled selected>Sélectionner le secteur d’activités</option>
 
                 @foreach($secteurActivites as $secteurActivite)
                     <option value="{{ $secteurActivite->MonLibelle }}">{{ $secteurActivite->MonLibelle }}</option>
@@ -227,7 +227,7 @@
     </fieldset>
     
     <fieldset class="border p-3">
-        <legend class="float-none w-auto px-2"><small>Personnes à contacter en cas de Besoin</small></legend>
+        <legend class="float-none w-auto px-2"><small>Personnes à contacter en cas de besoin</small></legend>
 
         <div class="row g-3 mb-3">
             <div class="col-12 col-lg-8">
