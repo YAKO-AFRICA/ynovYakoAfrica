@@ -25,7 +25,7 @@
                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" id="formProgress" style="width: 0%; background-color: #1e4520" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
 
-            <input type="hidden" name="{{$commercial->qr_code_token}}">
+            <input type="hidden" name="{{$commercial->idmembre}}">
             
             <!-- Steps Indicators - Version améliorée pour mobile -->
             <ul class="nav nav-pills mb-4 justify-content-center flex-nowrap overflow-auto" id="formSteps" role="tablist" style="white-space: nowrap;">

@@ -37,6 +37,8 @@
 
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
@@ -44,6 +46,22 @@
 
 
     <style>
+        :root {
+            --primary-color: #076633;
+            --secondary-color: #0766339a;
+            --success-color: #f7a400;
+            --warning-color: #f7a400;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+        }
+        .badge {
+        display: inline-block;
+        padding: 0.2rem 0.5rem;
+        color: #fff;
+        border-radius: 0.25rem;
+        font-size: 12px;
+    }
             .select2-container--default .select2-selection--single {
                 height: 38px !important;
                 display: flex;
@@ -159,6 +177,7 @@
 
         
 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
         {{-- js custome file --}}
         <script src="{{ asset('assets/js/custom.js')}}"></script>

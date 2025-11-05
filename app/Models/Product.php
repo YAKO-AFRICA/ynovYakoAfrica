@@ -20,6 +20,7 @@ class Product extends Model
     protected $table = 'tblproduit';
 
     protected $fillable = [
+        'IdProduit',
         'CodeProduit',
         'MonLibelle',
         'DateProduit',

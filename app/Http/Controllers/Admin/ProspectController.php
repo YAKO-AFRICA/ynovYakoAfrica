@@ -16,13 +16,23 @@ use App\Models\Profession;
 use Illuminate\Support\Str;
 // use BaconQrCode\Encoder\QrCode;
 use Illuminate\Http\Request;
+use App\Models\AssuranceInfo;
+use App\Models\ReseauProduct;
+use App\Models\SuivieProspert;
+use App\Models\contactProspert;
+use App\Models\PartnerProspert;
+use App\Models\ProductProspert;
 use App\Models\ProspectProduct;
+use App\Models\AdherentProspert;
+use App\Models\DocumentProspert;
 use App\Models\ProspectFollowup;
 use App\Models\TblSecteurActivite;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ProspectController extends Controller
@@ -34,44 +44,53 @@ class ProspectController extends Controller
 
     public function index(Request $request)
     {
-        $query = Prospect::where('userAdd_uuid', auth()->user()->id)->orderBy('id', 'desc');
+        $prospects = AdherentProspert::orderBy('created_at', 'desc')->paginate(20);
+        $myProspects = AdherentProspert::where('reference_par', Auth::user()->idmembre)->orderBy('created_at', 'desc')->paginate(20);
+      
 
-        if ($request->has('code') && !empty($request->code)) {
-            $query->where('code', 'like', '%' . $request->code . '%');
-        }
-
-        if ($request->has('first_name') && !empty($request->first_name)) {
-            $query->where('first_name', 'like', '%' . $request->first_name . '%');
-        }
-
-        if ($request->has('last_name') && !empty($request->last_name)) {
-            $query->where('last_name', 'like', '%' . $request->last_name . '%');
-        }
-
-        if ($request->has('date_from') && !empty($request->date_from) && 
-            $request->has('date_to') && !empty($request->date_to)) {
-            $query->whereBetween('created_at', [
-                Carbon::parse($request->date_from)->startOfDay(),
-                Carbon::parse($request->date_to)->endOfDay()
-            ]);
-        }
-
-        $allPropects = $query->get();
-
-        $product = Product::all();
-        $villes = TblVille::select('libelleVillle')->get();
-        $professions = Profession::select('MonLibelle')->get();
-        $secteurActivites = TblSecteurActivite::select('MonLibelle')->get();
-
-        if ($request->has('print')) {
-            $pdf = PDF::loadView('prospects.print', compact('allPropects'));
-            return $pdf->download('rapport_prospection_'.date('Y-m-d').'.pdf');
-        }
-
-        return view('prospects.index', compact('allPropects', 'villes', 'professions', 'secteurActivites', 'product'));
+        return view('prospects.index', compact('prospects','myProspects'));
     }
 
-    public function create()
+
+    private function getAllCountries()
+    {
+        $baseUrl = 'https://api.thecompaniesapi.com/v2/locations/countries';
+        $allCountries = [];
+
+        $page = 1;
+        $lastPage = 1;
+
+        do {
+            // Appel de l’API avec pagination
+            $response = Http::withOptions(['timeout' => 60])->get($baseUrl, [
+                'page' => $page,
+                'per_page' => 50,
+            ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                // Ajouter les pays de cette page
+                if (isset($data['countries'])) {
+                    $allCountries = array_merge($allCountries, $data['countries']);
+                }
+
+                // Pagination : on récupère la dernière page
+                $lastPage = $data['meta']['lastPage'] ?? 1;
+                $page++;
+            } else {
+                break; 
+            }
+        } while ($page <= $lastPage);
+
+        // On récupère uniquement les noms français
+        // $paysList = collect($allCountries)->filter()->sort()->values();
+
+        return $allCountries;
+    }
+
+
+    public function create($token)
     {
 
         $response = Http::withOptions(['timeout' => 60])->get(config('services.base_url_api') . '/enov/villes');
@@ -82,9 +101,19 @@ class ProspectController extends Controller
             $villes = [];
         }
 
-        $product = Product::all();
+        $commerciale = User::where('idmembre', $token)->firstOrFail();
+
+        $pays = $this->getAllCountries();
+
+        // $productByReseau = ReseauProduct::select('CodeProduit')->where('codereseau', Auth::user()->membre->codereseau)->get();
+        $productByReseau = ReseauProduct::select('CodeProduit')->where('codereseau', $commerciale->membre->codereseau)->get();
+
+        $codeProduits = $productByReseau->pluck('CodeProduit')->toArray();
+
+        $products = Product::whereIn('CodeProduit', $codeProduits)->get();
+
         $professions = Profession::select('MonLibelle')->get();
-        return view('prospects.create', compact('villes', 'professions', 'product'));
+        return view('prospects.create', compact('villes', 'professions', 'products', 'pays', 'commerciale'));
     }
 
     /**
@@ -98,101 +127,257 @@ class ProspectController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // public function store(Request $request)
+    // {
+
+    //     // Validation des données
+    //     $validated = $request->validate([
+    //         // 'code' => 'required|string|max:191|unique:prospects',
+    //         'first_name' => 'required|string|max:191',
+    //         'last_name' => 'required|string|max:191',
+    //         'email' => 'nullable|email|max:191',
+    //         'mobile' => 'nullable|string|max:191',
+    //         'adress' => 'nullable|string|max:191',
+    //         'city' => 'nullable|string|max:191',
+    //         'profession_uuid' => 'nullable|string|max:191',
+    //         'secteurActivity_uuid' => 'nullable|string|max:191',
+    //         'natureProspect' => 'nullable|string|max:191',
+    //         'produit_id' => 'nullable|string|max:191',
+    //         'montantPrime' => 'nullable|string|max:191',
+    //         'dateEffet' => 'nullable|date',
+    //         'typeCompagnie' => 'nullable|string|max:191',
+    //         'modeDePaiment' => 'nullable|string|max:191',
+    //         'lieuEvenement' => 'nullable|string|max:191',
+    //         'etat' => 'nullable|string|max:191',
+    //         'status' => 'nullable|string|max:191',
+    //         'note' => 'nullable|string',
+    //         'products' => 'nullable|array',
+    //         'products.*' => 'integer|exists:tblproduit,IdProduit', 
+    //     ]);
+
+    //     DB::beginTransaction();
+
+    //     try {
+    //         $code = Refgenerate(Prospect::class, 'P', 'code');
+    //         // Création du prospect
+    //         $prospect = new Prospect();
+    //         $prospect->uuid = Str::uuid();
+    //         $prospect->code = $code;
+
+    //         $prospect->first_name = $validated['first_name'];
+    //         $prospect->last_name = $validated['last_name'];
+    //         $prospect->email = $validated['email'] ?? null;
+    //         $prospect->mobile = $validated['mobile'] ?? null;
+    //         $prospect->adress = $validated['adress'] ?? null;
+    //         $prospect->city = $validated['city'] ?? null;
+    //         $prospect->profession_uuid = $validated['profession_uuid'] ?? null;
+    //         $prospect->secteurActivity_uuid = $validated['secteurActivity_uuid'] ?? null;
+    //         $prospect->natureProspect = $validated['natureProspect'] ?? null;
+    //         // $prospect->produit_id = $validated['produit_id'] ?? null;
+    //         $prospect->montantPrime = $validated['montantPrime'] ?? null;
+    //         $prospect->dateEffet = $validated['dateEffet'] ?? null;
+    //         $prospect->typeCompagnie = $validated['typeCompagnie'] ?? null;
+    //         $prospect->modeDePaiment = $validated['modeDePaiment'] ?? null;
+    //         $prospect->lieuEvenement = $validated['lieuEvenement'] ?? null;
+    //         $prospect->etat = $validated['etat'] ?? 'actif';
+    //         $prospect->status = $validated['status'] ?? 'nouveau';
+    //         $prospect->note = $validated['note'] ?? null;
+    //         $prospect->userAdd_uuid = auth()->user()->id;
+            
+    //         $prospect->save();
+
+    //         // Vérifie s'il y a des produits sélectionnés
+    //         if (!empty($request->products)) {
+    //             foreach ($request->products as $productId) {
+    //                 ProspectProduct::create([
+    //                     'prospect_id' => $prospect->id,
+    //                     'product_id' => $productId,
+    //                 ]);
+    //             }
+    //         }
+
+
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Prospect créé avec succès',
+    //             'data' => $prospect
+    //         ], 201);
+
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Erreur lors de la création du prospect',
+    //             'error' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+
     public function store(Request $request)
     {
-        // Validation des données
-        $validated = $request->validate([
-            // 'code' => 'required|string|max:191|unique:prospects',
-            'first_name' => 'required|string|max:191',
-            'last_name' => 'required|string|max:191',
-            'email' => 'nullable|email|max:191',
-            'mobile' => 'nullable|string|max:191',
-            'adress' => 'nullable|string|max:191',
-            'city' => 'nullable|string|max:191',
-            'profession_uuid' => 'nullable|string|max:191',
-            'secteurActivity_uuid' => 'nullable|string|max:191',
-            'natureProspect' => 'nullable|string|max:191',
-            'produit_id' => 'nullable|string|max:191',
-            'montantPrime' => 'nullable|string|max:191',
-            'dateEffet' => 'nullable|date',
-            'typeCompagnie' => 'nullable|string|max:191',
-            'modeDePaiment' => 'nullable|string|max:191',
-            'lieuEvenement' => 'nullable|string|max:191',
-            'etat' => 'nullable|string|max:191',
-            'status' => 'nullable|string|max:191',
-            'note' => 'nullable|string',
-            'products' => 'nullable|array',
-            'products.*' => 'integer|exists:tblproduit,IdProduit', 
-        ]);
-
         DB::beginTransaction();
 
         try {
-            $code = Refgenerate(Prospect::class, 'P', 'code');
-            // Création du prospect
-            $prospect = new Prospect();
-            $prospect->uuid = Str::uuid();
-            $prospect->code = $code;
 
-            $prospect->first_name = $validated['first_name'];
-            $prospect->last_name = $validated['last_name'];
-            $prospect->email = $validated['email'] ?? null;
-            $prospect->mobile = $validated['mobile'] ?? null;
-            $prospect->adress = $validated['adress'] ?? null;
-            $prospect->city = $validated['city'] ?? null;
-            $prospect->profession_uuid = $validated['profession_uuid'] ?? null;
-            $prospect->secteurActivity_uuid = $validated['secteurActivity_uuid'] ?? null;
-            $prospect->natureProspect = $validated['natureProspect'] ?? null;
-            // $prospect->produit_id = $validated['produit_id'] ?? null;
-            $prospect->montantPrime = $validated['montantPrime'] ?? null;
-            $prospect->dateEffet = $validated['dateEffet'] ?? null;
-            $prospect->typeCompagnie = $validated['typeCompagnie'] ?? null;
-            $prospect->modeDePaiment = $validated['modeDePaiment'] ?? null;
-            $prospect->lieuEvenement = $validated['lieuEvenement'] ?? null;
-            $prospect->etat = $validated['etat'] ?? 'actif';
-            $prospect->status = $validated['status'] ?? 'nouveau';
-            $prospect->note = $validated['note'] ?? null;
-            $prospect->userAdd_uuid = auth()->user()->id;
-            
-            $prospect->save();
+            Log::info($request->all());
+            // 🔹 Générer un UUID et un code
+            $uuid = (string) Str::uuid();
+            $code = 'PROS-' . strtoupper(Str::random(6));
 
-            // Vérifie s'il y a des produits sélectionnés
-            if (!empty($request->products)) {
-                foreach ($request->products as $productId) {
-                    ProspectProduct::create([
-                        'prospect_id' => $prospect->id,
-                        'product_id' => $productId,
+            // 🔹 Enregistrer l'adhérent principal
+            $prospect = AdherentProspert::create([
+                'uuid' => $uuid,
+                'code' => $code,
+                'civilite' => $request->civilite,
+                'nom' => $request->nom,
+                'prenom' => $request->prenom,
+                'genre' => $request->genre,
+                'date_naissance' => $request->date_naissance,
+                'lieu_naissance' => $request->lieu_naissance,
+                'lieu_residence' => $request->lieu_residence,
+                'situation_matrimoniale' => $request->situation_matrimoniale,
+                'type_piece_identite' => $request->type_piece_identite,
+                'numero_piece_identite' => $request->numero_piece_identite,
+                'email' => $request->email,
+                'adresse' => $request->adresse,
+                'pays' => $request->pays,
+                'profession' => $request->profession,
+                'employeur' => $request->employeur,
+                'secteur_activite' => $request->secteur_activite,
+                'personneRessource' => $request->personneRessource,
+                'contactRessource' => $request->contactRessource,
+                'personneRessource2' => $request->personneRessource2,
+                'contactRessource2' => $request->contactRessource2,
+                'notes' => $request->notes,
+                'reference_par' => $request->commerciale_code,
+            ]);
+
+            // 🔹 Enregistrer le produit sélectionné
+            if ($request->has('produits')) {
+                foreach ($request->produits as $prod) {
+                    ProductProspert::create([
+                        'uuid' => (string) Str::uuid(),
+                        'code' => $code,
+                        'product_uuid' => $prod,
+                        'prospert_uuid' => $uuid,
                     ]);
                 }
             }
 
+            // 🔹 Enregistrer la signature et informations assurance
+            if ($request->has('signature')) {
+                $signatureData = $request->input('signature');
+                $signatureFileName = 'signature_' . time() . '.png';
+                $signaturePath = 'signatures/' . $signatureFileName;
+                Storage::disk('public')->put($signaturePath, base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $signatureData)));
 
+                AssuranceInfo::create([
+                    'uuid' => (string) Str::uuid(),
+                    'code' => $code,
+                    'produit_uuid' => $request->produits[0] ?? null,
+                    'signature' => $signaturePath,
+                    'datteEffet' => $request->datteEffet,
+                    'modePaiement' => $request->modePaiement,
+                    'periodicite' => $request->periodicite,
+                ]);
+            }
+
+            // 🔹 Enregistrer les contacts
+            $contacts = json_decode($request->contacts, true);
+            if (!empty($contacts)) {
+                foreach ($contacts as $item) {
+                    contactProspert::create([
+                        'uuid' => (string) Str::uuid(),
+                        'code' => $code,
+                        'prospert_uuid' => $uuid,
+                        'contactType' => $item['contactType'] ?? '',
+                        'contact' => $item['contact'] ?? '',
+                        'etat' => 'ACTIF',
+                    ]);
+                }
+            }
+
+            // 🔹 Enregistrer les partenaires
+            $partners = json_decode($request->partners, true);
+            if (!empty($partners)) {
+                foreach ($partners as $item) {
+                    PartnerProspert::create([
+                        'uuid' => (string) Str::uuid(),
+                        'code' => $code,
+                        'prospert_uuid' => $uuid,
+                        'nom' => $item['nom'] ?? '',
+                        'prenom' => $item['prenom'] ?? '',
+                        'genre' => $item['genre'] ?? '',
+                        'civilite' => $item['civilite'] ?? '',
+                        'naturepiece' => $item['naturepiece'] ?? '',
+                        'numeropiece' => $item['numeropiece'] ?? '',
+                        'email' => $item['email'] ?? '',
+                        'situationMatrimoniale' => $item['situationMatrimoniale'] ?? '',
+                        'dateNaissance' => $item['dateNaissance'] ?? '',
+                        'lieuNaissance' => $item['lieuNaissance'] ?? '',
+                        'lieuResidence' => $item['lieuResidence'] ?? '',
+                        'adresseComplete' => $item['adresseComplete'] ?? '',
+                        'profession' => $item['profession'] ?? '',
+                        'employeur' => $item['employeur'] ?? '',
+                        'mobile' => $item['mobile'] ?? '',
+                        'filliation_code' => $item['filliation_code'] ?? '',
+                        'code_partner' => 'PART-' . strtoupper(Str::random(6)),
+                    ]);
+                }
+            }
+
+            // 🔹 Enregistrer les documents uploadés
+            if ($request->hasFile('documents')) {
+                foreach ($request->file('documents') as $index => $doc) {
+                    $nature = $request->input("documents.$index.nature");
+                    $path = $doc['file']->store('prospects_docs', 'public');
+                    DocumentProspert::create([
+                        'uuid' => (string) Str::uuid(),
+                        'code' => $code,
+                        'prospert_uuid' => $uuid,
+                        'filepath' => $path,
+                        'fileName' => basename($path),
+                        'nature' => $nature,
+                        'etat' => 'ACTIF',
+                    ]);
+                }
+            }
+
+            DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Prospect créé avec succès',
-                'data' => $prospect
-            ], 201);
+                'message' => 'Prospect enregistré avec succès',
+                'code' => $code,
+                'uuid' => $uuid
+            ]);
 
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur lors de la création du prospect',
-                'error' => $e->getMessage()
+                'message' => 'Erreur: ' . $e->getMessage()
             ], 500);
         }
     }
 
+
     public function addProduct(request $request)
     {
 
+
         DB::beginTransaction();
         try {
+            $code = Refgenerate(ProductProspert::class, 'P', 'code');
+
+            // 🔹 Enregistrer les produits
             if (!empty($request->products)) {
                 foreach ($request->products as $productId) {
-                    ProspectProduct::create([
-                        'prospect_id' => $request->prospect_id,
-                        'product_id' => $productId,
+                    ProductProspert::create([
+                        'uuid' => (string) Str::uuid(),
+                        'code' => $code,
+                        'prospert_uuid' => $request->prospect_id,
+                        'product_uuid' => $productId,
                     ]);
                 }
             }
@@ -222,35 +407,72 @@ class ProspectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    // public function show(string $id)
+    // {
+    //     $prospect = Prospect::with(['followups.user'])->where('id', $id)->firstOrFail();
+
+    //     $commerciaux = Membre::whereNotNull('codeagent')->where('codepartenaire',"llv")->limit(500)->get();
+
+    //     $professions = Profession::orderBy('MonLibelle')->get();
+    //     $secteurActivites = TblSecteurActivite::orderBy('MonLibelle')->get();
+    //     $products = Product::orderBy('MonLibelle')->get();
+    //     $villes = TblVille::orderBy('idville')->get();
+
+    //     return view('prospects.show', compact('prospect','commerciaux','products','professions','secteurActivites','villes'));
+    // }
+
+    public function show($uuid)
     {
-        $prospect = Prospect::with(['followups.user'])->where('id', $id)->firstOrFail();
 
-        $commerciaux = Membre::whereNotNull('codeagent')->where('codepartenaire',"llv")->limit(500)->get();
+        // Dans le contrôleur
+        $response = Http::withOptions(['timeout' => 60])->get(config('services.base_url_api') . '/enov/villes');
 
-        $professions = Profession::orderBy('MonLibelle')->get();
-        $secteurActivites = TblSecteurActivite::orderBy('MonLibelle')->get();
-        $products = Product::orderBy('MonLibelle')->get();
-        $villes = TblVille::orderBy('idville')->get();
+        if ($response->successful()) {
+            $villes = $response->json();
+            $villesMap = collect($villes)->keyBy('CodeVille')->map(function($ville) {
+                return $ville['MonLibelle'];
+            })->toArray();
+        } else {
+            $villesMap = [];
+        }
 
-        return view('prospects.show', compact('prospect','commerciaux','products','professions','secteurActivites','villes'));
+        $badgeColors = [
+            'mobile'   => 'primary',
+            'fixe'     => 'danger',
+            'whatsapp' => 'success',
+            'email'    => 'warning',
+            'Wave'     => 'info',
+        ];
+
+        $prospect = AdherentProspert::with(['followups.user'])->where('uuid', $uuid)->firstOrFail();
+        $assurance = AssuranceInfo::where('code', $prospect->code)->first();
+        $contacts = ContactProspert::where('prospert_uuid', $prospect->uuid)->get();
+        $partenaires = PartnerProspert::where('prospert_uuid', $prospect->uuid)->get();
+        $documents = DocumentProspert::where('prospert_uuid', $prospect->uuid)->get();
+        $produits = ProductProspert::where('prospert_uuid', $prospect->uuid)->get();
+        $allProducts = Product::orderBy('MonLibelle')->get();
+
+   
+
+
+        return view('prospects.show', compact('prospect', 'assurance', 'contacts', 'partenaires', 'documents', 'produits','villesMap','badgeColors','allProducts'));
     }
 
 
     public function storeFollowup(Request $request, $uuid)
     {
     
-        $prospect = Prospect::where('uuid', $uuid)->firstOrFail();
+        $prospect = AdherentProspert::where('uuid', $uuid)->firstOrFail();
         
-        $followup = ProspectFollowup::create([
+        $followup = SuivieProspert::create([
             'uuid' => Str::uuid(),
-            'prospect_id' => $prospect->id,
+            'prospect_uuid' => $prospect->uuid,
             'type' => $request->type,
             'notes' => $request->notes,
             'followup_date' => $request->followup_date,
             'next_followup_date' => $request->next_followup_date,
             'status' => $request->status,
-            'user_id' => auth()->user()->id,
+            'user_id' => Auth::user()->idmembre
         ])->save();
         
         // Mettre à jour le statut du prospect si nécessaire
@@ -418,7 +640,7 @@ class ProspectController extends Controller
     // App\Http\Controllers\ProspectionController.php
     public function showForm($token)
     {
-        $commercial = User::where('qr_code_token', $token)->firstOrFail();
+        $commercial = User::where('idmembre', $token)->firstOrFail();
 
         $professions = Profession::orderBy('MonLibelle')->get();
         $secteurActivites = TblSecteurActivite::orderBy('MonLibelle')->get();

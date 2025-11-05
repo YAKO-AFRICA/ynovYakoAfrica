@@ -89,6 +89,9 @@ Route::prefix('file')->name('file.')->group(function(){
     });
 });
 
+
+
+
 Route::prefix('tickets')->name('ticket.')->group(function(){
     Route::middleware('guest')->group(function(){
 
@@ -384,13 +387,14 @@ Route::get('/show/bullettin/test', [BulletinController::class, 'printBulletin'])
 
 Route::prefix('prospect')->name('prospect.')->group(function(){
     Route::middleware('guest','PreventBackHistory')->group(function(){
-
+        
+        Route::get('/create/{tokken}', [ProspectController::class, 'create'])->name('create');
+        Route::post('/store', [ProspectController::class, 'store']);
         // formule by product reseau 
 
     });
     Route::middleware(['auth','PreventBackHistory'])->group(function () {
         Route::get('/index', [ProspectController::class, 'index'])->name('index');
-        Route::get('/create', [ProspectController::class, 'create'])->name('create');
         Route::get('/suivies', [ProspectController::class, 'suivies'])->name('suivies');
         Route::get('/show/{id}', [ProspectController::class, 'show'])->name('show');
 
@@ -399,7 +403,7 @@ Route::prefix('prospect')->name('prospect.')->group(function(){
         // Route::get('/edit/{uuid}', [ProspectController::class, 'edit'])->name('edit');
         Route::put('/update/{uuid}', [ProspectController::class, 'update'])->name('update');
         Route::post('/prospects/{uuid}/convert', [ProspectController::class, 'convertToClient'])->name('convert');
-        Route::post('/store', [ProspectController::class, 'store']);
+        
 
         Route::delete('/{prospectId}/products/{productId}', [ProspectController::class, 'destroy'])->name('delete');
         Route::post('/assign/{uuid}', [ProspectController::class, 'assign'])->name('assign');
@@ -412,8 +416,8 @@ Route::prefix('prospect')->name('prospect.')->group(function(){
 });
 
 // routes/web.php
-Route::get('/prospection/{token}', [ProspectController::class, 'showForm'])->name('prospection.form');
 
+Route::get('/prospection/{token}', [ProspectController::class, 'showForm'])->name('prospection.form');
 
 Route::post('/prospection/{token}', [ProspectController::class, 'storeProspect']);
 
@@ -431,6 +435,17 @@ Route::get('storage/documents/{file}', function ($file) {
     return Response::make($fileContents, 200, ['Content-Type' => $mimeType]);
     
 })->where('file', '.*');
+
+Route::get('show/signature/{file}', function ($file) {
+    $path = storage_path('app/public/' . $file);
+    
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    return response()->file($path);
+})->where('file', '.*');
+
 
 Route::get('storage/prestations/{file}', function ($file) {
     // $path = base_path('../public_html/upload/prestations/' . $file);

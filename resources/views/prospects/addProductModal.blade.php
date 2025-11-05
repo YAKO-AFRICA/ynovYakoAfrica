@@ -10,7 +10,7 @@
                 <div class="modal-body">
                     <p>Sélectionnez un produit pour l'ajouter</p>
 
-                    <input type="hidden" name="prospect_id" value="{{$prospect->id}}">
+                    <input type="hidden" name="prospect_id" value="{{$prospect->uuid}}">
                     
                     <div class="mb-3">
                         <label for="productSearch" class="form-label">Rechercher un produit</label>
@@ -20,9 +20,9 @@
                     <div class="mb-3">
                         <label class="form-label">Résultats</label>
                         <div class="list-group" id="productResults" style="max-height: 300px; overflow-y: auto;">
-                            @foreach($products as $item)
+                            @foreach($allProducts as $item)
                             <label class="list-group-item d-flex align-items-center product-item">
-                                <input class="form-check-input me-3" type="checkbox" name="products[]" value="{{ $item->IdProduit }}">
+                                <input class="form-check-input me-3" type="checkbox" name="products[]" value="{{ $item->CodeProduit }}">
                                 <div class="product-info">
                                     <strong class="product-code">{{ $item->CodeProduit }}</strong> - <span class="product-name">{{ $item->MonLibelle }}</span>
                                 </div>

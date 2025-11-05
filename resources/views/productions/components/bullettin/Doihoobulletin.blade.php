@@ -334,8 +334,19 @@
                 </table>
                 
             </div>
-            <div style="width: 13%; background-color: #7471718b; padding: 5px; margin: 10px 0; border-radius: 15px; text-align: center">
-                <strong>Durée : <i>{{ $contrat->duree ?? '' }} ans</i></strong>
+            <div style="width: 100%;">
+                <div class="div float-left col-4" style="width: 30%; float: left">
+
+                    <strong>Durée : <i>{{ $contrat->duree ?? '' }} ans</i></strong>
+                </div>
+                <div class="div float-right col-4" style="width: 30% ; float: left">
+
+                    <strong>Frais d'adhesions : <i>{{ $contrat->fraisadhesion ?? "7 500" }}</i> FCFA</strong>
+                </div>
+                <div class="div float-right col-4" style="width: 30% ; float: right">
+
+                    <strong>Date d'effet : <i>{{ $contrat->dateeffet ?? '' }}</i></strong>
+                </div>
             </div>
         
         </section>
@@ -457,7 +468,7 @@
                         <td>{{ $item->nom ?? '' }} {{ $item->prenom ?? '' }}</td>
                         <td>{{ $item->filiation ?? '' }}</td>
                         <td>{{ $item->datenaissance ?? '' }}</td>
-                        <td>{{ $item->telephone ?? '' }}</td>
+                        <td>{{ $item->mobile ?? '' }}</td>
                         <td>{{ $item->lieuresidence ?? '' }}</td>
                     </tr>
                     @endforeach
