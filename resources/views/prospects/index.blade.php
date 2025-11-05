@@ -77,7 +77,7 @@
                                             </td>
                                             <td>
                                                 @php
-                                                    $contact = \App\Models\ContactProspert::where(
+                                                    $contact = \App\Models\contactProspert::where(
                                                         'prospert_uuid',
                                                         $item->uuid,
                                                     )->first();
