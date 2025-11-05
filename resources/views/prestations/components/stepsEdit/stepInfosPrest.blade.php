@@ -24,9 +24,9 @@
                                 <div class="row g-3 mb-3">
                                     <div class="col-12 col-lg-6">
 
-                                        <label for="single-select-fiel" class="form-label">Pour quel Contrat
+                                        <label for="idcontratEdit" class="form-label">Pour quel Contrat
                                             demandez-vous la prestation ?</label>
-                                        <select class="form-select" name="idcontrat" id="single-select-fiel"
+                                        <select class="form-select" name="idcontrat" id="idcontratEdit"
                                             data-placeholder="Veuillez sélectionner l'ID du contrat" required readonly>
                                             <option></option>
                                             <option value="{{ $prestation->idcontrat ?? '' }}" selected>
@@ -355,3 +355,4 @@
         </div>
     </div>
 </div>
+

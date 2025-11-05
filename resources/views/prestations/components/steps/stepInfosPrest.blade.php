@@ -154,34 +154,13 @@
                                         <span id="clearChoise" class="">Supprimer mon choix</span>
                                     </div>
                                 </div>
-                                {{-- <div class="row g-3 mb-3" id="IBANPaiement">
-                                    <div class="col-12 col-lg-6">
-                                        <label for="IBAN" class="form-label">IBAN sur lequel vous souhaitez
-                                            recevoir le paiement <span class="star">*</span></label>
-                                        <input type="text" class="form-control" name="IBAN" id="IBAN"
-                                            placeholder="Veuillez saisir l'IBAN sur lequel vous souhaitez recevoir le paiement">
-                                            <small><i id="ibanMsgError" class="text-danger"></i></small>
-                                            <small><i id="ibanMsgSuccess" class="text-success"></i></small>
-                                            <input type="hidden" name="TelOtp" value="" id="TelOtp">
-                                    </div>
-                                    <div class="col-12 col-lg-6">
-                                        <label for="ConfirmIBAN" class="form-label">Confirmer l'IBAN <span
-                                                class="star">*</span></label>
-                                        <input type="text" class="form-control" name="ConfirmIBAN"
-                                            id="ConfirmIBAN"
-                                            placeholder="Veuillez resaisir l'IBAN sur lequel vous souhaitez recevoir le paiement">
-                                            <small><i id="ibanConfirmMsgError" class="text-danger"></i></small>
-                                            <small><i id="ibanConfirmMsgSuccess" class="text-success"></i></small>
-                                    </div>
-                                    <small><span class="form-label star"><i>Veuillez saisir l'IBAN de votre compte
-                                                courant </i></span></small>
-                                </div> --}}
+                                
                                 <div class="row mb-3" id="IBANPaiement">
-                                    <div class="col-12 px-0">
+                                    <div class="col-12 px-0 py-3 text-center">
                                         <label for="IBAN" class="form-label">Quel est votre RIB sur lequel vous souhaitez
                                             recevoir le paiement <span class="star">*</span></label>
                                         <div class="rib-container row">
-                                            <div class="col-lg-3 col-12 mb-3 w-lg-20 text-center">
+                                            <div class="col-lg-3 col-12 mb-3 w-lg-20 ">
                                                 <label for="codebanque" class="form-label">Code Banque</label><br>
                                                 <input type="text" class="rib-input" name="rib_1" maxlength="1">
                                                 <input type="text" class="rib-input" name="rib_2" maxlength="1">
@@ -189,7 +168,7 @@
                                                 <input type="text" class="rib-input" name="rib_4" maxlength="1">
                                                 <input type="text" class="rib-input" name="rib_5" maxlength="1">
                                             </div>
-                                            <div class="col-lg-3 col-12 mb-3 w-lg-20 text-center">
+                                            <div class="col-lg-3 col-12 mb-3 w-lg-20 ">
                                                 <label for="codeagence" class="form-label">Code Agence</label><br>
                                                 <input type="text" class="rib-input" name="rib_6" maxlength="1">
                                                 <input type="text" class="rib-input" name="rib_7" maxlength="1">
@@ -197,7 +176,7 @@
                                                 <input type="text" class="rib-input" name="rib_9" maxlength="1">
                                                 <input type="text" class="rib-input" name="rib_10" maxlength="1">
                                             </div>
-                                            <div class="col-lg-5 col-12 mb-3 text-center">
+                                            <div class="col-lg-5 col-12 mb-3 ">
                                                 <label for="numcompte" class="form-label">N° de Compte</label><br>
                                                 <input type="text" class="rib-input" name="rib_11" maxlength="1">
                                                 <input type="text" class="rib-input" name="rib_12" maxlength="1">
@@ -212,13 +191,13 @@
                                                 <input type="text" class="rib-input" name="rib_21" maxlength="1">
                                                 <input type="text" class="rib-input" name="rib_22" maxlength="1">
                                             </div>
-                                            <div class="col-lg-1 col-12 mb-3 w-lg-15 text-center">
+                                            <div class="col-lg-1 col-12 mb-3 w-lg-15 ">
                                                 <label for="clerib" class="form-label">Clé RIB</label><br>
                                                 <input type="text" class="rib-input" name="rib_23" maxlength="1">
                                                 <input type="text" class="rib-input" name="rib_24" maxlength="1">
                                             </div>
-                                            <span class="text-center"><i id="ibanMsgError" class="text-danger"></i></span>
-                                            <span class="text-center"><i id="ibanMsgSuccess" class="text-success"></i></span>
+                                            <span class=""><i id="ibanMsgError" class="text-danger"></i></span>
+                                            <span class=""><i id="ibanMsgSuccess" class="text-success"></i></span>
                                         </div>
                                         <input type="hidden" class="form-control" name="IBAN" id="IBAN">
                                             
@@ -302,15 +281,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <div class="row">
-                                <div class="col-6 d-flex justify-content-start gap-3">
-                                    <button class="btn2 border-btn2 px-4" type="button" onclick="stepper1.previous()"><i class='bx bx-left-arrow-alt me-2 fs-4'></i>Retour </button>
-                                </div>
-                                <div class="col-6 d-flex justify-content-end gap-3">
-                                    <button class="btn-prime next-btn" type="button" data-next="etapePrest2">Suivant <i
-                                        class='bx bx-right-arrow-alt fs-4'></i></button>
-                                </div>
-                            </div> --}}
+                               
                                 <div class="row">
                                     <div class="col-6 d-flex justify-content-start gap-3">
                                         <button class="btn btn-primary px-4" type="button"
@@ -319,11 +290,6 @@
                                                 class='bx bx-left-arrow-alt me-2 fs-4'></i>Retour </button>
                                     </div>
                                     <div class="col-6 d-flex justify-content-end gap-3">
-                                        {{-- vers etape 3 --}}
-                                        {{-- <button class="btn btn-primary px-4 next-step-btn1" id="next-stepper4"
-                                            type="button">
-                                            Suivant<i class='bx bx-right-arrow-alt ms-2 fs-4'></i>
-                                        </button> --}}
 
                                         {{-- vers confirmation otp --}}
                                         <button class="btn btn-primary next-btn" type="button" id="next-stepper3"
@@ -339,131 +305,13 @@
             </div>
 
             <div class="etapePrest d-none" id="etapePrest2">
-                {{-- <div class="row g-3 mb-3" id="TelephonePaiement">
-                    <div class="col-12 col-lg-6">
-                        <label for="TelPaiement" class="form-label">N° de téléphone sur lequel vous souhaitez recevoir le paiement <span class="star">*</span></label>
-                        <input type="number" class="form-control" name="TelPaiement" id="TelPaiement" placeholder="Veuillez saisir le N° de téléphone sur lequel vous souhaitez recevoir le paiement">
-                    </div>
-                    <div class="col-12 col-lg-6">
-                        <label for="ConfirmTelPaiement" class="form-label">Confirmer le N° de téléphone <span class="star">*</span></label>
-                        <input type="number" class="form-control" name="ConfirmTelPaiement" id="ConfirmTelPaiement" placeholder="Veuillez resaisir le N° de téléphone sur lequel vous souhaitez recevoir le paiement">
-                    </div>
-                    <small><span class="form-label star"><i>N° de Telephone sans l'indicatif (ex: <strong>0100128271</strong>) </i></span></small>
-                </div> --}}
-
-
-
-                {{-- <div class="row">
-                    <div class="col-6 d-flex justify-content-start gap-3">
-                        <button class="btn2 border-btn2 prev-btn" type="button" data-prev="etapePrest1">
-                            <i class='bx bx-left-arrow-alt fs-4'></i> Retour
-                        </button>
-                    </div>
-                    <div class="col-6 d-flex justify-content-end gap-3">
-                        <button class="btn-prime px-4 next-step-btn1" id="next-stepper4" type="button">
-                            étape 3<i class='bx bx-right-arrow-alt ms-2 fs-4'></i>
-                        </button>
-                        <button class="btn-prime next-btn" type="button" id="next-stepper3" data-next="etapePrest5">
-                            Suivant <i class='bx bx-right-arrow-alt fs-4'></i>
-                         </button>
-                    </div>
-                </div>  --}}
-                {{-- <button class="btn-prime next-btn" type="button" id="next-stepper3" data-next="etapePrest3">
-                    <i class='bx bx-right-arrow-alt fs-4'></i>
-                </button> --}}
+                
             </div>
             <div class="etapePrest d-none" id="etapePrest3">
-                {{-- <div class="row g-3 mb-3 text-center" id="Operateur">
-                    <span class="form-label">Quel opérateur souhaitez-vous utiliser ?</span>
-                    
-                    <div class="row d-flex justify-content-center align-items-center mt-3 gap-3">
-                        <div class="Operateur-option col-lg-3 col-md-4 col-sm-12">
-                            <input type="radio" name="Operateur" value="Orange_money" id="Orange" class="Operateur-input">
-                            <label for="Orange" class="Operateur-label d-flex flex-column align-items-center justify-content-center">
-                                <span class="Operateur-icon">
-                                    <img src="https://seeklogo.com/images/O/orange-money-logo-8F2AED308D-seeklogo.com.png" alt="Orange Money">
-                                </span>
-                                <span class="Operateur-text">Orange Money</span>
-                            </label>
-                        </div>
-                        <div class="Operateur-option col-lg-3 col-md-4 col-sm-12">
-                            <input type="radio" name="Operateur" value="MTN_money" id="MTN" class="Operateur-input">
-                            <label for="MTN" class="Operateur-label d-flex flex-column align-items-center justify-content-center">
-                                <span class="Operateur-icon">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLJi9U1dG-aKqZeuCTBrHUvMX8IpAcxqpp1A&s" alt="MTN Money">
-                                </span>
-                                <span class="Operateur-text">MTN Money</span>
-                            </label>
-                        </div>
-                        <div class="Operateur-option col-lg-3 col-md-4 col-sm-12">
-                            <input type="radio" name="Operateur" value="Moov_money" id="Moov" class="Operateur-input">
-                            <label for="Moov" class="Operateur-label d-flex flex-column align-items-center justify-content-center">
-                                <span class="Operateur-icon">
-                                    <img src="https://play-lh.googleusercontent.com/P0fu0Qo5Y7JjS6duZRTa8Z5KJCbNDiHo1W714pz9qN9IoX8ufR0L7SE_FkDUWpZZRi_x=w240-h480-rw" alt="Moov Money">
-                                </span>
-                                <span class="Operateur-text">Moov Money</span>
-                            </label>
-                        </div>
-
-                    </div>
-                    <div class="col-12 d-flex justify-content-center mt-4">
-                        <span id="clearChoise" class="">Supprimer mon choix</span>
-                    </div>
-                </div> --}}
-                {{-- <div id="Operateur-btn">
-                    <button class="btn2 border-btn2 prev-btn" type="button" data-prev="etapePrest2">
-                        <i class='bx bx-left-arrow-alt fs-4'></i>
-                    </button>
-                    <button class="btn-prime next-btn" id="nextPhone" type="button" data-next="etapePrest4">
-                        <i class='bx bx-right-arrow-alt fs-4'></i>
-                    </button>
-                </div> --}}
+                
             </div>
             <div class="etapePrest d-none" id="etapePrest4">
 
-                {{-- <div class="row g-3 mb-3" id="IBANPaiement">
-                    <div class="col-12 col-lg-6">
-                        <label for="IBAN" class="form-label">IBAN sur lequel vous souhaitez recevoir le paiement <span class="star">*</span></label>
-                        <input type="text" class="form-control" name="IBAN" id="IBAN" placeholder="Veuillez saisir l'IBAN sur lequel vous souhaitez recevoir le paiement">
-                    </div>
-                    <div class="col-12 col-lg-6">
-                        <label for="ConfirmIBAN" class="form-label">Confirmer l'IBAN <span class="star">*</span></label>
-                        <input type="text" class="form-control" name="ConfirmIBAN" id="ConfirmIBAN" placeholder="Veuillez resaisir l'IBAN sur lequel vous souhaitez recevoir le paiement">
-                    </div> 
-                    <small><span class="form-label star"><i>Veuillez saisir l'IBAN de votre compte courant </i></span></small>
-                </div> --}}
-                {{-- <div class="row g-3 mb-3">
-                    <div class="col-12">
-                        <label for="AutresInfos" class="form-label">Avez-vous d'autres informations suplementaires a fournir pour votre demande ? (<span class="star">max 400 caractères </span>)</label>
-                        <textarea class="form-control" name="msgClient" id="AutresInfos" rows="5" placeholder="Veuillez saisir d'autres informations suplementaires a fournir pour pour votre demande"></textarea>
-                        <div style="float: left;">
-                            <span id="totalChar" class="fs-6 text-muted"> 400 caractères autorisés :</span>
-                            <small><i id="counterror" class="text-danger"></i></small>
-                            <small><i id="countesucces" class="text-success"></i></small>
-                        </div>
-                        <div style="float: right;">
-                            <span id="totalMot" class="text-muted">0 mots saisis</span>
-                        </div>
-                    </div>
-                </div> --}}
-
-                {{-- <div id="btn-TelephonePaiement">
-                    <button class="btn2 border-btn2 prev-btn" type="button" data-prev="etapePrest3">
-                        <i class='bx bx-left-arrow-alt fs-4'></i>
-                    </button>
-                    <button class="btn-prime next-btn" type="button" data-next="etapePrest5">
-                        <i class='bx bx-right-arrow-alt fs-4'></i>
-                    </button>
-                </div>
-
-                <div id="btn-IBANPaiement">
-                    <button class="btn2 border-btn2 prev-btn" type="button" data-prev="etapePrest2">
-                        <i class='bx bx-left-arrow-alt fs-4'></i>
-                    </button>
-                    <button class="btn-prime px-4 next-step-btn1" type="button">
-                        étape 3<i class='bx bx-right-arrow-alt ms-2 fs-4'></i>
-                    </button>
-                </div> --}}
             </div>
 
             <div class="etapePrest d-none" id="etapePrest5">

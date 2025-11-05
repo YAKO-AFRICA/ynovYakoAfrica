@@ -44,6 +44,103 @@
 
     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 
+    <script src="https://cdn.tiny.cloud/1/pfjd5f3rf5sx7e99t8p7wi1x9yz3phproft7hk92nakivoru/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+        <script>
+            tinymce.init({
+                selector: 'textarea.tinymce-editor',
+                height: 400,
+                language: 'fr_FR', // Interface en français
+                plugins: [
+                    'advlist autolink lists link image charmap preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table emoticons wordcount help',
+                    'export pagebreak codesample'
+                ],
+                toolbar: 'undo redo | formatselect | ' +
+                    'bold italic underline strikethrough forecolor backcolor | ' +
+                    'alignleft aligncenter alignright alignjustify | ' +
+                    'bullist numlist outdent indent | link image media emoticons | ' +
+                    'table codesample export | removeformat | fullscreen preview help',
+
+                menubar: 'file edit view insert format tools table help',
+
+                // Style par défaut du contenu
+                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px; line-height:1.6 }',
+
+                image_title: true,
+                automatic_uploads: true,
+                file_picker_types: 'image media',
+
+                // Gestion des uploads (images & vidéos)
+                file_picker_callback: function(callback, value, meta) {
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'file');
+
+                    if (meta.filetype === 'image') {
+                        input.setAttribute('accept', 'image/*');
+                    } else if (meta.filetype === 'media') {
+                        input.setAttribute('accept', 'video/*');
+                    }
+
+                    input.onchange = function() {
+                        var file = this.files[0];
+                        var reader = new FileReader();
+                        reader.onload = function() {
+                            var id = 'blobid' + (new Date()).getTime();
+                            var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                            var base64 = reader.result.split(',')[1];
+                            var blobInfo = blobCache.create(id, file, base64);
+                            blobCache.add(blobInfo);
+                            callback(blobInfo.blobUri(), {
+                                title: file.name
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    };
+                    input.click();
+                },
+
+                // Options supplémentaires
+                table_default_attributes: {
+                    border: '1'
+                },
+                table_default_styles: {
+                    'border-collapse': 'collapse',
+                    'width': '100%'
+                },
+                codesample_languages: [{
+                        text: 'HTML/XML',
+                        value: 'markup'
+                    },
+                    {
+                        text: 'JavaScript',
+                        value: 'javascript'
+                    },
+                    {
+                        text: 'CSS',
+                        value: 'css'
+                    },
+                    {
+                        text: 'PHP',
+                        value: 'php'
+                    },
+                    {
+                        text: 'Python',
+                        value: 'python'
+                    },
+                    {
+                        text: 'Java',
+                        value: 'java'
+                    },
+                    {
+                        text: 'C#',
+                        value: 'csharp'
+                    }
+                ]
+            });
+        </script>
+
 
     <style>
         :root {
@@ -118,6 +215,12 @@
         input[readonly]::selection,
         textarea[readonly]::selection {
             background: transparent;
+        }
+
+        input[readonly]:hover,
+        textarea[readonly]:hover,
+        select[readonly]:hover {
+            cursor: no-drop;
         }
 
     </style>
@@ -221,6 +324,8 @@
         <script type="module" src="{{ asset('api/request.js') }}"></script>
 
         {{-- <script src=https://touchpay.gutouch.com/touchpay/script/prod_touchpay-0.0.1.js type="text/javascript"></script> --}}
+
+        
 
 
         <script>

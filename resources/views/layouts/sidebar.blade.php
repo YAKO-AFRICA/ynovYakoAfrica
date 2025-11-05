@@ -262,7 +262,7 @@
 <header class="top-header">
     <div class="topbar d-flex align-items-center">
         <nav class="navbar navbar-expand gap-3">
-            <div class="mobile-toggle-menu"><i class='bx bx-menu'></i>
+            <div class="mobile-toggle-menu"><i class='bx bx-menu text-white'></i>
             </div>
 
 

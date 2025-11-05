@@ -191,17 +191,9 @@
                         @endforeach
                         <td>
                             <div class="d-flex order-actions">
-                                @if ($item->moyenPaiement == '' || $item->moyenPaiement == null || $item->Operateur == '' || $item->Operateur == null)
-                                    <a href="javascript:void(0)" data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal{{ $item->code }}"
-                                        class="ms-2 border"><i class='bx bxs-show'></i>
-                                    </a>
-                                @else
                                     <a href="{{ route('prestation.show', $item->code)}}" class="ms-2 border">
                                         <i class='bx bxs-show'></i>
                                     </a>
-                                @endif
-                                
                                 
                             </div>
                         </td>

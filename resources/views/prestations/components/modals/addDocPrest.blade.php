@@ -232,7 +232,7 @@
                             $types['Signature'] == null) --}}
                     @if (
                         $conditionsInvalides)
-                        <button type="submit" class="btn btn-success px-4">Submit <i
+                        <button type="submit" class="btn btn-success px-4">Sauvegarder <i
                                 class='bx bx-check'></i></button>
                     @endif
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
