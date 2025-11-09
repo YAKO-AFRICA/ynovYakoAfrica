@@ -107,6 +107,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             sessionStorage.removeItem('simulationData');
+            sessionStorage.removeItem("contacts");
             var searchInput = document.getElementById('searchProduct');
             var productItems = document.querySelectorAll('.product-item');
 

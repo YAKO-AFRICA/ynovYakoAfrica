@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     
                     // Capital
                     const capitalLabel = document.createElement('label');
-                    capitalLabel.textContent = 'Capital souhaité :';
+                    capitalLabel.textContent = 'Capital souhaité (FCFA):';
                     capitalLabel.className = 'form-label';
                     
                     const capitalSelect = document.createElement('select');
@@ -350,7 +350,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let resultDiv = document.getElementById("result");
         resultDiv.innerHTML = "";
 
-        let fraieadhesion = 0;
+        let fraieadhesion = 7500;
         
         // Objet pour stocker toutes les données de simulation
         const simulationData = {

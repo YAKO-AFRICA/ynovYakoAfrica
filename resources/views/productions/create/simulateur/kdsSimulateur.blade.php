@@ -85,7 +85,7 @@
                                 </select>
                             </div>
                             <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Date de naissance :</label>
+                                <label class="form-label">Date de naissance de l'assuré :</label>
                                 <input type="Date" class="form-control" id="dateNaissance" name="dateNaissance" required>
                             </div>
                             <div class="col-sm-12 col-md-6 mb-3 d-none">

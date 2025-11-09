@@ -450,7 +450,15 @@ class ProspectController extends Controller
         $partenaires = PartnerProspert::where('prospert_uuid', $prospect->uuid)->get();
         $documents = DocumentProspert::where('prospert_uuid', $prospect->uuid)->get();
         $produits = ProductProspert::where('prospert_uuid', $prospect->uuid)->get();
-        $allProducts = Product::orderBy('MonLibelle')->get();
+        // $allProducts = Product::orderBy('MonLibelle')->get();
+
+        $productByReseau = ReseauProduct::select('CodeProduit')
+            ->where('codereseau', Auth::user()->membre->codereseau)
+            ->get();
+
+        $codeProduits = $productByReseau->pluck('CodeProduit')->toArray();
+
+        $allProducts = Product::whereIn('CodeProduit', $codeProduits)->get();
 
    
 

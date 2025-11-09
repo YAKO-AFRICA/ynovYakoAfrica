@@ -188,8 +188,10 @@ Route::prefix('production')->name('prod.')->group(function(){
 
 
     });
-
 });
+
+Route::post('/contacts/session', [AdherentController::class, 'storeSession'])->name('contacts.session.store');
+
 
 Route::get('/notifications/mark-as-read/{id}',[MailController::class,'markAsRead'])->name('notif.markToRead');
 

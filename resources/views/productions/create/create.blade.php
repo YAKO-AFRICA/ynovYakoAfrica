@@ -114,8 +114,11 @@
                     
                     <form id="productionForm" enctype="multipart/form-data" class="submitFor form">
                         @csrf
+
                     
                         @include('productions.create.steps.stepAdherent', ['CodeProduit' => $product->CodeProduit])
+
+                    </form>
 
                         @include('productions.create.steps.stepAssurer', ['CodeProduit' => $product->CodeProduit])
 
@@ -135,8 +138,9 @@
 
                         @include('productions.create.steps.stepResume', ['CodeProduit' => $product->CodeProduit])
 
-                    </form>
+                   
                     @include('productions.create.steps.stepDocument', ['CodeProduit' => $product->CodeProduit])
+                    @include('productions.components.addContactForm')
                 </div>
             </div>
         </div>
@@ -285,6 +289,8 @@
 
                     sessionStorage.removeItem("simulationData");
                     sessionStorage.removeItem("simulationData");
+                    sessionStorage.removeItem("contacts");
+                    sessionStorage.removeItem("contacts");
                 } else {
                     throw new Error(response.data.message || "Erreur lors de l'enregistrement.");
                 }

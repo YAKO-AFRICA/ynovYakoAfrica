@@ -51,6 +51,20 @@ class AdherentController extends Controller
         //
     }
 
+    public function storeSession(Request $request)
+    {
+        $contacts = session('contacts', []);
+        $contacts[] = $request->contact;
+        session(['contacts' => $contacts]);
+
+        return response()->json([
+            'success' => true,
+            'contacts' => $contacts
+        ]);
+    }
+
+
+
     /**
      * Update the specified resource in storage.
      */

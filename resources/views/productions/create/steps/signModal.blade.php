@@ -2,7 +2,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-center">Signature electroique</h5>
+                <h5 class="modal-title text-center">Signature électroique</h5>
                 {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
             </div>
 
@@ -28,13 +28,12 @@
                 
                 <div class="card p-2" id="signature-iframe">
                     
-                    <iframe
-                        src="{{ url(config('services.sign_api') . 'signature/' . $token['token'] . '/' . $token['operation_type'] . '/' . $token['key_uuid']) }}"
+                    <iframe src="{{ url(config('services.sign_api') . 'signature/' . $token['token'] . '/' . $token['operation_type'] . '/' . $token['key_uuid']) }}"
                         frameborder="0" style="width: 100%; height: 60vh"></iframe>
                 </div>
                 <div class="card p-2" id="signature-qrcode">
                     <div class="card-header text-center">
-                        <h4>Veuillez scanner ce code QR pour éffectuer votre signature</h4>
+                        <h4>Veuillez scanner ce code QR pour effectuer votre signature</h4>
                     </div>
                     <div class="card-body">
                         <div class="row">

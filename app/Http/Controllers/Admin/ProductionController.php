@@ -487,6 +487,8 @@ class ProductionController extends Controller
 
         Log::info($data);
 
+        dd($data);
+
         // On décode inputSessionData
         $inputSessionData = json_decode($data['inputSessionData'], true);
 
@@ -496,6 +498,19 @@ class ProductionController extends Controller
         if (!empty($request->inputSessionData)) {
             $simulationData = json_decode($request->inputSessionData);
         }
+
+        $contactsBrut = $data['contacts'] ?? [];
+
+        
+
+        $contacts = json_decode($contactsBrut, true);
+
+        Log::info($contacts);
+
+        foreach ($contacts as $contact) {
+            Log::info($contact);
+        }
+
 
         DB::beginTransaction();
         try {
