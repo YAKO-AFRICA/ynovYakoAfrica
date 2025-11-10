@@ -191,7 +191,7 @@
                                     id="duree" name="duree" required>
                             </div>
                             <div class="col-12 mb-4">
-                                <label for="montantrente" class="form-label">Montant de la Rente (en FCFA) :
+                                <label for="montantrente" class="form-label">Montant de la rente (en FCFA) :
                                     <span class="text-danger">*</span></label>
                                 <select name="montantrente" id="montantrente" class="form-select" required>
                                     <option value="" selected>Selectionnez le montant de la rente</option>
@@ -265,7 +265,7 @@
                                 <label for="fraisAdhesion" class="form-label">Frais d’adhésion :</label>
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="fraisAdhesion" name="fraisAdhesion"
-                                        min="0">
+                                        min="0"value="7500">
                                     <span class="input-group-text">FCFA</span>
                                 </div>
                             </div>

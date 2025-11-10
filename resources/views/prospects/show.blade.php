@@ -229,7 +229,7 @@
                                                     <div class="info-content">
                                                         <div class="info-label">Genre</div>
                                                         <div class="info-value">
-                                                            {{ $prospect->genre ?? '<span class="empty-value">Non renseigné</span>' }}
+                                                            {{ $prospect->genre ?? 'Non renseigné' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -242,7 +242,7 @@
                                                     <div class="info-content">
                                                         <div class="info-label">Date de naissance</div>
                                                         <div class="info-value">
-                                                            {{ Carbon\Carbon::parse($prospect->date_naissance)->locale('fr_FR')->translatedFormat('l j F Y') ?? '<span class="empty-value">Non renseigné</span>' }}
+                                                            {{ Carbon\Carbon::parse($prospect->date_naissance)->locale('fr_FR')->translatedFormat('l j F Y') ?? 'Non renseigné' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -255,7 +255,7 @@
                                                     <div class="info-content">
                                                         <div class="info-label">Lieu de naissance</div>
                                                         <div class="info-value">
-                                                            {{ $villesMap[$prospect->lieu_naissance] ?? ($prospect->lieu_naissance ?? '<span class="empty-value">Non renseigné</span>') }}
+                                                            {{ $villesMap[$prospect->lieu_naissance] ?? ($prospect->lieu_naissance ?? 'Non renseigné') }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -268,7 +268,7 @@
                                                     <div class="info-content">
                                                         <div class="info-label">Situation matrimoniale</div>
                                                         <div class="info-value">
-                                                            {{ $prospect->situation_matrimoniale ?? '<span class="empty-value">Non renseigné</span>' }}
+                                                            {{ $prospect->situation_matrimoniale ?? 'Non renseigné' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -304,7 +304,7 @@
                                                     <div class="info-content">
                                                         <div class="info-label">Numéro de pièce</div>
                                                         <div class="info-value">
-                                                            {{ $prospect->numero_piece_identite ?? '<span class="empty-value">Non renseigné</span>' }}
+                                                            {{ $prospect->numero_piece_identite ?? 'Non renseigné' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -327,7 +327,7 @@
                                                     <div class="info-content">
                                                         <div class="info-label">Email</div>
                                                         <div class="info-value">
-                                                            {{ $prospect->email ?? '<span class="empty-value">Non renseigné</span>' }}
+                                                            {{ $prospect->email ?? 'Non renseigné' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -382,7 +382,7 @@
                                                     <div class="info-content">
                                                         <div class="info-label">Pays</div>
                                                         <div class="info-value">
-                                                            {{ $prospect->pays ?? '<span class="empty-value">Non renseigné</span>' }}
+                                                            {{ $prospect->pays ?? 'Non renseigné' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -395,7 +395,7 @@
                                                     <div class="info-content">
                                                         <div class="info-label">Adresse complète</div>
                                                         <div class="info-value">
-                                                            {{ $prospect->adresse ?? '<span class="empty-value">Non renseigné</span>' }}
+                                                            {{ $prospect->adresse ?? 'Non renseigné' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -418,7 +418,7 @@
                                                     <div class="info-content">
                                                         <div class="info-label">Profession</div>
                                                         <div class="info-value">
-                                                            {{ $prospect->profession ?? '<span class="empty-value">Non renseigné</span>' }}
+                                                            {{ $prospect->profession ?? 'Non renseigné' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -431,7 +431,7 @@
                                                     <div class="info-content">
                                                         <div class="info-label">Employeur</div>
                                                         <div class="info-value">
-                                                            {{ $prospect->employeur ?? '<span class="empty-value">Non renseigné</span>' }}
+                                                            {{ $prospect->employeur ?? 'Non renseigné' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -444,7 +444,7 @@
                                                     <div class="info-content">
                                                         <div class="info-label">Secteur d'activité</div>
                                                         <div class="info-value">
-                                                            {{ $prospect->secteur_activite ?? '<span class="empty-value">Non renseigné</span>' }}
+                                                            {{ $prospect->secteur_activite ?? 'Non renseigné' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -512,7 +512,7 @@
                                                     <div class="info-content">
                                                         <div class="info-label">Personne ressource 1</div>
                                                         <div class="info-value">
-                                                            {{ $prospect->personneRessource ?? '<span class="empty-value">Non renseigné</span>' }}
+                                                            {{ $prospect->personneRessource ?? 'Non renseigné' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -525,7 +525,7 @@
                                                     <div class="info-content">
                                                         <div class="info-label">Contact ressource 1</div>
                                                         <div class="info-value">
-                                                            {{ $prospect->contactRessource ?? '<span class="empty-value">Non renseigné</span>' }}
+                                                            {{ $prospect->contactRessource ?? 'Non renseigné' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -538,7 +538,7 @@
                                                     <div class="info-content">
                                                         <div class="info-label">Personne ressource 2</div>
                                                         <div class="info-value">
-                                                            {{ $prospect->personneRessource2 ?? '<span class="empty-value">Non renseigné</span>' }}
+                                                            {{ $prospect->personneRessource2 ?? 'Non renseigné' }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -551,7 +551,7 @@
                                                     <div class="info-content">
                                                         <div class="info-label">Contact ressource 2</div>
                                                         <div class="info-value">
-                                                            {{ $prospect->contactRessource2 ?? '<span class="empty-value">Non renseigné</span>' }}
+                                                            {{ $prospect->contactRessource2 ?? 'Non renseigné' }}
                                                         </div>
                                                     </div>
                                                 </div>

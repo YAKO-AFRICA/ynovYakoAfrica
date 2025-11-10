@@ -17,7 +17,7 @@
     <hr>
         
     <div class="row g-3 mb-3">
-        <div class="col-12">
+        <div class="col-6">
             <label class="form-label">Civilité <span class="star">*</span></label> <br>
 
             <div class="form-check form-check-inline">
@@ -36,6 +36,45 @@
                 <span class="text-danger"> Veuillez cocher la civilité </span>
             @enderror
         </div>
+        <div class="col-6">
+            <label class="form-label">Situation matrimoniale <span class="star">*</span></label><br>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="celibataire" value="CELIB" required>
+                <label class="form-check-label" for="celibataire">Célibataire</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="marie" value="MARIE" required>
+                <label class="form-check-label" for="marie">Marié(e)</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="divorce" value="DIVOR" required>
+                <label class="form-check-label" for="divorce">Divorcé(e)</label>
+            </div>
+
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="veuf" value="VEUVE" required>
+                <label class="form-check-label" for="veuf">Veuf(ve)</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="separe" value="Séparé(e)" required>
+                <label class="form-check-label" for="separe">Séparé(e)</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="unionlibre" value="Union libre" required>
+                <label class="form-check-label" for="unionlibre">Union libre</label>
+            </div>
+
+            @error('situation_matrimoniale')
+                <span class="text-danger">Veuillez sélectionner une situation matrimoniale.</span>
+            @enderror
+        </div>
+
     </div>
     <!---end row-->
     <div class="row g-3 mb-3">
@@ -166,65 +205,46 @@
         </div>
     </div>
     <fieldset class="border p-3">
-        <legend class="float-none w-auto px-2"><small>Numéro de téléphone</small></legend>
-        <div class="row col-12 col-lg-12">
-            <div class="col-sm-12 col-md-6 col-lg-6">
-                <label for="contact_nom" class="form-label">Type Mobile 1 <span class="text-danger">*</span> </label>
-                <select name="typMobileOne" id="typMobileOne" class="form-select" required>
-                    <option value="Whatsapp">Whatsapp</option>
-                    <option value="MobileMoney">Mobile Money</option>
-                    <option value="Wave">Wave</option>
-                    <option value="Tel">Tél</option>
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-6">
-                <label class="form-label">Mobile 1 <span class="text-danger">*</span></label><br>
-                <div class="input-group mb-3">
-                    <input type="text" name="mobile" class="form-control" autocomplete="on" required minlength="10" maxlength="14" required>
+        <legend class="float-none w-auto px-2"><small>Contact</small></legend>
+        <!-- Bouton pour ajouter des contacts optionnels -->
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#contactModal">
+            + Ajouter un contact optionnel
+        </button>
+
+        <!-- Contact principal -->
+        <div class="row">
+            <div class="mb-3 col-sm-12 col-md-6 col-lg-6">
+                <label class="form-label d-block">Type de contact principal : <span class="text-danger">*</span></label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="Whatsapp" id="WhatsappPrincipal" required>
+                    <label class="form-check-label" for="WhatsappPrincipal">Whatsapp</label>
                 </div>
-                @error('mobile')
-                    <span class="text-danger"> Veuillez remplir votre numéro de mobile </span>
-                @enderror
-            </div>
-        </div>
-        <div class="row col-sm-12 col-md-12 col-lg-12">
-            <div class="col-sm-12 col-md-6 col-lg-6">
-                <label for="contact_nom" class="form-label">Type Mobile 2 </label>
-                <select name="typMobileTwo" id="typMobileTwo" class="form-select">
-                    <option value="Whatsapp">Whatsapp</option>
-                    <option value="MobileMoney">Mobile Money</option>
-                    <option value="Wave">Wave</option>
-                    <option value="Tel">Tél</option>
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-6">
-                <label class="form-label">Mobile 2 </label><br>
-                <div class="input-group mb-3">
-                    <input type="text" name="mobile1" class="form-control" autocomplete="on" minlength="10" maxlength="14" >
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="MobileMoney" id="MobileMoneyPrincipal">
+                    <label class="form-check-label" for="MobileMoneyPrincipal">Mobile Money</label>
                 </div>
-                @error('mobile1')
-                    <span class="text-danger"> Veuillez remplir votre numéro de mobile </span>
-                @enderror
-            </div>
-        </div>
-        <div class="row g-3 mb-3 col-sm-12 col-md-12 col-lg-12">
-            <div class="col-sm-12 col-md-6 col-lg-6">
-                <label for="contact_nom" class="form-label">Type contact 3 </label>
-                <select name="typMobileThree" id="typMobileThree" class="form-select">
-                    <option value="Whatsapp">Whatsapp</option>
-                    <option value="MobileMoney">Mobile Money</option>
-                    <option value="Wave">Wave</option>
-                    <option value="Tel">Tél</option>
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-6">
-                <label class="form-label">Contact 3 </label><br>
-                <div class="input-group mb-3">
-                    <input type="text" id="telephone" name="telephone" class="form-control" autocomplete="on" minlength="10" maxlength="14">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="Wave" id="WavePrincipal">
+                    <label class="form-check-label" for="WavePrincipal">Wave</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="Tel" id="TelPrincipal">
+                    <label class="form-check-label" for="TelPrincipal">Tel</label>
                 </div>
             </div>
+             <div class="mb-3 col-sm-12 col-md-6 col-lg-6">
+                <label class="form-label">Valeur du contact principal <span class="text-danger">*</span></label>
+                <input type="tel" id="mobile" name="mobile" class="form-control" placeholder="ex: 0701020304" required>
+            </div>
         </div>
+        
+        <!-- Aperçu des contacts -->
+        <div id="contactsPreview" class="mt-3"></div>
+
+        <!-- Champ caché pour soumettre au backend -->
+        <input type="hidden" name="contacts" id="contactsInput">
     </fieldset>
+
     
     <fieldset class="border p-3">
         <legend class="float-none w-auto px-2"><small>Personnes à contacter en cas de besoin</small></legend>
@@ -265,36 +285,13 @@
 
         <div class="">
             <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i class='bx bx-right-arrow-alt'></i></button>
+             
         </div>
+        
     </div>
 
-    <script>
-        // Ajout d'un événement onclick sur le bouton "Suivant"
-        document.querySelector('.btn-next-form').addEventListener('click', function(event) {
-        event.preventDefault();
-        // Validez les champs obligatoires de l'étape actuelle
-        if (validateStep1()) {
-            // Si les champs sont valides, passez à l'étape suivante
-            stepper1.next();
-        }
-        });
 
-        // Fonction pour valider les champs de l'étape 1
-        function validateStep1() {
-            var civilite = document.querySelector('input[name="civilite"]:checked');
-            var nom = document.querySelector('input[name="nom"]').value;
-            var prenom = document.querySelector('input[name="prenom"]').value;
-            if (!civilite) {
-                document.querySelector('.error-message').innerHTML = 'Veuillez cocher la civilité';
-                return false;
-            }
-            if(!nom){
-                document.querySelector('.error-message').innerHTML = 'Veuillez saisir le nom';
-                return false;
-            }
-            return true;
-        }
-    </script>
+    
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -333,11 +330,19 @@
         });
     </script>
 
-    {{-- <script>
+
+    <script>
         document.addEventListener('DOMContentLoaded', function () {
             const apiUrl = 'https://api.yakoafricassur.com/enov/villes';
             const apiProfessions = 'https://api.yakoafricassur.com/enov/professions';
 
+            // Fonction utilitaire pour mettre en majuscule uniquement la première lettre
+            function capitalizeFirstLetter(str) {
+                if (!str) return '';
+                return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+            }
+
+            // Chargement des villes
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
@@ -345,86 +350,39 @@
                     const lieuSelect = document.getElementById('lieunaissance');
                     
                     data.forEach(ville => {
+                        const libelleFormate = capitalizeFirstLetter(ville.MonLibelle);
+
                         const optionVille = document.createElement('option');
-                        optionVille.value = ville.MonLibelle;
-                        optionVille.textContent = ville.MonLibelle;
+                        optionVille.value = libelleFormate;
+                        optionVille.textContent = libelleFormate;
                         villeSelect.appendChild(optionVille);
 
                         const optionLieu = document.createElement('option');
-                        optionLieu.value = ville.MonLibelle;
-                        optionLieu.textContent = ville.MonLibelle;
+                        optionLieu.value = libelleFormate;
+                        optionLieu.textContent = libelleFormate;
                         lieuSelect.appendChild(optionLieu);
                     });
-                });
+                })
+                .catch(error => console.error('Erreur chargement villes:', error));
 
-
-
+            // Chargement des professions
             fetch(apiProfessions)
                 .then(response => response.json())
                 .then(data => {
                     const professionSelect = document.getElementById('profession');
+                    
                     data.forEach(profession => {
+                        const libelleFormate = capitalizeFirstLetter(profession.MonLibelle);
+
                         const optionProfession = document.createElement('option');
-                        optionProfession.value = profession.MonLibelle;
-                        optionProfession.textContent = profession.MonLibelle;
+                        optionProfession.value = libelleFormate;
+                        optionProfession.textContent = libelleFormate;
                         professionSelect.appendChild(optionProfession);
                     });
-                });
+                })
+                .catch(error => console.error('Erreur chargement professions:', error));
         });
-    </script> --}}
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const apiUrl = 'https://api.yakoafricassur.com/enov/villes';
-        const apiProfessions = 'https://api.yakoafricassur.com/enov/professions';
-
-        // Fonction utilitaire pour mettre en majuscule uniquement la première lettre
-        function capitalizeFirstLetter(str) {
-            if (!str) return '';
-            return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-        }
-
-        // Chargement des villes
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                const villeSelect = document.getElementById('lieuresidence');
-                const lieuSelect = document.getElementById('lieunaissance');
-                
-                data.forEach(ville => {
-                    const libelleFormate = capitalizeFirstLetter(ville.MonLibelle);
-
-                    const optionVille = document.createElement('option');
-                    optionVille.value = libelleFormate;
-                    optionVille.textContent = libelleFormate;
-                    villeSelect.appendChild(optionVille);
-
-                    const optionLieu = document.createElement('option');
-                    optionLieu.value = libelleFormate;
-                    optionLieu.textContent = libelleFormate;
-                    lieuSelect.appendChild(optionLieu);
-                });
-            })
-            .catch(error => console.error('Erreur chargement villes:', error));
-
-        // Chargement des professions
-        fetch(apiProfessions)
-            .then(response => response.json())
-            .then(data => {
-                const professionSelect = document.getElementById('profession');
-                
-                data.forEach(profession => {
-                    const libelleFormate = capitalizeFirstLetter(profession.MonLibelle);
-
-                    const optionProfession = document.createElement('option');
-                    optionProfession.value = libelleFormate;
-                    optionProfession.textContent = libelleFormate;
-                    professionSelect.appendChild(optionProfession);
-                });
-            })
-            .catch(error => console.error('Erreur chargement professions:', error));
-    });
-</script>
+    </script>
 
 
 </div>

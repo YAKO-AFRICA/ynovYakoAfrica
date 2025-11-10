@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     
                     // Capital
                     const capitalLabel = document.createElement('label');
-                    capitalLabel.textContent = 'Capital souhaité :';
+                    capitalLabel.textContent = 'Capital souhaité (FCFA):';
                     capitalLabel.className = 'form-label';
                     
                     const capitalSelect = document.createElement('select');
@@ -313,9 +313,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const capitalSouscrit = parseFloat(capitalSouscritInput.value);
         const age = parseInt(ageInput.value);
         const duree = dureeInput.value;
+        // const souscripteurAssur = document.querySelector("[name='isAssure']");
         
         // Vérifier que tous les champs requis sont remplis
-        if (!capitalSouscrit || isNaN(age) || !codePeriodiciteInput.value || !duree) {
+        if (!capitalSouscrit || isNaN(age) || !codePeriodiciteInput.value || !duree ) {
             document.getElementById("result").innerHTML = `
                 <tr>
                     <td colspan="3" class="text-center">Veuillez remplir tous les champs obligatoires</td>
@@ -346,17 +347,24 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
         
+        const isAssureInput = document.querySelector('input[name="isAssure"]:checked');
+        const isAssure = isAssureInput ? isAssureInput.value : '';
+
+
+        
+        
         let totalPrime = 0;
         let resultDiv = document.getElementById("result");
         resultDiv.innerHTML = "";
 
-        let fraieadhesion = 0;
+        let fraieadhesion = 7500;
         
         // Objet pour stocker toutes les données de simulation
         const simulationData = {
             garantieData: [],
             primeFinale: 0,
             infoSimulation: {
+                isAssure : isAssure,
                 primepricipale: 0,
                 periodicite: codePeriodiciteInput.value,
                 capital: 0,
@@ -486,12 +494,14 @@ document.addEventListener("DOMContentLoaded", function () {
         // Mettre à jour la prime finale
         simulationData.primeFinale = totalPrime;
         simulationData.infoSimulation.primepricipale = totalPrime;
+
+        const firstPrime = totalPrime + fraieadhesion
         
         // Stocker toutes les données en session
         saveToSession(simulationData);
         
         // Mettre à jour le total affiché
-        document.getElementById('primeTotal').textContent = totalPrime.toLocaleString('fr-FR');
+        document.getElementById('primeTotal').textContent = firstPrime.toLocaleString('fr-FR');
         
         // Activer le bouton de souscription si tout est valide
         if (totalPrime > 0) {
@@ -526,6 +536,11 @@ document.addEventListener("DOMContentLoaded", function () {
         resultDiv.innerHTML = "";
         const selectedOptions = document.querySelectorAll('.garantie-option:checked');
         selectedOptions.forEach(option => option.checked = false);
+
+        const souscripteurAssur = document.querySelector("[name='isAssure']");
+        if(souscripteurAssur) {
+            souscripteurAssur.value = "";
+        }
         
         // Réinitialiser également l'état de SURETÉ
         sessionStorage.removeItem('valueSureteCheck');
@@ -533,6 +548,39 @@ document.addEventListener("DOMContentLoaded", function () {
         sessionStorage.removeItem('simulationData');
         
     });
+
+    const souscribBtn = document.getElementById('btn-souscription');
+
+    souscribBtn.addEventListener('click', function(event) {
+        // Récupère la valeur du radio "isAssure"
+        const isAssureInput = document.querySelector('input[name="isAssure"]:checked');
+        const isAssure = isAssureInput ? isAssureInput.value : '';
+
+        // Si aucune option n'est cochée → bloquer la redirection
+        if (!isAssureInput) {
+            event.preventDefault(); 
+            alert("Veuillez choisir une option (Oui ou Non) avant de continuer");
+            
+            // Met le focus sur le premier radio pour attirer l’attention
+            const firstRadio = document.querySelector('input[name="isAssure"]');
+            if (firstRadio) {
+                firstRadio.focus();
+            }
+            return;
+        }
+
+        // Si une valeur est cochée → on met à jour la session normalement
+        const sessionData = sessionStorage.getItem('simulationData');
+        if (sessionData) {
+            const simulationData = JSON.parse(sessionData);
+            simulationData.infoSimulation.isAssure = isAssure;
+            sessionStorage.setItem('simulationData', JSON.stringify(simulationData));
+        }
+
+        // (Pas besoin de preventDefault ici, la redirection s’effectue normalement)
+    });
+
+
     
     // Déclencher le changement de périodicité au chargement pour initialiser les données
     document.getElementById("codePeriodicite").dispatchEvent(new Event('change'));
