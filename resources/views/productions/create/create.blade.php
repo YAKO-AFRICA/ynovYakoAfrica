@@ -117,13 +117,13 @@
 
                     
                         @include('productions.create.steps.stepAdherent', ['CodeProduit' => $product->CodeProduit])
+                        
 
                     
-
+                    </form>
                         @include('productions.create.steps.stepAssurer', ['CodeProduit' => $product->CodeProduit])
 
-                    </form>
-
+                    
                         @include('productions.create.steps.stepBeneficiaire', ['CodeProduit' => $product->CodeProduit])
                     
                         <input type="hidden" id="assuresInput" name="assures">
@@ -139,7 +139,7 @@
                         @include('productions.create.steps.stepSante', ['CodeProduit' => $product->CodeProduit])
 
                         @include('productions.create.steps.stepResume', ['CodeProduit' => $product->CodeProduit])
-
+                    
                    
                     @include('productions.create.steps.stepDocument', ['CodeProduit' => $product->CodeProduit])
                     @include('productions.components.addContactForm')

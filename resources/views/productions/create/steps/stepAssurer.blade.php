@@ -90,88 +90,86 @@
                                 @endforeach
 
                                 <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const simulationData = JSON.parse(sessionStorage.getItem('simulationData'));
-                                    console.log('Données de simulation:', simulationData);
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        const simulationData = JSON.parse(sessionStorage.getItem('simulationData'));
+                                        console.log('Données de simulation:', simulationData);
 
-                                    const hasSenior = simulationData?.garantieData?.some(item => item.codeGarantie === 'SENIOR');
+                                        const hasSenior = simulationData?.garantieData?.some(item => item.codeGarantie === 'SENIOR');
 
-                                    document.querySelectorAll('.garantie-optionnelle').forEach(radio => {
-                                        const garValue = radio.getAttribute('data-gar-value');
+                                        document.querySelectorAll('.garantie-optionnelle').forEach(radio => {
+                                            const garValue = radio.getAttribute('data-gar-value');
 
-                                        if (garValue === 'SENIOR') {
-                                            if (hasSenior) {
-                                                // Si garantie SENIOR existe → coche "Oui"
-                                                if (radio.value === 'Oui') {
-                                                    radio.checked = true;
+                                            if (garValue === 'SENIOR') {
+                                                if (hasSenior) {
+                                                    // Si garantie SENIOR existe → coche "Oui"
+                                                    if (radio.value === 'Oui') {
+                                                        radio.checked = true;
+                                                    } else {
+                                                        radio.checked = false;
+                                                    }
                                                 } else {
-                                                    radio.checked = false;
+                                                    // Sinon → coche "Non"
+                                                    if (radio.value === 'Non') {
+                                                        radio.checked = true;
+                                                    } else {
+                                                        radio.checked = false;
+                                                    }
                                                 }
-                                            } else {
-                                                // Sinon → coche "Non"
-                                                if (radio.value === 'Non') {
-                                                    radio.checked = true;
-                                                } else {
-                                                    radio.checked = false;
-                                                }
+
+                                                // Rendre les deux boutons non modifiables
+                                                radio.disabled = true;
+                                                radio.parentElement.style.opacity = '0.7';
                                             }
 
-                                            // Rendre les deux boutons non modifiables
-                                            radio.disabled = true;
-                                            radio.parentElement.style.opacity = '0.7';
-                                        }
+                                            const hasSurete = simulationData?.garantieData?.some(item => item.codeGarantie === 'SUR');
+                                            if (garValue === 'SUR') {
+                                                if (hasSurete) {
+                                                    // Si garantie SENIOR existe → coche "Oui"
+                                                    if (radio.value === 'Oui') {
+                                                        radio.checked = true;
+                                                    } else {
+                                                        radio.checked = false;
+                                                    }
+                                                } else {
+                                                    // Sinon → coche "Non"
+                                                    if (radio.value === 'Non') {
+                                                        radio.checked = true;
+                                                    } else {
+                                                        radio.checked = false;
+                                                    }
+                                                }
 
-                                        const hasSurete = simulationData?.garantieData?.some(item => item.codeGarantie === 'SUR');
-                                        if (garValue === 'SUR') {
-                                            if (hasSurete) {
-                                                // Si garantie SENIOR existe → coche "Oui"
-                                                if (radio.value === 'Oui') {
-                                                    radio.checked = true;
-                                                } else {
-                                                    radio.checked = false;
-                                                }
-                                            } else {
-                                                // Sinon → coche "Non"
-                                                if (radio.value === 'Non') {
-                                                    radio.checked = true;
-                                                } else {
-                                                    radio.checked = false;
-                                                }
+                                                // Rendre les deux boutons non modifiables
+                                                radio.disabled = true;
+                                                radio.parentElement.style.opacity = '0.7';
                                             }
 
-                                            // Rendre les deux boutons non modifiables
-                                            radio.disabled = true;
-                                            radio.parentElement.style.opacity = '0.7';
-                                        }
-                                        
-                                        const hasDeces = simulationData?.garantieData?.some(item => item.codeGarantie === 'DECESACC');
-                                        if (garValue === 'DECESACC') {
-                                            if (hasDeces) {
-                                                // Si garantie hasDeces existe → coche "Oui"
-                                                if (radio.value === 'Oui') {
-                                                    radio.checked = true;
+                                            const hasDeces = simulationData?.garantieData?.some(item => item.codeGarantie === 'DECESACC');
+                                            if (garValue === 'DECESACC') {
+                                                if (hasDeces) {
+                                                    // Si garantie hasDeces existe → coche "Oui"
+                                                    if (radio.value === 'Oui') {
+                                                        radio.checked = true;
+                                                    } else {
+                                                        radio.checked = false;
+                                                    }
                                                 } else {
-                                                    radio.checked = false;
+                                                    // Sinon → coche "Non"
+                                                    if (radio.value === 'Non') {
+                                                        radio.checked = true;
+                                                    } else {
+                                                        radio.checked = false;
+                                                    }
                                                 }
-                                            } else {
-                                                // Sinon → coche "Non"
-                                                if (radio.value === 'Non') {
-                                                    radio.checked = true;
-                                                } else {
-                                                    radio.checked = false;
-                                                }
-                                            }
 
-                                            // Rendre les deux boutons non modifiables
-                                            radio.disabled = true;
-                                            radio.parentElement.style.opacity = '0.7';
-                                        }
+                                                // Rendre les deux boutons non modifiables
+                                                radio.disabled = true;
+                                                radio.parentElement.style.opacity = '0.7';
+                                            }
+                                        });
                                     });
-                                });
                                 </script>
-
                             </ul>
-    
                         </td>
                     @else
                         <td>Pas de garantie complementaire</td>
@@ -179,7 +177,6 @@
                     <td></td>
                 </tr>
             </tfoot>
-    
         </table>
     </div>
 
@@ -189,12 +186,10 @@
         <div class="d-flex align-items-center justify-content-between gap-3">
             <button onclick="event.preventDefault(); stepper1.previous()" class="btn border-btn btn-previous-form"><i
                     class='bx bx-left-arrow-alt'></i>Précédent</button>
-            {{-- <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i
-                    class='bx bx-right-arrow-alt'></i></button> --}}
+            <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i
+                    class='bx bx-right-arrow-alt'></i></button>
 
-                    <button id="btn-next" stepper1.next() class="btn btn-two btn-next-for btn-auto-generate"
-                    type="button">Enregistrer<i class='bx bx-right-arrow-alt'></i>
-                </button>
+                    
         </div>
         {{-- </div> --}}
     </div>
@@ -242,13 +237,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // Coche la bonne valeur à partir de la session
         if (info.isAssure === 'oui') {
             radioOui.checked = true;
+            // Rendre les boutons non modifiables
+            radioOui.disabled = true;
+            radioNon.disabled = true;
         } else if (info.isAssure === 'non') {
             radioNon.checked = true;
+            // Rendre les boutons non modifiables
+            radioOui.disabled = true;
+            radioNon.disabled = true;
         }
-
-        // Rendre les boutons non modifiables
-        radioOui.disabled = true;
-        radioNon.disabled = true;
 
         // Met à jour l'affichage du tableau selon la valeur
         if (conditionalRow) {
@@ -256,18 +253,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- 3️⃣ Définir les listeners pour mise à jour dynamique (si besoin dans d'autres cas) ---
-    if (radioOui) radioOui.addEventListener('change', toggleRowDisplay);
-    if (radioNon) radioNon.addEventListener('change', toggleRowDisplay);
+    radioOui.addEventListener('change', toggleRowDisplay);
+    radioNon.addEventListener('change', toggleRowDisplay);
+
 
     function toggleRowDisplay() {
-        if (conditionalRow) {
-            const isAssureOui = radioOui.checked;
-            conditionalRow.style.display = isAssureOui ? 'table-row' : 'none';
-        }
+        const isAssureOui = document.getElementById('Oui').checked;
+        const row = document.getElementById('conditional-tr');
+        row.style.display = isAssureOui ? 'table-row' : 'none';
     }
 });
 </script>
+
 
 
 

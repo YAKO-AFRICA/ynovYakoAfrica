@@ -126,7 +126,7 @@
             const nom = document.getElementById('FisrtName') ? document.getElementById('FisrtName').value : 'Nom';
             const prenom = document.getElementById('LastName') ? document.getElementById('LastName').value : 'Prénom';
             const dateNaissance = document.getElementById('Date_naissance') ? document.getElementById('Date_naissance').value : 'Date';
-            const lieuNaissance = document.getElementById('lieunaissanc-{{ $product->CodeProduit }}') ? document.getElementById('lieunaissanc-{{ $product->CodeProduit }}').value : 'Lieu';
+            const lieuNaissance = document.getElementById('lieunaissance') ? document.getElementById('lieunaissance').value : 'Lieu';
             const lieuResidence = document.getElementById('lieuresidence') ? document.getElementById('lieuresidence').value : 'Résidence';
             const telephone = document.querySelector('input[name="mobile"]') ? document.querySelector('input[name="mobile"]').value : 'Téléphone';
             const email = document.getElementById('email') ? document.getElementById('email').value : 'Email';
@@ -186,7 +186,7 @@
             const datenaissanceBenef = document.getElementById('datenaissanceBenef');
             const lieunaissanceBenef = document.getElementById('lieunaissanceBenef');
             const lieuresidenceBenef = document.getElementById('lieuresidenceBenef');
-            const lienParente = document.getElementById('lienParente');
+            const lienParente = document.getElementById('lienParenteBenef');
             const mobileBenef = document.getElementById('mobileBenef');
         // Get form values
         const beneficiary = {
@@ -195,7 +195,7 @@
             dateNaissance: document.getElementById('datenaissanceBenef').value,
             lieuNaissance: document.getElementById('lieunaissanceBenef').value,
             lieuResidence: document.getElementById('lieuresidenceBenef').value,
-            lienParente: document.getElementById('lienParente').value,
+            lienParente: lienParente.value,
             telephone: document.getElementById('mobileBenef').value,
             email: document.getElementById('emailBenef').value,
             part: document.getElementById('partBenef').value

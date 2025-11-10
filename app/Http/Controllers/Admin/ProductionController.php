@@ -487,8 +487,6 @@ class ProductionController extends Controller
 
         Log::info($data);
 
-        dd($data);
-
         // On décode inputSessionData
         $inputSessionData = json_decode($data['inputSessionData'], true);
 
@@ -501,16 +499,10 @@ class ProductionController extends Controller
 
         $contactsBrut = $data['contacts'] ?? [];
 
-        
 
         $contacts = json_decode($contactsBrut, true);
 
         Log::info($contacts);
-
-        foreach ($contacts as $contact) {
-            Log::info($contact);
-        }
-
 
         DB::beginTransaction();
         try {
@@ -564,6 +556,7 @@ class ProductionController extends Controller
                 'prenom' => $request->prenom,
                 'datenaissance' => $datenaissance,
                 'lieunaissance' => $request->lieunaissance,
+                'situationMatrimoniale' => $request->situation_matrimoniale,
                 'sexe' => $sexe,
                 'numeropiece' => $request->numeropiece,
                 'naturepiece' => $request->naturepiece,
@@ -573,11 +566,12 @@ class ProductionController extends Controller
                 'pays' => $request->pays,
                 'estmigre' => 0,
                 'email' => $request->email,
+                'typeNumMSpecial' => $request->typePrincipal,
+                'mobile' => $request->mobile,
                 'telephone' => $request->telephone,
                 'telephone1' => $request->telephone1,
-                'mobile' => $request->mobile,
-                'codemembre' => 0,
                 'mobile1' => $request->mobile1,
+                'codemembre' => 0,
                 'saisieLe' => now(),
                 'saisiepar' => Auth::user()->membre->idmembre,
                 'refcontratsource' => $request->refcontratsource,
@@ -588,6 +582,19 @@ class ProductionController extends Controller
                 'capitalconnexe' => $request->capitalconnexe
             ]);
 
+            foreach ($contacts as $contact) {
+                $code = Refgenerate(Contact::class, 'C', 'code');
+
+                $Contact = Contact::create([
+                    'uuid' => Str::uuid(),
+                    'code' => $code,
+                    'adherent_id' => $idAdherent,
+                    'type' => $contact['type'],
+                    'valeur' => $contact['valeur'],
+                    'etat' => 'Actif'
+                    
+                ]);
+            }
             // creation de l'assuré souscripteur
 
             if ($request->estAssure === "Oui") {
@@ -1324,7 +1331,7 @@ class ProductionController extends Controller
 
                 'capital' => number_format($request->capital, 2, ".", ""),
 
-                'duree' => $request->duree,
+                // 'duree' => $request->duree,
 
                 // 'codeproduit' => $request->codeproduit,
 

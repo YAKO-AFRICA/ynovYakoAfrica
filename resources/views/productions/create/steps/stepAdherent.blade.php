@@ -108,7 +108,7 @@
         </div>
         
         <div class="col-12 col-lg-6">
-            <label for="lieunaissanc-{{ $product->CodeProduit }}" class="form-label">Lieu de naissance</label>
+            <label for="lieunaissance" class="form-label">Lieu de naissance</label>
             <select class="form-select selection" name="lieunaissance" id="lieunaissance"
                 data-codeproduit="{{ $product->CodeProduit }}" data-placeholder="Sélectionner le lieu" autocomplete="on">
                 <option value="" disabled selected>Sélectionner le lieu</option>
@@ -220,15 +220,15 @@
                     <label class="form-check-label" for="WhatsappPrincipal">Whatsapp</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="MobileMoney" id="MobileMoneyPrincipal">
+                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="MobileMoney" id="MobileMoneyPrincipal" required>
                     <label class="form-check-label" for="MobileMoneyPrincipal">Mobile Money</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="Wave" id="WavePrincipal">
+                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="Wave" id="WavePrincipal" required>
                     <label class="form-check-label" for="WavePrincipal">Wave</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="Tel" id="TelPrincipal">
+                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="Tel" id="TelPrincipal" required>
                     <label class="form-check-label" for="TelPrincipal">Tel</label>
                 </div>
             </div>
@@ -284,7 +284,10 @@
         </div>
 
         <div class="">
-            <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i class='bx bx-right-arrow-alt'></i></button>
+            {{-- <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i class='bx bx-right-arrow-alt'></i></button> --}}
+            <button id="btn-next" stepper1.next() class="btn btn-two btn-next-for btn-auto-generate"
+                    type="button">Enregistrer<i class='bx bx-right-arrow-alt'></i>
+                </button>
              
         </div>
         
