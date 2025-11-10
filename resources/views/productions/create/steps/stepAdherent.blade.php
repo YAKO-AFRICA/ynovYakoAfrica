@@ -284,10 +284,8 @@
         </div>
 
         <div class="">
-            {{-- <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i class='bx bx-right-arrow-alt'></i></button> --}}
-             <button id="btn-next" stepper1.next() class="btn btn-two btn-next-for btn-auto-generate"
-                    type="button">Enregistrer<i class='bx bx-right-arrow-alt'></i>
-                </button>
+            <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i class='bx bx-right-arrow-alt'></i></button>
+             
         </div>
         
     </div>

@@ -118,9 +118,11 @@
                     
                         @include('productions.create.steps.stepAdherent', ['CodeProduit' => $product->CodeProduit])
 
-                    </form>
+                    
 
                         @include('productions.create.steps.stepAssurer', ['CodeProduit' => $product->CodeProduit])
+
+                    </form>
 
                         @include('productions.create.steps.stepBeneficiaire', ['CodeProduit' => $product->CodeProduit])
                     

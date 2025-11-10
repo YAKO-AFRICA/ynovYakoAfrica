@@ -142,11 +142,6 @@
         const typePrincipal = document.querySelector('input[name="typePrincipal"]:checked')?.value;
         const mobile = document.getElementById('mobile').value.trim();
 
-        if (!typePrincipal || mobile === '') {
-            alert("Veuillez renseigner le contact principal avant de passer à l'étape suivante.");
-            return;
-        }
-
         const allContacts = [
             {
                 type: typePrincipal,

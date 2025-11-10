@@ -84,10 +84,7 @@
                                     <option value="100000">100 000</option>
                                 </select>
                             </div>
-                            <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Date de naissance de l'assuré :</label>
-                                <input type="Date" class="form-control" id="dateNaissance" name="dateNaissance" required>
-                            </div>
+                            
                             <div class="col-sm-12 col-md-6 mb-3 d-none">
                                 <label class="form-label">Âge Calculé :</label>
                                 <input type="hidden" class="form-control" id="age" name="age">
@@ -97,6 +94,30 @@
                                 <input type="number" class="form-control" id="duree" name="duree" value="6" min="6" max="99" required>
                             </div>
                         </div>
+
+                        <div class="row">
+                           <div class="col-sm-12 col-md-6 mb-3">
+                                <label class="form-label">Date de naissance de l'assuré :</label>
+                                <input type="Date" class="form-control" id="dateNaissance" name="dateNaissance" required>
+                            </div> 
+                           <div class="col-sm-12 col-md-6 mt-4">
+                                <div>
+                                    <label for="">Le souscrit est-il l'assuré ?</label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="isAssure" id="isAssureOui" value="oui" required>
+                                        <label class="form-check-label" for="isAssureOui">Oui</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="isAssure" id="isAssureNon" value="non">
+                                        <label class="form-check-label" for="isAssureNon">Non</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+
+                        
                         
                         <!-- Section pour les garanties optionnelles -->
                         <div id="optionalGaranties" class="mt-4">
@@ -134,6 +155,13 @@
                                     <td colspan="3" class="text-center">Veuillez remplir les informations de simulation</td>
                                 </tr>
                             </tbody>
+                        </table>
+
+                        <table class="table">
+                            <tr>
+                                <td><strong class="text-uppercase fs-6">Frais d'adhésion </strong><small class="text-muted text-danger">(payable une seul fois)</small></td>
+                                <td><span class="text-success">+</span> <strong> {{ number_format(7500, 0, ',', ' ')}}</strong> FCFA</td>
+                            </tr>
                         </table>
                         <div class="ribbon">Prime Totale</div>
 
