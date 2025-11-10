@@ -61,6 +61,20 @@
                                 </select>
                             </div>
                         </div>
+                        @php
+                            // Date actuelle
+                            $today = new DateTime();
+
+                            // Nombre de jours restants dans le mois courant
+                            $daysRemaining = (int) $today->format('t') - (int) $today->format('j');
+
+                            // Si les jours restants <= 7 → passer au mois sur-prochain, sinon mois prochain
+                            if ($daysRemaining <= 7) {
+                                $firstDayOfMonth = date('Y-m-01', strtotime('+2 months'));
+                            } else {
+                                $firstDayOfMonth = date('Y-m-01', strtotime('+1 month'));
+                            }
+                        @endphp
                         <div class="row g-3 mb-3 d-none" id="divNouveauModePaiement">
                             <div class="col-md-6">
                                 <label for="nouveauModePaiement" class="form-label">
@@ -74,8 +88,8 @@
                                 <label for="aCompterDu" class="form-label">
                                     À compter du <span class="star">*</span>
                                 </label>
-                                <input type="date" min="{{ date('Y-m-d') }}" class="form-control"
-                                    value="{{ date('Y-m-d') }}" id="aCompterDu" name="aCompterDu">
+                                <input type="date" min="{{ $firstDayOfMonth }}" class="form-control firstDayOfMonth"
+                                    value="{{ $firstDayOfMonth }}" id="aCompterDu" name="aCompterDu">
                             </div>
                         </div>
                         <div class="row g-3 mb-3 d-none" id="divReductionPrimeEtCapital">
@@ -129,9 +143,10 @@
                                 <label for="nouvellePrimeCADENCE" class="form-label">
                                     Nouvelle prime souhaitée <span class="star">*</span>
                                 </label>
-                                <select class="form-select" name="nouvellePrimeCADENCE" id="nouvellePrimeCADENCE">
+                                <input type="number" class="form-control" value="15000" min="15000" id="nouvellePrimeCADENCE" name="nouvellePrimeCADENCE">
+                                {{-- <select class="form-select" name="nouvellePrimeCADENCE" id="nouvellePrimeCADENCE">
                                     <option selected value="" disabled>Sélectionnez la prime</option>
-                                    {{-- de 15 000 FCFA à 30 000 FCFA --}}
+                                    
                                     @for ($i = 15000; $i <= 30000; $i += 15000)
                                         <option value="{{ $i }}">{{ number_format($i, 0, ',', ' ') }}</option>
                                     @endfor
@@ -139,7 +154,7 @@
                                     <option value="50000">50 000</option>
                                     <option value="75000">75 000</option>
                                     <option value="100000">100 000</option>
-                                </select>
+                                </select> --}}
                             </div>
                             <div class="col-md-12 d-none" id="divNouvellePrimePFA_IND">
                                 <label for="nouvellePrimePFA_IND" class="form-label">
@@ -161,15 +176,14 @@
                                     <option value="Trimestrielle">Trimestrielle</option>
                                     <option value="Semestrielle">Semestrielle</option>
                                     <option value="Annuelle">Annuelle</option>
-                                    <option value="Paiement unique">Paiement unique</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
                                 <label for="aCompterDuPeriodicite" class="form-label">
                                     À compter du <span class="star">*</span>
                                 </label>
-                                <input type="date" min="{{ date('Y-m-d') }}" class="form-control"
-                                    value="{{ date('Y-m-d') }}" id="aCompterDuPeriodicite" name="aCompterDuPeriodicite">
+                                <input type="date" min="{{ $firstDayOfMonth }}" class="form-control firstDayOfMonth"
+                                    value="{{ $firstDayOfMonth }}" id="aCompterDuPeriodicite" name="aCompterDuPeriodicite">
                             </div>
 
                         </div>
@@ -187,8 +201,8 @@
                                 <label for="aCompterDuSuspension" class="form-label">
                                     À compter du <span class="star">*</span>
                                 </label>
-                                <input type="date" min="{{ date('Y-m-d') }}" class="form-control"
-                                    value="{{ date('Y-m-d') }}" id="aCompterDuSuspension" name="aCompterDuSuspension">
+                                <input type="date" min="{{ $firstDayOfMonth }}" class="form-control firstDayOfMonth"
+                                    value="{{ $firstDayOfMonth }}" id="aCompterDuSuspension" name="aCompterDuSuspension">
                             </div>
 
                         </div>
@@ -224,13 +238,16 @@
                         <p id="OPSfile" class="d-none">Merci de bien vouloir cliquer <a
                                 href="{{ asset('assets/docs/ops.pdf') }}" download class="text-danger">ici pour télécharger,
                                 remplir, signer et téléverser la fiche d'autorisation de prélèvement sur salaire </a></p>
+                        <p id="ChequeInfo" class="d-none text-danger">Le chèque doit être libellé <strong><u>à l'ordre de YAKO AFRICA Assurances Vie</u></strong>.</p>
+                        <p id="NumCompteYAKO" class="d-none">Merci de bien vouloir cliquer <a href="{{ asset('assets/docs/numCompteYako.pdf') }}" class="text-danger" download>ici pour télécharger le numéro de compte YAKO AFRICA Assurances Vie</a> sur lequel vous pourrez éffectuer le virement.</p>
+
                         <div class="row g-3 mb-3 d-none" id="divNouvelleDateEffet">
                             <div class="col-12">
                                 <label for="nouvelleDateEffet" class="form-label">
                                     Nouvelle date d'effet souhaité <span class="star">*</span>
                                 </label>
-                                <input type="date" min="{{ date('Y-m-d') }}" class="form-control"
-                                    value="{{ date('Y-m-d') }}" id="nouvelleDateEffet" name="nouvelleDateEffet">
+                                <input type="date" min="{{ $firstDayOfMonth }}" class="form-control firstDayOfMonth"
+                                    value="{{ $firstDayOfMonth }}" id="nouvelleDateEffet" name="nouvelleDateEffet">
                             </div>
                         </div>
 
@@ -414,19 +431,16 @@
                                         <div class="mb-3">
                                             <div class="card">
                                                 <div class="card-header">
-                                                    <label class="form-label">Fiche d'autorisation de Prélèvement sur
-                                                        Salarie <strong><small class="text-danger">(dûment rempli et
-                                                                signé)</small></strong></label>
+                                                    <label class="form-label">Fiche d'autorisation de Prélèvement sur Salarie <strong><small class="text-danger">(dûment rempli et signé)</small></strong></label>
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="input-group">
-                                                        <input id="OPS-file-uploa" class="form-control" type="file"
-                                                            name="libelle[]"
+                                                        <input id="OPS-file-uploa" class="form-control"
+                                                            type="file" name="libelle[]"
                                                             accept=".jpg, .png, image/jpeg, image/png, .pdf"
                                                             onchange="previewFilesPrestAutre(event, 'OPS')">
                                                         <input type="hidden" name="type[]" value="OPS">
-                                                        <input type="hidden" name="filename[]"
-                                                            value="Ordre de prélèvement sur salaire">
+                                                        <input type="hidden" name="filename[]" value="Ordre de prélèvement sur salaire">
                                                     </div>
                                                     <div id="OPS" class="mt-3 preview-area"></div>
                                                 </div>
@@ -616,7 +630,7 @@
                                                             <div class="input-group">
                                                                 <input id="CNIrecto-file-uploa" class="form-control"
                                                                     type="file" name="libelle[]"
-                                                                    accept=".jpg, .png, image/jpeg, image/png, .pdf"
+                                                                    accept=".jpg, .png, image/jpeg, image/png"
                                                                     onchange="previewFilesPrestAutre(event, 'CNIrectoAssure')">
                                                                 <input type="hidden" name="type[]"
                                                                     value="CNIrectoAssure">
@@ -631,7 +645,7 @@
                                                             <div class="input-group">
                                                                 <input id="CNIverso-file-uploa" class="form-control"
                                                                     type="file" name="libelle[]"
-                                                                    accept=".jpg, .png, image/jpeg, image/png, .pdf"
+                                                                    accept=".jpg, .png, image/jpeg, image/png"
                                                                     onchange="previewFilesPrestAutre(event, 'CNIversoAssure')">
                                                                 <input type="hidden" name="type[]"
                                                                     value="CNIversoAssure">
@@ -664,7 +678,7 @@
                                                             <div class="input-group">
                                                                 <input id="CNIrecto-file-uploa" class="form-control"
                                                                     type="file" name="libelle[]"
-                                                                    accept=".jpg, .png, image/jpeg, image/png, .pdf"
+                                                                    accept=".jpg, .png, image/jpeg, image/png"
                                                                     onchange="previewFilesPrestAutre(event, 'CNIrecto')">
                                                                 <input type="hidden" name="type[]" value="CNIrecto">
                                                                 <input type="hidden" name="filename[]"
@@ -678,7 +692,7 @@
                                                             <div class="input-group">
                                                                 <input id="CNIverso-file-uploa" class="form-control"
                                                                     type="file" name="libelle[]"
-                                                                    accept=".jpg, .png, image/jpeg, image/png, .pdf"
+                                                                    accept=".jpg, .png, image/jpeg, image/png"
                                                                     onchange="previewFilesPrestAutre(event, 'CNIverso')">
                                                                 <input type="hidden" name="type[]" value="CNIverso">
                                                                 <input type="hidden" name="filename[]"
@@ -709,7 +723,7 @@
                                                             <div class="input-group">
                                                                 <input id="CNIrecto-file-uploa" class="form-control"
                                                                     type="file" name="libelle[]"
-                                                                    accept=".jpg, .png, image/jpeg, image/png, .pdf"
+                                                                    accept=".jpg, .png, image/jpeg, image/png"
                                                                     onchange="previewFilesPrestAutre(event, 'CNIrectoBeneficiaire')">
                                                                 <input type="hidden" name="type[]"
                                                                     value="CNIrectoBeneficiaire">
@@ -725,7 +739,7 @@
                                                             <div class="input-group">
                                                                 <input id="CNIverso-file-uploa" class="form-control"
                                                                     type="file" name="libelle[]"
-                                                                    accept=".jpg, .png, image/jpeg, image/png, .pdf"
+                                                                    accept=".jpg, .png, image/jpeg, image/png"
                                                                     onchange="previewFilesPrestAutre(event, 'CNIversoBeneficiaire')">
                                                                 <input type="hidden" name="type[]"
                                                                     value="CNIversoBeneficiaire">
@@ -758,7 +772,7 @@
                                                             <div class="input-group">
                                                                 <input id="CNIrecto-file-uploa" class="form-control"
                                                                     type="file" name="libelle[]"
-                                                                    accept=".jpg, .png, image/jpeg, image/png, .pdf"
+                                                                    accept=".jpg, .png, image/jpeg, image/png"
                                                                     onchange="previewFilesPrestAutre(event, 'CNIrectoPayeurPrime')">
                                                                 <input type="hidden" name="type[]"
                                                                     value="CNIrectoPayeurPrime">
@@ -773,7 +787,7 @@
                                                             <div class="input-group">
                                                                 <input id="CNIverso-file-uploa" class="form-control"
                                                                     type="file" name="libelle[]"
-                                                                    accept=".jpg, .png, image/jpeg, image/png, .pdf"
+                                                                    accept=".jpg, .png, image/jpeg, image/png"
                                                                     onchange="previewFilesPrestAutre(event, 'CNIversoPayeurPrime')">
                                                                 <input type="hidden" name="type[]"
                                                                     value="CNIversoPayeurPrime">
@@ -791,7 +805,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Signature & Soumission -->
                         <div class="row">
                             <div class="col-12 d-flex justify-content-end gap-3">
@@ -811,81 +824,6 @@
         </div>
     </div>
     <!--end stepper one-->
-
-    <script>
-        // document.querySelector('.submitForm').addEventListener('submit', function (event) {
-        //     event.preventDefault(); // Empêche le rechargement par défaut du formulaire
-
-        //     const form = this;
-        //     const submitButton = form.querySelector('button[type="submit"]');
-        //     if (submitButton.disabled) return; // Empêche une soumission multiple
-
-        //     submitButton.disabled = true; // Désactive le bouton pour éviter les soumissions multiples
-
-        //     const formData = new FormData(form);
-
-        //     // Crée un nouvel onglet immédiatement pour éviter le blocage
-        //     const newTab = window.open('about:blank', '_blank');
-
-        //     fetch(form.action, {
-        //         method: form.method,
-        //         headers: {
-        //             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-        //         },
-        //         body: formData,
-        //     })
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             if (data.type === 'success' && data.pdf_url) {
-        //                 // Redirige le nouvel onglet à l'URL du PDF
-        //                 newTab.location.href = data.pdf_url;
-        //             } else {
-        //                 // Ferme le nouvel onglet en cas d'erreur
-        //                 newTab.close();
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error('Erreur :', error);
-        //             // Ferme le nouvel onglet en cas d'erreur
-        //             newTab.close();
-        //         })
-        //         .finally(() => {
-        //             submitButton.disabled = false; // Réactive le bouton après le traitement
-        //         });
-        // });
-        document.addEventListener('DOMContentLoaded', function() {
-            const formulaire = document.getElementById('PrestationAutre');
-            if (!formulaire) {
-                console.error("Le formulaire avec l'ID 'PrestationAutre' est introuvable !");
-                return;
-            }
-
-            // Cibler l'élément avec le name "typeprestation"
-            const typePrestation = formulaire.querySelector('[name="typeprestation"]');
-            const motifAutre1 = document.getElementById('motifAutre1'); // ID spécifique pour le span
-            const motifAutre2 = document.getElementById('motifAutre2'); // ID spécifique pour le span
-
-            // Vérifiez si les éléments existent
-            if (!typePrestation || !motifAutre1 || !motifAutre2) {
-                console.error("Un ou plusieurs éléments HTML sont introuvables !");
-                return;
-            }
-
-            // Fonction pour mettre à jour le texte du span
-            function updateMotif() {
-                const selectedValue = typePrestation.value; // Récupère la valeur sélectionnée
-                console.log("Valeur sélectionnée :", selectedValue); // Log pour déboguer
-                motifAutre1.textContent = selectedValue || "Aucun motif sélectionné"; // Met à jour le span
-                motifAutre2.textContent = selectedValue || "Aucun motif sélectionné"; // Met à jour le span
-            }
-
-            // Ajouter un événement 'change' sur le select
-            typePrestation.addEventListener('change', updateMotif);
-
-            // Initialiser la valeur au chargement de la page
-            updateMotif();
-        });
-    </script>
 
     @include('productions.create.steps.signModal')
     <!--end stepper one-->
@@ -924,6 +862,44 @@
                 reader.readAsDataURL(file);
             }
         }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const dateInputs = document.querySelectorAll('.firstDayOfMonth');
+
+            dateInputs.forEach(input => {
+                input.addEventListener('change', function () {
+                    const selectedDate = new Date(this.value);
+
+                    // Si le jour n’est pas le 1er, on le force au 1er
+                    if (selectedDate.getDate() !== 1) {
+                        alert("❌ Seul le 1er jour de chaque mois est autorisé.");
+                        selectedDate.setDate(1);
+                        this.value = selectedDate.toISOString().split('T')[0];
+                    }
+                });
+
+                input.addEventListener('input', function () {
+                    const selectedDate = new Date(this.value);
+
+                    // Empêcher la saisie d’un jour autre que le 1er
+                    if (selectedDate.getDate() !== 1) {
+                        alert("❌ Seul le 1er jour de chaque mois est autorisé.");
+                        selectedDate.setDate(1);
+                        this.value = selectedDate.toISOString().split('T')[0];
+                    }
+                });
+
+                // Forcer la valeur initiale à toujours être le 1er du mois courant
+                const now = new Date();
+                now.setDate(1);
+                const todayFirst = now.toISOString().split('T')[0];
+                if (!input.value) {
+                    input.value = todayFirst;
+                }
+            });
+        });
     </script>
 
     <script>
@@ -1026,6 +1002,8 @@
             const nouvellePrimePFA_INDInput = formulaire?.querySelector('#nouvellePrimePFA_IND');
 
             const OPSfileText = formulaire?.querySelector('#OPSfile');
+            const ChequeInfoText = formulaire?.querySelector('#ChequeInfo');
+            const NumCompteYAKOText = formulaire?.querySelector('#NumCompteYAKO');
 
 
             const divCNISouscripteur = formulaire?.querySelector('#divCNISouscripteur');
@@ -1077,11 +1055,12 @@
             const formatDate = (dateString) => {
                 if (!dateString) return '-';
                 const date = new Date(dateString);
-                return date.toLocaleDateString('fr-FR', {
+                const formatted = date.toLocaleDateString('fr-FR', {
                     day: '2-digit',
-                    month: '2-digit',
+                    month: 'long',
                     year: 'numeric'
                 });
+                return formatted.charAt(0).toUpperCase() + formatted.slice(1);
             };
             const modePaiementSelect = [{
                     "idModePaiement": 1,
@@ -1093,83 +1072,51 @@
                     "CodePaiement": "CHK",
                     "libelle": "Chèque"
                 },
+                
                 {
                     "idModePaiement": 3,
-                    "CodePaiement": "ESP",
-                    "libelle": "Espèces"
-                },
-                {
-                    "idModePaiement": 4,
                     "CodePaiement": "VIR",
                     "libelle": "Virement bancaire"
                 },
                 {
-                    "idModePaiement": 5,
+                    "idModePaiement": 4,
                     "CodePaiement": "OVP",
                     "libelle": "Ordre Virement permanent"
 
                 },
+                
                 {
-                    "idModePaiement": 6,
-                    "CodePaiement": "MANDAT",
-                    "libelle": "Mandat postal"
-
-                },
-                {
-                    "idModePaiement": 7,
+                    "idModePaiement": 5,
                     "CodePaiement": "EBANK",
                     "libelle": "Mobile money"
 
                 },
+                
                 {
-                    "idModePaiement": 8,
-                    "CodePaiement": "COMP",
-                    "libelle": "Compensation de prime"
-
-                },
-                {
-                    "idModePaiement": 9,
+                    "idModePaiement": 6,
                     "CodePaiement": "SOCIETE",
                     "libelle": "Société"
 
                 },
                 {
-                    "idModePaiement": 10,
+                    "idModePaiement": 7,
                     "CodePaiement": "OV",
                     "libelle": "Ordre de Virement"
 
                 },
                 {
-                    "idModePaiement": 11,
+                    "idModePaiement": 8,
                     "CodePaiement": "VRC",
                     "libelle": "Versement sur compte"
 
                 },
+                
                 {
-                    "idModePaiement": 12,
-                    "CodePaiement": "TRANSFERT",
-                    "libelle": "Transfert"
-
-                },
-                {
-                    "idModePaiement": 14,
+                    "idModePaiement": 9,
                     "CodePaiement": "DEF",
                     "libelle": "DEFENSE"
 
                 },
-                {
-                    "idModePaiement": 15,
-                    "CodePaiement": "EVIR",
-                    "libelle": "VIREMENT ELECTRONIQUE"
-
-                }
-
-                {{-- {
-                    "idModePaiement": 13,
-                    "CodePaiement": "PB",
-                    "libelle": "PARTICIPATION AUX BENEFICES"
-
-                }, --}}
             ];
 
             modePaiementSelect.forEach(mode => {
@@ -1343,9 +1290,7 @@
                         break;
                     case 'CHK':
                         modePaiementSouhaite = 'Chèque';
-                        break;
-                    case 'ESP':
-                        modePaiementSouhaite = 'Espèces';
+
                         break;
                     case 'VIR':
                         modePaiementSouhaite = 'Virement bancaire';
@@ -1356,14 +1301,8 @@
                     case 'OVP':
                         modePaiementSouhaite = 'Ordre Virement permanent';
                         break;
-                    case 'MANDAT':
-                        modePaiementSouhaite = 'Mandat postal';
-                        break;
                     case 'EBANK':
                         modePaiementSouhaite = 'Mobile money';
-                        break;
-                    case 'COMP':
-                        modePaiementSouhaite = 'Compensation de prime';
                         break;
                     case 'SOCIETE':
                         modePaiementSouhaite = 'Société';
@@ -1377,17 +1316,8 @@
                     case 'VRC':
                         modePaiementSouhaite = 'Versement sur compte';
                         break;
-                    case 'TRANSFERT':
-                        modePaiementSouhaite = 'Transfert';
-                        break;
-                    case 'PB':
-                        modePaiementSouhaite = 'PARTICIPATION AUX BENEFICES';
-                        break;
                     case 'DEF':
                         modePaiementSouhaite = 'DEFENSE';
-                        break;
-                    case 'EVIR':
-                        modePaiementSouhaite = 'VIREMENT ELECTRONIQUE';
                         break;
                     default:
                         modePaiementSouhaite = 'Autre';
@@ -1431,9 +1361,35 @@
                         filleOPS.forEach(file => {
                             file.required = true;
                         });
-                        OPSfileText.classList.remove('d-none');
                         afficherBloc(OPSfileText);
-                    }else{
+                        masquerBloc(ChequeInfoText);
+                        masquerBloc(NumCompteYAKOText);
+                        Swal.fire({
+                            icon: 'info',
+                            title: `<strong style="color:#076633;">${modePaiementSouhaite}</strong>`,
+                            html: "Merci de bien vouloir cliquer sur le bouton <strong style='color:#076633;'>Télécharger</strong> pour télécharger, remplir, signer et téléverser la fiche d'autorisation de prélèvement sur salaire.",
+                            confirmButtonText: 'Télécharger',
+                            confirmButtonColor: '#076633'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // URL du fichier PDF
+                                const pdfUrl = "{{ asset('assets/docs/ops.pdf') }}";
+                                const fileName = "Autorisation_prelevement_salaire.pdf";
+
+                                // Création d'un lien de téléchargement "invisible"
+                                const link = document.createElement('a');
+                                link.href = pdfUrl;
+                                link.download = fileName;
+                                document.body.appendChild(link);
+
+                                // Déclenche le téléchargement
+                                link.click();
+
+                                // Nettoyage
+                                document.body.removeChild(link);
+                            }
+                        });
+                    } else if(nouveauModePaiementInput.value == 'CHK'){
                         divOPS.classList.add('d-none');
                         filleOPS.forEach(file => {
                             file.required = false;
@@ -1441,6 +1397,61 @@
                         });
                         divPreviewAreaOPS.innerHTML = '';
                         masquerBloc(OPSfileText);
+                        masquerBloc(NumCompteYAKOText);
+                        afficherBloc(ChequeInfoText);
+                        Swal.fire({
+                            icon: 'info',
+                            title: `<strong style="color:#076633;">${modePaiementSouhaite}</strong>`,
+                            html: "Le chèque doit être libellé <strong style='color:#076633;'>à l'ordre de YAKO AFRICA Assurances Vie</strong>.",
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#076633'
+                        });
+                    } else if(nouveauModePaiementInput.value == 'OVP' || nouveauModePaiementInput.value == 'OV' || nouveauModePaiementInput.value == 'VRC'){
+                        divOPS.classList.add('d-none');
+                        filleOPS.forEach(file => {
+                            file.required = false;
+                            resetFileInput(file);
+                        });
+                        divPreviewAreaOPS.innerHTML = '';
+                        masquerBloc(OPSfileText);
+                        masquerBloc(ChequeInfoText);
+                        afficherBloc(NumCompteYAKOText);
+                        Swal.fire({
+                            icon: 'info',
+                            title: `<strong style="color:#076633;">${modePaiementSouhaite}</strong>`,
+                            html: "Merci de bien vouloir cliquer sur le bouton <strong style='color:#076633;'>Télécharger</strong> pour télécharger le numéro de compte YAKO AFRICA Assurances Vie sur lequel vous pourrez éffectuer le virement.",
+                            confirmButtonText: 'Télécharger',
+                            confirmButtonColor: '#076633'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // URL du fichier PDF
+                                const pdfUrl = "{{ asset('assets/docs/numCompteYako.pdf') }}";
+                                const fileName = "numCompteYako.pdf";
+
+                                // Création d'un lien de téléchargement "invisible"
+                                const link = document.createElement('a');
+                                link.href = pdfUrl;
+                                link.download = fileName;
+                                document.body.appendChild(link);
+
+                                // Déclenche le téléchargement
+                                link.click();
+
+                                // Nettoyage
+                                document.body.removeChild(link);
+                            }
+                        });
+                    } else{
+                        divOPS.classList.add('d-none');
+                        ChequeInfoText.classList.add('d-none');
+                        filleOPS.forEach(file => {
+                            file.required = false;
+                            resetFileInput(file);
+                        });
+                        divPreviewAreaOPS.innerHTML = '';
+                        masquerBloc(OPSfileText);
+                        masquerBloc(NumCompteYAKOText);
+                        masquerBloc(ChequeInfoText);
                     }
 
                     divFicheIdentification.classList.add('d-none');
@@ -1555,7 +1566,7 @@
                         divPreviewAreaCarteProfessionnelle.innerHTML = '';
                     }
                     content = `
-                        <p>Monsieur,</p>
+                        <p>Monsieur,</p><br>
                         <p>Je viens par la présente demander un <strong>${selectedValue || '...'}</strong> de mon contrat <strong>${contrat}</strong>.</p>
                         <p><strong><u>Mode de paiement actuel :</u></strong></p>
                         <ul>
@@ -1571,8 +1582,8 @@
                         <ul>
                             <li>${modePaiementSouhaite}</li>
                         </ul>
-                        <p>À compter du ${formatDate(aCompterDuInput?.value)}</p>
-                        <p>Dans l’attente d’une suite favorable.<br>Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
+                        <p>À compter du ${formatDate(aCompterDuInput?.value)}</p><br>
+                        <p>Dans l’attente d’une suite favorable.<br> <br>Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
                     `;
                 } else if (CodeTypeOperation == '6') {
                     divCNISouscripteur.classList.remove('d-none');
@@ -1665,17 +1676,19 @@
                     divPreviewAreaCNIpayeurPrime.innerHTML = '';
 
                     content = `
-                        <p>Monsieur,</p>
+                        <p>Monsieur,</p> <br>
                         <p>Je viens par la présente demander un <strong>${selectedValue || '...'}</strong> de mon contrat <strong>${contrat}</strong>.</p>
                         <p><strong><u>Nouvelle date d'effet souhaitée :</u></strong></p>
                         <ul>
                             <li>${formatDate(nouvelleDateEffetInput?.value)}</li>
                         </ul>
-                        <p>Dans l’attente d’une suite favorable.<br>Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
+                        <p>Dans l’attente d’une suite favorable.<br><br>Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
                     `;
 
 
                     masquerBloc(OPSfileText);
+                    masquerBloc(ChequeInfoText);
+                    masquerBloc(NumCompteYAKOText);
                     masquerBloc(divNouvelleAdresse, nouvelleAdresseInput);
                     masquerBloc(divModificationDuree, modifDureeContratSouhaiteeInput);
                     masquerBloc(divNouvellePeriodicite, nouvellePeriodiciteInput, aCompterDuPeriodiciteInput);
@@ -1788,17 +1801,19 @@
                     divPreviewAreaCNIpayeurPrime.innerHTML = '';
 
                     content = `
-                        <p>Monsieur,</p>
+                        <p>Monsieur,</p> <br>
                         <p>Je viens par la présente demander un <strong>${selectedValue || '...'}</strong> de mon contrat <strong>${contrat}</strong>.</p>
                         <p><strong><u>Nouveau contact téléphonique souhaitée :</u></strong></p>
                         <ul>
                             <li>${nouveauContactTelephoniqueInput?.value}</li>
-                        </ul>
-                        <p>Dans l’attente d’une suite favorable.<br>Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
+                        </ul><br>
+                        <p>Dans l’attente d’une suite favorable.<br><br>Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
                     `;
 
 
                     masquerBloc(OPSfileText);
+                    masquerBloc(ChequeInfoText);
+                    masquerBloc(NumCompteYAKOText);
                     masquerBloc(divNouvelleAdresse, nouvelleAdresseInput);
                     masquerBloc(divModificationDuree, modifDureeContratSouhaiteeInput);
                     masquerBloc(divNouvellePeriodicite, nouvellePeriodiciteInput, aCompterDuPeriodiciteInput);
@@ -1977,7 +1992,7 @@
                     divPreviewAreaCNIpayeurPrime.innerHTML = '';
 
                     content = `
-                        <p>Monsieur,</p>
+                        <p>Monsieur,</p> <br>
                         <p style="text-align: justify;">
                             Je viens par la présente demander une/un 
                             <strong>${selectedValue || '...'}</strong> 
@@ -2005,12 +2020,14 @@
                                             : ''
                         }
                         <p>
-                            Dans l’attente d’une suite favorable.<br>
+                            Dans l’attente d’une suite favorable.<br> <br>
                             Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.
                         </p>
                     `;
 
                     masquerBloc(OPSfileText);
+                    masquerBloc(ChequeInfoText);
+                    masquerBloc(NumCompteYAKOText);
                     masquerBloc(divNouvelleAdresse, nouvelleAdresseInput);
                     masquerBloc(divModificationDuree, modifDureeContratSouhaiteeInput);
                     masquerBloc(divNouvellePeriodicite, nouvellePeriodiciteInput, aCompterDuPeriodiciteInput);
@@ -2155,13 +2172,13 @@
                     divPreviewAreaExtraitActeNaissance.innerHTML = '';
 
                     content = `
-                        <p>Monsieur,</p>
+                        <p>Monsieur,</p> <br>
                         <p style="text-align: justify;">
                             Je viens par la présente demander le 
                             <strong>${selectedValue || '...'}</strong>, <strong>${assureeAModifierInput?.value || '...'}</strong> sur mon contrat <strong>${contrat}</strong>.
-                        </p>
+                        </p><br>
                         <p>
-                            Dans l’attente d’une suite favorable.<br>
+                            Dans l’attente d’une suite favorable.<br><br>
                             Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.
                         </p>
                     `;
@@ -2169,6 +2186,8 @@
 
 
                     masquerBloc(OPSfileText);
+                    masquerBloc(ChequeInfoText);
+                    masquerBloc(NumCompteYAKOText);
                     masquerBloc(divNouvelleAdresse, nouvelleAdresseInput);
                     masquerBloc(divModificationDuree, modifDureeContratSouhaiteeInput);
                     masquerBloc(divNouvellePeriodicite, nouvellePeriodiciteInput, aCompterDuPeriodiciteInput);
@@ -2279,18 +2298,20 @@
                     divPreviewAreaExtraitActeNaissance.innerHTML = '';
 
                     content = `
-                        <p>Monsieur,</p>
+                        <p>Monsieur,</p> <br>
                         <p style="text-align: justify;">
                             Je viens par la présente demander un 
                             <strong>Changement Payeur de Prime</strong> du contrat <strong>${contrat}</strong> en raison du décès du payeur de prime actuel.
-                        </p>
+                        </p><br>
                         <p>
-                            Dans l’attente d’une suite favorable.<br>
+                            Dans l’attente d’une suite favorable.<br> <br>
                             Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.
                         </p>
                     `;
 
                     masquerBloc(OPSfileText);
+                    masquerBloc(ChequeInfoText);
+                    masquerBloc(NumCompteYAKOText);
                     masquerBloc(divAssureeAModifier, assureeAModifierInput);
                     masquerBloc(divNouvelleAdresse, nouvelleAdresseInput);
                     masquerBloc(divModificationDuree, modifDureeContratSouhaiteeInput);
@@ -2404,17 +2425,19 @@
                     divPreviewAreaExtraitActeNaissance.innerHTML = '';
 
                     content = `
-                        <p>Monsieur,</p>
+                        <p>Monsieur,</p> <br>
                         <p style="text-align: justify;">
                             Je viens par la présente demander une <strong>${selectedValue || '...'} </strong> de mon contrat <strong>${contrat}</strong>.
-                        </p>
+                        </p> <br>
                         <p>
-                            Dans l’attente d’une suite favorable.<br>
+                            Dans l’attente d’une suite favorable.<br> <br>
                             Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.
                         </p>
                     `;
 
                     masquerBloc(OPSfileText);
+                    masquerBloc(ChequeInfoText);
+                    masquerBloc(NumCompteYAKOText);
                     masquerBloc(divAssureeAModifier, assureeAModifierInput);
                     masquerBloc(divNouvelleAdresse, nouvelleAdresseInput);
                     masquerBloc(divModificationDuree, modifDureeContratSouhaiteeInput);
@@ -2529,16 +2552,18 @@
                     divPreviewAreaExtraitActeNaissance.innerHTML = '';
 
                     content = `
-                        <p>Monsieur,</p>
+                        <p>Monsieur,</p> <br>
                         <p>Je viens par la présente demander un <strong>${selectedValue || '...'}</strong> de mon contrat <strong>${contrat}</strong>.</p>
                         <p><strong><u>Nouvelle adresse souhaitée :</u></strong></p>
                         <ul>
                             <li>${nouvelleAdresseInput?.value}</li>
-                        </ul>
-                        <p>Dans l’attente d’une suite favorable.<br>Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
+                        </ul><br>
+                        <p>Dans l’attente d’une suite favorable.<br> <br> Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
                     `;
 
                     masquerBloc(OPSfileText);
+                    masquerBloc(ChequeInfoText);
+                    masquerBloc(NumCompteYAKOText);
                     masquerBloc(divAssureeAModifier, assureeAModifierInput);
                     masquerBloc(divSuspension, dureeSuspensionInput, aCompterDuSuspensionInput);
                     masquerBloc(divModificationDuree, modifDureeContratSouhaiteeInput);
@@ -2653,7 +2678,7 @@
                     divPreviewAreaExtraitActeNaissance.innerHTML = '';
 
                     content = `
-                        <p>Monsieur,</p>
+                        <p>Monsieur,</p> <br>
                         <p>Je viens par la présente demander une <strong>${selectedValue || '...'} </strong> <strong>${contrat}</strong>.</p>
                         <p><strong><u>Durée actuelle du contrat :</u></strong></p>
                         <ul>
@@ -2662,11 +2687,13 @@
                         <p><strong><u>Nouvelle durée souhaitée :</u></strong></p>
                         <ul>
                             <li>${modifDureeContratSouhaiteeInput?.value} ans</li>
-                        </ul>
-                        <p>Dans l’attente d’une suite favorable.<br>Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
+                        </ul><br>
+                        <p>Dans l’attente d’une suite favorable.<br> <br> Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
                     `;
 
                     masquerBloc(OPSfileText);
+                    masquerBloc(ChequeInfoText);
+                    masquerBloc(NumCompteYAKOText);
                     masquerBloc(divAssureeAModifier, assureeAModifierInput);
                     masquerBloc(divNouvelleAdresse, nouvelleAdresseInput);
                     masquerBloc(divSuspension, dureeSuspensionInput, aCompterDuSuspensionInput);
@@ -2779,7 +2806,7 @@
                     divPreviewAreaExtraitActeNaissance.innerHTML = '';
 
                     content = `
-                        <p>Monsieur,</p>
+                        <p>Monsieur,</p> <br>
                         <p>Je viens par la présente demander une <strong>${selectedValue || '...'} </strong> du contrat <strong>${contrat}</strong>.</p>
                         <p><strong><u>Periodicité actuelle :</u></strong></p>
                         <ul>
@@ -2789,11 +2816,13 @@
                         <ul>
                             <li>${nouvellePeriodiciteInput?.value}</li>
                         </ul>
-                        <p>À compter du ${formatDate(aCompterDuPeriodiciteInput?.value)}</p>
-                        <p>Dans l’attente d’une suite favorable.<br>Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
+                        <p>À compter du ${formatDate(aCompterDuPeriodiciteInput?.value)}</p><br>
+                        <p>Dans l’attente d’une suite favorable.<br> <br> Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
                     `;
 
                     masquerBloc(OPSfileText);
+                    masquerBloc(ChequeInfoText);
+                    masquerBloc(NumCompteYAKOText);
                     masquerBloc(divAssureeAModifier, assureeAModifierInput);
                     masquerBloc(divNouvelleAdresse, nouvelleAdresseInput);
                     masquerBloc(divModificationDuree, modifDureeContratSouhaiteeInput);
@@ -2908,16 +2937,18 @@
                     divPreviewAreaExtraitActeNaissance.innerHTML = '';
 
                     content = `
-                        <p>Monsieur,</p>
+                        <p>Monsieur,</p> <br>
                         <p>Je viens par la présente demander une <strong>${selectedValue || '...'} </strong> sur mon contrat <strong>${contrat}</strong>.</p>
                         <p><strong><u>Montant souhaité :</u></strong></p>
                         <ul>
                             <li>${parseInt(MontantOptionRemboursementInput?.value).toLocaleString('fr-FR') || '25 000'} FCFA</li>
-                        </ul>
-                        <p>Dans l’attente d’une suite favorable.<br>Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
+                        </ul><br>
+                        <p>Dans l’attente d’une suite favorable.<br> <br> Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
                     `;
 
                     masquerBloc(OPSfileText);
+                    masquerBloc(ChequeInfoText);
+                    masquerBloc(NumCompteYAKOText);
                     masquerBloc(divAssureeAModifier, assureeAModifierInput);
                     masquerBloc(divNouvelleAdresse, nouvelleAdresseInput);
                     masquerBloc(divModificationDuree, modifDureeContratSouhaiteeInput);
@@ -3161,7 +3192,7 @@
                     }
                     // Contenu initial de la lettre
                     content = `
-                        <p>Monsieur,</p>
+                        <p>Monsieur,</p> <br>
                         <p>Je viens par la présente demander une <strong>${selectedValue || '...'}</strong> sur mon contrat <strong>${contrat}</strong>.</p>
                         ${
                             ['DOIHOO', 'YKE_2008', 'YKE_2018', 'YKF_2008', 'YKF_2018', 'YKS_2008', 'YKS_2018', 'YKR_2021', 'YKL_2004'].includes(contratDetails?.codeProduit)
@@ -3181,10 +3212,13 @@
                                 <li>${nouvellePrime} FCFA</li>
                             </ul>`
                         }
-                        <p>Dans l’attente d’une suite favorable.<br>Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
+                        <br>
+                        <p>Dans l’attente d’une suite favorable.<br> <br> Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
                     `;
 
                     masquerBloc(OPSfileText);
+                    masquerBloc(ChequeInfoText);
+                    masquerBloc(NumCompteYAKOText);
                     masquerBloc(divAssureeAModifier, assureeAModifierInput);
                     masquerBloc(divNouvelleAdresse, nouvelleAdresseInput);
                     masquerBloc(divSuspension, dureeSuspensionInput, aCompterDuSuspensionInput);
@@ -3290,12 +3324,14 @@
                     divPreviewAreaExtraitActeNaissance.innerHTML = '';
 
                     content = `
-                        <p>Monsieur,</p>
-                        <p>Je viens par la présente demander une <strong>${selectedValue || '...'}</strong> de mon contrat <strong>${contrat}</strong> pour <strong>${dureeSuspensionInput?.value || '1'} </strong> mois à compter du <strong>${formatDate(aCompterDuSuspensionInput?.value) || '...'} </strong>.</p>
-                        <p>Dans l’attente d’une suite favorable.<br>Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
+                        <p>Monsieur,</p> <br>
+                        <p>Je viens par la présente demander une <strong>${selectedValue || '...'}</strong> de mon contrat <strong>${contrat}</strong> pour une période de <strong>${dureeSuspensionInput?.value || '1'} </strong> mois à compter du <strong>${formatDate(aCompterDuSuspensionInput?.value) || '...'} </strong>.</p><br>
+                        <p>Dans l’attente d’une suite favorable.<br> <br> Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
                     `;
 
                     masquerBloc(OPSfileText);
+                    masquerBloc(ChequeInfoText);
+                    masquerBloc(NumCompteYAKOText);
                     masquerBloc(divAssureeAModifier, assureeAModifierInput);
                     masquerBloc(divNouvelleAdresse, nouvelleAdresseInput);
                     masquerBloc(divModificationDuree, modifDureeContratSouhaiteeInput);
@@ -3423,12 +3459,14 @@
                     divPreviewAreaCNIpayeurPrime.innerHTML = '';
 
                     content = `
-                        <p>Monsieur,</p>
-                        <p>Je viens par la présente faire une demande de <strong>${selectedValue || '...'}</strong> de mon contrat <strong>${contrat}</strong>.</p>
-                        <p>Dans l’attente d’une suite favorable.<br>Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
+                        <p>Monsieur,</p> <br>
+                        <p>Je viens par la présente faire une demande de <strong>${selectedValue || '...'}</strong> de mon contrat <strong>${contrat}</strong>.</p><br>
+                        <p>Dans l’attente d’une suite favorable.<br> <br> Veuillez recevoir Monsieur le Directeur, l’expression de mes salutations les plus sincères.</p>
                     `;
 
                     masquerBloc(OPSfileText);
+                    masquerBloc(ChequeInfoText);
+                    masquerBloc(NumCompteYAKOText);
                     masquerBloc(divAssureeAModifier, assureeAModifierInput);
                     masquerBloc(divNouvelleAdresse, nouvelleAdresseInput);
                     masquerBloc(divModificationDuree, modifDureeContratSouhaiteeInput);
@@ -3597,9 +3635,6 @@
             // Vérifie au chargement
             verifierEtape("#PrestationAutre");
         });
-
-
-         
     </script>
 
     <script>

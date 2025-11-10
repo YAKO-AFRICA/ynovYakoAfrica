@@ -17,6 +17,7 @@
             size: A4;
         }
 
+
         body {
             font-family: 'Gotham-Book', sans-serif;
             color: #000;
@@ -32,16 +33,20 @@
         }
 
         .header {
+            /* display: flex; */
             width: 100%;
             height: 140px;
-            margin-bottom: 4mm;
+            /* justify-content: space-between; */
+            margin: 2mm 0;
             font-size: 13px;
+            /* line-height: 1.6; */
         }
 
         .sender {
             float: left;
             line-height: 1.7;
             font-size: 13px;
+            margin-top: 7mm;
         }
 
         .date {
@@ -49,11 +54,12 @@
             font-size: 13px;
             text-align: right;
             max-width: 70mm;
+            margin-top: 12mm;
         }
 
         .recipient {
             text-align: right;
-            margin-bottom: 5mm;
+            margin: 8mm 0;
             font-size: 13px;
             line-height: 1.3;
         }
@@ -61,13 +67,14 @@
         .objet {
             font-weight: bold;
             text-decoration: underline;
-            margin-bottom: 5mm;
+            margin: 8mm 0;
             font-size: 14px;
         }
 
         .body {
             font-size: 14px;
             line-height: 1.3;
+            margin: 8mm 0;
         }
 
         .body p {
@@ -136,8 +143,12 @@
 
             <!-- Destinataire -->
             <div class="recipient">
-                <strong>À MONSIEUR LE DIRECTEUR GENERAL</strong> <br>
-                DE YAKO AFRICA Assurances Vie
+                 <p style="text-align: right; margin-right: 5mm;"><strong>À</strong></p> 
+                <p style="text-align: right;">
+                MONSIEUR LE DIRECTEUR GENERAL 
+                <br>YAKO AFRICA Assurances Vie</p> 
+                
+                
             </div>
 
             <!-- Objet -->
@@ -152,24 +163,21 @@
 
             <div class="signature" style="width: 100%;">
                 <div class="closing-yako" style="width: 50%; float: left;">
-                    YAKO AFRICA Assurances Vie <br><br>
-                    {{-- <img src="data:image/jpg;base64,{{ base64_encode(file_get_contents(public_path('cust_assets/images/cachet-yako.jpeg'))) }}"
-                        alt="" style="width: 150px; height: 50px;"> --}}
+
                 </div>
-                
-                <div class="closing" style="width: 50%; float: right;">
-                    L’intéressé <br><br>
-                    <small><i>Lu et approuvé</i> </small> <br>
+                <div class="closing" style="width: 50%; float: right; margin-right: 8mm;">
+                    <u>L’intéressé(e)</u> <br><br>
+                    <small><i>Lu et approuvé</i> </small> <br> <br>
                     @if ($imageSrc != '')
-                        <img src="{{ $imageSrc }}" alt="Signature" style="width: 150px; height: 50px;">
+                        <img src="{{ $imageSrc }}" alt="Signature" style="width: 160px;">
                     @endif
                 </div>
             </div>
             
 
             <!-- Pièces jointes -->
-            <div class="attachments" style="text-align: justify; margin-top: 150px;">
-                <span><strong>Pièces jointes :</strong></span>
+            <div class="attachments" style="text-align: justify; margin-top: 140px;">
+                <span><strong>Pièce(s) jointe(s) :</strong></span>
                 <ul>
                     @foreach ($prestation->docPrestation as $doc)
                         <li><input type="checkbox" checked> {{ $doc->filename }}</li>

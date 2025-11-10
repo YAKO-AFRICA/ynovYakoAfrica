@@ -204,20 +204,7 @@
     
     <main class="main">   
         <section class="main-section" style="position: relative; height: 100%; width: 100%; overflow: hidden;">
-            {{-- <header class="banner" style="width: 100%; background-color: #ffffff; height: 95px; margin: 0px">
-                <div class="left-section" style="float: left; height: 100%; margin-right: 20px !important; width: 75%;">
-                    <div class="yellow-bar" style="background-color: #f7b500; width: 100%; height: 50%;"></div>
-                    <div class="green-bar-title"style="width: 100%; height: 50%; border: 1px solid #fff;">
-                        <div class="green-bar" style="background-color: #006838; width: 35%; height: 100%;"></div>
-                        <div class="center-section" style="float: right; width: 75%; height: 100%; padding: 10px 0; text-align: right;">
-                            <h4>FORMULAIRE DE DEMANDE DE PRESTATION</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="right-section">
-                    <img src="data:image/jpg;base64,{{ base64_encode(file_get_contents(public_path('cust_assets/images/logo.png'))) }}" alt="Yako Africa Logo" class="logo">
-                </div>
-            </header> --}}
+           
             <header class="banner" style="width: 100%; background-color: #ffffff; height: 95px; margin: 0px">
                 <div class="left-section" style="float: right; height: 100%; width: 75%;">
                     <div class="yellow-bar" style="background-color: #f7b500; width: 100%; height: 50%;"></div>
@@ -654,33 +641,17 @@
                     <input type="text" 
                            style="width: 4%; margin-bottom: -7px; border: 1px solid #90C8A7; padding: 5px; font-size: 14px; text-align:center; color: #F7A400; border-radius: 3px; background-color: #ffffff;"
                            value="{{ $bulletin != null ? 'X' : '.' }}" />&nbsp; &nbsp;&nbsp;&nbsp;
-                    {{-- <input type="text" 
-                           style="width: 4%; margin-bottom: -7px; border: 1px solid #90C8A7; padding: 5px; font-size: 14px; text-align:center; color: #F7A400; border-radius: 3px; background-color: #ffffff;"
-                           value="{{ isset($prestation->docPrestation[1]) && $prestation->id == optional($prestation->docPrestation[1])->idPrestation && optional($prestation->docPrestation[1])->libelle !== null ? 'X' : '.' }}" />&nbsp; &nbsp;
-                 --}}
                     <label for="prenom">RIB&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                     <input type="text" style="width: 4%; margin-bottom: -7px; border: 1px solid #90C8A7; padding: 5px; font-size: 14px; text-align:center; color: #F7A400; border-radius: 3px; background-color: #ffffff;"
                            value="{{ $RIB != null ? 'X' : '.' }}" /> <br><br>
 
-                    {{-- <input type="text" 
-                           style="width: 4%; margin-bottom: -7px; border: 1px solid #90C8A7; padding: 5px; font-size: 14px; text-align:center; color: #F7A400; border-radius: 3px; background-color: #ffffff;"
-                           value="{{ isset($prestation->docPrestation[2]) && $prestation->id == optional($prestation->docPrestation[2])->idPrestation && optional($prestation->docPrestation[2])->libelle !== null ? 'X' : '.' }}" /><br><br>
-                 --}}
                     <label for="prenom">Attestation de <br> déclaration de <br>perte du contrat &nbsp; &nbsp;&nbsp;&nbsp;</label> 
                     <input type="text" style="width: 4%; margin-bottom: -7px; border: 1px solid #90C8A7; padding: 5px; text-align:center; color: #F7A400; font-size: 14px; border-radius: 3px; background-color: #ffffff;"
                            value="{{ $AttestationPerteContrat != null ? 'X' : '.' }}" />&nbsp; &nbsp; 
-                    {{-- <input type="text" 
-                           style="width: 4%; margin-bottom: -7px; border: 1px solid #90C8A7; padding: 5px; text-align:center; color: #F7A400; font-size: 14px; border-radius: 3px; background-color: #ffffff;"
-                           value="{{ isset($prestation->docPrestation[6]) && $prestation->id == optional($prestation->docPrestation[6])->idPrestation && optional($prestation->docPrestation[6])->libelle !== null ? 'X' : '.' }}" />&nbsp; &nbsp;
-                 --}}
+                    
                     <label for="prenom">Fiche d'identification du N° de téléphone &nbsp;&nbsp;</label>
                     <input type="text" style="width: 4%; margin-bottom: -7px; border: 1px solid #90C8A7; padding: 5px; text-align:center; color: #F7A400; font-size: 14px; border-radius: 3px; background-color: #ffffff;"
                            value="{{ $FicheIDNum != null ? 'X' : '.' }}" />&nbsp; &nbsp;
-                    {{-- <input type="text" 
-                        style="width: 4%; margin-bottom: -7px; border: 1px solid #90C8A7; padding: 5px; text-align:center; color: #F7A400; font-size: 14px; border-radius: 3px; background-color: #ffffff;"
-                        value="{{ isset($prestation->docPrestation[5]) && $prestation->id == optional($prestation->docPrestation[5])->idPrestation && optional($prestation->docPrestation[5])->libelle !== null ? 'X' : '.' }}" />&nbsp; &nbsp;
-                         --}}
-
                     
                     <label for="qrcode" style="position: absolute; top: -193px; left: 650px">
                         <img src="data:image/png;base64,{{ $qrcode }}" alt="QR Code">
@@ -689,10 +660,6 @@
                     <label for="prenom">Copie CNI&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;</label>
                     <input type="text" style="width: 4%; margin-bottom: -7px; border: 1px solid #90C8A7; padding: 5px; text-align:center; color: #F7A400; font-size: 14px; border-radius: 3px; background-color: #ffffff;"
                            value="{{ $CNI != null ? 'X' : '.' }}" />&nbsp; &nbsp;
-
-                    {{-- <input type="text" 
-                           style="width: 4%; margin-bottom: -7px; border: 1px solid #90C8A7; padding: 5px; text-align:center; color: #F7A400; font-size: 14px; border-radius: 3px; background-color: #ffffff;"
-                           value="{{ isset($prestation->docPrestation[3]) && isset($prestation->docPrestation[4]) && $prestation->id == optional($prestation->docPrestation[3])->idPrestation && $prestation->id == optional($prestation->docPrestation[4])->idPrestation && optional($prestation->docPrestation[3])->libelle !== null && optional($prestation->docPrestation[4])->libelle !== null ? 'X' : '.' }}" /> --}}
                 </div>
                 
                 

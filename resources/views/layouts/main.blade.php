@@ -280,10 +280,11 @@
 
         
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
 
         {{-- js custome file --}}
-        <script src="{{ asset('assets/js/custom.js')}}"></script>
+         <!--plugins-->
+        <script src="{{ asset('assets/js/jquery.min.js')}}"></script>
         <script src="{{ asset('root/resume.js')}}"></script>
         <script src="{{ asset('assets/root/simulateur/primes.js')}}"></script>
         <script src="{{ asset('assets/root/simulateur/doihooSimulateur.js')}}"></script>
@@ -292,10 +293,10 @@
         <script src="{{ asset('assets/root/simulateur/simulateur.js')}}"></script>
         <script src="{{ asset('assets/root/simulateur/ykeSimulateur.js')}}"></script>
         <script src="{{ asset('assets/js/fieldsForm.js')}}"></script>
+        
+       
         <!-- Bootstrap JS -->
         <script src="{{ asset('assets/js/bootstrap.bundle.min.js')}}"></script>
-        <!--plugins-->
-        <script src="{{ asset('assets/js/jquery.min.js')}}"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="{{ asset('assets/js/custom.js')}}"></script> 
         {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
@@ -315,8 +316,8 @@
         
        
         <!--app JS-->
-        <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
-        <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script>
+        {{-- <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
+        <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script> --}}
 
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         {{-- <script src="{{ mix('js/app.js') }}"></script> --}}
@@ -489,11 +490,11 @@
             });
         
             $(".date-format").flatpickr({
-            altFormat: "j F, Y",
-            dateFormat: "d-m-Y", // Format réel de la date envoyée (10-12-2024)
-            minDate: "today", // La date minimale est aujourd'hui
-            // locale: "fr" // Définit la langue en français
-        });
+                altFormat: "j F, Y",
+                dateFormat: "d-m-Y", // Format réel de la date envoyée (10-12-2024)
+                minDate: "today", // La date minimale est aujourd'hui
+                locale: "fr" // Définit la langue en français
+            });
         
             $(".date-range").flatpickr({
                 mode: "range",
@@ -516,76 +517,76 @@
     
 
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const form = document.getElementById("multiStepForm");
-            const formSteps = document.querySelectorAll(".form-step");
-            const stepperSteps = document.querySelectorAll(".stepper .step");
-            const prevBtn = document.getElementById("prevBtn");
-            const nextBtn = document.getElementById("nextBtn");
-            const submitBtn = document.getElementById("submit");
-            let currentStep = 0;
-            
-            // Met à jour l'affichage des étapes du formulaire et du stepper
-            function updateFormAndStepper() {
-                // Mettre à jour les étapes du formulaire
-                formSteps.forEach((step, index) => {
-                    step.classList.toggle("active", index === currentStep);
-                });
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const form = document.getElementById("multiStepForm");
+                const formSteps = document.querySelectorAll(".form-step");
+                const stepperSteps = document.querySelectorAll(".stepper .step");
+                const prevBtn = document.getElementById("prevBtn");
+                const nextBtn = document.getElementById("nextBtn");
+                const submitBtn = document.getElementById("submit");
+                let currentStep = 0;
+                
+                // Met à jour l'affichage des étapes du formulaire et du stepper
+                function updateFormAndStepper() {
+                    // Mettre à jour les étapes du formulaire
+                    formSteps.forEach((step, index) => {
+                        step.classList.toggle("active", index === currentStep);
+                    });
 
-                // Mettre à jour le stepper
-                stepperSteps.forEach((step, index) => {
-                    step.classList.toggle("active", index <= currentStep);
-                });
+                    // Mettre à jour le stepper
+                    stepperSteps.forEach((step, index) => {
+                        step.classList.toggle("active", index <= currentStep);
+                    });
 
-                // Gérer la visibilité des boutons
-                prevBtn.style.display = currentStep > 0 ? "inline-block" : "none";
-                prevBtn.style.display = currentStep < formSteps.length - 1 ? "inline-block" : "none";
-                nextBtn.style.display = currentStep < formSteps.length - 2 ? "inline-block" : "none";
-                submitBtn.style.display = currentStep === formSteps.length - 2 ? "inline-block" : "none";
-            }
+                    // Gérer la visibilité des boutons
+                    prevBtn.style.display = currentStep > 0 ? "inline-block" : "none";
+                    prevBtn.style.display = currentStep < formSteps.length - 1 ? "inline-block" : "none";
+                    nextBtn.style.display = currentStep < formSteps.length - 2 ? "inline-block" : "none";
+                    submitBtn.style.display = currentStep === formSteps.length - 2 ? "inline-block" : "none";
+                }
 
-            // Valide les champs de l'étape actuelle
-            function validateCurrentStep() {
-                const activeStep = formSteps[currentStep];
-                const requiredFields = activeStep.querySelectorAll("[required]");
-                let isValid = true;
+                // Valide les champs de l'étape actuelle
+                function validateCurrentStep() {
+                    const activeStep = formSteps[currentStep];
+                    const requiredFields = activeStep.querySelectorAll("[required]");
+                    let isValid = true;
 
-                requiredFields.forEach((field) => {
-                    if (!field.value.trim()) {
-                        field.classList.add("is-invalid");
-                        isValid = false;
-                    } else {
-                        field.classList.remove("is-invalid");
+                    requiredFields.forEach((field) => {
+                        if (!field.value.trim()) {
+                            field.classList.add("is-invalid");
+                            isValid = false;
+                        } else {
+                            field.classList.remove("is-invalid");
+                        }
+                    });
+
+                    if (!isValid) {
+                        alert("Veuillez remplir tous les champs obligatoires avant de continuer.");
+                    }
+
+                    return isValid;
+                }
+
+                // Gestion du bouton "Suivant"
+                nextBtn.addEventListener("click", function () {
+                    if (validateCurrentStep()) {
+                        currentStep++;
+                        updateFormAndStepper();
                     }
                 });
 
-                if (!isValid) {
-                    alert("Veuillez remplir tous les champs obligatoires avant de continuer.");
-                }
-
-                return isValid;
-            }
-
-            // Gestion du bouton "Suivant"
-            nextBtn.addEventListener("click", function () {
-                if (validateCurrentStep()) {
-                    currentStep++;
+                // Gestion du bouton "Précédent"
+                prevBtn.addEventListener("click", function () {
+                    currentStep--;
                     updateFormAndStepper();
-                }
-            });
+                });
 
-            // Gestion du bouton "Précédent"
-            prevBtn.addEventListener("click", function () {
-                currentStep--;
+                // Initialiser l'affichage des étapes
                 updateFormAndStepper();
             });
-
-            // Initialiser l'affichage des étapes
-            updateFormAndStepper();
-        });
-    </script>
+        </script>
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {

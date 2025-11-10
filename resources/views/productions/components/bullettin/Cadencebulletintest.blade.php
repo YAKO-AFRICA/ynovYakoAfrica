@@ -674,9 +674,9 @@
                 <div style="width: 33%; float: left;">
                     <strong>Signature du souscripteur</strong>
                     <div>
-                        @if ($imageSrc != null)
+                        {{-- @if ($imageSrc != null)
                             <img src="{{ $imageSrc }}" alt="QR Code de vérification" style="width: 55px; height: 55px;">
-                        @endif
+                        @endif --}}
                     </div>
                     {{-- <p><i style="font-size: 10px !important">(précédée de la mention "LU et APPROUVE)</i></p> --}}
                 </div>
