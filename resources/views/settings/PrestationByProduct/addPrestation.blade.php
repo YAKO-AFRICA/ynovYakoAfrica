@@ -83,25 +83,6 @@
 
     </div>
     
-
-    {{-- <script>
-        function addPrestation() {
-            const container = document.getElementById('prestationsContainer');
-            const template = document.querySelector('.prestation-item');
-            const newItem = template.cloneNode(true);
-            
-            // Réinitialiser la valeur du select cloné
-            newItem.querySelector('select').selectedIndex = 0;
-            
-            container.appendChild(newItem);
-        }
-
-        function deletePrestation(event) {
-            const button = event.target;
-            const item = button.closest('.prestation-item');
-            item.remove();
-        }
-    </script> --}}
     <script>
         function addPrestation() {
             const container = document.getElementById('prestationsContainer');

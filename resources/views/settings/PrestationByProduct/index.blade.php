@@ -83,43 +83,5 @@
 
     </div>
     
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            function addPrestation(event) {
-                // Trouver le modal le plus proche du bouton cliqué
-                const button = event.target;
-                const modal = button.closest('.modal');
-                if (!modal) return;
-    
-                // Sélectionner le container de prestations et le modèle à cloner
-                const container = modal.querySelector('#prestationsContainer');
-                const template = modal.querySelector('.prestation-item');
-    
-                if (!container || !template) return;
-    
-                // Cloner l'élément prestation
-                const newItem = template.cloneNode(true);
-                newItem.style.display = "block"; // Rendre visible la nouvelle ligne clonée
-    
-                // Réinitialiser la valeur du select cloné
-                const select = newItem.querySelector('select');
-                if (select) {
-                    select.selectedIndex = 0;
-                    select.name = "prestations[]"; // Assurer que le name est bien présent
-                }
-    
-                // Ajouter le nouvel élément au container
-                container.appendChild(newItem);
-            }
-    
-            // Attacher la fonction au bouton d'ajout avec la délégation d'événements
-            document.addEventListener('click', function (event) {
-                if (event.target.classList.contains('btn-add-prestation')) {
-                    addPrestation(event);
-                }
-            });
-        });
-    </script> --}}
-    
 @endsection
 
