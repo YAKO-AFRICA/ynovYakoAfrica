@@ -118,7 +118,7 @@
                         
 
                     
-                    </form>
+                    
                         @include('productions.create.steps.stepAssurer', ['CodeProduit' => $product->CodeProduit])
 
                     
@@ -137,7 +137,7 @@
                         @include('productions.create.steps.stepSante', ['CodeProduit' => $product->CodeProduit])
 
                         @include('productions.create.steps.stepResume', ['CodeProduit' => $product->CodeProduit])
-                    
+                    </form>
                    
                     @include('productions.create.steps.stepDocument', ['CodeProduit' => $product->CodeProduit])
                     @include('productions.components.addContactForm')

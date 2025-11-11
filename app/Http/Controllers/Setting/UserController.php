@@ -146,6 +146,7 @@ class UserController extends Controller
                 $role = 'Inconnu';
                 break;
         }
+        Log::info($request->codeequipe);
 
         $agence = Equipe::select('codeequipe','libelleequipe','id')->where('codeequipe', $request->codeequipe)->first();
         log::info($agence);
