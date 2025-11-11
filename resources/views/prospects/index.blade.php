@@ -17,7 +17,7 @@
             </div>
             <div class="ms-auto">
                 <div class="btn-group">
-                    
+
                 </div>
             </div>
         </div>
@@ -36,6 +36,73 @@
                         <a href="{{ route('prospect.download') }}" class="btn btn-sm btn-outline-primary">
                             <i class="bi bi-download"></i> Télécharger le QR Code
                         </a>
+                    </div>
+                </div>
+                <div class="">
+                    <div class="row g-3">
+                        <!-- Card 1 -->
+                        <div class="col-md-6">
+                            <div class="card card-stat p-3 h-100">
+                                <div class="d-flex align-items-start">
+                                    <div class="me-3">
+                                        <i class="bi bi-people-fill fs-2 text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <div class="small-muted">Nouveaux prospects</div>
+                                        <div class="stat-value" id="card-new-prospects">1 240</div>
+                                        <div class="small-muted">Cette semaine</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="col-md-6">
+                            <div class="card card-stat p-3 h-100">
+                                <div class="d-flex align-items-start">
+                                    <div class="me-3">
+                                        <i class="bi bi-person-check-fill fs-2 text-success"></i>
+                                    </div>
+                                    <div>
+                                        <div class="small-muted">Prospects convertis</div>
+                                        <div class="stat-value" id="card-converted">312</div>
+                                        <div class="small-muted">Total</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="col-md-6">
+                            <div class="card card-stat p-3 h-100">
+                                <div class="d-flex align-items-start">
+                                    <div class="me-3">
+                                        <i class="bi bi-clock-history fs-2 text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <div class="small-muted">En attente de conversion</div>
+                                        <div class="stat-value" id="card-pending">428</div>
+                                        <div class="small-muted">En cours</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div class="col-md-6">
+                            <div class="card card-stat p-3 h-100">
+                                <div class="d-flex align-items-start">
+                                    <div class="me-3">
+                                        <i class="bi bi-bar-chart-fill fs-2 text-info"></i>
+                                    </div>
+                                    <div>
+                                        <div class="small-muted">Taux de conversion</div>
+                                        <div class="stat-value" id="card-rate">20.0%</div>
+                                        <div class="small-muted">Sur la période</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
