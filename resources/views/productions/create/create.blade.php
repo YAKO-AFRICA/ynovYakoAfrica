@@ -107,8 +107,6 @@
                 </div>
             </div>
         </div>
-        
-    
             <div class="card-body productions">
                 <div class="bs-stepper-content card p-3">
                     

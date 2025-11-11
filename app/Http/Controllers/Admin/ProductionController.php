@@ -228,8 +228,6 @@ class ProductionController extends Controller
         return view('gestionEquip.index' ,['datas' => $datas, 'activeColumns' => $activeColumns, 'defaultColumns' => $defaultColumns, 'additionalColumns' => $additionalColumns]);
     }
 
-
-
     public function stepProduct()
     {
 

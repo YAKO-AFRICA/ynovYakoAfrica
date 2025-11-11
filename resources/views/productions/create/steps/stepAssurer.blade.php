@@ -30,10 +30,7 @@
             <!-- Modal -->
         </div>
         {{-- @endif --}}
-
-
     </div>
-
     <div class="overflow-auto">
         <table class="table mb-0 table-striped table-bordered table-hover table-responsive">
             <thead>
