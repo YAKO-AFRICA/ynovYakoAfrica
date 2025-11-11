@@ -1292,6 +1292,10 @@ form select.error:focus {
 	text-align: left;
 	border-bottom-right-radius: 0
 }
+/* .chat-content-rightside .chat-time {
+	float: right;
+	text-align: left;
+} */
 
 .chat-toggle-btn {
 	width: 40px;
