@@ -216,19 +216,19 @@
             <div class="mb-3 col-sm-12 col-md-6 col-lg-6">
                 <label class="form-label d-block">Type de contact principal : <span class="text-danger">*</span></label>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="Whatsapp" id="WhatsappPrincipal" required>
+                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="Whatsapp" id="WhatsappPrincipal" >
                     <label class="form-check-label" for="WhatsappPrincipal">Whatsapp</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="MobileMoney" id="MobileMoneyPrincipal" required>
+                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="MobileMoney" id="MobileMoneyPrincipal" >
                     <label class="form-check-label" for="MobileMoneyPrincipal">Mobile Money</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="Wave" id="WavePrincipal" required>
+                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="Wave" id="WavePrincipal" >
                     <label class="form-check-label" for="WavePrincipal">Wave</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="Tel" id="TelPrincipal" required>
+                    <input class="form-check-input" type="checkbox" name="typePrincipal[]" value="Tel" id="TelPrincipal" >
                     <label class="form-check-label" for="TelPrincipal">Tel</label>
                 </div>
             </div>

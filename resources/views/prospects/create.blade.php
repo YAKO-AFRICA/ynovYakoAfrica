@@ -68,7 +68,7 @@
                 <h2 class="section-title">Assurés / Bénéficiaires</h2>
                 
                 <div class="form-group">
-                    <label>Etre-vous meme assuré ?</label>
+                    <label>Etre-vous vous même assuré (e)?</label>
                     <div class="radio-group">
                         <label class="radio-label">
                             <input type="radio" name="assurerAuTerme" value="oui"> Oui
@@ -80,12 +80,21 @@
                 </div>
 
                 <div class="info-box">
-                    <p>👨‍👩‍👧‍👦 Ajoutez la personne que vous comptez assuré, conjoints, enfants ou autres membres liés au prospect.</p>
+                    <p>👨‍👩‍👧‍👦 Ajoutez les personnes que vous comptez assurer : conjoint, enfants ou autres membres liés au prospect.</p>
                 </div>
 
-                <button type="button" class="btn btn-primary" onclick="openPartnerModal()">
-                    + Ajouter un acteur
-                </button>
+                <div class="form-group">
+                    <label class="required">Type d'acteur</label>
+                    <div class="cards-container row">
+                        <label class="partner-card col" id="card-ass" data-type="ASS" data-bs-toggle="modal" data-bs-target="#openPartnerModal">
+                            Assuré
+                        </label>
+                        
+                        <label class="partner-card col" id="card-ben" data-type="BEN" data-bs-toggle="modal" data-bs-target="#openPartnerModal">
+                            Bénéficiaire
+                        </label>
+                    </div>
+                </div>
 
                 <div id="partnersList" class="added-list"></div>
             </div>
@@ -133,7 +142,11 @@
                     ✓ Soumettre la Demande
                 </button>
             </div>
+
+
         </form>
+
+        
 
 
         <script>
@@ -186,4 +199,5 @@
         });
         </script>
     </div>
+    @include('prospects.components.modals.partnerModal')
 @endsection

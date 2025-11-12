@@ -71,7 +71,8 @@
         }
 
         .container {
-            max-width: 1000px;
+            /* max-width: 1000px; */
+            width: 100%;
             margin: 0 auto;
             background: white;
             border-radius: 16px;
@@ -1049,66 +1050,29 @@
             renderContacts();
         }
 
-        // Gestion des partenaires
-        function openPartnerModal() {
-            document.getElementById('partnerModal').classList.add('active');
-            document.querySelectorAll('#partnerModal input, #partnerModal select, #partnerModal textarea')
-                .forEach(field => field.value = '');
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ajouter les écouteurs d'événements à tous les labels
+            document.querySelectorAll('.partner-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const acteurType = this.getAttribute('data-type');
+                    // 1. Affecter la valeur au champ input
+                    document.getElementById('partner_type').value = acteurType;
+                });
+            });
+        });
 
-        function closePartnerModal() {
-            document.getElementById('partnerModal').classList.remove('active');
-        }
-
-        // function addPartner() {
-        //     const nom = document.getElementById('partner_nom').value;
-        //     const prenom = document.getElementById('partner_prenom').value;
-        //     const type = document.getElementById('partner_type').value;
-
-        //     alert(nom + ' ' + prenom + ' ' + type);
-
-        //     if (!nom || !prenom || !type) {
-        //         alert('Veuillez remplir au moins le nom, prénom et le type de partenaire');
-        //         return;
-        //     }
-
-        //     const partner = {
-        //         type: type,
-        //         civilite: document.getElementById('partner_civilite').value,
-        //         nom: nom,
-        //         prenom: prenom,
-        //         genre: document.getElementById('partner_genre').value,
-        //         dateNaissance: document.getElementById('partner_dateNaissance').value,
-        //         lieuNaissance: document.getElementById('partner_lieuNaissance').value,
-        //         naturepiece: document.getElementById('partner_naturepiece').value,
-        //         numeropiece: document.getElementById('partner_numeropiece').value,
-        //         email: document.getElementById('partner_email').value,
-        //         mobile: document.getElementById('partner_mobile').value,
-        //         situationMatrimoniale: document.getElementById('partner_situationMatrimoniale').value,
-        //         lieuResidence: document.getElementById('partner_lieuResidence').value,
-        //         adresseComplete: document.getElementById('partner_adresseComplete').value,
-        //         profession: document.getElementById('partner_profession').value,
-        //         employeur: document.getElementById('partner_employeur').value,
-        //         filliation_code: document.getElementById('partner_filliation_code').value
-        //     };
-
-        //     partners.push(partner);
-        //     renderPartners();
-        //     closePartnerModal();
-        // }
         function addPartner() {
             const nom = document.getElementById('partner_nom').value.trim();
             const prenom = document.getElementById('partner_prenom').value.trim();
             
+            
 
-            const typeInput = document.querySelectorAll('input[name="partner_type"]:checked');
-            // console.log(typeInput);
+            const typeInput = document.getElementById('partner_type');
+            
 
 
             // Vérifie si un type est sélectionné
             const type = typeInput ? typeInput.value : '';
-
-            // alert(type);
 
             if (!nom || !prenom) {
                 alert('Veuillez remplir au moins le nom, prénom et le type de partenaire');
@@ -1121,8 +1085,8 @@
             // console.log(genreInput.value);
 
             const partner = {
-                // type: type,
                 civilite: civiliteInput ? civiliteInput.value : '',
+                type: type,
                 nom: nom,
                 prenom: prenom,
                 genre: genreInput ? genreInput.value : '',
@@ -1142,7 +1106,23 @@
 
             partners.push(partner);
             renderPartners();
-            closePartnerModal();
+
+            partnerForm = document.getElementById('partnerForm');
+
+            partnerForm.querySelectorAll('input').forEach(input => {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    input.checked = false;
+                } else {
+                    input.value = '';
+                }
+            });
+
+
+            
+
+
+
+
         }
 
 

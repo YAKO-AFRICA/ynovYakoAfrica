@@ -45,7 +45,8 @@ class ProspectController extends Controller
     public function index(Request $request)
     {
         $prospects = AdherentProspert::orderBy('created_at', 'desc')->paginate(20);
-        $myProspects = AdherentProspert::where('reference_par', Auth::user()->idmembre)->orderBy('created_at', 'desc')->paginate(20);
+        $myProspects = AdherentProspert::where('reference_par', Auth::user()->idmembre)->where('etat' , 'Actif')->orderBy('created_at', 'desc')->paginate(20);
+
       
 
         return view('prospects.index', compact('prospects','myProspects'));
@@ -113,7 +114,8 @@ class ProspectController extends Controller
         $products = Product::whereIn('CodeProduit', $codeProduits)->get();
 
         $professions = Profession::select('MonLibelle')->get();
-        return view('prospects.create', compact('villes', 'professions', 'products', 'pays', 'commerciale'));
+        $secteurActivites = TblSecteurActivite::orderBy('MonLibelle')->get();
+        return view('prospects.create', compact('villes', 'professions', 'products', 'pays', 'commerciale','secteurActivites'));
     }
 
     /**
@@ -242,8 +244,8 @@ class ProspectController extends Controller
                 'adresse' => $request->adresse,
                 'pays' => $request->pays,
                 'profession' => $request->profession,
+                // 'employeur' => $request->employeur,
                 'employeur' => $request->employeur,
-                'secteur_activite' => $request->secteur_activite,
                 'personneRessource' => $request->personneRessource,
                 'contactRessource' => $request->contactRessource,
                 'personneRessource2' => $request->personneRessource2,

@@ -10,10 +10,11 @@
                 <label class="required">Civilité</label>
                 <select name="civilite" required>
                     <option value="">Sélectionner</option>
-                    <option value="M">M.</option>
-                    <option value="Mme">Mme</option>
-                    <option value="Dr">Dr</option>
-                    <option value="Pr">Pr</option>
+                    <option value="Mlle">Mademoiselle</option>
+                    <option value="Mme">Madame</option>
+                    <option value="M">Monsieur</option>
+                    <option value="Dr">Docteur</option>
+                    <option value="Pr">Président</option>
                 </select>
             </div>
             <div class="form-group col-sm-12 col-md-4 col-lg-4">
@@ -57,9 +58,19 @@
         </legend>
 
         <div class="row">
+            <div class="form-group col-sm-12 col-md-4 col-lg-4">
+                <label>Pays de résidence</label>
+                <select name="pays" id="pays" class="selection">
+                    <option value="" disabled selected>Choisir ...</option>
+                    @foreach ($pays as $item)
+                        <option value="{{ $item['nameFr'] }}" data-code="{{ $item['code']}}">{{ $item['nameFr'] }}</option>
+                    @endforeach
+                </select>
+                
+            </div>
         
             <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                <label>Lieu de Résidence</label>
+                <label>Ville de Résidence</label>
                 <select name="lieu_residence" id="" class="selection">
                     <option value="" disabled selected>Choisir</option>
                     @foreach ($villes as $ville)
@@ -98,16 +109,7 @@
                 <label>Email</label>
                 <input type="email" name="email">
             </div>
-            <div class="form-group col-sm-12 col-md-4 col-lg-4">
-                <label>Pays</label>
-                <select name="pays" id="pays" class="selection">
-                    <option value="" disabled selected>Choisir ...</option>
-                    @foreach ($pays as $item)
-                        <option value="{{ $item['nameFr'] }}" data-code="{{ $item['code']}}">{{ $item['nameFr'] }}</option>
-                    @endforeach
-                </select>
-                
-            </div>
+            
             <div class="form-group col-sm-12 col-md-12 col-lg-12 full-width">
                 <label>Adresse Complète</label>
                 <textarea name="adresse" rows="2"></textarea>
@@ -127,17 +129,28 @@
 
                 </select>
             </div>
-            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+            {{-- <div class="form-group col-sm-12 col-md-6 col-lg-6">
                 <label>Employeur</label>
                 <input type="text" name="employeur">
-            </div>
+            </div> --}}
             <div class="form-group col-sm-12 col-md-6 col-lg-6">
                 <label>Secteur d'Activité</label>
-                <input type="text" name="secteur_activite">
+                {{-- <input type="text" name="secteur_activite"> --}}
+                
+                <select name="employeur" id="employeur" class="selection">
+                    <option value="" disabled selected >Choisir</option>
+                    @foreach($secteurActivites as $secteurActivite)
+                        <option value="{{ $secteurActivite->MonLibelle }}">{{ $secteurActivite->MonLibelle }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="form-group col-sm-12 col-md-6 col-lg-6">
-                <label>Commerciale</label>
-                <input type="text" name="reference_par"  value="{{ $commerciale->membre->nom ?? '' }} {{ $commerciale->membre->prenom ?? '' }}">
+                <label>Agent Commerciale</label>
+                <input type="text" name="reference_par"  value="{{ $commerciale->membre->nom ?? '' }} {{ $commerciale->membre->prenom ?? '' }}" readonly>
+            </div>
+            <div class="form-group col-sm-12 col-md-6 col-lg-6">
+                <label>Téléphone Commerciale</label>
+                <input type="text" name="reference_par"  value="{{ $commerciale->membre->cel ?? $commerciale->membre->tel ?? '' }}" readonly>
             </div>
         </div>
     </fieldset>
@@ -149,12 +162,12 @@
         
         <div class="row mb-3">
             <div class="form-group col-sm-12 col-md-6 col-lg-6">
-                <label>Personne Ressource 1</label>
-                <input type="text" name="personneRessource">
+                <label>Personne Ressource 1 <span class="text-danger">*</span></label>
+                <input type="text" name="personneRessource" required>
             </div>
             <div class="form-group col-sm-12 col-md-6 col-lg-6">
-                <label>Contact Ressource 1</label>
-                <input type="tel" name="contactRessource">
+                <label>Contact Ressource 1 <span class="text-danger">*</span></label>
+                <input type="tel" name="contactRessource" minlength="10" maxlength="14" required pattern="^[0-9]+$" title="Veuillez saisir uniquement des chiffres">
             </div>
         </div>
         
@@ -165,7 +178,7 @@
             </div>
             <div class="form-group col-sm-12 col-md-6 col-lg-6">
                 <label>Contact Ressource 2</label>
-                <input type="tel" name="contactRessource2">
+                <input type="tel" name="contactRessource2" minlength="10" maxlength="14">
             </div>
         </div>
     </fieldset>
@@ -186,6 +199,38 @@
 
 <div class="info-box">
     <p>📞 Ajoutez tous les numéros de téléphone et moyens de contact du prospect.</p>
+</div>
+
+<div class="form-grid row">
+    <div class="form-group col-sm-12 col-md-8 col-lg-6">
+        <label class="required">Type de Contact</label>
+        <div class="row gap-2">
+            <label for="mobile" class="col-3">
+                <input type="checkbox" name="contactType[]" value="mobile" id="mobile" required>
+                <span>Mobile</span>
+            </label>
+            <label for="fixe" class="col-3">
+                <input type="checkbox" name="contactType[]" value="fixe" id="fixe">
+                <span>Fixe</span>
+            </label>
+            <label for="whatsapp" class="col-3">
+                <input type="checkbox" name="contactType[]" value="whatsapp" id="whatsapp">
+                <span>WhatsApp</span>
+            </label>
+            <label for="Wave" class="col-3">
+                <input type="checkbox" name="contactType[]" value="Wave" id="Wave">
+                <span>Wave</span>
+            </label>
+            <label for="autre" class="col-3">
+                <input type="checkbox" name="contactType[]" value="autre" id="autre">
+                <span>Autre</span>
+            </label>
+        </div>
+    </div>
+    <div class="form-group col-sm-12 col-md-4 col-lg-4 mb-2">
+        <label class="required">Contact</label>
+        <input type="tel" id="contactValue" class="form-control" required placeholder="Entrez le contact" maxlength="14" min="10" required>
+    </div>
 </div>
 
 <button type="button" class="btn btn-primary" onclick="openContactModal()">

@@ -8,7 +8,7 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label class="required">Type de Contact</label>
-                    <select id="contactType" required>
+                    <select id="contactType" >
                         <option value="">Sélectionner</option>
                         <option value="mobile">Mobile</option>
                         <option value="fixe">Téléphone fixe</option>
@@ -20,7 +20,7 @@
                 </div>
                 <div class="form-group">
                     <label class="required">Contact</label>
-                    <input type="tel" id="contactValue" class="form-control required placeholder="Entrez le contact" maxlength="14" min="10">
+                    <input type="tel" id="contactValue" class="form-control" placeholder="Entrez le contact" maxlength="14" min="10">
                 </div>
             </div>
             <div style="margin-top: 20px; text-align: right;">

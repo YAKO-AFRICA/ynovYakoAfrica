@@ -16,22 +16,27 @@
             </nav>
         </div>
         <div class="ms-auto">
-            <div class="btn-group">
-                <div class="ms-auto"><a href="javascript:;" class="btn btn-primary radius-30 mt-2 mt-lg-0" data-bs-toggle="modal" data-bs-target="#addUsers"><i class="bx bxs-plus-square"></i>Ajouter un utilisateur</a></div>
-            </div>
+            
         </div>
     </div>
     <!--end breadcrumb-->
   
-    <div class="card">
+    <div class="card p-2">
+        <div class="card-hedear">
+            <div class="d-flex align-items-center justify-content-end mb-4">
+                <div class="">
+                    <a href="javascript:;" 
+                    class="btn btn-primary radius-30 mt-2 mt-lg-0" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#addUsers">
+                    <i class="bx bxs-plus-square"></i>Ajouter un utilisateur</a>
+                </div>
+            </div>
+        </div>
         <div class="card-body">
             
 
-            <div class="d-lg-flex align-items-center mb-4 gap-3">
-                <div class="position-relative">
-                </div>
-              {{-- <div class="ms-auto"><a href="javascript:;" class="btn btn-primary radius-30 mt-2 mt-lg-0" data-bs-toggle="modal" data-bs-target="#addUsers"><i class="bx bxs-plus-square"></i>Ajouter un utilisateur</a></div> --}}
-            </div>
+            
             <div class="table-responsive">
                 @php
                     // Colonnes par défaut

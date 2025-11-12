@@ -22,6 +22,14 @@
             </div>
         </div>
         <!--end breadcrumb-->
+        @php
+            $total = count($myProspects ?? []);
+            $clients = count($myProspects->where('status', 'client') ?? []);
+            $prospect = count($myProspects->where('status', 'prospect') ?? []);
+            $tauxConversion = $total > 0 ? ($clients / $total) * 100 : 0;
+        @endphp
+
+        
 
         <div class="row">
             <!-- QR Code Section -->
@@ -48,9 +56,8 @@
                                         <i class="bi bi-people-fill fs-2 text-primary"></i>
                                     </div>
                                     <div>
-                                        <div class="small-muted">Nouveaux prospects</div>
-                                        <div class="stat-value" id="card-new-prospects">1 240</div>
-                                        <div class="small-muted">Cette semaine</div>
+                                        <div class="small-muted">Total prospections</div>
+                                        <div class="stat-value text-primary float-end mt-3" id="card-new-prospects">{{ $total ?? 0 }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -65,8 +72,7 @@
                                     </div>
                                     <div>
                                         <div class="small-muted">Prospects convertis</div>
-                                        <div class="stat-value" id="card-converted">312</div>
-                                        <div class="small-muted">Total</div>
+                                        <div class="stat-value text-success float-end mt-3" id="card-converted">{{ $clients ?? 0 }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -81,8 +87,7 @@
                                     </div>
                                     <div>
                                         <div class="small-muted">En attente de conversion</div>
-                                        <div class="stat-value" id="card-pending">428</div>
-                                        <div class="small-muted">En cours</div>
+                                        <div class="stat-value text-warning float-end mt-3" id="card-pending">{{ $prospect ?? 0 }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -97,8 +102,7 @@
                                     </div>
                                     <div>
                                         <div class="small-muted">Taux de conversion</div>
-                                        <div class="stat-value" id="card-rate">20.0%</div>
-                                        <div class="small-muted">Sur la période</div>
+                                        <div class="stat-value text-info float-end mt-3" id="card-rate">{{ number_format($tauxConversion, 2) }}%</div>
                                     </div>
                                 </div>
                             </div>
@@ -112,9 +116,9 @@
                 <div class="card shadow-sm">
                     <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
                         <h5 class="mb-0 text-white">Liste des Prospects</h5>
-                        <a href="{{ url('/prospect/create') }}" class="btn btn-light btn-sm">
+                        {{-- <a href="javascript(void(0))" data-bs-toggle="modal" data-bs-target="#addnewPropect" class="btn btn-light btn-sm">
                             <i class="bi bi-plus-circle"></i> Nouveau Prospect
-                        </a>
+                        </a> --}}
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -131,7 +135,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($prospects as $item)
+                                    @forelse ($myProspects as $item)
                                         <tr>
                                             <td>{{ $item->code ?? 'N/A' }}</td>
                                             <td>{{ $item->civilite }} {{ $item->nom }} {{ $item->prenom }}</td>
