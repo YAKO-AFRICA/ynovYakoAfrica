@@ -58,45 +58,55 @@
                     @foreach($ticket->messages as $message)
 
                         @if($message->user_id === $ticket->user_id) 
-                            <div class="chat-content-leftside">
+                            <div class="chat-content-rightside">
                                 <div class="d-flex">
-                                    <img src="{{ asset('assets/images/avatars/avatar-3.png') }}" width="48" height="48" class="rounded-circle" alt="" />
-                                    <div class="flex-grow-1 ms-2">
-                                        <p class="mb-0 chat-time">{{ $message->user->membre->nom }}, {{ $message->created_at->diffForHumans() }}</p>
-                                        <p class="chat-left-msg">{!! nl2br(e($message->content)) !!}</p>
-                                        @if($message->attachments->isNotEmpty())
-                                            <div class="message-attachments mt-3">
-                                                @foreach($message->attachments as $attachment)
-                                                    <a href="{{ asset('storage/' . $attachment->path) }}" 
-                                                    class="attachment-item" download="{{ $attachment->original_name }}"
-                                                    title="{{ $attachment->original_name }} ({{ round($attachment->size / 1024, 1) }} Ko)">
-                                                        <i class="bx bx-file"></i>
-                                                        <span class="attachment-name">{{ Str::limit($attachment->original_name, 20) }}</span>
-                                                    </a>
-                                                @endforeach
-                                            </div>
-                                        @endif
+                                    
+                                            {{-- <img src="{{ asset('assets/images/avatars/avatar-3.png') }}" width="45" height="45" class="rounded-circle" alt="" /> --}}
+                                    <div class="flex-grow-1 ms-2 mb-2">
+                                        <div class="chat-right-msg">
+                                            <img src="{{ asset('root/images/login-images/default.png')}}"width="45" height="45" class="rounded-circle" alt="">
+                                            <span class="mb-0 chat-time text-end">{{ $message->user->membre->nom }}, {{ $message->created_at->diffForHumans() }}</span>
+                                            <p class="my-3">{!! nl2br(e($message->content)) !!}</p>
+
+                                            @if($message->attachments->isNotEmpty())
+                                                <div class="message-attachments mt-3">
+                                                    @foreach($message->attachments as $attachment)
+                                                        <a href="{{ asset('storage/' . $attachment->path) }}" 
+                                                        class="attachment-item" download="{{ $attachment->original_name }}"
+                                                        title="{{ $attachment->original_name }} ({{ round($attachment->size / 1024, 1) }} Ko)">
+                                                            <i class="bx bx-file"></i>
+                                                            <span class="attachment-name">{{ Str::limit($attachment->original_name, 20) }}</span>
+                                                        </a>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
                         @else
-                            <div class="chat-content-rightside">
+                            <div class="chat-content-leftside">
                                 <div class="d-flex">
-                                    <div class="flex-grow-1 me-2">
-                                        <p class="mb-0 chat-time text-end">{{ $message->user->membre->nom }}, {{ $message->created_at->diffForHumans() }}</p>
-                                        <p class="chat-right-msg">{!! nl2br(e($message->content)) !!}</p>
-                                        @if($message->attachments->isNotEmpty())
-                                            <div class="message-attachments mt-3">
-                                                @foreach($message->attachments as $attachment)
-                                                    <a href="{{ route('ticket.attachments.download', $attachment->id) }}" 
-                                                    class="attachment-item" 
-                                                    title="{{ $attachment->original_name }} ({{ round($attachment->size / 1024, 1) }} Ko)">
-                                                        <i class="bx bx-file"></i>
-                                                        <span class="attachment-name">{{ Str::limit($attachment->original_name, 20) }}</span>
-                                                    </a>
-                                                @endforeach
-                                            </div>
-                                        @endif
+                                    <div class="flex-grow-1 me-2 mb-2">
+                                        <div class="chat-left-msg">
+                                            <img src="{{ asset('root/images/login-images/default.png')}}"width="45" height="45" class="rounded-circle" alt="">
+                                            <span class="mb-0 chat-time text-end">{{ $message->user->membre->nom }}, {{ $message->created_at->diffForHumans() }}</span>
+                                            <p class="my-3">{!! nl2br(e($message->content)) !!}</p>
+
+                                            @if($message->attachments->isNotEmpty())
+                                                <div class="message-attachments mt-3">
+                                                    @foreach($message->attachments as $attachment)
+                                                        <a href="{{ asset('storage/' . $attachment->path) }}" 
+                                                        class="attachment-item" download="{{ $attachment->original_name }}"
+                                                        title="{{ $attachment->original_name }} ({{ round($attachment->size / 1024, 1) }} Ko)">
+                                                            <i class="bx bx-file"></i>
+                                                            <span class="attachment-name">{{ Str::limit($attachment->original_name, 20) }}</span>
+                                                        </a>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -246,14 +256,15 @@
                     if (data.success) {
                         // Ajouter le nouveau message à l'interface
                         const message = data.message;
-                        const userIsSender = message.user_id === {{ auth()->id() }};
+                        const userIsSender = message.user_id === {{ $ticket->user_id }};
+                        //const userIsSender = message.user_id === {{ auth()->id() }}; /tickets/attachments/${attachment.id}/download
                         
                         let attachmentsHtml = '';
                         if (message.attachments && message.attachments.length > 0) {
                             attachmentsHtml = message.attachments.map(attachment => `
-                                <a href="/tickets/attachments/${attachment.id}/download" 
+                                <a href="{{ asset('storage/') }}/${attachment.path}" 
                                 class="attachment-item" 
-                                title="${attachment.original_name}">
+                                title="${attachment.original_name} (${attachment.size / 1024} Ko)" download="${attachment.original_name}">
                                     <i class="bx bx-file"></i>
                                     <span class="attachment-name">${attachment.original_name.substring(0, 20)}${attachment.original_name.length > 20 ? '...' : ''}</span>
                                 </a>
@@ -261,21 +272,22 @@
                         }
                         
                         const messageHtml = `
+
                             <div class="chat-content-${userIsSender ? 'rightside' : 'leftside'}">
-                                <div class="d-flex ${userIsSender ? '' : 'align-items-start'}">
-                                    ${userIsSender ? '' : `<img src="{{ asset('assets/images/avatars/avatar-3.png') }}" width="48" height="48" class="rounded-circle me-2" alt="" />`}
-                                    <div class="${userIsSender ? 'flex-grow-1 me-2' : 'flex-grow-1 ms-2'}">
-                                        <p class="mb-0 chat-time ${userIsSender ? 'text-end' : ''}">
-                                            ${message.user.membre.nom}, ${new Date(message.created_at).toLocaleString()}
-                                        </p>
-                                        <p class="chat-${userIsSender ? 'right' : 'left'}-msg">
-                                            ${message.content.replace(/\n/g, '<br>')}
-                                        </p>
-                                        ${attachmentsHtml ? `
-                                        <div class="message-attachments mt-3">
-                                            ${attachmentsHtml}
+                                <div class="d-flex ${userIsSender ? '' : 'align-items-star'}">
+                                    <div class="${userIsSender ? 'flex-grow-1 me-2' : 'flex-grow-1 ms-2'} mb-2">
+                                        <div class="chat-${userIsSender ? 'right' : 'left'}-msg">
+                                            <img src="{{ asset('root/images/login-images/default.png') }}" width="48" height="48" class="rounded-circle me-2" alt="" />
+                                            <span class="mb-0 chat-time ${userIsSender ? 'text-end' : ''}">
+                                                ${message.user.membre.nom}, ${new Date(message.created_at).toLocaleString()}
+                                            </span>
+                                            <p class="my-3">${message.content.replace(/\n/g, '<br>')}</p>
+                                            ${attachmentsHtml ? `
+                                            <div class="message-attachments mt-3">
+                                                ${attachmentsHtml}
+                                            </div>
+                                            ` : ''}
                                         </div>
-                                        ` : ''}
                                     </div>
                                 </div>
                             </div>
