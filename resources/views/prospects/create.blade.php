@@ -186,10 +186,26 @@
 
                 const data = await response.json();
                 if (data.success) {
-                    alert('✅ Prospect enregistré avec succès ! Code : ' + data.code);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Prospect enregistré avec succès !',
+                        text: 'Code : ' + data.code,
+                        showConfirmButton: true,
+                    });
+
+                    setTimeout(() => {
+                        window.location.href = 'https://web.yakoafricassur.com/';
+                    }, 2000);
+
                     console.log('UUID Prospect:', data.uuid);
                 } else {
-                    alert('❌ Erreur : ' + data.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: '❌ Erreur !' ,
+                        text: 'Erreur : ' + data.message,
+                        showConfirmButton: true,
+                    });
+                    // alert('❌ Erreur : ' + data.message);
                 }
 
             } catch (error) {

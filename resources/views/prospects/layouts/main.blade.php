@@ -572,6 +572,10 @@
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <script>
         $(document).ready(function() {
             $('.selection').select2({
@@ -899,10 +903,7 @@
                             <dt>Mode de Paiement</dt>
                             <dd>${modePaiement}</dd>
                         </dl>
-                        <dl class="summary-item">
-                            <dt>Email</dt>
-                            <dd>${email}</dd>
-                        </dl>
+                      
                     </div>
                 </div>
 
@@ -923,6 +924,11 @@
                     <dd class="summary-value">${notes}</dd>
                 </div>
             `;
+
+              // <dl class="summary-item">
+                        //     <dt>Email</dt>
+                        //     <dd>${email}</dd>
+                        // </dl>
 
             // Documents
             const filesHTML = uploadedFiles.length > 0
