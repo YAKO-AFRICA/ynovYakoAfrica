@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Membre;
 use App\Models\Tblotp;
 use App\Models\Assurer;
+use App\Models\Contact;
 use App\Models\Contrat;
 use App\Models\Product;
 use BaconQrCode\Writer;
@@ -35,18 +36,18 @@ use App\Models\ReseauProduct;
 use App\Models\TblProfession;
 use Endroid\QrCode\Logo\Logo;
 use App\Models\AssureGarantie;
+
 use App\Models\ProduitGarantie;
 
 use BaconQrCode\Encoder\QrCode;
-
 use Endroid\QrCode\Label\Label;
 use App\Models\DeclarationSante;
 use App\Models\TblSecteurActivite;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Notifications\SystemeNotify;
 
+use App\Notifications\SystemeNotify;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -499,8 +500,11 @@ class ProductionController extends Controller
 
 
         $contacts = json_decode($contactsBrut, true);
+        Log::info("conttttt");
 
         Log::info($contacts);
+
+        Log::info("conttttt fin");
 
         DB::beginTransaction();
         try {
@@ -564,7 +568,7 @@ class ProductionController extends Controller
                 'pays' => $request->pays,
                 'estmigre' => 0,
                 'email' => $request->email,
-                'typeNumMSpecial' => $request->typePrincipal,
+                // 'typeNumMSpecial' => $request->typePrincipal,
                 'mobile' => $request->mobile,
                 'telephone' => $request->telephone,
                 'telephone1' => $request->telephone1,
@@ -587,7 +591,7 @@ class ProductionController extends Controller
                     'uuid' => Str::uuid(),
                     'code' => $code,
                     'adherent_id' => $idAdherent,
-                    'type' => $contact['type'],
+                    'type' => $contact['type'] ?? "Tel",
                     'valeur' => $contact['valeur'],
                     'etat' => 'Actif'
                     

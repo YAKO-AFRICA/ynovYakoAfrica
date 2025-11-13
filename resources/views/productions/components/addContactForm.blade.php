@@ -115,6 +115,7 @@
         const contact = {
             type: typesChecked.join(', '),
             valeur: valeur,
+            principal: false
         };
 
         contacts.push(contact);
@@ -144,7 +145,7 @@
 
         const allContacts = [
             {
-                type: typePrincipal,
+                type: typePrincipal || 'Tel',
                 valeur: mobile,
                 principal: true
             },

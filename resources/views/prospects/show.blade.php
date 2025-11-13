@@ -332,8 +332,60 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-6">
+                                                <div class="info-item">
+                                                    <div class="info-icon success">
+                                                        <i class="bi bi-house"></i>
+                                                    </div>
+                                                    <div class="info-content">
+                                                        <div class="info-label">Adresse complète</div>
+                                                        <div class="info-value">
+                                                            {{ $prospect->adresse ?? 'Non renseigné' }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            
 
                                             <div class="col-md-6">
+                                                <div class="info-item">
+                                                    <div class="info-icon warning">
+                                                        <i class="bi bi-geo-alt"></i>
+                                                    </div>
+                                                    <div class="info-content">
+                                                        <div class="info-label">Lieu de résidence</div>
+                                                        <div class="info-value">
+                                                            {{ $villesMap[$prospect->lieu_residence] ?? ($prospect->lieu_residence ?? 'Non renseigné') }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="info-item">
+                                                    <div class="info-icon primary">
+                                                        <i class="bi bi-globe"></i>
+                                                    </div>
+                                                    <div class="info-content">
+                                                        <div class="info-label">Pays</div>
+                                                        <div class="info-value">
+                                                            {{ $prospect->pays ?? 'Non renseigné' }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+
+                                    <!-- Contacts -->
+                                    <div class="mb-4">
+                                        <h4 class="section-title">
+                                            <i class="bi bi-briefcase me-2"></i>Contacts
+                                        </h4>
+
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-4 col-lg-4">
                                                 <div class="info-item">
                                                     <div class="info-icon success">
                                                         <i class="bi bi-telephone"></i>
@@ -361,48 +413,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="info-item">
-                                                    <div class="info-icon warning">
-                                                        <i class="bi bi-geo-alt"></i>
-                                                    </div>
-                                                    <div class="info-content">
-                                                        <div class="info-label">Lieu de résidence</div>
-                                                        <div class="info-value">
-                                                            {{ $villesMap[$prospect->lieu_residence] ?? ($prospect->lieu_residence ?? 'Non renseigné') }}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="info-item">
-                                                    <div class="info-icon primary">
-                                                        <i class="bi bi-globe"></i>
-                                                    </div>
-                                                    <div class="info-content">
-                                                        <div class="info-label">Pays</div>
-                                                        <div class="info-value">
-                                                            {{ $prospect->pays ?? 'Non renseigné' }}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="info-item">
-                                                    <div class="info-icon success">
-                                                        <i class="bi bi-house"></i>
-                                                    </div>
-                                                    <div class="info-content">
-                                                        <div class="info-label">Adresse complète</div>
-                                                        <div class="info-value">
-                                                            {{ $prospect->adresse ?? 'Non renseigné' }}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
-
                                     <!-- Profession -->
                                     <div class="mb-4">
                                         <h4 class="section-title">
