@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\AdherentProspert;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\OTPController;
 use App\Http\Controllers\DashboardController;
@@ -30,6 +31,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route::middleware('auth:sanctum')->group(function () {
     
 // });
+
+Route::post('/rechercher-prospert', function (Request $request) {
+    $prospert = AdherentProspert::where('code', $request->codeProspert)->first();
+
+    Log::info($prospert);
+
+    if (!$prospert) {
+        return response()->json(['message' => 'Prospert non trouvé'], 404);
+    }
+
+    return response()->json(
+        [
+        'success' => true,
+        'message' => 'Prospert trouvé',
+        'prospert' => $prospert
+        ]);
+});
 
 
 Route::post('/fetch-contract-details', [PrestationController::class, 'fetchContractDetails']);

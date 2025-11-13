@@ -3,7 +3,9 @@
 use Carbon\Carbon;
 use App\Models\FileManager;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use BaconQrCode\Encoder\QrCode;
+use App\Models\AdherentProspert;
 use App\Models\TblTypePrestation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -413,9 +415,13 @@ Route::prefix('prospect')->name('prospect.')->group(function(){
 
         Route::get('/download', [ProspectController::class, 'downloadQrCode'])->name('download');
 
+        
+
     });
 
 });
+
+
 
 // routes/web.php
 
