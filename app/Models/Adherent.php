@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Contact;
 use PhpParser\Node\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,6 +49,11 @@ class Adherent extends Model
         'contratconnexe',
         'capitalconnexe',
     ];
+
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class, 'adherent_id', 'id');
+    }
 
 
     protected function datenaissance(): Attribute

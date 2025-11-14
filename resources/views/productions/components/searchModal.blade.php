@@ -285,13 +285,16 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="card client-card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">${client.nom || client.Nom} ${client.prenom || client.Prenom}</h5>
-                    <p><strong>Date naissance:</strong> ${client.date_naissance || client.DateNaissance || 'Non renseigné'}</p>
+                    <p><strong>Situation code:</strong> ${client.CodeSitMatrimoniale || client.situation_matrimoniale || 'Non renseigné'}</p>
+                    <p><strong>Date naissance:</strong> ${client.date_naissance || formatDateNaissance(client.DateNaissance) || 'Non renseigné'}</p>
                     <p><strong>Lieu naissance:</strong> ${client.lieu_naissance || client.LieuNaissance || 'Non renseigné'}</p>
+                    <p><strong>Profession :</strong> ${client.profession || client.CodeProfession || 'Non renseigné'}</p>
                     <p><strong>Résidence:</strong> ${client.lieu_residence || client.LieuResidence || 'Non renseigné'}</p>
                     <p><strong>Email:</strong> ${client.email || 'Non renseigné'}</p>
                     <p><strong>Téléphone:</strong> ${client.contactRessource || client.Contact || 'Non renseigné'}</p>
                 </div>
             </div>`;
+
     }
 
     
@@ -309,16 +312,22 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             return civilites[code] || '';
         }
-       function getSituationM(code) {
-            const situationM = {
-                'CELIB': 'Célibataire',
-                'MARIE': 'Marié(e)',
-                'DIVOR': 'Divorcé(e)',
-                'VEUVE': 'Veuf(ve)',
-                'CONCUB': 'Concubin(e)'
-            };
-            return situationM[code] || '';
+
+        function formatDateNaissance(dateString) {
+            let date = new Date(dateString);
+
+            // Récupérer l'année, le mois et le jour
+            let year = date.getFullYear();
+            let month = (date.getMonth() + 1).toString().padStart(2, '0');
+            let day = date.getDate().toString().padStart(2, '0');
+
+            // Construire le format "YYYY-MM-DD"
+            let formattedDate = `${year}-${month}-${day}`;
+            return formattedDate;
         }
+
+
+        
 
     function fillMainForm(client) {
         try {
@@ -326,18 +335,24 @@ document.addEventListener('DOMContentLoaded', function() {
             const civilite = getCivilite(client.CodeCivilite || client.civilite);
             setRadioValue('civilite', civilite);
              const situationMCode = client.situation_matrimoniale || client.CodeSitMatrimoniale;
-            const situationM = getSituationM(situationMCode);
-            setRadioValue('situation_matrimoniale', situationM);
+            setRadioValue('situation_matrimoniale', situationMCode);
             setInputValue('nom', client.nom || client.Nom);
             setInputValue('prenom', client.prenom || client.Prenom);
-            setInputValue('datenaissance', (client.date_naissance || client.DateNaissance)?.split('T')[0]);
+            setInputValue('personneressource', client.personneRessource || client.ContactNom);
+            setInputValue('contactpersonneressource', client.contactRessource || client.ContactCel);
+            setInputValue('personneressource2', client.personneRessource2 || '');
+            setInputValue('contactpersonneressource2', client.contactRessource2 || '');
+            setInputValue('datenaissance', formatDateNaissance(client.date_naissance || client.DateNaissance));
             setSelectValue('lieunaissance', client.lieu_naissance || client.LieuNaissance);
             setSelectValue('lieuresidence', client.lieu_residence || client.LieuResidence);
+            setSelectValue('profession', client.profession || client.Profession);
             setInputValue('numeropiece', client.numero_piece_identite || client.NumPiece);
             setRadioValue('naturepiece', client.type_piece_identite || client.PieceType || 'CNI');
             setInputValue('mobile', client.contactRessource || client.Contact);
+            setInputValue('email', client.email || '');
             triggerChangeEvent('lieunaissance');
             triggerChangeEvent('lieuresidence');
+            triggerChangeEvent('profession');
             showToast('Formulaire rempli avec succès', 'success');
         } catch (e) {
             console.error('Erreur remplissage:', e);

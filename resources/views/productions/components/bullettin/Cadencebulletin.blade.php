@@ -273,64 +273,99 @@
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
                 <!-- Colonne gauche -->
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Nom :
-                        </strong><span>{{ $contrat->adherent->nom ?? ''}}</span></label>
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <label><strong>Prénoms :
-                        </strong><span> {{ $contrat->adherent->prenom ?? ''}}</span></label>
+                <div style="width: 100%; margin-top: 10px;">
+                    <div style="width: 50%; float: left;">
+                        <label><strong>Nom : </strong><span>{{ $contrat->adherent->nom ?? '....' }}</span></label>
+                    </div>
+                    {{-- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; --}}
+                    <div style="width: 50%; float: right;">
+                        <label><strong>Prénoms : </strong><span>{{ $contrat->adherent->prenom ?? '....' }}</span></label>
+                    </div>
                 </div>
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Né(e) le :
-                        </strong><span>{{ $contrat->adherent->datenaissance ?? ''}}</span></label> &nbsp;
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <label><strong>à
-                        </strong><span> {{ $contrat->adherent->lieunaissance ?? ''}} </span></label>
+                <div style="width: 100%; margin-top: 25px;">
+                    <div style="width: 50%; float: left;">
+                        <label><strong>Né(e) le :
+                        </strong><span>{{ $contrat->adherent->datenaissance ?? '....' }}</span></label>
+                    </div>
+                    <div style="width: 50%; float: left;">
+                        <label><strong>à
+                        </strong><span>{{ $contrat->adherent->lieunaissance ?? '....' }}</span></label>
+                    </div>
+                </div>
+                <div style="width: 100%; margin-top: 25px;">
+                    <div style="width: 50%; float: left;">
+                        <label><strong>Nature de la pièce :
+                        </strong><span>{{ $contrat->adherent->naturepiece ?? ''}}</span></label>
+                    </div>
+                    <div style="width: 50%; float: left;">
+                        <label><strong>N°
+                        </strong><span>{{ $contrat->adherent->numeropiece ?? '....' }}</span></label>
+                    </div>
                 </div>
 
-                <section style="width: 80%; margin: 5px 0; padding: 7px; border-radius: 7px;">
+                <section style="width: 80%; margin-top: 30px; border-radius: 7px;">
 
                     <div style="width: 100%;">
                         <div style="width: 45%; float: left;"><strong>Situation Matrimoniale :</strong></div>
-                        <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><span>Célibataire</span></div>
-                        <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><span>Marié(e)</span></div>
-                        <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><span>Divorcé(e)</span></div>
-                        <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><span>Veuf(ve)</span></div>
+                        <div style="width: 18%; float: left;">
+                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'CELIB') checked @endif>
+                            <span>Célibataire</span>
+                        </div>
+                        <div style="width: 18%; float: left;">
+                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'MARIE') checked @endif>
+                            <span>Marié(e)</span>
+                        </div>
+                        <div style="width: 18%; float: left;">
+                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'DIVOR') checked @endif>
+                            <span>Divorcé(e)</span>
+                        </div>
+                        <div style="width: 18%; float: left;">
+                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'VEUVE') checked @endif>
+                            <span>Veuf(ve)</span>
+                        </div>
                     </div>
-                    <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
+                    <div style="clear: both;"></div>
                 </section>
 
                 <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Profession :
-                        </strong><span>{{ $contrat->adherent->profession ?? ''}}</span></label> &nbsp;
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <label><strong>Employeur :
-                        </strong><span>{{ $contrat->adherent->employeur ?? ''}}</span></label>
+                     <div style="width: 50%; float: left;">
+                        <label><strong>Profession :
+                        </strong><span>{{ $contrat->adherent->profession ?? '....' }}</span></label>
+                    </div>
+                    <div style="width: 50%; float: right;">
+                        <label><strong>Employeur :
+                        </strong><span>{{ $contrat->adherent->employeur ?? '....' }}</span></label>
+                    </div>
                 </div>
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Adresse actuelle :
-                        </strong><span>{{ $contrat->adherent->lieuresidence ?? ''}}</span></label> &nbsp;
-                    &nbsp; &nbsp; &nbsp;
-                    <label><strong>Adresse permanente :
-                        </strong><span>{{ $contrat->adherent->lieuresidence ?? ''}}</span></label>
+                <div style="width: 100%; margin-top: 25px;">
+                    <div style="width: 50%; float: left;">
+                        <label><strong>Adresse :
+                        </strong><span>{{ $contrat->adherent->telephone1 ?? '....' }}</span></label>
+                    </div>
+                    <div style="width: 50%; float: left;">
+                        <label><strong>Lieu de residence :
+                        </strong><span>{{ $contrat->adherent->lieuresidence ?? '....' }}</span></label>
+                    </div>
                 </div>
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Téléphone courant :
-                        </strong><span>{{ $contrat->adherent->mobile ?? ''}}</span></label> &nbsp; &nbsp;
-                    &nbsp;
-                    <label><strong>Téléphone permanente :
-                        </strong><span>{{ $contrat->adherent->telephone ?? ''}}</span></label>
-                </div>
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>{{ $contrat->adherent->naturepiece ?? ''}} :
-                        </strong><span> N° {{ $contrat->adherent->numeropiece ?? ''}}</span></label>
-                    &nbsp; &nbsp; &nbsp;
-                    <label><strong>E-mail :
-                        </strong><span>{{ $contrat->adherent->email ?? ''}}</span></label>
+                <div style="width: 100% ; margin-top: 25px; margin-bottom: 10px">
+                    <div style="width: 33%; float: left;">
+                        <label><strong>E-mail :
+                        </strong><span>{{ $contrat->adherent->email ?? '....' }}</span></label>
+                    </div>
+                    <div style="width: 33%; float: left;">
+                        <label><strong>Téléphone courant :
+                        </strong><span>{{ $contrat->adherent->mobile ?? '....' }}</span></label>
+                    </div>
+                    @php
+                    $whatsapp = $contrat->adherent->contacts;
+                    @endphp
+
+                    <div style="width: 33%; float: right;">
+                        <label>
+                            <strong>N° Whatsapp : </strong>
+                            <span>{{ $whatsapp->where('type', 'Whatsapp')->first()->valeur ?? '....' }}</span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </section>
@@ -366,22 +401,29 @@
                 </table>
                 
             </div>
-            <div style="width: 33%; background-color: #7471718b; padding: 5px; border-radius: 15px; text-align: center">
+            <div style="width: 33%; background-color: #7471718b; padding: 5px; border-radius: 15px; text-align: center; margin-top: 25px">
                 <strong><i>personne à contacter en cas d'urgence</i></strong>
             </div>
-            <div style="width: 100%; margin: 15px 0; ">
-                <label><strong>Nom et prénoms :
-                    </strong><span>{{ $contrat->personneressource ?? ''}} </span></label>
-                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
-                <label><strong>Contact :
-                    </strong><span>{{ $contrat->contactpersonneressource ?? ''}}</span></label>
+
+            <div style="width: 100%; margin-top: 25px;">
+                <div style="width: 50%; float: left;">
+                    <label><strong>Nom et prénoms :
+                    </strong><span>{{ $contrat->personneressource ?? '....' }}</span></label>
+                </div>
+                <div style="width: 50%; float: left;">
+                    <label><strong>Contact :
+                    </strong><span>{{ $contrat->contactpersonneressource ?? '....' }}</span></label>
+                </div>
             </div>
-            <div style="width: 100%; margin: 15px 0; ">
-                <label><strong>Nom et prénoms :
-                    </strong><span>{{ $contrat->personneressource2 ?? ''}}</span></label>
-                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
-                <label><strong>Contact :
-                    </strong><span>{{ $contrat->contactpersonneressource2 ?? ''}}</span></label>
+            <div style="width: 100%; margin-top: 25px; margin-bottom: 25px;">
+                <div style="width: 50%; float: left;">
+                    <label><strong>Nom et prénoms :
+                    </strong><span>{{ $contrat->personneressource2 ?? '....' }}</span></label>
+                </div>
+                <div style="width: 50%; float: left;">
+                    <label><strong>Contact :
+                    </strong><span>{{ $contrat->contactpersonneressource2 ?? '....' }}</span></label>
+                </div>
             </div>
         </section>
         <section style="margin-bottom: 25px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
@@ -510,7 +552,7 @@
                 <!-- Colonne gauche -->
                 <div style="width: 100%; margin-top: 0px;">
 
-                    <label>Je souhaite souscrire au contrat "<strong> CADENCE</strong>" pour une durée de <strong>{{ $contrat->duree ?? ''}}</strong> ANS en prenante éffet le <strong>{{ $contrat->dateeffet ?? ''}}</strong></label>
+                    <label>Je souhaite souscrire au contrat "<strong> CADENCE</strong>" pour une durée de <strong>{{ $contrat->duree ?? ''}} </strong> ANS en prenante éffet le <strong>{{ Carbon\Carbon::parse($contrat->dateeffet)->format('d/m/Y') ?? ''}}</strong></label>
                 </div>
                 <div style="width: 100%; margin-top: 7px;">
                     <label>Le capital garanti au contrat doit être reservé au(x) bénéficiaire(s) sous la forme : </label><br><br>
@@ -564,8 +606,8 @@
                     </div>
                     <div style="clear: both;"></div> 
                 </section>
-                <label><span>sur une duree de </span><b>{{ $contrat->duree ?? ''}}</b>ANS,</label>
-                <label><span>une cotisation de </span><b>{{ $contrat->primepricipale ?? ''}}</b>FCFA + <b>{{ $contrat->surprime ?? 0}} <i>(Frais accessoire)</i></b>FCFA = <b>{{ number_format($contrat->prime) ?? 0}}</b>FCFA</label><br><br>
+                <label><span>sur une duree de </span><b>{{ $contrat->duree ?? ''}}</b> ANS,</label>
+                <label><span>une cotisation de </span><b>{{ $contrat->primepricipale ?? ''}}</b> FCFA + <b>{{ $contrat->surprime ?? 0}} <i>(Frais accessoire)</i></b> FCFA = <b>{{ number_format($contrat->prime) ?? 0}}</b> FCFA</label><br><br>
                 <label><span>Frais unique d'Adhésion : </span><b>7 500 FCFA </b></label> <br><br>
                 <section style="width: 90%; border-radius: 7px; margin-bottom: 7px;">
                     <div style="width: 100%;">

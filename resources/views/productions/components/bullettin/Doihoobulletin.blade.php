@@ -222,7 +222,7 @@
                         <!-- Numéro de pièce -->
                         <div style="width: 50%; float: left;">
                             <span>N°</span> 
-                            <input type="text" style="width: 90%; padding: 2px" 
+                            <input type="text" style="width: 90%; padding: 2px;" 
                                    value="{{ $contrat->adherent->numeropiece ?? '' }}">
                         </div>
                     </div>
@@ -254,14 +254,22 @@
 
                     <div style="width: 100%;">
                         <div style="width: 45%; float: left;"><strong>Situation Matrimoniale :</strong></div>
-                        <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><span>Célibataire</span></div>
-                        <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><span>Marié(e)</span></div>
-                        <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><span>Divorcé(e)</span></div>
-                        <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><span>Veuf(ve)</span></div>
+                        <div style="width: 18%; float: left;">
+                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'CELIB') checked @endif>
+                            <span>Célibataire</span>
+                        </div>
+                        <div style="width: 18%; float: left;">
+                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'MARIE') checked @endif>
+                            <span>Marié(e)</span>
+                        </div>
+                        <div style="width: 18%; float: left;">
+                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'DIVOR') checked @endif>
+                            <span>Divorcé(e)</span>
+                        </div>
+                        <div style="width: 18%; float: left;">
+                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'VEUVE') checked @endif>
+                            <span>Veuf(ve)</span>
+                        </div>
                     </div>
                     <div style="clear: both;"></div>
                 </section>

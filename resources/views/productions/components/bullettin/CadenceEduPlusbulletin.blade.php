@@ -204,16 +204,16 @@
     <div class="a4-container">
         <section style="margin-bottom: 7px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
             <!-- Titre -->
-            <div class="" style="width: 2%; background-color: #747171; padding: 5px; float: left;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0; text-align: center">I</h4>
+            <div class="" style="width: 2%; background-color: #747171; padding: 3px; float: left;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0; text-align: center">I</h4>
             </div>
             <div class=""
-                style="width: 30%; background-color: #747171; padding: 5px; border-radius: 0 7px 7px 0; margin-left: 30px;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0;">SOUSCRIPTEUR</h4>
+                style="width: 30%; background-color: #747171; padding: 3px; border-radius: 0 7px 7px 0; margin-left: 30px;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0;">SOUSCRIPTEUR</h4>
             </div>
             <!-- Contenu -->
-            <div class="content" style="margin-top: 0px; padding: 10px;">
-                <section style="width: 30%; margin: 5px 0; border: 1px solid #444; padding: 7px; border-radius: 7px">
+            <div class="content" style="margin-top: 0px; padding: 5px;">
+                <section style="width: 30%; margin: 5px 0; border: 1px solid #444; padding: 5px; border-radius: 7px">
                     <div style="width: 100%; text-align: center;">
                         <div style="width: 33%; float: left;"><input type="radio" class="radio1" @if(isset($contrat->adherent->civilite) && strtolower($contrat->adherent->civilite) === 'madame') checked @endif><span>Mme</span>
                         </div>
@@ -224,7 +224,7 @@
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
-                <section style="width: 100%; margin: 5px 0; padding: 7px; border-radius: 7px;">
+                <section style="width: 100%; margin: 5px 0; padding: 5px; border-radius: 7px;">
                     <div style="width: 100%;">
                         <div style="width: 18%; float: left;"><input type="radio"
                                 class="radio1" @if(isset($contrat->adherent->naturepiece) && strtolower($contrat->adherent->naturepiece) === 'passport') checked @endif><span>Passeport</span>
@@ -242,74 +242,101 @@
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
                 <!-- Colonne gauche -->
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Nom :
-                        </strong><span>{{ $contrat->adherent->nom ?? '....' }}</span></label>
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <label><strong>Prénoms :
-                        </strong><span>{{ $contrat->adherent->prenom ?? '....' }}</span></label>
+                 <div style="width: 100%; margin-top: 5px;">
+                    <div style="width: 50%; float: left;">
+                        <label><strong>Nom : </strong><span>{{ $contrat->adherent->nom ?? '....' }}</span></label>
+                    </div>
+                    {{-- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; --}}
+                    <div style="width: 50%; float: right;">
+                        <label><strong>Prénoms : </strong><span>{{ $contrat->adherent->prenom ?? '....' }}</span></label>
+                    </div>
                 </div>
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Né(e) le :
-                        </strong><span>{{ $contrat->adherent->datenaissance ?? '....' }}</span></label> &nbsp;
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <label><strong>à
+                <div style="width: 100%; margin-top: 25px;">
+                    <div style="width: 50%; float: left;">
+                        <label><strong>Né(e) le :
+                        </strong><span>{{ $contrat->adherent->datenaissance ?? '....' }}</span></label>
+                    </div>
+                    <div style="width: 50%; float: left;">
+                        <label><strong>à
                         </strong><span>{{ $contrat->adherent->lieunaissance ?? '....' }}</span></label>
+                    </div>
+                    
                 </div>
 
-                <section style="width: 80%; margin: 5px 0; padding: 7px; border-radius: 7px;">
+                <section style="width: 80%; margin-top: 25px; border-radius: 7px;">
 
                     <div style="width: 100%;">
                         <div style="width: 45%; float: left;"><strong>Situation Matrimoniale :</strong></div>
-                        <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><span>Célibataire</span></div>
-                        <div style="width: 18%; float: left;"><input type="radio" class="radio1"><span>Marié(e)</span>
+                        <div style="width: 18%; float: left;">
+                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'CELIB') checked @endif>
+                            <span>Célibataire</span>
                         </div>
-                        <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><span>Divorcé(e)</span></div>
-                        <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1"><span>Veuf(ve)</span></div>
+                        <div style="width: 18%; float: left;">
+                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'MARIE') checked @endif>
+                            <span>Marié(e)</span>
+                        </div>
+                        <div style="width: 18%; float: left;">
+                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'DIVOR') checked @endif>
+                            <span>Divorcé(e)</span>
+                        </div>
+                        <div style="width: 18%; float: left;">
+                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'VEUVE') checked @endif>
+                            <span>Veuf(ve)</span>
+                        </div>
                     </div>
-                    <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
+                    <div style="clear: both;"></div>
                 </section>
 
                 <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Profession :
-                        </strong><span>{{ $contrat->adherent->profession ?? '....' }}</span></label> &nbsp;
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <label><strong>Employeur :
+                     <div style="width: 50%; float: left;">
+                        <label><strong>Profession :
+                        </strong><span>{{ $contrat->adherent->profession ?? '....' }}</span></label>
+                    </div>
+                    <div style="width: 50%; float: right;">
+                        <label><strong>Employeur :
                         </strong><span>{{ $contrat->adherent->employeur ?? '....' }}</span></label>
+                    </div>
                 </div>
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Lieu de residence :
-                        </strong><span>>{{ $contrat->adherent->lieuresidence ?? '....' }}</span></label>
-                    &nbsp;
-
-                </div>
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Téléphone courant :
-                        </strong><span>{{ $contrat->adherent->mobile ?? '....' }}</span></label> &nbsp; &nbsp;
-                    &nbsp;
-                    <label><strong>N° Whatsapp :
-                        </strong><span>{{ $contrat->adherent->telephone ?? '....' }}</span></label>
-                </div>
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>Adresse :
+                <div style="width: 100%; margin-top: 25px;">
+                    <div style="width: 50%; float: left;">
+                        <label><strong>Adresse :
                         </strong><span>{{ $contrat->adherent->telephone1 ?? '....' }}</span></label>
-                    &nbsp; &nbsp;
-                    <label><strong>E-mail :
+                    </div>
+                    <div style="width: 50%; float: left;">
+                        <label><strong>Lieu de residence :
+                        </strong><span>{{ $contrat->adherent->lieuresidence ?? '....' }}</span></label>
+                    </div>
+                </div>
+                <div style="width: 100% ; margin-top: 25px; margin-bottom: 13px">
+                    <div style="width: 33%; float: left;">
+                        <label><strong>E-mail :
                         </strong><span>{{ $contrat->adherent->email ?? '....' }}</span></label>
+                    </div>
+                    <div style="width: 33%; float: left;">
+                        <label><strong>Téléphone courant :
+                        </strong><span>{{ $contrat->adherent->mobile ?? '....' }}</span></label>
+                    </div>
+                    @php
+                    $whatsapp = $contrat->adherent->contacts;
+                    @endphp
+
+                    <div style="width: 33%; float: right;">
+                        <label>
+                            <strong>N° Whatsapp : </strong>
+                            <span>{{ $whatsapp->where('type', 'Whatsapp')->first()->valeur ?? '....' }}</span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </section>
         <section style="margin-bottom: 7px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
             <!-- Titre -->
-            <div class="" style="width: 2%; background-color: #747171; padding: 5px; float: left;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0; text-align: center">II</h4>
+            <div class="" style="width: 2%; background-color: #747171; padding: 3px; float: left;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0; text-align: center">II</h4>
             </div>
             <div class=""
-                style="width: 30%; background-color: #747171; padding: 5px; border-radius: 0 7px 7px 0; margin-left: 30px;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0;">ASSURE</h4>
+                style="width: 30%; background-color: #747171; padding: 3px; border-radius: 0 7px 7px 0; margin-left: 30px;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0;">ASSURE</h4>
             </div>
             <!-- Contenu -->
             <div class="content1" style="margin-top: 5px; padding: 10px;">
@@ -334,43 +361,54 @@
                 </table>
 
             </div>
-            <div
-                style="width: 33%; background-color: #7471718b; padding: 5px; border-radius: 15px; text-align: center">
+            <div style="width: 33%; background-color: #7471718b; padding: 5px; border-radius: 15px; text-align: center; margin-top: 10px">
                 <strong><i>personne à contacter en cas d'urgence</i></strong>
             </div>
-            <div style="width: 100%; margin: 15px 0; ">
-                <label><strong>Nom et prénoms :
-                </strong><span>{{ $contrat->personneressource ?? '....' }}</span></label>
-                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
-                <label><strong>Contact :
+
+            <div style="width: 100%; margin-top: 25px;">
+                <div style="width: 50%; float: left;">
+                    <label><strong>Nom et prénoms :
+                    </strong><span>{{ $contrat->personneressource ?? '....' }}</span></label>
+                </div>
+                <div style="width: 50%; float: left;">
+                    <label><strong>Contact :
                     </strong><span>{{ $contrat->contactpersonneressource ?? '....' }}</span></label>
                 </div>
+            </div>
+            <div style="width: 100%; margin-top: 25px; margin-bottom: 25px;">
+                <div style="width: 50%; float: left;">
+                    <label><strong>Nom et prénoms :
+                    </strong><span>{{ $contrat->personneressource2 ?? '....' }}</span></label>
+                </div>
+                <div style="width: 50%; float: left;">
+                    <label><strong>Contact :
+                    </strong><span>{{ $contrat->contactpersonneressource2 ?? '....' }}</span></label>
+                </div>
+            </div>
 
         </section>
 
 
         <section style="margin-bottom: 7px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
             <!-- Titre -->
-            <div class="" style="width: 2%; background-color: #747171; padding: 5px; float: left;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0; text-align: center">III</h4>
+            <div class="" style="width: 2%; background-color: #747171; padding: 3px; float: left;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0; text-align: center">III</h4>
             </div>
             <div class=""
-                style="width: 30%; background-color: #747171; padding: 5px; border-radius: 0 7px 7px 0; margin-left: 30px;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0;">BENEFICIAIRES</h4>
+                style="width: 30%; background-color: #747171; padding: 3px; border-radius: 0 7px 7px 0; margin-left: 30px;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0;">BENEFICIAIRES</h4>
             </div>
             <!-- Contenu -->
             <!-- Contenu -->
             <div class="content1" style="margin-top: 5px; padding: 10px;">
-
                 <div
                     style="width: 20%; background-color: #7471718b; padding: 5px; border-radius: 15px; text-align: center">
                     <strong><i>1. Au terme du contrat</i></strong>
                 </div>
                 <section style="width: 97%; margin: 5px 0; padding: 7px; border-radius: 7px;">
-
                     <div style="width: 100%;">
                         <div style="width: 18%; float: left;"><input type="radio" class="radio1"
-                             @if(isset($contrat->beneficiaireauterme) && $contrat->beneficiaireauterme == 'adherent') checked @endif><span>L'assué</span></div>
+                             @if(isset($contrat->beneficiaireauterme) && $contrat->beneficiaireauterme == 'adherent') checked @endif><span>L'assuré</span></div>
                         <div style="width: 43%; float: left;"><input type="radio" class="radio1" @if(isset($contrat->beneficiaireauterme) && $contrat->beneficiaireauterme == 'Conjoint') checked @endif><span>Le Conjoint
                                 non séparé de corps, ni divorcé</span></div>
                         <div style="width: 33%; float: left;"><input type="radio" class="radio1" @if(isset($contrat->beneficiaireauterme) && $contrat->beneficiaireauterme == 'Enfants nés et à naitre') checked @endif ><span>Les enfants
@@ -380,33 +418,10 @@
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
-                {{-- <table border="1" cellpadding="5" cellspacing="0" width="100%">
-                    <tr>
-                        <th>Nom complet</th>
-                        <th>filliation</th>
-                        <th>Né(e) le</th>
-                        <th>Teléphone</th>
-                        <th>Résidence</th>
-                    </tr>
-                    <tr>
-                        <td>Dupont</td>
-                        <td>Fils de Jean Dupont</td>
-                        <td>01/01/1990</td>
-                        <td>Paris</td>
-                        <td>Lyon</td>
-                    </tr>
-                    <tr>
-                        <td>Durand</td>
-                        <td>Fils de Marie Durand</td>
-                        <td>12/05/1985</td>
-                        <td>Marseille</td>
-                        <td>Bordeaux</td>
-                    </tr>
-                </table> --}}
 
             </div>
 
-            <div class="content1" style="margin-top: 5px; padding: 10px;">
+            <div class="content1" style=" padding: 5px;">
 
                 <div
                     style="width: 35%; background-color: #7471718b; padding: 5px; border-radius: 15px; text-align: center">
@@ -443,29 +458,29 @@
                         </tr>
                     @endforeach
                 </table>
-
             </div>
         </section>
         <section style="margin-bottom: 7px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
             <!-- Titre -->
-            <div class="" style="width: 2%; background-color: #747171; padding: 5px; float: left;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0; text-align: center">IV</h4>
+            <div class="" style="width: 2%; background-color: #747171; padding: 3px; float: left;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0; text-align: center">IV</h4>
             </div>
             <div class=""
-                style="width: 40%; background-color: #747171; padding: 5px; border-radius: 0 7px 7px 0; margin-left: 30px;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0;">SOUSCRIPTION AU CONTRAT</h4>
+                style="width: 40%; background-color: #747171; padding: 3px; border-radius: 0 7px 7px 0; margin-left: 30px;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0;">SOUSCRIPTION AU CONTRAT</h4>
             </div>
             <!-- Contenu -->
             <div class="content" style="margin-top: 0px; padding: 10px;">
                 <!-- Colonne gauche -->
+                
                 <div style="width: 100%; margin-top: 0px;">
 
-                    <label>Je souhaite souscrire au contrat "<strong style="text-transform: uppercase">Cadence
-                            Education Plus</strong>" pour une durée de <strong>{{ $contrat->duree ?? ''}}</strong> ANS en prenante éffet le 
-                        <strong>{{ $contrat->dateeffet ?? ''}}</strong></label>
+                    <label>Je souhaite souscrire au contrat " <strong style="text-transform: uppercase">Cadence Education Plus</strong>" pour une durée de <strong>{{ $contrat->duree ?? 10}}</strong> ANS </label> 
+
+                    <label style="text-decoration: underline">Date Effet souhaitée :</label><strong>{{ \Carbon\Carbon::parse($contrat->dateeffet)->format('d/m/Y') ?? '' }}</strong></label>
                 </div><br>
                 {{-- <section style="width: 80%; border-radius: 7px;"> --}}
-                <div style="width: 100%; margin-left: 70px; margin-top: -10px;">
+                <div style="width: 100%; margin-top: -10px;">
                     <div style="width: 15%; float: left;"><span>Périodicité :</span></div>
                     <div style="width: 18%; float: left;"><input type="radio"
                             class="radio1" @if(isset($contrat->periodicite) && $contrat->periodicite == 'M') checked @endif><strong>Mensuelle</strong></div>
@@ -479,13 +494,21 @@
                 <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 {{-- </section> --}}
             </div>
-            <div class="content" style="margin-top: 0px; padding: 10px;">
+            <div class="content" style="margin-top: 0px; padding: 5px;">
                 <!-- Colonne gauche -->
+                <div style="width: 100%; margin-top: 5px;">
+                    <div style="width: 50%; float: left;">
+                        <label><strong>CAPITAL ETUDE :
+                        </strong><span>{{ number_format($contrat->capital) ?? 0}}</span><span> FCFA</span></label>
+                    </div>
+                    <div style="width: 50%; float: left;">
+                        <label><strong>MONTANT PRIME :
+                        </strong><span>{{ $contrat->prime ?? 0 }}</span> <span> FCFA</span></label>
+                    </div>
+                </div>
 
-                <label><span>CAPITAL ETUDE </span><b>..................</b>FCFA
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MONTANT
-                    PRIME <b>{{ number_format($contrat->prime) ?? 0}}</b>FCFA</label><br><br>
                 <label><span>Frais unique d'Adhésion : </span><b>7 500 FCFA </b></label> <br><br>
+
                 <section style="width: 90%; border-radius: 7px; margin-bottom: 7px;">
                     <div style="width: 100%;">
                         <div style="width: 38%; float: left;"><span>Adhésion aux services en ligne e-Nov : </span>
@@ -500,18 +523,22 @@
             </div>
         </section>
 
-        <section style="margin-bottom: 7px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
+        <section 
+    style="
+        margin-bottom: 7px; 
+        font-family: Arial, sans-serif; 
+        border-bottom: 1px dotted #444;  ">
             <!-- Titre -->
-            <div class="" style="width: 2%; background-color: #747171; padding: 5px; float: left;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0; text-align: center">V</h4>
+            <div class="" style="width: 2%; background-color: #747171; padding: 3px; float: left;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0; text-align: center">V</h4>
             </div>
             <div class=""
-                style="width: 30%; background-color: #747171; padding: 5px; border-radius: 0 7px 7px 0; margin-left: 30px;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0;">PAIEMENT DES PRIMES</h4>
+                style="width: 30%; background-color: #747171; padding: 3px; border-radius: 0 7px 7px 0; margin-left: 30px;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0;">PAIEMENT DES PRIMES</h4>
             </div>
 
             <!-- Contenu -->
-            <div class="content" style="margin-top: 0px; padding: 10px;">
+            <div class="content" style="margin-top: 0px; padding: 5px;">
                 <!-- Colonne gauche -->
                 <div style="width: 100%; margin-top: 0px;">
 
@@ -534,7 +561,7 @@
                                     Assurances Vie</strong> ou auprès des mandataires autorisés</i></small>)</label>
                     <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio"
                             class="radio1" @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'Mobile_money') checked @endif>Moble money ou Internet</label>
-                    <!-- Autres (autres valeurs) -->
+                    {{-- <!-- Autres (autres valeurs) -->
                     <label style="margin-top: 5px; margin-left:20px; display:block">
                         <input type="radio" class="radio1" name="modepaiement_etat"
                                @if(isset($contrat->modepaiement) && !in_array($contrat->modepaiement, ['VIR', 'SOURCE', 'CHK', 'ESP', 'Mobile_money'])) checked @endif>
@@ -546,75 +573,72 @@
                                 ...............................................................................................................................................
                             @endif
                         </b>
-                    </label>
+                    </label> --}}
                 </div>
 
             </div>
         </section>
-        <section style="margin-bottom: 7px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
+        <section style="margin-bottom: 7px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444; page-break-before: always; display: block;">
             <!-- Titre -->
-            <div class="" style="width: 2%; background-color: #747171; padding: 5px; float: left;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0; text-align: center">VI</h4>
+            <div class="" style="width: 2%; background-color: #747171; padding: 3px; float: left;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0; text-align: center">VI</h4>
             </div>
             <div class=""
-                style="width: 65%; background-color: #747171; padding: 5px; border-radius: 0 7px 7px 0; margin-left: 30px;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0;">DECLARATION SUR l'ETAT DE SANTE (À remplir par
+                style="width: 65%; background-color: #747171; padding: 3px; border-radius: 0 7px 7px 0; margin-left: 30px;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0;">DECLARATION SUR l'ETAT DE SANTE (À remplir par
                     l'assuré) </h4>
             </div>
             <section style="margin-top: 10px; margin-bottom: 0px; padding: 5px; borde: 1px solid #444;">
                 <div style="padding: 4px; border: 1px solid #444;  background-color: #dbdbdb22; border-radius: 10px">
                     <div style="margin: 0 auto; padding: 10px 50px; border-radius: 10px">
 
-                        <ul style="text-align: justify">
-                            <li>Les déclarations de l'adhérent consistent la base du contrat d'assurance.</li><br>
-                            <li>Nous vous invitons par conséquent à repondre au questionnaire ci-déssous avec sincérité
-                                et exactitude.</li>
-                            <br>
-                            <li>Notez que vos déclarations sont strictement confidentielle et permettent uniquement à
-                                l'assureur de faire un contrat qui correspond à vos besoins spécifiques.</li>
-                            <br>
-                            <li>À toutes fins utiles, nous vous rappelons que l'assureur, en application de l'artucle 18
-                                du code CIMA, se réserve le droit de vérifier l'exactitude des déclarationset pourrait
+                        <ul style="text-align: justify ; font-size: 11px">
+                            <li>Les déclarations de l'adhérent consistent la base du contrat d'assurance.</li>
+                            <li>Nous vous invitons par conséquent à repondre au questionnaire ci-déssous avec sincérité et exactitude.</li>
+                            <li>Notez que vos déclarations sont strictement confidentielle et permettent uniquement à l'assureur de faire un contrat qui correspond à vos besoins spécifiques.</li>
+                            <li>À toutes fins utiles, nous vous rappelons que l'assureur, en application de l'article 18
+                                du code CIMA, se réserve le droit de vérifier l'exactitude des déclarations et pourrait
                                 refuser de payer le capital décès en cas de fausses déclarations intentionnelles.</li>
                         </ul>
                     </div>
                 </div>
             </section>
-            <div class="content" style="margin-top: 0px; padding: 10px;">
+            <div class="content" style="margin-top: 0px; padding: 5px;">
                 <!-- Colonne gauche -->
-                <div style="width: 100%;">
-                    <label><strong>Nom :
-                        </strong><span>...........................</span></label>
-                    &nbsp; &nbsp;
-                    <label><strong>Prénoms :
-                        </strong><span>.......................................................................</span></label>&nbsp;
-                    &nbsp;
-                    <label><strong>Né(e) le :
-                        </strong><span>.......................................................</span></label>
-                </div>
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>1. Taille :
-                        </strong><span>..........................M</span></label> &nbsp;
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <label><strong>2. Poids
-                        </strong><span>................ KG</span></label>
-                </div>
-
-                <section style="width: 100%; margin: 5px 0; padding: 7px; border-radius: 7px;">
-
-                    <div style="width: 100%;">
-                        <div style="width: 25%; float: left;"><strong>3. Fumez-vous ? :</strong></div>
-                        <div style="width: 18%; float: left;"><input type="radio" class="radio1"><span>Oui</span>
-                        </div>
-                        <div style="width: 18%; float: left;"><input type="radio" class="radio1"><span>Non</span>
-                        </div>
-                        <div style="width: 45%; float: left;"><input type="radio" class="radio1"><span>Si Oui,
-                                Nombre de cigarette par jour <strong> .........</strong></span></div>
+               
+                <div style="width: 100%; text-alig: center;">
+                    <div style="width: 33%; float: left;">
+                        <strong>Nom :</strong>
+                        <span>...........................</span>
                     </div>
-                    <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
+                    <div style="width: 33%; float: left;">
+                        <strong>Prénoms :</strong>
+                        <span>...........................</span>
+                    </div>
+                    <div style="width: 33%; float: left;">
+                        <strong>Né(e) le :</strong> 
+                        <span>...........................</span>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
 
-                </section>
-                <section style="width: 90%; margin: 5px 0; padding: 7px; border-radius: 7px;">
+                <div style="width: 100%; margin-top: 7px;">
+                    <div style="width: 33%; float: left;">
+                        <strong>1. Taille :</strong>
+                        <span>...........................</span>
+                    </div>
+                    <div style="width: 33%; float: left;">
+                        <strong>2. Poids</strong>
+                        <span>...........................</span>
+                    </div>
+                    <div style="width: 33%; float: left;">
+                        <strong>3. Fumez-vous ? :</strong> 
+                        <span><input type="radio" class="radio1"><span>Oui</span></span>
+                        <span><input type="radio" class="radio1"><span>Non</span></span>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <section style="width: 90%; border-radius: 7px; margin-top: 7px;">
 
                     <div style="width: 100%;">
                         <div style="width: 30%; float: left;"><strong>4. Buvez-vous de l'alcool ? :</strong></div>
@@ -627,11 +651,8 @@
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
-                <div style="width: 100%; margin-top: 15px;">
-                    <label><strong>5. Vos distractions :
-                        </strong><span>.......................................................</span></label>
-                </div>
-                <section style="width: 85%; margin: 5px 0; padding: 7px; border-radius: 7px;">
+                
+                <section style="width: 85%; border-radius: 7px; margin-top: 7px;">
 
                     <div style="width: 100%;">
                         <div style="width: 50%; float: left;"><strong>6. Êtes-vous atteint d'une infirmité ? :</strong>
@@ -645,7 +666,7 @@
                     </div>
 
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
-                    <div style="width: 100%; margin-left:50px;margin-top:5px">
+                    <div style="width: 100%; margin-top:7px">
                         <div style="width: 10%; float: left;"><strong>Cause :</strong></div>
                         <div style="width: 18%; float: left;"><input type="radio" class="radio1"><span>Par
                                 maladie</span></div>
@@ -657,8 +678,7 @@
                     </div>
                     <div style="clear: both;"></div>
                 </section>
-                <section style="width: 90%; margin: 5px 0; padding: 7px; border-radius: 7px;">
-
+                <section style="width: 90%; border-radius: 7px; margin-top: 7px;">
                     <div style="width: 100%;">
                         <div style="width: 33%; float: left;"><strong>7. Êtes-vous en arrêt de travail ? :</strong>
                         </div>
@@ -676,6 +696,10 @@
                     </div>
                     <div style="clear: both;"></div>
                 </section>
+                <div style="width: 100%; margin-top: 7px;">
+                    <label><strong>5. Vos distractions :
+                        </strong><span>...............................................................</span></label>
+                </div>
                 <table border="1" cellpadding="6" cellspacing="0" width="100%">
                     <tr>
                         <th>Nature</th>
@@ -765,24 +789,24 @@
                         <td></td>
                         <td></td>
                     </tr>
-                </table><br><br>
-                <p>Je sousigné,certifie avoir repondu avec sincérité sans aucune reticence et n'avoir rein dissimulé sur
+                </table>
+                <p style="margin-top: 7px">Je sousigné,certifie avoir repondu avec sincérité sans aucune reticence et n'avoir rein dissimulé sur
                     mon état de santé passé ou actuel et prend acte que toute reticence ou fausse déclaration de ma part
-                    entrainera la nullité du contrat conformement à l'article 18 du Code CIMA.</p> <br><br>
+                    entrainera la nullité du contrat conformement à l'article 18 du Code CIMA.</p>
             </div>
         </section>
 
-        <section style="margin-bottom: 30px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
+        <section style="margin-bottom: 5px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
             <!-- Titre -->
-            <div class="" style="width: 2%; background-color: #747171; padding: 5px; float: left;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0; text-align: center">VII</h4>
+            <div class="" style="width: 2%; background-color: #747171; padding: 3px; float: left;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0; text-align: center">VII</h4>
             </div>
             <div class=""
-                style="width: 65%; background-color: #747171; padding: 5px; border-radius: 0 7px 7px 0; margin-left: 30px;">
-                <h4 style="color: #fff; font-size: 15px; margin: 0;">Partie reservée à YAKO AFRICA</h4>
+                style="width: 65%; background-color: #747171; padding: 3px; border-radius: 0 7px 7px 0; margin-left: 30px;">
+                <h4 style="color: #fff; font-size: 13px; margin: 0;">Partie reservée à YAKO AFRICA</h4>
             </div>
 
-            <section style="margin-top: 30px; margin-bottom: 20px; padding: 5px; font-family: Arial, sans-serif;">
+            <section style="margin-top: 10px; margin-bottom: 20px; padding: 5px; font-family: Arial, sans-serif;">
                 <div class="container-fluid">
 
                     <!-- Contenu -->
@@ -850,8 +874,8 @@
             </section>
 
         </section>
-        <section style="width: 100%; margin-top: 20px;">
-            <div style="width: 100%; margin-top: 10px; margin-bottom: 20px;">
+        <section style="width: 100%; margin-top: 5px;">
+            <div style="width: 100%; margin-bottom: 10px;">
 
                 <label>Fait à : <strong> {{ $contrat->user->membre->zone->libellezone ?? '' }}  </strong> le <strong> {{ \Carbon\Carbon::parse($contrat->saisiele)->format('d/m/Y à H:i:s') ?? '' }} </strong></label>
                 
