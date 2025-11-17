@@ -864,12 +864,9 @@
                                         style="width: 81%" value="----"> </label>
                             </div>
                         </div>
-
                         <!-- Clear pour éviter les flottements -->
                         <div style="clear: both;"></div>
-
                     </div>
-
                 </div>
             </section>
 
