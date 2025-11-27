@@ -53,9 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Premier resize
     resizeCanvas();
 
-    // Fix : deuxième resize après rendu complet de la page
-    setTimeout(resizeCanvas, 300);
-
 
     const form = document.querySelector('form');
     if (form) {
