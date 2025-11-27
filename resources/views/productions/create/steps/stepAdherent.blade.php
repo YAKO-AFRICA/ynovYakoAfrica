@@ -61,12 +61,12 @@
             </div>
 
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="separe" value="Séparé(e)" required>
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="separe" value="separe" required>
                 <label class="form-check-label" for="separe">Séparé(e)</label>
             </div>
 
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="unionlibre" value="Union libre" required>
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="unionlibre" value="union_libre" required>
                 <label class="form-check-label" for="unionlibre">Union libre</label>
             </div>
 

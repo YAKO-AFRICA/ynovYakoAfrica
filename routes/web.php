@@ -658,3 +658,5 @@ Route::get('/notifications/check', function () {
         'unreadNotificationsCount' => $user->unreadNotifications()->count(),
     ]);
 })->name('notifications.check');
+
+Route::get('/email-send', [UserController::class, 'sendMail'])->name('email.send');

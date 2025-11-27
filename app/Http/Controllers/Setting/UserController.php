@@ -235,9 +235,9 @@ class UserController extends Controller
         return response()->json($dataResponse);
     }
 
-    private function sendMail($email, $plainPassword)
+    public function sendMail($email, $plainPassword)
     {
-
+        
         $mailData = [
             'title' => 'Identifiant de connexion ! 🎉',
             'btnLink' => url('/'),
@@ -420,7 +420,7 @@ class UserController extends Controller
                 'login' => $request->login,
                 'role' => $role,
                 'coderole' => $request->profile_id,
-                'pass' => $request->pass,
+                // 'pass' => $request->pass,
                 'email' => $request->email,
                 'cel' => $request->cel,
                 'tel' => $request->tel,

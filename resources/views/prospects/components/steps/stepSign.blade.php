@@ -2,14 +2,17 @@
     <p>✍️ Veuillez apposer votre signature électronique pour valider votre demande.</p>
 </div>
 
-<div class="form-group">
+<div class="form-group container">
     <label class="required">Signature Électronique</label>
-    <canvas id="signaturePad" class="signature-pad" width="900" height="200"></canvas>
-    <div class="signature-controls">
-        <button type="button" class="btn btn-secondary" onclick="clearSignature()">
-            🗑️ Effacer
+    <div id="signatureContainer" class="border rounded bg-light " style="width: 100%; height: 200px; position: relative; background: white;">
+        <canvas id="signatureCanvas" class="" style="width: 100%; height: 100%; touch-action: none;"></canvas>
+    </div>
+    <div class="signature-controls mt-2">
+        <button type="button" class="btn btn-secondary btn-sm" id="clearSignatureBtn">
+            🗑️ Effacer la signature
         </button>
     </div>
+    <input type="hidden" name="signature" id="signatureData">
 </div>
 
 <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 20px; border-radius: 8px; margin-top: 20px;">
@@ -21,7 +24,59 @@
         et aux réglementations en vigueur.
     </p>
     <label class="checkbox-label" style="margin-top: 15px;">
-        <input type="checkbox" name="accepte_conditions" required>
+        <input type="checkbox" name="accepte_conditions" id="acceptConditions" required>
         <span>J'accepte les conditions générales *</span>
     </label>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('signatureCanvas');
+    const signaturePad = new SignaturePad(canvas, {
+        backgroundColor: 'rgb(255, 255, 255)',
+        penColor: 'rgb(0, 0, 0)'
+    });
+
+    document.getElementById('clearSignatureBtn').addEventListener('click', () => signaturePad.clear());
+
+    function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext('2d').scale(ratio, ratio);
+        signaturePad.clear();
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    // Premier resize
+    resizeCanvas();
+
+    // Fix : deuxième resize après rendu complet de la page
+    setTimeout(resizeCanvas, 300);
+
+
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const acceptConditions = document.getElementById('acceptConditions');
+            
+            if (signaturePad.isEmpty()) {
+                e.preventDefault();
+                alert('Veuillez fournir votre signature');
+                return;
+            }
+            
+            if (!acceptConditions.checked) {
+                e.preventDefault();
+                alert('Veuillez accepter les conditions générales');
+                return;
+            }
+            
+            document.getElementById('signatureData').value = signaturePad.toDataURL();
+        });
+    }
+});
+
+</script>

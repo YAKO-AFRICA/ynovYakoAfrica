@@ -46,7 +46,6 @@ class ProspectController extends Controller
     {
         $prospects = AdherentProspert::orderBy('created_at', 'desc')->paginate(20);
         $myProspects = AdherentProspert::where('reference_par', Auth::user()->idmembre)->where('etat' , 'Actif')->orderBy('created_at', 'desc')->paginate(20);
-
       
 
         return view('prospects.index', compact('prospects','myProspects'));

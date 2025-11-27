@@ -576,6 +576,8 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
     <script>
         $(document).ready(function() {
             $('.selection').select2({
@@ -646,63 +648,6 @@
         let contacts = [];
         let partners = [];
         let uploadedFiles = [];
-        let signaturePad;
-        let isDrawing = false;
-
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
-            initSignaturePad();
-            updateProgress();
-        });
-
-        // Signature Pad
-        function initSignaturePad() {
-            const canvas = document.getElementById('signaturePad');
-            const ctx = canvas.getContext('2d');
-            signaturePad = { canvas, ctx };
-            
-            canvas.addEventListener('mousedown', startDrawing);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseup', stopDrawing);
-            canvas.addEventListener('mouseout', stopDrawing);
-            canvas.addEventListener('touchstart', handleTouch);
-            canvas.addEventListener('touchmove', handleTouch);
-            canvas.addEventListener('touchend', stopDrawing);
-        }
-
-        function startDrawing(e) {
-            isDrawing = true;
-            const rect = signaturePad.canvas.getBoundingClientRect();
-            signaturePad.ctx.beginPath();
-            signaturePad.ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-        }
-
-        function draw(e) {
-            if (!isDrawing) return;
-            const rect = signaturePad.canvas.getBoundingClientRect();
-            signaturePad.ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-            signaturePad.ctx.strokeStyle = '#000';
-            signaturePad.ctx.lineWidth = 2;
-            signaturePad.ctx.stroke();
-        }
-
-        function stopDrawing() {
-            isDrawing = false;
-        }
-
-        function handleTouch(e) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const mouseEvent = new MouseEvent(
-                e.type === 'touchstart' ? 'mousedown' : e.type === 'touchmove' ? 'mousemove' : 'mouseup',
-                { clientX: touch.clientX, clientY: touch.clientY }
-            );
-            signaturePad.canvas.dispatchEvent(mouseEvent);
-        }
-
-        function clearSignature() {
-            signaturePad.ctx.clearRect(0, 0, signaturePad.canvas.width, signaturePad.canvas.height);
-        }
 
 
 
@@ -1214,53 +1159,6 @@
             uploadedFiles.splice(index, 1);
             renderFiles();
         }
-
-        // Soumission du formulaire
-        // document.getElementById('insuranceForm').addEventListener('submit', function(e) {
-        //     e.preventDefault();
-
-        //     // Vérifier la signature
-        //     const canvas = document.getElementById('signaturePad');
-        //     const ctx = canvas.getContext('2d');
-        //     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        //     const hasSignature = imageData.data.some(channel => channel !== 0);
-
-        //     if (!hasSignature) {
-        //         alert('Veuillez apposer votre signature avant de soumettre le formulaire');
-        //         return;
-        //     }
-
-        //     // Collecter toutes les données
-        //     const formData = new FormData(this);
-            
-        //     // Ajouter les données supplémentaires
-        //     formData.append('contacts', JSON.stringify(contacts));
-        //     formData.append('partners', JSON.stringify(partners));
-        //     formData.append('signature', canvas.toDataURL());
-            
-        //     // Ajouter les fichiers
-        //     uploadedFiles.forEach((item, index) => {
-        //         formData.append(`documents[${index}][file]`, item.file);
-        //         formData.append(`documents[${index}][nature]`, item.nature);
-        //     });
-
-        //     // Afficher les données (à remplacer par l'envoi réel)
-        //     console.log('=== DONNÉES DU FORMULAIRE ===');
-        //     console.log('Informations personnelles:', Object.fromEntries(formData));
-        //     console.log('Contacts:', contacts);
-        //     console.log('Partenaires:', partners);
-        //     console.log('Documents:', uploadedFiles.length, 'fichier(s)');
-
-            
-        //     fetch('/prospect/store', {
-        //         method: 'POST',
-        //         body: formData,
-        //         headers: {
-        //             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        //         }
-        //     }).then(response => response.json())
-        //       .then(data => console.log(data));
-        // });
 
         
 

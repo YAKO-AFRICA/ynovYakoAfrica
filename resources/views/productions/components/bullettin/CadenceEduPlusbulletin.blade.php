@@ -108,10 +108,10 @@
             <div style="width: 95%; margin: auto">
                 <div
                     style="width: 46%; margin: auto; border: 1px solid #444; padding: 5px; border-radius: 7px; float:left">
-                    <strong style="font-size: 15px">Police N° </strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <span style="color: red; font-size: 20px">{{ $contrat->id}}</span>
+                    <strong style="font-size: 15px">n° Bulletin </strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span style="color: red; font-size: 20px">{{ $contrat->numBullettin ?? ''}}</span>
                 </div>
-
+                
                 <div
                     style="width: 46%; margin: auto; border: 1px solid #444; padding: 5px; border-radius: 7px; float:right">
                     <strong style="font-size: 15px">IND-CEP-2304-</strong>
