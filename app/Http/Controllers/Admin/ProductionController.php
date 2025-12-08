@@ -734,7 +734,7 @@ class ProductionController extends Controller
                     'naturepiece' => $request->naturepiece,
                     'lieuresidence' => $request->lieuresidence,
                     'filiation' => 'LUIMM',
-                    'mobile' => $request->mobile,
+                    'mobile' => $request->mobile ?? $request->telephone ?? null,
                     'email' => $request->email,
                     'saisieLe' => now(),
                     'saisiepar' => Auth::user()->membre->idmembre,
