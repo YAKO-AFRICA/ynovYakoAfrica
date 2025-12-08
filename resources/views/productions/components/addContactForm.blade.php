@@ -54,7 +54,7 @@
         preview.innerHTML = '';
 
         if (contacts.length === 0) {
-            preview.innerHTML = `<div class="text-muted">Aucun contact optionnel ajouté pour le moment.</div>`;
+            preview.innerHTML = `<div class="text-muted">Aucun contact ajouté pour le moment.</div>`;
             return;
         }
 
@@ -88,6 +88,7 @@
         preview.innerHTML = html;
     }
 
+
     function removeContact(index) {
         contacts.splice(index, 1);
         sessionStorage.setItem('contacts', JSON.stringify(contacts));
@@ -100,7 +101,8 @@
         e.preventDefault();
 
         const valeur = document.getElementById('valeur').value.trim();
-        const typesChecked = Array.from(document.querySelectorAll('input[name="type[]"]:checked')).map(c => c.value);
+        const typesChecked = Array.from(document.querySelectorAll('input[name="type[]"]:checked'))
+                                .map(c => c.value);
 
         if (typesChecked.length === 0) {
             alert('Veuillez sélectionner au moins un type de contact.');
@@ -108,7 +110,7 @@
         }
 
         if (valeur === '') {
-            alert('Veuillez renseigner une valeur de contact.');
+            alert('Veuillez renseigner la valeur du contact.');
             return;
         }
 
@@ -118,19 +120,21 @@
             principal: false
         };
 
+        // Ajoute à la liste
         contacts.push(contact);
         sessionStorage.setItem('contacts', JSON.stringify(contacts));
-
-        // Met à jour le champ caché
         document.getElementById('contactsInput').value = JSON.stringify(contacts);
 
-        // Fermer modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('contactModal'));
-        modal.hide();
+        // Ferme modal
+        bootstrap.Modal.getInstance(document.getElementById('contactModal')).hide();
 
+        // Reset
         document.getElementById('contactForm').reset();
+
         renderContacts();
     });
+
+
 
     // On affiche les contacts déjà enregistrés à chaque chargement
     document.addEventListener('DOMContentLoaded', renderContacts);
@@ -140,28 +144,22 @@
     document.querySelector('.btn-next-form').addEventListener('click', function (event) {
         event.preventDefault();
 
-        const typePrincipal = document.querySelector('input[name="typePrincipal"]:checked')?.value;
-        const mobile = document.getElementById('mobile').value.trim();
+        // Vérifie si AU MOINS un contact existe
+        const currentContacts = JSON.parse(sessionStorage.getItem('contacts') || '[]');
 
-        const allContacts = [
-            {
-                type: typePrincipal || 'Tel',
-                valeur: mobile,
-                principal: true
-            },
-            ...contacts.map(c => ({ ...c, principal: false }))
-        ];
+        if (currentContacts.length === 0) {
+            alert("Veuillez ajouter au moins un contact avant de continuer.");
+            return;
+        }
 
-        // Sauvegarde dans la session et champ caché
-        sessionStorage.setItem('contacts', JSON.stringify(allContacts));
-        document.getElementById('contactsInput').value = JSON.stringify(allContacts);
+        // Sauvegarde dans input caché
+        document.getElementById('contactsInput').value = JSON.stringify(currentContacts);
 
-        // sessionStorage.setItem('contacts', JSON.stringify(allContacts));
+        console.log("Contacts enregistrés :", currentContacts);
 
-        console.log("Contacts enregistrés avant passage à l'étape suivante :", allContacts);
-
-        // Passe à l'étape suivante après la sauvegarde
+        // Passage à l'étape suivante
         stepper1.next();
     });
+
 
 </script>

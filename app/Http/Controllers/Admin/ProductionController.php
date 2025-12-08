@@ -491,6 +491,7 @@ class ProductionController extends Controller
 
         // Maintenant on peut accéder à la périodicité
         $periodicite = $inputSessionData['infoSimulation']['periodicite'] ?? null;
+        $isAssure = $inputSessionData['infoSimulation']['isAssure'] ?? null;
 
         if (!empty($request->inputSessionData)) {
             $simulationData = json_decode($request->inputSessionData);
@@ -599,7 +600,7 @@ class ProductionController extends Controller
             }
             // creation de l'assuré souscripteur
 
-            if ($request->estAssure === "Oui") {
+            if ($request->estAssure === "Oui" || $isAssure === "oui") {
 
                 $Assurer = Assurer::create([
                     'id' => $idAssure,
@@ -715,24 +716,24 @@ class ProductionController extends Controller
 
             // Récupérer et enregistrer les bénéficiaires
             $beneficiaires = json_decode($request->input('beneficiaires'), true);
+        
 
             if ($request->addBeneficiary === "adherent") {
                 $benefauterm = "adherent";
-                $datenaissanceBenef = Carbon::parse($request->datenaissanceBenef)->format('Y-m-d H:i:s');
 
                 Beneficiaire::create([
                     'id' => $idBenef,
                     'civilite' => $request->civilite,
                     'nom' => $request->nom,
                     'prenom' => $request->prenom,
-                    'datenaissance' => $datenaissanceBenef,
+                    'datenaissance' => $datenaissance,
                     'codecontrat' => $idContrat,
                     'codeadherent' => $idAdherent,
                     'lieunaissance' => $request->lieunaissance,
                     'numeropiece' => $request->numeropiece,
                     'naturepiece' => $request->naturepiece,
                     'lieuresidence' => $request->lieuresidence,
-                    'filiation' => $request->lienParente,
+                    'filiation' => 'LUIMM',
                     'mobile' => $request->mobile,
                     'email' => $request->email,
                     'saisieLe' => now(),
@@ -897,7 +898,7 @@ class ProductionController extends Controller
             
             return response()->json([
                 'type' => 'success',
-                'urlback' => route('prod.edit', ['id' => $idContrat]),
+                'urlback' => route('prod.show', ['id' => $idContrat]),
                 'url' => $bulletinData['file_url'],
                 'message' => "Enregistré avec succès !",
                 'code' => 200,

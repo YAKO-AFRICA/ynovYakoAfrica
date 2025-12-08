@@ -21,23 +21,19 @@
                 </div>
                 <div class="step col" data-step="3">
                     <div class="step-circle">3</div>
-                    <div class="step-label">Assurés/ Bénéficiaires</div>
+                    <div class="step-label">Assurés</div>
                 </div>
                 <div class="step col" data-step="4">
                     <div class="step-circle">4</div>
-                    <div class="step-label">Infos Assurance</div>
+                    <div class="step-label">Bénéficiaires</div>
                 </div>
                 <div class="step col" data-step="5">
                     <div class="step-circle">5</div>
-                    <div class="step-label">Documents</div>
+                    <div class="step-label">Infos Assurance</div>
                 </div>
                 <div class="step col" data-step="6">
                     <div class="step-circle">6</div>
-                    <div class="step-label">Validation</div>
-                </div>
-                <div class="step col" data-step="7">
-                    <div class="step-circle">7</div>
-                    <div class="step-label">Finalisation</div>
+                    <div class="step-label">Documents</div>
                 </div>
             </div>
         </div>
@@ -52,6 +48,7 @@
                 <div class="info-box">
                     <p>🛡️ Sélectionnez les produits d'assurance qui vous intéressent.</p>
                 </div>
+                
 
                 @include('prospects.components.steps.stepProduct')
             </div>
@@ -65,7 +62,7 @@
 
             <!-- Step 3: Partenaires -->
             <div class="form-step" data-step="3">
-                <h2 class="section-title">Assurés / Bénéficiaires</h2>
+                <h2 class="section-title">Assurés</h2>
                 
                 <div class="form-group">
                     <label>Etre-vous vous même assuré (e)?</label>
@@ -87,8 +84,25 @@
                     <label class="required">Type d'acteur</label>
                     <div class="cards-container row">
                         <label class="partner-card col" id="card-ass" data-type="ASS" data-bs-toggle="modal" data-bs-target="#openPartnerModal">
-                            Assuré
+                            Ajouter un Assuré
                         </label>
+                    </div>
+                </div>
+
+                <div id="partnersList" class="added-list"></div>
+            </div>
+            <!-- Step 3: Partenaires -->
+            <div class="form-step" data-step="4">
+                <h2 class="section-title">Bénéficiaires</h2>
+                
+
+                <div class="info-box">
+                    <p>👨‍👩‍👧‍👦 Ajoutez les beneficiaires au contrat: conjoint, enfants ou autres membres liés au prospect.</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="required">Type d'acteur</label>
+                    <div class="cards-container row">
                         
                         <label class="partner-card col" id="card-ben" data-type="BEN" data-bs-toggle="modal" data-bs-target="#openPartnerModal">
                             Bénéficiaire
@@ -100,34 +114,17 @@
             </div>
 
             <!-- Step 4: Informations Assurance -->
-            <div class="form-step" data-step="4">
+            <div class="form-step" data-step="5">
                 <h2 class="section-title">Informations sur l'Assurance</h2>
                 
                 @include('prospects.components.steps.stepAssurance')
             </div>
 
             <!-- Step 5: Documents -->
-            <div class="form-step" data-step="5">
+            <div class="form-step" data-step="6">
                 <h2 class="section-title">Documents</h2>
                 
                 @include('prospects.components.steps.stepDoc')
-            </div>
-
-            <!-- Step 6: Signature et Validation -->
-            <div class="form-step" data-step="6">
-                <h2 class="section-title">Signature et Validation</h2>
-                
-                @include('prospects.components.steps.stepSign')
-            </div>
-            <!-- Étape 7: Récapitulatif -->
-            <div class="form-step" data-step="7">
-                <h2 class="section-title">📋 Récapitulatif de votre demande</h2>
-                
-                <div class="info-box">
-                    <p>✅ Veuillez vérifier l'exactitude de toutes les informations avant de soumettre votre demande.</p>
-                </div>
-                
-                @include('prospects.components.steps.stepResume')
             </div>
 
             <!-- Navigation Buttons -->
@@ -138,7 +135,7 @@
                 <button type="button" class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">
                     Suivant →
                 </button>
-                <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">
+                <button type="submit" class="btn btn-warning" id="submitBtn" style="display: none;">
                     ✓ Soumettre la Demande
                 </button>
             </div>
@@ -151,68 +148,57 @@
 
         <script>
             document.getElementById('insuranceForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+                e.preventDefault();
 
-            // Vérifie la signature
-            const canvas = document.getElementById('signaturePad');
-            const ctx = canvas.getContext('2d');
-            const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-            const hasSignature = pixels.some(channel => channel !== 0);
-            if (!hasSignature) {
-                alert('Veuillez apposer votre signature avant de soumettre le formulaire.');
-                return;
-            }
+                const btnSubmit = document.getElementById('submitBtn');
+                btnSubmit.textContent = 'Envoi en cours...';
+                btnSubmit.disabled = true;
 
-            // Prépare les données
-            const formData = new FormData(this);
-            formData.append('contacts', JSON.stringify(contacts));
-            formData.append('partners', JSON.stringify(partners));
-            formData.append('signature', canvas.toDataURL());
+                // Prépare les données
+                const formData = new FormData(this);
+                formData.append('contacts', JSON.stringify(contacts));
+                formData.append('partners', JSON.stringify(partners));
 
-            uploadedFiles.forEach((item, index) => {
-                formData.append(`documents[${index}][file]`, item.file);
-                formData.append(`documents[${index}][nature]`, item.nature);
-            });
-
-            try {
-                const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
-                const response = await fetch('/prospect/store', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': csrf
-                    }
+                uploadedFiles.forEach((item, index) => {
+                    formData.append(`documents[${index}][file]`, item.file);
+                    formData.append(`documents[${index}][nature]`, item.nature);
                 });
 
-                const data = await response.json();
-                if (data.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Prospect enregistré avec succès !',
-                        text: 'Code : ' + data.code,
-                        showConfirmButton: true,
+                try {
+                    const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
+                    const response = await fetch('/prospect/store', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': csrf
+                        }
                     });
 
-                    setTimeout(() => {
-                        window.location.href = 'https://web.yakoafricassur.com/';
-                    }, 2000);
+                    const data = await response.json();
+                    if (data.success) {
+                        btnSubmit.textContent = 'Un instant ... !';
 
-                    console.log('UUID Prospect:', data.uuid);
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: '❌ Erreur !' ,
-                        text: 'Erreur : ' + data.message,
-                        showConfirmButton: true,
-                    });
-                    // alert('❌ Erreur : ' + data.message);
+                        setTimeout(() => {
+                            window.location.href = '/prospect/finish/' + data.uuid;
+                        }, 2000);
+
+                    } else {
+                        btnSubmit.disabled = false;
+                        Swal.fire({
+                            icon: 'error',
+                            title: '❌ Erreur !' ,
+                            text: 'Erreur : ' + data.message,
+                            showConfirmButton: true,
+                        });
+                        // alert('❌ Erreur : ' + data.message);
+                    }
+
+                } catch (error) {
+                    btnSubmit.disabled = false;
+                    console.error('Erreur de soumission:', error);
+                    alert('Une erreur est survenue lors de l’envoi du formulaire.');
                 }
-
-            } catch (error) {
-                console.error('Erreur de soumission:', error);
-                alert('Une erreur est survenue lors de l’envoi du formulaire.');
-            }
-        });
+            });
         </script>
     </div>
     @include('prospects.components.modals.partnerModal')

@@ -12,9 +12,10 @@ use App\Models\Prospect;
 
 
 use App\Models\TblVille;
+use App\Models\Signature;
 use App\Models\Profession;
-use Illuminate\Support\Str;
 // use BaconQrCode\Encoder\QrCode;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\AssuranceInfo;
 use App\Models\ReseauProduct;
@@ -45,10 +46,72 @@ class ProspectController extends Controller
     public function index(Request $request)
     {
         $prospects = AdherentProspert::orderBy('created_at', 'desc')->paginate(20);
+
         $myProspects = AdherentProspert::where('reference_par', Auth::user()->idmembre)->where('etat' , 'Actif')->orderBy('created_at', 'desc')->paginate(20);
       
 
         return view('prospects.index', compact('prospects','myProspects'));
+    }
+
+    public function finish($uuid)
+    {
+
+        $prospect = AdherentProspert::where('uuid', $uuid)->firstOrFail();
+
+        return view('prospects.finishStep', compact('prospect'));
+    }
+
+    public function signaturePad(Request $request)
+    {
+
+        Log::info($request->all());
+
+        try{
+
+            DB::beginTransaction();
+
+            if ($request->has('signature')) {
+                $signatureData = $request->input('signature');
+                $signatureFileName = 'signature_' . $request->prospect_code . '.png';
+                $signaturePath = 'signatures/' . $signatureFileName;
+                Storage::disk('public')->put($signaturePath, base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $signatureData)));
+
+                AssuranceInfo::where('code', $request->prospect_code)->update([
+                    'signature' => $signaturePath,
+                ]);
+
+                Signature::create([
+                    'operation_type' => 'prospect_signature',
+                    'reference_key' => $request->prospect_uuid,
+                    'key_uuid' => Str::uuid(),
+                    'signature_path' => $signaturePath,
+                    'status' => 'pending',
+                ]);
+            }
+
+
+            DB::commit();
+
+            return $response = [
+                'type' => 'success',
+                'urlback' => 'back',
+                'message' => "Enregistré avec succès!",
+                'code' => 200,
+            ];
+
+        }catch(\Exception $e){
+            DB::rollBack();
+
+            log::info($e->getMessage());
+
+            return $response = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur système! $e->getMessage()",
+                'code' => 500,
+            ];
+        }
+            
     }
 
 
@@ -125,100 +188,10 @@ class ProspectController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    // public function store(Request $request)
-    // {
-
-    //     // Validation des données
-    //     $validated = $request->validate([
-    //         // 'code' => 'required|string|max:191|unique:prospects',
-    //         'first_name' => 'required|string|max:191',
-    //         'last_name' => 'required|string|max:191',
-    //         'email' => 'nullable|email|max:191',
-    //         'mobile' => 'nullable|string|max:191',
-    //         'adress' => 'nullable|string|max:191',
-    //         'city' => 'nullable|string|max:191',
-    //         'profession_uuid' => 'nullable|string|max:191',
-    //         'secteurActivity_uuid' => 'nullable|string|max:191',
-    //         'natureProspect' => 'nullable|string|max:191',
-    //         'produit_id' => 'nullable|string|max:191',
-    //         'montantPrime' => 'nullable|string|max:191',
-    //         'dateEffet' => 'nullable|date',
-    //         'typeCompagnie' => 'nullable|string|max:191',
-    //         'modeDePaiment' => 'nullable|string|max:191',
-    //         'lieuEvenement' => 'nullable|string|max:191',
-    //         'etat' => 'nullable|string|max:191',
-    //         'status' => 'nullable|string|max:191',
-    //         'note' => 'nullable|string',
-    //         'products' => 'nullable|array',
-    //         'products.*' => 'integer|exists:tblproduit,IdProduit', 
-    //     ]);
-
-    //     DB::beginTransaction();
-
-    //     try {
-    //         $code = Refgenerate(Prospect::class, 'P', 'code');
-    //         // Création du prospect
-    //         $prospect = new Prospect();
-    //         $prospect->uuid = Str::uuid();
-    //         $prospect->code = $code;
-
-    //         $prospect->first_name = $validated['first_name'];
-    //         $prospect->last_name = $validated['last_name'];
-    //         $prospect->email = $validated['email'] ?? null;
-    //         $prospect->mobile = $validated['mobile'] ?? null;
-    //         $prospect->adress = $validated['adress'] ?? null;
-    //         $prospect->city = $validated['city'] ?? null;
-    //         $prospect->profession_uuid = $validated['profession_uuid'] ?? null;
-    //         $prospect->secteurActivity_uuid = $validated['secteurActivity_uuid'] ?? null;
-    //         $prospect->natureProspect = $validated['natureProspect'] ?? null;
-    //         // $prospect->produit_id = $validated['produit_id'] ?? null;
-    //         $prospect->montantPrime = $validated['montantPrime'] ?? null;
-    //         $prospect->dateEffet = $validated['dateEffet'] ?? null;
-    //         $prospect->typeCompagnie = $validated['typeCompagnie'] ?? null;
-    //         $prospect->modeDePaiment = $validated['modeDePaiment'] ?? null;
-    //         $prospect->lieuEvenement = $validated['lieuEvenement'] ?? null;
-    //         $prospect->etat = $validated['etat'] ?? 'actif';
-    //         $prospect->status = $validated['status'] ?? 'nouveau';
-    //         $prospect->note = $validated['note'] ?? null;
-    //         $prospect->userAdd_uuid = auth()->user()->id;
-            
-    //         $prospect->save();
-
-    //         // Vérifie s'il y a des produits sélectionnés
-    //         if (!empty($request->products)) {
-    //             foreach ($request->products as $productId) {
-    //                 ProspectProduct::create([
-    //                     'prospect_id' => $prospect->id,
-    //                     'product_id' => $productId,
-    //                 ]);
-    //             }
-    //         }
-
-
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => 'Prospect créé avec succès',
-    //             'data' => $prospect
-    //         ], 201);
-
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Erreur lors de la création du prospect',
-    //             'error' => $e->getMessage()
-    //         ], 500);
-    //     }
-    // }
 
     public function store(Request $request)
     {
         DB::beginTransaction();
-
-        
 
         try {
 

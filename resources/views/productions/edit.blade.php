@@ -50,7 +50,7 @@
             </button>
 
 
-            <input type=button onclick='calltouchpay("{{ $contrat->id }}")' class="btn btn-primary btn-sm text-decoration-none px-2 px-md-3" value="Payer ma première prime" />
+            {{-- <input type=button onclick='calltouchpay("{{ $contrat->id }}")' class="btn btn-primary btn-sm text-decoration-none px-2 px-md-3" value="Payer ma première prime" /> --}}
 
 
         </div>
@@ -318,139 +318,7 @@
     console.log(contratInfo.adherent);
 </script>
 
-<script>
-    function getDateCode() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            
-            return `${year}${month}${day}${hours}${minutes}${seconds}`;
-        }
-</script>
 
-<script type="text/javascript">
-    function calltouchpay(contratId) {
-        
-        const code = Math.floor(Math.random() * 9999) + 1;
-
-        // Construire le code paiement
-        const dateCode = getDateCode();
-        const codePaiement = `PAI-${dateCode}-${code}`;
-
-        // alert(codePaiement);
-
-
-        const order_number = codePaiement;
-        const agency_code = "CILLV4645";
-        const secure_code = "hLVznZ60EQgSUq^Q-#6lzpn^YIpXW4w_LL%B!To#?f@gPnFsT%";
-
-        const domain_name = 'laloyalevie.com';
-
-        const url_redirection_success = window.location.href + '/payment/success';
-        const url_redirection_failed = window.location.href + '/payment/failed';
-        const amount = contratInfo.prime;
-        const city = "";
-        const email = contratInfo.adherent.email || "";
-        const clientFirstname = contratInfo.adherent.prenom || "";
-        const clientLastname = contratInfo.adherent.nom || "";
-        const clientPhone = contratInfo.adherent.mobile || "";
-
-        fetch('{{ config('app.url') }}/cretePaiement', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                order_number: order_number,
-                idContrat: contratId,
-                agency_code: agency_code,
-                domain_name: domain_name,
-                amount: amount,
-                city: city,
-                email: email,
-                clientFirstname: clientFirstname,
-                clientLastname: clientLastname,
-                clientPhone: clientPhone,
-            }),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur réseau');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Paiement sauvegardé côté serveur :", data);
-
-            // 👉 Appeler TouchPay seulement après avoir sauvegardé
-            sendPaymentInfos(
-                order_number,
-                agency_code,
-                secure_code,
-                domain_name,
-                url_redirection_success,
-                url_redirection_failed,
-                amount,
-                city,
-                email,
-                clientFirstname,
-                clientLastname,
-                clientPhone
-            );
-        })
-        .catch(error => console.error("Erreur lors de la sauvegarde :", error));
-
-
-        // sendPaymentInfos(
-        //     order_number,
-        //     agency_code,
-        //     secure_code,
-        //     domain_name,
-        //     url_redirection_success,
-        //     url_redirection_failed,
-        //     amount,
-        //     city,
-        //     email,
-        //     clientFirstname,
-        //     clientLastname,
-        //     clientPhone
-        // );
-
-
-        // fetch('http://ynovyakoafrica.test/cretePaiement', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        //     },
-        //     body: JSON.stringify({
-        //         order_number: order_number,
-        //         idContrat: contratId,
-        //         agency_code: agency_code,
-        //         domain_name: domain_name,
-        //         amount: amount,
-        //         city: city,
-        //         email: email,
-        //         clientFirstname: clientFirstname,
-        //         clientLastname: clientLastname,
-        //         clientPhone: clientPhone,
-        //     }),
-        // })
-        // .then(response => {
-        //     if (!response.ok) {
-        //         throw new Error('Erreur réseau');
-        //     }
-        //     return response.json();
-        // })
-    }
-</script>
-
-    
 
 </div>
 

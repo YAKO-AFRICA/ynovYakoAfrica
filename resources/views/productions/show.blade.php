@@ -934,7 +934,7 @@
         const agency_code = "CILLV4645";
         const secure_code = "hLVznZ60EQgSUq^Q-#6lzpn^YIpXW4w_LL%B!To#?f@gPnFsT%";
 
-        const domain_name = 'laloyalevie.com';
+        const domain_name = 'yakoafricassur.com';
 
         const url_redirection_success = window.location.href + '/payment/success';
         const url_redirection_failed = window.location.href + '/payment/failed';

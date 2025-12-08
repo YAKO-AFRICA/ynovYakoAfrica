@@ -1047,13 +1047,7 @@
     </div>
         <!-- Script TouchPay -->
 
-       
-       
-
-        
- 
-
-        {{-- <script type="text/javascript">
+        <script type="text/javascript">
              function calltouchpay() {
                 const order_number = "code001";
                 const agency_code = "CILLV4645";
@@ -1091,7 +1085,7 @@
                
                 calltouchpay();
             }
-        </script> --}}
+        </script>
 
 
     <!-- JavaScript -->

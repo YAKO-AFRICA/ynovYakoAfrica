@@ -102,7 +102,7 @@
                             </div> 
                            <div class="col-sm-12 col-md-6 mt-4">
                                 <div>
-                                    <label for="">Le souscrit est-il l'assuré ?</label><br>
+                                    <label for="">Le souscripteur est-il l'assuré ?</label><br>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="isAssure" id="isAssureOui" value="oui" required>
                                         <label class="form-check-label" for="isAssureOui">Oui</label>

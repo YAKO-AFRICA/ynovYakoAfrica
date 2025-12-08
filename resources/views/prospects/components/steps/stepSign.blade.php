@@ -1,44 +1,48 @@
-<div class="info-box">
-    <p>✍️ Veuillez apposer votre signature électronique pour valider votre demande.</p>
+
+
+
+<div class="container-sign my-2 w-100">
+    <form action="{{ route('prospect.signaturePad') }}" method="POST" id="signFormId" class="submitForm">
+        @csrf
+
+        <div class="mb-3">
+            <label class="form-label">Veuillez signer ici <span class="text-danger">*</span></label>
+            <div class="border rounded bg-light" style="width: 100%; height: 200px; position: relative;">
+                <canvas id="signatureCanvas" style="width: 100%; height: 100%; touch-action: none;"></canvas>
+            </div>
+            
+            <input type="hidden" name="prospect_uuid" id="prospect_uuid" value="{{ $prospect->uuid }}">
+            <input type="hidden" name="prospect_code" id="prospect_code" value="{{ $prospect->code }}">
+            <input type="hidden" name="signature" id="signatureData" >
+        </div>
+
+        <div class="d-flex justify-content-between mt-4 w-100">
+            <button type="button" id="clearSignature" class="btn btn-outline-danger btn-sm">Effacer</button>
+            <button type="submit" class="btn btn-success btn-sm">Valider la signature</button>
+        </div>
+    </form>
 </div>
 
-<div class="form-group container">
-    <label class="required">Signature Électronique</label>
-    <div id="signatureContainer" class="border rounded bg-light " style="width: 100%; height: 200px; position: relative; background: white;">
-        <canvas id="signatureCanvas" class="" style="width: 100%; height: 100%; touch-action: none;"></canvas>
-    </div>
-    <div class="signature-controls mt-2">
-        <button type="button" class="btn btn-secondary btn-sm" id="clearSignatureBtn">
-            🗑️ Effacer la signature
-        </button>
-    </div>
-    <input type="hidden" name="signature" id="signatureData">
-</div>
+    
 
-<div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 20px; border-radius: 8px; margin-top: 20px;">
-    <h3 style="color: #92400e; margin-bottom: 10px;">⚠️ Déclaration</h3>
-    <p style="color: #78350f; font-size: 14px; line-height: 1.6;">
-        Je certifie que toutes les informations fournies dans ce formulaire sont exactes et complètes.
-        Je comprends que toute fausse déclaration peut entraîner la nullité du contrat ou la réduction des prestations.
-        J'accepte que mes données personnelles soient traitées conformément à la politique de confidentialité
-        et aux réglementations en vigueur.
-    </p>
-    <label class="checkbox-label" style="margin-top: 15px;">
-        <input type="checkbox" name="accepte_conditions" id="acceptConditions" required>
-        <span>J'accepte les conditions générales *</span>
-    </label>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js" defer></script>
+
 <script>
+let signaturePad; // ➜ Variable globale
+
 document.addEventListener('DOMContentLoaded', function() {
+
     const canvas = document.getElementById('signatureCanvas');
-    const signaturePad = new SignaturePad(canvas, {
+
+    // Initialisation globale
+    signaturePad = new SignaturePad(canvas, {
         backgroundColor: 'rgb(255, 255, 255)',
         penColor: 'rgb(0, 0, 0)'
     });
 
-    document.getElementById('clearSignatureBtn').addEventListener('click', () => signaturePad.clear());
+    document.getElementById('clearSignature').addEventListener('click', () => signaturePad.clear());
 
     function resizeCanvas() {
         const ratio = Math.max(window.devicePixelRatio || 1, 1);
@@ -49,31 +53,71 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     window.addEventListener('resize', resizeCanvas);
-
-    // Premier resize
     resizeCanvas();
-
-
-    const form = document.querySelector('form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            const acceptConditions = document.getElementById('acceptConditions');
-            
-            if (signaturePad.isEmpty()) {
-                e.preventDefault();
-                alert('Veuillez fournir votre signature');
-                return;
-            }
-            
-            if (!acceptConditions.checked) {
-                e.preventDefault();
-                alert('Veuillez accepter les conditions générales');
-                return;
-            }
-            
-            document.getElementById('signatureData').value = signaturePad.toDataURL();
-        });
-    }
 });
-
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const form = document.getElementById('signFormId');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Vérification
+        if (signaturePad.isEmpty()) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Veuillez fournir votre signature',
+            })
+            // alert('Veuillez fournir votre signature');
+            return;
+        }
+
+        // Base64 dans le champ hidden
+        document.getElementById('signatureData').value = signaturePad.toDataURL();
+
+        // Afficher loader
+        document.getElementById('signatureLoader').classList.remove('d-none');
+
+        // Préparer données
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: "POST",
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+
+            // Cacher loader
+            document.getElementById('signatureLoader').classList.add('d-none');
+
+            if (data.type === 'success') {
+
+                // Afficher modal
+                const modal = new bootstrap.Modal(document.getElementById('successModal'));
+                modal.show();
+
+            } else {
+                alert("Erreur système !");
+            }
+        })
+        .catch(() => {
+            document.getElementById('signatureLoader').classList.add('d-none');
+            alert("Erreur de communication !");
+        });
+    });
+
+    // Redirection après OK
+    document.getElementById('btnRedirect').addEventListener('click', function() {
+        window.location.href = "https://yakoafricassur.com";
+    });
+});
+</script>
+
+
+
+        

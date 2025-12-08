@@ -576,8 +576,6 @@ document.addEventListener("DOMContentLoaded", function () {
             simulationData.infoSimulation.isAssure = isAssure;
             sessionStorage.setItem('simulationData', JSON.stringify(simulationData));
         }
-
-        // (Pas besoin de preventDefault ici, la redirection s’effectue normalement)
     });
 
 

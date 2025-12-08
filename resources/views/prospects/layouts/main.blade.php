@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    {{-- <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script> --}}
     
 
     <style>
@@ -462,22 +463,6 @@
             cursor: pointer;
         }
 
-        /* Signature */
-        .signature-pad {
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            cursor: crosshair;
-            background: white;
-            touch-action: none;
-            width: 100%;
-        }
-
-        .signature-controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
         .info-box {
             background: #f0f9ff;
             border-left: 4px solid #3d8a41;
@@ -552,7 +537,11 @@
     </style>
 </head>
 <body>
-    @yield('content')
+    <main class="py-4 d-flex flex-column justify-content-center align-items-center">
+        @yield('content')
+    </main>
+
+    {{-- <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script> --}}
 
     <!-- Modal Contact -->
     @include('prospects.components.modals.contactModal')
@@ -575,8 +564,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -644,12 +631,15 @@
     <script>
         // Variables globales
         let currentStep = 1;
-        const totalSteps = 7;
+        const totalSteps = 6;
         let contacts = [];
         let partners = [];
         let uploadedFiles = [];
 
-
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+        });
 
         // Ajouter cette fonction dans la navigation entre les étapes
         function changeStep(direction) {
@@ -665,238 +655,13 @@
             if (currentStep > totalSteps) currentStep = totalSteps;
             if (currentStep < 1) currentStep = 1;
 
-            // Si on arrive à l'étape résumé, générer le récapitulatif
-            if (currentStep === 7) {
-                generateSummary();
-            }
-
             steps[currentStep - 1].classList.add('active');
             updateProgress();
             updateButtons();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Fonction pour générer le résumé
-        function generateSummary() {
-            // Informations personnelles
-            const civilite = document.querySelector('select[name="civilite"]')?.value || 'Non renseigné';
-            const nom = document.querySelector('input[name="nom"]')?.value || 'Non renseigné';
-            const prenom = document.querySelector('input[name="prenom"]')?.value || 'Non renseigné';
-            const genre = document.querySelector('input[name="genre"]:checked')?.value || 'Non renseigné';
-            const dateNaissance = document.querySelector('input[name="date_naissance"]')?.value || 'Non renseigné';
-            const lieuNaissance = document.querySelector('select[name="lieu_naissance"]')?.selectedOptions[0]?.text || 'Non renseigné';
-
-            // Coordonnées
-            const lieuResidence = document.querySelector('select[name="lieu_residence"]')?.selectedOptions[0]?.text || 'Non renseigné';
-            const situationMatrimoniale = document.querySelector('select[name="situation_matrimoniale"]')?.value || 'Non renseigné';
-            const typePiece = document.querySelector('select[name="type_piece_identite"]')?.value || 'Non renseigné';
-            const numeroPiece = document.querySelector('input[name="numero_piece_identite"]')?.value || 'Non renseigné';
-            const email = document.querySelector('input[name="email"]')?.value || 'Non renseigné';
-            const pays = document.querySelector('select[name="pays"]')?.selectedOptions[0]?.text || 'Non renseigné';
-            const adresse = document.querySelector('textarea[name="adresse"]')?.value || 'Non renseigné';
-
-            // Informations professionnelles
-            const profession = document.querySelector('select[name="profession"]')?.selectedOptions[0]?.text || 'Non renseigné';
-            const employeur = document.querySelector('input[name="employeur"]')?.value || 'Non renseigné';
-            const secteurActivite = document.querySelector('input[name="secteur_activite"]')?.value || 'Non renseigné';
-            const referencePar = document.querySelector('input[name="reference_par"]')?.value || 'Non renseigné';
-
-            // Personnes ressources
-            const personneRessource1 = document.querySelector('input[name="personneRessource"]')?.value || 'Non renseigné';
-            const contactRessource1 = document.querySelector('input[name="contactRessource"]')?.value || 'Non renseigné';
-            const personneRessource2 = document.querySelector('input[name="personneRessource2"]')?.value || 'Non renseigné';
-            const contactRessource2 = document.querySelector('input[name="contactRessource2"]')?.value || 'Non renseigné';
-
-            // Informations commerciales
-            const dejaClient = document.querySelector('input[name="dejaClient"]:checked')?.value || 'Non renseigné';
-            const dateEffet = document.querySelector('input[name="datteEffet"]')?.value || 'Non renseigné';
-            const modePaiement = document.querySelector('select[name="modePaiement"]')?.value || 'Non renseigné';
-            const periodicite = document.querySelector('select[name="periodicite"]')?.value || 'Non renseigné';
-
-            // Notes
-            const notes = document.querySelector('textarea[name="notes"]')?.value || 'Aucune note';
-
-            document.getElementById('summary-personal').innerHTML = `
-                <div class='row'>
-                    <div class="col-sm-12 col-md-4 col-lg-4 float-right">
-                        <dl class="summary-list">
-                            <dt>Genre</dt>
-                            <dd>${genre === 'M' ? 'Masculin' : 'Féminin'}</dd>
-
-                            <dt>Nom & Prénom</dt>
-                            <dd>${nom} ${prenom}</dd>
-                        </dl>
-                    </div>
-                    <div class="col-sm-12 col-md-4 col-lg-4 float-right">
-                        <dt>Civilité</dt>
-                        <dd>${civilite}</dd>
-
-                        <dt>Date de Naissance</dt>
-                        <dd>${dateNaissance}</dd>
-                        
-                    </div>
-                    <div class="col-sm-12 col-md-4 col-lg-4 float-left">
-                        <dt>Situation Matrimoniale</dt>
-                        <dd>${situationMatrimoniale}</dd>
-
-                        <dt>Lieu de Naissance</dt>
-                        <dd>${lieuNaissance}</dd>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('summary-contact').innerHTML = `
-                <div class="row">
-                    <div class="col-sm-12 col-md-4 col-lg-4 float-right">
-                        <dl class="summary-item">
-                            <dt>Lieu de Résidence</dt>
-                            <dd>${lieuResidence}</dd>
-                        </dl>
-                        <dl class="summary-item">
-                            <dt>Type de Pièce</dt>
-                            <dd>${typePiece}</dd>
-                        </dl>
-                    </div>
-                    
-                    <div class="col-sm-12 col-md-4 col-lg-4 float-left">
-                        <dl class="summary-item">
-                            <dt>Adresse</dt>
-                            <dd>${adresse || 'Non renseignée'}</dd>
-                        </dl>
-                        <dl class="summary-item">
-                            <dt>Numéro de Pièce</dt>
-                            <dd>${numeroPiece}</dd>
-                        </dl>
-                        
-                    </div>
-
-                    <div class="col-sm-12 col-md-4 col-lg-4 float-left">
-                        <dl class="summary-item">
-                            <dt>Pays</dt>
-                            <dd>${pays}</dd>
-                        </dl>
-                        <dl class="summary-item">
-                            <dt>Email</dt>
-                            <dd>${email}</dd>
-                        </dl>
-                        
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('summary-professional').innerHTML = `
-                <div class="row">
-                    <div class="col-sm-12 col-md-4 col-lg-4 float-right">
-                        <dl class="summary-item">
-                            <dt>Proféssion</dt>
-                            <dd>${profession}</dd>
-                        </dl>
-                    </div>
-                    <div class="col-sm-12 col-md-4 col-lg-4 float-left">
-                        <dl class="summary-item">
-                            <dt>Employeur</dt>
-                            <dd>${employeur}</dd>
-                        </dl>
-                    </div>
-                    <div class="col-sm-12 col-md-4 col-lg-4 float-left">
-                        <dl class="summary-item">
-                            <dt>Secteur d'Activité</dt>
-                            <dd>${secteurActivite}</dd>
-                        </dl>
-                    </div>
-                </div>
-            `;
-
-            // Contacts ajoutés
-            const contactsHTML = contacts.length > 0 
-                ? contacts.map(contact => `
-                    <div class="row">
-                        <div class="summary-item col-sm-12 col-md-4 col-lg-4">
-                            <div class="summary-label ">${contact.contactType}</div>
-                            <div class="summary-value">${contact.contact}</div>
-                        </div>
-                    </div>
-                    
-                `).join('')
-                : '<div class="empty-data">Aucun contact ajouté</div>';
-            document.getElementById('summary-contacts').innerHTML = contactsHTML;
-
-            document.getElementById('summary-commercial').innerHTML = `
-                <div class="row">
-                    <div class="col-sm-12 col-md-4 col-lg-4 float-left">
-                        <dl class="summary-item">
-                            <dt>Déjà Client</dt>
-                            <dd>${dejaClient === 'oui' ? 'Oui' : 'Non'}</dd>
-                        </dl>
-                        <dl class="summary-item">
-                            <dt>Email</dt>
-                            <dd>${email}</dd>
-                        </dl>
-                    </div>
-                    <div class="col-sm-12 col-md-4 col-lg-4 float-left">
-                        <dl class="summary-item">
-                            <dt>Date d'Effet</dt>
-                            <dd>${dateEffet}</dd>
-                        </dl>
-                        <dl class="summary-item">
-                            <dt>Périodicité</dt>
-                            <dd>${periodicite}</dd>
-                        </dl>
-                    </div>
-                    <div class="col-sm-12 col-md-4 col-lg-4 float-left">
-                        <dl class="summary-item">
-                            <dt>Mode de Paiement</dt>
-                            <dd>${modePaiement}</dd>
-                        </dl>
-                      
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="summary-item col-sm-12 col-md-6 col-lg-6">
-                        <dt>Personne Ressource 1</dt>
-                        <dd>${personneRessource1} - ${contactRessource1}</dd>
-                    </div>
-                    <div class="summary-item col-sm-12 col-md-6 col-lg-6">
-                        <dt>Personne Ressource 2</dt>
-                        <dd>${personneRessource2} - ${contactRessource2}</dd>
-                    </div>
-                </div>
-
-                
-                <div class="summary-item full-width">
-                    <dt class="summary-label">Notes</dt>
-                    <dd class="summary-value">${notes}</dd>
-                </div>
-            `;
-
-              // <dl class="summary-item">
-                        //     <dt>Email</dt>
-                        //     <dd>${email}</dd>
-                        // </dl>
-
-            // Documents
-            const filesHTML = uploadedFiles.length > 0
-                ? uploadedFiles.map(file => `
-                    <div class="summary-item">
-                        <div class="summary-label">${file.nature}</div>
-                        <div class="summary-value">${file.fileName}</div>
-                    </div>
-                `).join('')
-                : '<div class="empty-data">Aucun document uploadé</div>';
-            document.getElementById('summary-documents').innerHTML = filesHTML;
-
-            // Vérifier la signature
-            const canvas = document.getElementById('signaturePad');
-            const ctx = canvas.getContext('2d');
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const hasSignature = imageData.data.some(channel => channel !== 0);
-            
-            document.getElementById('summary-signature').textContent = hasSignature ? '✅ Apposée' : '❌ Manquante';
-            
-            const conditionsAccepted = document.querySelector('input[name="accepte_conditions"]')?.checked;
-            document.getElementById('summary-conditions').textContent = conditionsAccepted ? '✅ Acceptées' : '❌ Non acceptées';
-        }
+        
 
         function validateStep(step) {
             const currentStepElement = document.querySelector(`.form-step[data-step="${step}"]`);
@@ -1068,12 +833,6 @@
                 }
             });
 
-
-            
-
-
-
-
         }
 
 
@@ -1159,9 +918,8 @@
             uploadedFiles.splice(index, 1);
             renderFiles();
         }
-
-        
-
     </script>
+
+     @yield('scripts')
 </body>
 </html>

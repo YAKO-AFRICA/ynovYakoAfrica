@@ -395,6 +395,8 @@ Route::prefix('prospect')->name('prospect.')->group(function(){
         Route::get('/create/{tokken}', [ProspectController::class, 'create'])->name('create');
         Route::post('/store', [ProspectController::class, 'store']);
         // formule by product reseau 
+        Route::get('/finish/{uuid}', [ProspectController::class, 'finish'])->name('finish');
+        Route::post('/signaturePad', [ProspectController::class, 'signaturePad'])->name('signaturePad');
 
     });
     Route::middleware(['auth','PreventBackHistory'])->group(function () {
