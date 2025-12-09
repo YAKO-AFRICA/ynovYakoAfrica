@@ -10,7 +10,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 p-0">
                 <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a></li>
-                <li class="breadcrumb-item active" aria-current="page">Details de la proposition</li>
+                <li class="breadcrumb-item active" aria-current="page">Détails de la proposition</li>
             </ol>
         </nav>
     </div>
@@ -69,7 +69,7 @@
                     <div class="bs-stepper-circle">2</div>
                     <div class="">
                         <h5 class="mb-0 steper-title @if ($contrat->etape == 2)
-                                text-primary @endif">Transmission</h5>
+                                text-primary @endif">Transmise</h5>
                         <p class="mb-0 steper-sub-title">{{ $contrat->transmisle ?? ''}}</p>
                     </div>
                     </div>
@@ -80,17 +80,17 @@
                         <div class="bs-stepper-circle">3</div>
                         @if ($contrat->etape == 3)
                         <div class="">
-                            <h5 class="mb-0 steper-title text-primary">Accepter/Migrer</h5>
+                            <h5 class="mb-0 steper-title text-primary">Acceptée/Migrée</h5>
                             <p class="mb-0 steper-sub-title">{{ $contrat->acceptele ?? ''}}</p>
                         </div>
                         @elseif ($contrat->etape == 4)
                         <div class="">
-                            <h5 class="mb-0 steper-title text-primary">Rejetter</h5>
+                            <h5 class="mb-0 steper-title text-primary">Rejetée</h5>
                             <p class="mb-0 steper-sub-title">{{ $contrat->annulerle ?? ''}}</p>
                         </div>
                         @else
                         <div class="">
-                            <h5 class="mb-0 steper-title">Non Traité</h5>
+                            <h5 class="mb-0 steper-title">Non Traitée</h5>
                             <p class="mb-0 steper-sub-title">00-00-0000</p>
                         </div>
                         @endif
@@ -108,16 +108,16 @@
                 <div class="fm-menu">
                     <div class="list-group list-group-flush">
                         <a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="info-contrat">
-                            <i class='bx bx-folder me-2'></i><span>Detail du contrat</span>
+                            <i class='bx bx-folder me-2'></i><span>Détail du contrat</span>
                         </a>
                         <a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="edit-adherent">
-                            <i class='bx bx-devices me-2'></i><span>Adherent</span>
+                            <i class='bx bx-devices me-2'></i><span>Adhérent</span>
                         </a>
                         <a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="edit-assurer">
                             <i class='bx bx-analyse me-2'></i><span>Assurés</span>
                         </a>
                         <a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="edit-beneficiaire">
-                            <i class='bx bx-plug me-2'></i><span>Beneficiaire</span>
+                            <i class='bx bx-plug me-2'></i><span>Bénèficiaire</span>
                         </a>
                         <a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="edit-Info-complementaire">
                             <i class='bx bx-analyse me-2'></i><span>Informations</span>
@@ -133,7 +133,7 @@
 
             <div class="card-body">
 
-                <h5 class="mb-0 font-weight-bold">Documents joint </h5>
+                <h5 class="mb-0 font-weight-bold">Documents joints </h5>
 
                 <div class="mt-3"></div>
 
@@ -257,10 +257,10 @@
                                     <dt>Périodicité</dt>
                                     <dd>
                                         @switch($contrat->periodicite)
-                                            @case('M') Mois @break
-                                            @case('T') Trimestre @break
-                                            @case('S') Semestre @break
-                                            @case('A') Année @break
+                                            @case('M') Mensuelle @break
+                                            @case('T') Trimestrielle @break
+                                            @case('S') Semestrielle @break
+                                        @case('A') Annuelle @break
                                             @case('U') Versement unique @break
                                             @default --
                                         @endswitch
@@ -302,7 +302,7 @@
                     
                                     
                     
-                                    <dt>Cle Rib</dt>
+                                    <dt>Clé Rib</dt>
                                     <dd>{{ $contrat->rib ?? '--' }}</dd>
                                     <dt>Code Conseiller</dt>
                                     <dd>{{ $contrat->codeConseiller ?? "--" }}</dd>

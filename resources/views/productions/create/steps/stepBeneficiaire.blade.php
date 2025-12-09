@@ -29,7 +29,7 @@
                     <div class="form-check" data-bs-toggle="modal" data-bs-target="#addBenefModal">
                         <input class="form-check-input" type="checkbox" value="autre" id="Autres1" data-situation="terme-contrat">
                         <label class="form-check-label" for="Autres1">
-                            Autres, Préciser (ajouter des bénéficiaires)
+                            Autres, à présiser
                         </label>
                     </div>
                 </div>
@@ -56,7 +56,7 @@
                     <div class="form-check" data-bs-toggle="modal" data-bs-target="#addBenefModal">
                         <input class="form-check-input" type="checkbox" value="autre" id="Autres2" name="audecesContrat">
                         <label class="form-check-label" for="Autres2"> 
-                            Autres, Préciser (ajouter des bénéficiaires)
+                            Autres, à préiser
                         </label>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
                             <th scope="col">Nom & Prénoms</th>
                             <th scope="col">Né(e) le</th>
                             <th scope="col">Lieu de naissance</th>
-                            <th scope="col">Lieu de residence</th>
+                            <th scope="col">Lieu de résidence</th>
                             <th scope="col">Filiation</th>
                             <th scope="col">Téléphone</th>
                             <th scope="col">Email</th>
