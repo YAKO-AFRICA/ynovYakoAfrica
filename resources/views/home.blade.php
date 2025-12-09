@@ -8,7 +8,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div>
-                        <p class="mb-0 text-secondary">Total Saisie</p>
+                        <p class="mb-0 text-secondary">Total Saisis</p>
                         <h4 class="my-1 text-secondary">{{ count($userData['myAllContrats']) }}</h4>
                         <p class="mb-0 font-13">+{{ count($userData['myContratsMonth']) }} Mois en cours</p>
                     </div>
@@ -57,7 +57,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div>
-                        <p class="mb-0 text-secondary">Accepter/Migrer</p>
+                        <p class="mb-0 text-secondary">Accepté/Migré</p>
                         <h4 class="my-1 text-success">{{ count($userData['myAllContratMigrer']) }}</h4>
                         <p class="mb-0 font-13">+ {{ count($userData['myAllContratMigrerMonth']) }} Mois en cours</p>
                     </div>
@@ -112,7 +112,7 @@
                     <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1"
                             style="color: #14abef"></i>Transmis</span>
                     <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1"
-                            style="color: #ffc107"></i>Accepter</span>
+                            style="color: #ffc107"></i>Accepté</span>
                 </div>
                 <div class="chart-container-1">
                     <canvas id="chartDash"></canvas>
@@ -147,7 +147,7 @@
             <div class="card-header">
                 <div class="d-flex align-items-center">
                     <div>
-                        <h6 class="mb-0">Repartition de production par Produit</h6>
+                        <h6 class="mb-0">Répartition de production par Produit</h6>
                     </div>
                     <div class="dropdown ms-auto">
                         <a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i
