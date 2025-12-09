@@ -8,7 +8,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div>
-                        <p class="mb-0 text-secondary">Total Saisis</p>
+                        <p class="mb-0 text-secondary">Total saisies</p>
                         <h4 class="my-1 text-secondary">{{ count($userData['myAllContrats']) }}</h4>
                         <p class="mb-0 font-13">+{{ count($userData['myContratsMonth']) }} Mois en cours</p>
                     </div>
@@ -24,7 +24,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div>
-                        <p class="mb-0 text-secondary">En Saisie</p>
+                        <p class="mb-0 text-secondary">En saisie</p>
                         <h4 class="my-1 text-info">{{ count($userData['myAllContratEnSaisie']) }}</h4>
                         <p class="mb-0 font-13">+{{ count($userData['myAllContratEnSaisieMonth']) }} Mois en cours</p>
                     </div>
@@ -41,7 +41,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div>
-                        <p class="mb-0 text-secondary">Transmis</p>
+                        <p class="mb-0 text-secondary">Transmise</p>
                         <h4 class="my-1 text-warning">{{ count($userData['myAllContratTransmis']) }}</h4>
                         <p class="mb-0 font-13">+{{ count($userData['myAllContratTransmisMonth']) }} Mois en cours</p>
                     </div>
@@ -57,7 +57,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div>
-                        <p class="mb-0 text-secondary">Accepté/Migré</p>
+                        <p class="mb-0 text-secondary">Acceptées/Migrées</p>
                         <h4 class="my-1 text-success">{{ count($userData['myAllContratMigrer']) }}</h4>
                         <p class="mb-0 font-13">+ {{ count($userData['myAllContratMigrerMonth']) }} Mois en cours</p>
                     </div>
@@ -73,7 +73,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div>
-                        <p class="mb-0 text-secondary">Total Rejet</p>
+                        <p class="mb-0 text-secondary">Total rejetées</p>
                         <h4 class="my-1 text-danger">{{ count($userData['myAllContratRejetter']) }}</h4>
                         <p class="mb-0 font-13">+{{ count($userData['myAllContratRejetterMonth']) }} Mois en cours</p>
                     </div>
@@ -110,9 +110,9 @@
             <div class="card-body">
                 <div class="d-flex align-items-center ms-auto font-13 gap-2 mb-3">
                     <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1"
-                            style="color: #14abef"></i>Transmis</span>
+                            style="color: #14abef"></i>Transmises</span>
                     <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1"
-                            style="color: #ffc107"></i>Accepté</span>
+                            style="color: #ffc107"></i>Acceptées</span>
                 </div>
                 <div class="chart-container-1">
                     <canvas id="chartDash"></canvas>
@@ -136,7 +136,7 @@
                 <div class="col">
                     <div class="p-3">
                         <h5 class="mb-0">{{ $userData['totalRejetPerYears'] }}</h5>
-                        <small class="mb-0">Rejet/ année en cours </small>
+                        <small class="mb-0">Rejets/ année en cours </small>
                     </div>
                 </div>
             </div>
@@ -147,7 +147,7 @@
             <div class="card-header">
                 <div class="d-flex align-items-center">
                     <div>
-                        <h6 class="mb-0">Répartition de production par Produit</h6>
+                        <h6 class="mb-0">Répartition des productions par Produit</h6>
                     </div>
                     <div class="dropdown ms-auto">
                         <a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i
