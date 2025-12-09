@@ -11,7 +11,7 @@
                     
                     <!-- Personal Information -->
                     <fieldset class="border p-3 mb-4">
-                        <legend class="float-none w-auto px-2"><small><strong>Informations Personnelles</strong></small></legend>
+                        <legend class="float-none w-auto px-2"><small><strong>Informations personnelles</strong></small></legend>
                         
                         <div class="row g-3 mb-3">
                             <div class="col-12 col-lg-6">

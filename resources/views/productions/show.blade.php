@@ -108,7 +108,7 @@
                 <div class="fm-menu">
                     <div class="list-group list-group-flush">
                         <a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="info-contrat">
-                            <i class='bx bx-folder me-2'></i><span>Détail du contrat</span>
+                            <i class='bx bx-folder me-2'></i><span>Détails du contrat</span>
                         </a>
                         <a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="edit-adherent">
                             <i class='bx bx-devices me-2'></i><span>Adhérent</span>
@@ -117,7 +117,7 @@
                             <i class='bx bx-analyse me-2'></i><span>Assurés</span>
                         </a>
                         <a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="edit-beneficiaire">
-                            <i class='bx bx-plug me-2'></i><span>Bénéficiaire</span>
+                            <i class='bx bx-plug me-2'></i><span>Bénéficiaires</span>
                         </a>
                         <a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="edit-Info-complementaire">
                             <i class='bx bx-analyse me-2'></i><span>Informations</span>
@@ -775,41 +775,41 @@
                         </div>
                         <div class="row my-3">
                             <div class="div col">
-                                <strong>Modifier le </strong>
+                                <strong>Modifié le </strong>
                                 <span>{{ $contrat->modifierle ?? '--' }}</span>
                             </div>
                             <div class="div col">
-                                <strong>Modifier par</strong>
+                                <strong>Modifié par</strong>
                                 <span>{{ $contrat->modifierpar ?? 'Non renseigné' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="div col">
-                                <strong>Transmis le </strong>
+                                <strong>Transmise le </strong>
                                 <span>{{ $contrat->transmisle ?? '--' }}</span>
                             </div>
                             <div class="div col">
-                                <strong>Transmis par</strong>
+                                <strong>Transmise par</strong>
                                 <span>{{ $contrat->transmispar ?? 'Non renseigné' }}</span>
                             </div>
                         </div>
                         <div class="row my-3">
                             <div class="div col">
-                                <strong>Accepter le </strong>
+                                <strong>Accepté le </strong>
                                 <span>{{ $contrat->accepterle ?? '--' }}</span>
                             </div>
                             <div class="div col">
-                                <strong>Accepter par</strong>
+                                <strong>Accepté par</strong>
                                 <span>{{ $contrat->accepterpar ?? 'Non renseigné' }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="div col">
-                                <strong>Rejeter le </strong>
+                                <strong>Rejeté le </strong>
                                 <span>{{ $contrat->annulerle ?? '--' }}</span>
                             </div>
                             <div class="div col">
-                                <strong>Rejeter par</strong>
+                                <strong>Rejeté par</strong>
                                 <span>{{ $contrat->rejeterpar ?? 'Non renseigné' }}</span>
                             </div>
                         </div>
@@ -819,13 +819,13 @@
                                 <span>{{ $contrat->estMigre ? 'Oui' : 'Non' }}</span>
                             </div>
                             <div class="div col">
-                                <strong>Transmis par</strong>
+                                <strong>Transmise par</strong>
                                 <span>{{ $contrat->codeConseiller ?? 'Non renseigné' }}</span>
                             </div>
                         </div>
 
                         <div class="col-12 form-group mt-3">
-                            <label for="" class="form-label">Observations(Motif de rejet)</label>
+                            <label for="" class="form-label">Observations(Motif du rejet)</label>
                             <textarea name="" class="form-control" id="" rows="3" readonly>
                                 {{ $contrat->motifrejet ?? '' }}
                             </textarea>
