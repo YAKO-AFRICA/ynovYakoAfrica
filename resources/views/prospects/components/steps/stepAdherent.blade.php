@@ -157,7 +157,7 @@
 
     <fieldset class="mt-3 p-3">
         <legend class="float-none w-auto px-2 border rounded bg-white">
-            <small>Personnes Ressources</small>
+            <small>Personnes à contacter en cas de besoin</small>
         </legend>
         
         <div class="row mb-3">

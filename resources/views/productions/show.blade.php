@@ -815,7 +815,7 @@
                         </div>
                         <div class="row my-3">
                             <div class="div col">
-                                <strong>Est migré </strong>
+                                <strong>Est migrée </strong>
                                 <span>{{ $contrat->estMigre ? 'Oui' : 'Non' }}</span>
                             </div>
                             <div class="div col">

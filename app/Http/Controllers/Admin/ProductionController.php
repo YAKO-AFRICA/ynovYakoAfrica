@@ -76,7 +76,7 @@ class ProductionController extends Controller
         $allPropositionssss = Contrat::where('etape', "!=", "");
         $allPropositions = Contrat::where('saisiepar', Auth::user()->idmembre);
 
-        $defaultColumns = ['#', 'Produit','Souscripteur','Age Souscripteur', 'Date Effet', 'Prime', 'Capital', 'Montant Rente', 'Saisir Par', 'Status'];
+        $defaultColumns = ['#', 'Produit','Souscripteur','Age Souscripteur', 'Date Effet', 'Prime', 'Capital', 'Montant Rente', 'Saisie Par', 'Status'];
 
         $additionalColumns = [
             'Mode de Paiement' => 'modepaiement',
