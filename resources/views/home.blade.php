@@ -41,7 +41,7 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div>
-                        <p class="mb-0 text-secondary">Transmise</p>
+                        <p class="mb-0 text-secondary">Transmises</p>
                         <h4 class="my-1 text-warning">{{ count($userData['myAllContratTransmis']) }}</h4>
                         <p class="mb-0 font-13">+{{ count($userData['myAllContratTransmisMonth']) }} Mois en cours</p>
                     </div>

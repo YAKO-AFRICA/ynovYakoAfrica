@@ -58,22 +58,22 @@
 
                         <div class="form-group row">
                             <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Code Produit :</label>
+                                <label class="form-label">Produit :</label>
                                 <input type="text" class="form-control" id="CodeProduit" name="CodeProduit" value="{{ $product->CodeProduit}}" required readonly>
                             </div>
                             <div class="col-sm-12 col-md-6 mb-3">
-                                <label class="form-label">Code Périodicité :</label>
+                                <label class="form-label">Périodicité :</label>
                                 <select name="codePeriodicite" id="codePeriodicite" class="form-control" required>
-                                    <option value="M">MENSUEL</option>
-                                    <option value="T">TRIMESTRIEL</option>
-                                    <option value="S">SEMESTRIEL</option>
-                                    <option value="A">ANNUEL</option>
+                                    <option value="M">Mensuelle</option>
+                                    <option value="T">Trimestrielle</option>
+                                    <option value="S">Semestrielle</option>
+                                    <option value="A">Annuelle</option>
                                 </select>
                             </div>
                             <div class="col-sm-12 col-md-6 mb-3">
                                 <label class="form-label">Prime souhaitée (F CFA) :</label>
                                 <select name="capitalSouscrit" id="capitalSouscrit" class="form-select" required>
-                                    <option value="" selected>Selectionnez une prime</option>
+                                    <option value="" selected>Sélectionnez une prime</option>
                                     <option value="15000">15 000</option>
                                     <option value="20000">20 000</option>
                                     <option value="25000">25 000</option>
