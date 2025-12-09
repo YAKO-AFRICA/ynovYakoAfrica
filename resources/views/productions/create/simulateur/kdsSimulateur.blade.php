@@ -163,12 +163,12 @@
                                 <td><span class="text-success">+</span> <strong> {{ number_format(7500, 0, ',', ' ')}}</strong> FCFA</td>
                             </tr>
                         </table>
-                        <div class="ribbon">Prime Totale</div>
+                        <div class="ribbon">Prime totale</div>
 
                         <table class="table">
                             <tfoot class="table-light">
                                 <tr>
-                                    <td colspan="2" class="text-end fw-bold">Montant Total (F CFA):</td>
+                                    <td colspan="2" class="text-end fw-bold">Montant total (F CFA):</td>
                                     <td id="primeTotal" class="fw-bold">0</td>
                                 </tr>
                             </tfoot>
