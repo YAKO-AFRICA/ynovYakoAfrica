@@ -52,14 +52,14 @@
                         <div class="parent-icon">
                             <i class='bx bx-home-alt'></i>
                         </div>
-                        <div class="menu-title">Nouvelle Proposition</div>
+                        <div class="menu-title">Nouvelle proposition</div>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('prod.index')}}">
                         <div class="parent-icon"><i class="fadeIn animated bx bx-clipboard"></i>
                         </div>
-                        <div class="menu-title">Mes Propositions</div>
+                        <div class="menu-title">Mes propositions</div>
                     </a>
                 </li>
                 @can('Chef equipe')
@@ -81,7 +81,7 @@
                     <div class="parent-icon">
                         <i class="lni lni-customer fs-5"></i>
                     </div>
-                    <div class="menu-title">Nouvelle Prospection</div>
+                    <div class="menu-title">Nouvelle prospection</div>
                 </a>
             </li>
             @endcan

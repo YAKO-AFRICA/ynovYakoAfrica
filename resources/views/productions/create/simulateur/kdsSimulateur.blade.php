@@ -63,7 +63,7 @@
                             </div>
                             <div class="col-sm-12 col-md-6 mb-3">
                                 <label class="form-label">Périodicité :</label>
-                                <select name="codePeriodicite" id="codePeriodicite" class="form-control" required>
+                                <select name="codePeriodicite" id="codePeriodicite" class="form-select" required>
                                     <option value="M">Mensuelle</option>
                                     <option value="T">Trimestrielle</option>
                                     <option value="S">Semestrielle</option>
@@ -159,7 +159,7 @@
 
                         <table class="table">
                             <tr>
-                                <td><strong class="text-uppercase fs-6">Frais d'adhésion </strong><small class="text-muted text-danger">(payable une seul fois)</small></td>
+                                <td><strong class="text-uppercase fs-6">Frais d'adhésion </strong><small class="text-muted text-danger">(payable une seule fois)</small></td>
                                 <td><span class="text-success">+</span> <strong> {{ number_format(7500, 0, ',', ' ')}}</strong> FCFA</td>
                             </tr>
                         </table>
