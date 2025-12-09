@@ -46,7 +46,7 @@
 
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="situation_matrimoniale" id="union_libre" value="union_libre" required>
-                <label class="form-check-label" for="separe">Concubinage</label>
+                <label class="form-check-label" for="separe">En Concubinage</label>
             </div>
 
             <div class="form-check form-check-inline">
@@ -148,7 +148,7 @@
             @enderror
         </div>
         <div class="col-12 col-lg-4">
-            <label for="numeropiece" class="form-label">numéro de la pièce<span class="text-danger">*</span></label>
+            <label for="numeropiece" class="form-label">Numéro de la pièce<span class="text-danger">*</span></label>
             <input type="text" name="numeropiece" class="form-control" id="numeropiece"
                 placeholder="Nature de la pièce d'identité" autocomplete="on" required>
 
@@ -181,9 +181,9 @@
             </select>
         </div>
         <div class="col-12 col-lg-6">
-            <label for="employeur" class="form-label">Secteur d’activités</label>
+            <label for="employeur" class="form-label">Secteur d’activité</label>
             <select class="form-select selection" name="employeur" id="employeur" autocomplete="on">
-                <option value="" disabled selected>Sélectionner le secteur d’activités</option>
+                <option value="" disabled selected>Sélectionner le secteur d’activité</option>
 
                 @foreach($secteurActivites as $secteurActivite)
                     <option value="{{ $secteurActivite->MonLibelle }}">{{ $secteurActivite->MonLibelle }}</option>
