@@ -5,7 +5,7 @@
 <!--breadcrumb-->
 
 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-    <div class="breadcrumb-title pe-3">eSouscription</div>
+    <div class="breadcrumb-title pe-3">e-Souscription</div>
     <div class="ps-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 p-0">
@@ -117,7 +117,7 @@
                             <i class='bx bx-analyse me-2'></i><span>Assurés</span>
                         </a>
                         <a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="edit-beneficiaire">
-                            <i class='bx bx-plug me-2'></i><span>Bénèficiaire</span>
+                            <i class='bx bx-plug me-2'></i><span>Bénéficiaire</span>
                         </a>
                         <a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="edit-Info-complementaire">
                             <i class='bx bx-analyse me-2'></i><span>Informations</span>
@@ -294,7 +294,7 @@
                                     <dt>Prime</dt>
                                     <dd>{{ number_format($contrat->prime ?? 0, 0, ',', ' ') }} FCFA</dd>
                     
-                                    <dt>Prime Principale</dt>
+                                    <dt>Prime principale</dt>
                                     <dd>{{ number_format($contrat->primepricipale ?? 0, 0, ',', ' ') }} FCFA</dd>
 
                                     <dt>Frais d'adhésion</dt>
@@ -302,17 +302,14 @@
                     
                                     
                     
-                                    <dt>Clé Rib</dt>
+                                    <dt>Clé RIB</dt>
                                     <dd>{{ $contrat->rib ?? '--' }}</dd>
-                                    <dt>Code Conseiller</dt>
+                                    <dt>Code conseiller</dt>
                                     <dd>{{ $contrat->codeConseiller ?? "--" }}</dd>
                                 </dl>
                             </div>
                         </div>
                     </div>
-
-                    
-
                 </section>
 
                 <section id="edit-adherent" class="section-content d-none">
@@ -437,12 +434,8 @@
                                 </strong>
 
                                 <span>{{ $contrat->adherent->email ?? 'Non renseigné' }}</span>
-
                             </div>
-
                         </div>
-
-                        
 
                         <div class="row g-3 mb-3">
 
@@ -483,7 +476,7 @@
 
                     <fieldset class="border p-3">
 
-                        <legend class="float-none w-auto px-2"><small>Personnes à contacter en cas de besoins</small></legend>
+                        <legend class="float-none w-auto px-2"><small>Personnes à contacter en cas de besoin</small></legend>
 
                         <div class="row g-3 mb-3">
 
@@ -635,13 +628,13 @@
                         @if ($contrat->codeproduit === "INV_2020")
                             <div class="row my-4">
                                 <div class="col-12 col-lg-6">
-                                    <label class="form-label"><strong>Beneficiaire au terme du contrat</strong></label>
+                                    <label class="form-label"><strong>Bénéficiaire au terme du contrat</strong></label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" value="{{ $contrat->beneficiaireauterme ?? 'Non renseigné' }}" readonly>
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-6">
-                                    <label class="form-label"><strong>Beneficiaire au Deces</strong></label>
+                                    <label class="form-label"><strong>Bénéficiaire au Deces</strong></label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" value="{{ $contrat->beneficiaireaudeces ?? 'Non renseigné' }}" readonly>
                                     </div>
