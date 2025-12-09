@@ -45,29 +45,29 @@
             </div>
 
             <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="union_libre" value="union_libre" required>
+                <label class="form-check-label" for="separe">Concubinage</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="PACS" value="PACS" required>
+                <label class="form-check-label" for="marie">Pacsé(e)</label>
+            </div>
+
+            <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="situation_matrimoniale" id="marie" value="MARIE" required>
                 <label class="form-check-label" for="marie">Marié(e)</label>
             </div>
+            
 
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="situation_matrimoniale" id="divorce" value="DIVOR" required>
                 <label class="form-check-label" for="divorce">Divorcé(e)</label>
             </div>
 
-
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="situation_matrimoniale" id="veuf" value="VEUVE" required>
                 <label class="form-check-label" for="veuf">Veuf(ve)</label>
-            </div>
-
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="separe" value="separe" required>
-                <label class="form-check-label" for="separe">Séparé(e)</label>
-            </div>
-
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="situation_matrimoniale" id="unionlibre" value="union_libre" required>
-                <label class="form-check-label" for="unionlibre">Union libre</label>
             </div>
 
             @error('situation_matrimoniale')
