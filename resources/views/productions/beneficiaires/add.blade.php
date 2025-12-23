@@ -42,16 +42,15 @@
                                 @endforeach 
                             </select>
                         </div>
-                        <div class="col-12 col-lg-6">
-                            <label for="lienParente" class="form-label">Lien de Parenté</label>
-                            <select id="lienParenteBenef" class="form-select" name="lienParenteBenef">
-                                <option selected value="" disabled>Sélectionner le lien de Parenté</option>
-                              
-                                @foreach ($filliations  as $item)
-                                    <option value="{{ $item->CodeFiliation }}">{{ $item->MonLibelle }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <select id="lienParenteBenef" class="form-select" name="lienParenteBenef">
+                            <option selected value="" disabled>Sélectionner le lien de Parenté</option>
+                            
+                            @foreach ($filliations as $item)
+                                @if(!empty($item->MonLibelle))
+                                    <option value="{{ $item->MonLibelle }}">{{ $item->MonLibelle }}</option>
+                                @endif
+                            @endforeach
+                        </select>
                     </div>
                     
                     <div class="row g-3 mb-3">

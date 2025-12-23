@@ -44,6 +44,17 @@
                 </a>
             </li>
             @endcan
+            @can('Voir e-validation')
+            <strong><li class="menu-label">E-PRET</li></strong>
+            <li>
+                <a href="{{ route('cotation.index')}}">
+                    <div class="parent-icon">
+                        <i class='bx bx-home-alt'></i>
+                    </div>
+                    <div class="menu-title">Gestion de cotation</div>
+                </a>
+            </li>
+            @endcan
 
             @can('Voir e-souscription')
                 <strong><li class="menu-label">E-Souscription</li></strong>

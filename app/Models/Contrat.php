@@ -136,8 +136,8 @@ class Contrat extends Model
 
     public function documentsLoyemp()
     {
-        return $this->hasMany(Document::class, 'codecontrat', 'refcontratsource')
-                    ->where('source', 'pret');
+        return $this->hasMany(Document::class, 'codecontrat', 'id')
+                    ->where('source', 'ES');
     }
 
        public function getDocumentsBasedOnProduct()

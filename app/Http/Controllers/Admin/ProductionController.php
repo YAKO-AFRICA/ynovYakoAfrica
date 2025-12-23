@@ -63,8 +63,6 @@ use BaconQrCode\Renderer\Image\ImagickImageBackEnd; // Utilisez Imagick si dispo
 
 class ProductionController extends Controller
 {
-
-
     /**
      * Display a listing of the resource.
      */

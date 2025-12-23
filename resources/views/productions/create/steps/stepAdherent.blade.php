@@ -113,9 +113,7 @@
                 data-codeproduit="{{ $product->CodeProduit }}" data-placeholder="Sélectionner le lieu" autocomplete="on">
                 <option value="" disabled selected>Sélectionner le lieu</option>
 
-                {{-- @foreach($villes as $ville)
-                    <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option>
-                @endforeach --}}
+              
             </select>
         </div>
         
@@ -208,7 +206,7 @@
         <legend class="float-none w-auto px-2"><small>Contact</small></legend>
         <!-- Bouton pour ajouter des contacts optionnels -->
         <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#contactModal">
-            + Ajouter un contact optionnel
+            + Ajouter un contact
         </button>
         
         <!-- Aperçu des contacts -->
@@ -306,6 +304,7 @@
 
 
     <script>
+       
         document.addEventListener('DOMContentLoaded', function () {
             const apiUrl = 'https://api.yakoafricassur.com/enov/villes';
             const apiProfessions = 'https://api.yakoafricassur.com/enov/professions';
@@ -315,6 +314,7 @@
                 if (!str) return '';
                 return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
             }
+
 
             // Chargement des villes
             fetch(apiUrl)
@@ -356,6 +356,10 @@
                 })
                 .catch(error => console.error('Erreur chargement professions:', error));
         });
+
+
+
+
     </script>
 
 

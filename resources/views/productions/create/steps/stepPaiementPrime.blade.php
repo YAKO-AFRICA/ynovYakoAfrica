@@ -63,10 +63,9 @@
                                     <option value="{{ $item->NOM_LONG }}" data-code-guichet="{{ $item->CodeGuichet }}" data-code-banque="{{ $item->CODEBANQUE }}" >
                                         {{ $item->NOM_LONG ?? '' }}
                                     </option>
-                                @endforeach
+                                @endforeach 
                             </select>
                         </div>
-
                         
                         <div class="col-12 mb-3 row w-100">
                             <div class="col-sm-6 col-md-2 col-lg-2">

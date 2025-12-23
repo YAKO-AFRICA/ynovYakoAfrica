@@ -115,9 +115,9 @@
                                     </select>
                                 </div>
                                 <div class="col-12 col-lg-6">
-                                    <label for="lienParente" class="form-label">Lien de Parenté</label>
+                                    <label for="lienParente" class="form-label">Lien de Parenté <span class="text-danger">*</span></label>
                                     <select class="form-select" name="lienParente" id="lienParente"
-                                        aria-label="Default select example">
+                                        aria-label="Default select example" required>
 
                                         <option selected value="" disabled>Sélectionner le lien de Parenté</option>
 
@@ -131,7 +131,7 @@
                                 <div class="col-12 col-lg-6">
                                     <label class="form-label">Telephone</label><br>
                                     <div class="input-group mb-3">
-                                        <input type="text" name="mobileAssur" id="mobileAssur" class="form-control" aria-label="Text input with select">
+                                        <input type="tel" name="mobileAssur" id="mobileAssur" class="form-control" placeholder="ex: +225 0701020304" minlength="10" maxlength="15" >
                                     </div>
                                     
                                     @error('mobileAssur')

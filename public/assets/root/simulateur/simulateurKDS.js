@@ -559,7 +559,12 @@ document.addEventListener("DOMContentLoaded", function () {
         // Si aucune option n'est cochée → bloquer la redirection
         if (!isAssureInput) {
             event.preventDefault(); 
-            alert("Veuillez choisir une option (Oui ou Non) avant de continuer");
+
+            swal.fire({
+                title: "Veuillez choisir une option (Oui ou Non) pour l'assuré avant de continuer",
+                icon: "warning",
+                confirmButtonText: "OK"
+            });
             
             // Met le focus sur le premier radio pour attirer l’attention
             const firstRadio = document.querySelector('input[name="isAssure"]');

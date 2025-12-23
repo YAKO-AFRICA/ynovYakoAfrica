@@ -35,42 +35,43 @@ class DocumentController extends Controller
     public function store(Request $request)
     {
         try {
-        DB::beginTransaction();
-        $idContrat = $request->contrat;
-        $libelles = $request->input('libelles');
-        $files = $request->file('files');
-         
-       if($files != null) {
-        foreach ($files as $key => $file) {
-            $imageName = $idContrat . '-' . now()->timestamp . '.' . $file->getClientOriginalExtension();
+            DB::beginTransaction();
+            
+            $idContrat = $request->contrat;
+            $libelles = $request->input('libelles');
+            $files = $request->file('files');
+            
+            if($files != null) {
+                foreach ($files as $key => $file) {
+                    $imageName = $idContrat . '-' . now()->timestamp . '.' . $file->getClientOriginalExtension();
 
-            // $destinationPath = public_path('documents/files');
-            $destinationPath = base_path(env('UPLOADS_PATH'));
+                    // $destinationPath = public_path('documents/files');
+                    $destinationPath = base_path(env('UPLOADS_PATH'));
 
-            $file->move($destinationPath, $imageName);
-            $filePath = '../public_html/testenovapi/public/uploads/' . $imageName;
+                    $file->move($destinationPath, $imageName);
+                    $filePath = '../public_html/testenovapi/public/uploads/' . $imageName;
 
-            // \dd($libelles[$key]);
+                    // \dd($libelles[$key]);
 
-            TblDocument::create([
-                'codecontrat' => $idContrat,
-                'filename' => $imageName,
-                'libelle' => $libelles[$key],
-                'saisiele' => now(),
-                'saisiepar' => Auth::user()->membre->idmembre,
-                'source' => "ES",
+                    TblDocument::create([
+                        'codecontrat' => $idContrat,
+                        'filename' => $imageName,
+                        'libelle' => $libelles[$key],
+                        'saisiele' => now(),
+                        'saisiepar' => Auth::user()->membre->idmembre,
+                        'source' => "ES",
+                    ]);
+                }
+            }
+
+            DB::commit();
+        
+            return response()->json([
+                'type' => 'success',
+                'urlback' => 'back',
+                'message' => "Enregistré avec succès!",
+                'code' => 200,
             ]);
-        }
-       }
-
-        DB::commit();
-    
-        return response()->json([
-            'type' => 'success',
-            'urlback' => 'back',
-            'message' => "Enregistré avec succès!",
-            'code' => 200,
-        ]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([

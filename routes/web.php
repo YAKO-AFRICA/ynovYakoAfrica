@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\RapportController;
 use App\Http\Controllers\Setting\MotifController;
 use App\Http\Controllers\Admin\AdherentController;
 use App\Http\Controllers\Admin\BulletinController;
+use App\Http\Controllers\Admin\CotationController;
 use App\Http\Controllers\Admin\DocumentController;
 use App\Http\Controllers\Admin\PaiementController;
 use App\Http\Controllers\Admin\ProspectController;
@@ -386,6 +387,18 @@ Route::prefix('epret')->name('epret.')->group(function(){
 
 });
 Route::get('/show/bullettin/test', [BulletinController::class, 'printBulletin'])->name('bullettin.test');
+
+Route::prefix('cotation')->name('cotation.')->group(function(){
+    Route::middleware('guest','PreventBackHistory')->group(function(){
+
+    });
+    Route::middleware(['auth','PreventBackHistory'])->group(function () {
+        Route::get('/index', [CotationController::class, 'index'])->name('index');
+        Route::post('/store/{uuid}', [CotationController::class, 'store'])->name('store');
+        Route::get('/create/{id}', [CotationController::class, 'create'])->name('create');
+    });
+    
+});
 
 
 
