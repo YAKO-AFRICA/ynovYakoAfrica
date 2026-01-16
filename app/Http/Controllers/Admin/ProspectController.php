@@ -23,6 +23,7 @@ use App\Models\SuivieProspert;
 use App\Models\contactProspert;
 use App\Models\PartnerProspert;
 use App\Models\ProductProspert;
+use App\Models\ProduitGarantie;
 use App\Models\ProspectProduct;
 use App\Models\AdherentProspert;
 use App\Models\DocumentProspert;
@@ -76,7 +77,7 @@ class ProspectController extends Controller
                 $signaturePath = 'signatures/' . $signatureFileName;
                 Storage::disk('public')->put($signaturePath, base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $signatureData)));
 
-                AssuranceInfo::where('code', $request->prospect_code)->update([
+                AssuranceInfo::where('prospert_uuid', $request->prospect_uuid)->update([
                     'signature' => $signaturePath,
                 ]);
 
@@ -233,7 +234,7 @@ class ProspectController extends Controller
                 foreach ($request->produits as $prod) {
                     ProductProspert::create([
                         'uuid' => (string) Str::uuid(),
-                        'code' => $code,
+                        'code' => 'PP-' . strtoupper(Str::random(6)),
                         'product_uuid' => $prod,
                         'prospert_uuid' => $uuid,
                     ]);
@@ -241,20 +242,31 @@ class ProspectController extends Controller
             }
 
             // 🔹 Enregistrer la signature et informations assurance
-            if ($request->has('signature')) {
-                $signatureData = $request->input('signature');
-                $signatureFileName = 'signature_' . time() . '.png';
-                $signaturePath = 'signatures/' . $signatureFileName;
-                Storage::disk('public')->put($signaturePath, base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $signatureData)));
+            if ($uuid) {
+                // $signatureData = $request->input('signature');
+                // $signatureFileName = 'signature_' . time() . '.png';
+                // $signaturePath = 'signatures/' . $signatureFileName;
+                // Storage::disk('public')->put($signaturePath, base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $signatureData)));
+                $rib = $request->codeBanque .'-'. $request->codeGuichet .'-'. $request->numeroCompte .'-'. $request->cleRib;
 
                 AssuranceInfo::create([
                     'uuid' => (string) Str::uuid(),
-                    'code' => $code,
+                    'code' => 'AS-' . strtoupper(Str::random(6)),
                     'produit_uuid' => $request->produits[0] ?? null,
-                    'signature' => $signaturePath,
+                    // 'signature' => $signaturePath,
                     'datteEffet' => $request->datteEffet,
                     'modePaiement' => $request->modePaiement,
                     'periodicite' => $request->periodicite,
+                    'dejaClient' => $request->dejaClient,
+                    'assurerAuTerme' => $request->assurerAuTerme,
+                    'duree' => $request->duree,
+                    'prospert_uuid' => $uuid,
+                    'banque' => $request->banque,
+                    'rib' => $rib,
+                    'codeBanque' => $request->codeBanque,
+                    'codeGuichet' => $request->codeGuichet,
+                    'numeroCompte' => $request->numeroCompte,
+                    'cleRib' => $request->cleRib
                 ]);
             }
 
@@ -264,7 +276,7 @@ class ProspectController extends Controller
                 foreach ($contacts as $item) {
                     contactProspert::create([
                         'uuid' => (string) Str::uuid(),
-                        'code' => $code,
+                        'code' => 'CON-' . strtoupper(Str::random(6)),
                         'prospert_uuid' => $uuid,
                         'contactType' => $item['contactType'] ?? '',
                         'contact' => $item['contact'] ?? '',
@@ -275,11 +287,13 @@ class ProspectController extends Controller
 
             // 🔹 Enregistrer les partenaires
             $partners = json_decode($request->partners, true);
+
+            log::info($partners);
             if (!empty($partners)) {
                 foreach ($partners as $item) {
                     PartnerProspert::create([
                         'uuid' => (string) Str::uuid(),
-                        'code' => $code,
+                        'code' => 'PART-' . strtoupper(Str::random(6)),
                         'prospert_uuid' => $uuid,
                         'nom' => $item['nom'] ?? '',
                         'prenom' => $item['prenom'] ?? '',
@@ -297,27 +311,39 @@ class ProspectController extends Controller
                         'employeur' => $item['employeur'] ?? '',
                         'mobile' => $item['mobile'] ?? '',
                         'filliation_code' => $item['filliation_code'] ?? '',
-                        'code_partner' => 'PART-' . strtoupper(Str::random(6)),
+                        'code_partner' => $item['type'] ?? '',
                     ]);
                 }
             }
 
-            // 🔹 Enregistrer les documents uploadés
-            if ($request->hasFile('documents')) {
-                foreach ($request->file('documents') as $index => $doc) {
+           $documents = $request->file('documents');
+
+            Log::info('documents reçus');
+            Log::info($request->file('documents'));
+
+            if ($documents) {
+                foreach ($documents as $index => $doc) {
+
+                    if (!isset($doc['file']) || !$doc['file']->isValid()) {
+                        continue;
+                    }
+
                     $nature = $request->input("documents.$index.nature");
+
                     $path = $doc['file']->store('prospects_docs', 'public');
+
                     DocumentProspert::create([
                         'uuid' => (string) Str::uuid(),
-                        'code' => $code,
+                        'code' => 'DOC-' . strtoupper(Str::random(6)),
                         'prospert_uuid' => $uuid,
                         'filepath' => $path,
-                        'fileName' => basename($path),
+                        'fileName' => $doc['file']->getClientOriginalName(),
                         'nature' => $nature,
                         'etat' => 'ACTIF',
                     ]);
                 }
             }
+
 
             DB::commit();
 
@@ -380,22 +406,7 @@ class ProspectController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    // public function show(string $id)
-    // {
-    //     $prospect = Prospect::with(['followups.user'])->where('id', $id)->firstOrFail();
 
-    //     $commerciaux = Membre::whereNotNull('codeagent')->where('codepartenaire',"llv")->limit(500)->get();
-
-    //     $professions = Profession::orderBy('MonLibelle')->get();
-    //     $secteurActivites = TblSecteurActivite::orderBy('MonLibelle')->get();
-    //     $products = Product::orderBy('MonLibelle')->get();
-    //     $villes = TblVille::orderBy('idville')->get();
-
-    //     return view('prospects.show', compact('prospect','commerciaux','products','professions','secteurActivites','villes'));
-    // }
 
     public function show($uuid)
     {
@@ -467,31 +478,18 @@ class ProspectController extends Controller
         return redirect()->back()->with('success', 'Suivi enregistré avec succès');
     }
 
-    public function convertToClient(Request $request, $id)
+    public function convertToClient(Request $request, $uuid)
     {
-        // $request->validate([
-        //     'client_code' => 'required|unique:clients,code'
-        // ]);
+        $prospect = AdherentProspert::where('uuid', $uuid)->firstOrFail();
+        $partner = PartnerProspert::where('prospert_uuid', $uuid)->get();
+        $assures = PartnerProspert::where('prospert_uuid', $uuid)->where('code_partner', 'ASS')->get();
+        $beneficiaries = PartnerProspert::where('prospert_uuid', $uuid)->where('code_partner', 'BEN')->get();
+        $products = ProductProspert::where('prospert_uuid', $uuid)->get();
+        $allProducts = ReseauProduct::select('codeproduit', 'libelleproduit')
+            ->where('codereseau', Auth::user()->membre->codereseau)->get();
+
         
-        // $prospect = Prospect::where('id', $id)->firstOrFail();
-        
-        // // Créer le client
-        // $client = Client::create([
-        //     'uuid' => Str::uuid(),
-        //     'code' => $request->client_code,
-        //     'first_name' => $prospect->first_name,
-        //     'last_name' => $prospect->last_name,
-        //     // ... autres champs
-        // ]);
-        
-        // // Mettre à jour le prospect
-        // $prospect->update([
-        //     'status' => 'converted',
-        //     'client_id' => $client->id
-        // ]);
-        
-        // return redirect()->route('clients.show', $client->id)
-        //     ->with('success', 'Prospect converti en client avec succès');
+        return view('productions.create.createProspert', compact('prospect','assures', 'beneficiaries', 'products','allProducts'));
     }
 
     public function edit($uuid)

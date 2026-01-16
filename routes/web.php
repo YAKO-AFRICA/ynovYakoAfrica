@@ -430,6 +430,11 @@ Route::prefix('prospect')->name('prospect.')->group(function(){
 
         Route::get('/download', [ProspectController::class, 'downloadQrCode'])->name('download');
 
+
+        // convert prospert to Client
+
+        Route::get('/convert/form/{uuid}', [ProspectController::class, 'convertToClient'])->name('convert.form');
+
         
 
     });

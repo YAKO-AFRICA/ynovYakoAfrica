@@ -40,7 +40,8 @@
             <div class="modal-body">
                 <div class="form-grid" id="partnerForm">
 
-                    <input type="hidden" name="partner_type" id="partner_type" value="">
+                    <input type="hidden" name="partner_type" id="partner_type" value="">   
+                    {{-- donné du type chargé dynamic --}}
 
                     <fieldset class="mt-3 p-3">
                         <legend class="float-none w-auto px-2 border rounded bg-white">

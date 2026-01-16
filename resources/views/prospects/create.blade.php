@@ -55,7 +55,7 @@
 
             <!-- Step 2: Informations Personnelles et Contacts -->
             <div class="form-step" data-step="2">
-                <h2 class="section-title">Informations du Prospect/Adhérent</h2>
+                <h2 class="section-title ">👤 Informations du Prospect/Souscripteur</h2>
                 
                 @include('prospects.components.steps.stepAdherent')
             </div>
@@ -83,13 +83,13 @@
                 <div class="form-group">
                     <label class="required">Type d'acteur</label>
                     <div class="cards-container row">
-                        <label class="partner-card col" id="card-ass" data-type="ASS" data-bs-toggle="modal" data-bs-target="#openPartnerModal">
+                        <label class="partner-card col" id="card-ass" data-type="ASS" onclick="collectType('ASS')" data-bs-toggle="modal" data-bs-target="#openPartnerModal">
                             Ajouter un Assuré
                         </label>
                     </div>
                 </div>
 
-                <div id="partnersList" class="added-list"></div>
+                <div id="partnersList" class="added-list partnersList"></div>
             </div>
             <!-- Step 3: Partenaires -->
             <div class="form-step" data-step="4">
@@ -104,13 +104,13 @@
                     <label class="required">Type d'acteur</label>
                     <div class="cards-container row">
                         
-                        <label class="partner-card col" id="card-ben" data-type="BEN" data-bs-toggle="modal" data-bs-target="#openPartnerModal">
+                        <label class="partner-card col" id="card-ben" data-type="BEN" onclick="collectType('BEN')" data-bs-toggle="modal" data-bs-target="#openPartnerModal">
                             Bénéficiaire
                         </label>
                     </div>
                 </div>
 
-                <div id="partnersList" class="added-list"></div>
+                <div id="partnersList" class="added-list partnersList"></div>
             </div>
 
             <!-- Step 4: Informations Assurance -->
@@ -123,7 +123,6 @@
             <!-- Step 5: Documents -->
             <div class="form-step" data-step="6">
                 <h2 class="section-title">Documents</h2>
-                
                 @include('prospects.components.steps.stepDoc')
             </div>
 
@@ -142,6 +141,15 @@
 
 
         </form>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                collectType = function(type) {
+                    // alert(type);
+                    document.getElementById('partner_type').value = type;
+                };
+            });
+        </script>
 
         
 
@@ -163,6 +171,8 @@
                     formData.append(`documents[${index}][file]`, item.file);
                     formData.append(`documents[${index}][nature]`, item.nature);
                 });
+
+                console.log(formData);
 
                 try {
                     const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';

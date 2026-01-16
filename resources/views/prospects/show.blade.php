@@ -179,7 +179,7 @@
                             <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#assignToModal">
                                 <i class="bx bx-user-check me-1"></i> Assigner
                             </button> --}}
-                            <a href="{{ route('prod.stepProduct') }}" class="btn btn-outline-success">
+                            <a href="{{ route('prospect.convert.form', $prospect->uuid) }}" class="btn btn-outline-success">
                                 <i class="bx bx-transfer me-1"></i> Convertir en client
                             </a>
                             {{-- <a href="tel:{{ $prospect->mobile }}" class="btn btn-outline-info">

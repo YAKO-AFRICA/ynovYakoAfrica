@@ -22,7 +22,13 @@ class AssuranceInfo extends Model
         'modePaiement',
         'periodicite',
         'signature',
+        'duree',
+        'prospert_uuid',
+        'banque',
+        'rib',
+        'codeBanque',
+        'codeGuichet',
+        'numeroCompte',
+        'cleRib'
     ];
-
-
 }

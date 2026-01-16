@@ -13,6 +13,10 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     {{-- <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script> --}}
+
+
+	<link href="{{ asset('assets/css/icons.css')}}" rel="stylesheet">
+
     
 
     <style>
@@ -837,8 +841,11 @@
 
 
         function renderPartners() {
-            const container = document.getElementById('partnersList');
-            container.innerHTML = '';
+            // const container = document.getElementById('partnersList');
+            const containers = document.querySelectorAll('.partnersList');
+            containers.forEach(container => {
+                container.innerHTML = '';
+            });
 
             partners.forEach((partner, index) => {
                 const div = document.createElement('div');
@@ -854,9 +861,14 @@
                         Supprimer
                     </button>
                 `;
-                container.appendChild(div);
+                containers.forEach(container => {
+                    container.appendChild(div);
+                });
             });
         }
+        
+
+
 
         function removePartner(index) {
             partners.splice(index, 1);
@@ -890,6 +902,9 @@
             }
 
             uploadedFiles.push({ file: file, nature: nature, fileName: file.name });
+            document.getElementById('documents_input').value = JSON.stringify(uploadedFiles);
+            console.log(uploadedFiles);
+
             renderFiles();
             event.target.value = '';
         }
