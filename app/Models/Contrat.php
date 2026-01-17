@@ -58,6 +58,10 @@ class Contrat extends Model
         'periodiciterente',
         'dureerente',
 
+        'mode_reserversement',
+        'echeance_reversement',
+        'duree_reversement',
+
         'personneressource',
         'contactpersonneressource',
         'beneficiaireauterme',
@@ -130,8 +134,11 @@ class Contrat extends Model
 
     public function garanties()
     {
-        return $this->hasMany(AssureGarantie::class, 'codecontrat', 'id');
+        return $this->hasMany(AssureGarantie::class, 'codecontrat', 'id')
+                    ->where('cleintegration', $this->cleintegration);
     }
+
+
 
 
     public function documentsLoyemp()

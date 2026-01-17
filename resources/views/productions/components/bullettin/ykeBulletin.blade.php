@@ -178,7 +178,7 @@
                         <td>{{ $assure->lieuresidence }}</td>
                     </tr>
                     @endforeach
-                    <tr>
+                    {{-- <tr>
                         <tr>
                             <td>azss</td>
                             <td>ffffff</td>
@@ -186,7 +186,7 @@
                             <td>rfklo</td>
                             <td>bvnnf</td>
                         </tr>
-                    </tr>
+                    </tr> --}}
                     
                 </table>
                 

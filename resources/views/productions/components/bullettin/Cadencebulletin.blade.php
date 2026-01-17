@@ -556,8 +556,13 @@
                 </div>
                 <div style="width: 100%; margin-top: 7px;">
                     <label>Le capital garanti au contrat doit être reservé au(x) bénéficiaire(s) sous la forme : </label><br><br>
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label> <input type="radio" class="radio1"> <span>d'un paiement unique à la date d'echéeance</span></label><br><br>
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label> <input type="radio" class="radio1"><span>d'une rente certaine payée sur une duree de <b>{{ $contrat->duree ?? ''}}</b> ANS</span></label>
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label> <input type="radio" class="radio1"> 
+                        @if ($contrat->mode_reserversement == 'unique')
+                            Un paiement unique à la date d'échéance 
+                        @else
+                            Une rente certaine payée sur une duree de {{ $contrat->duree_reversement ?? ''}} ANS
+                        @endif
+                    </label><br><br>
                 
                 </div> <br> <br>
 
@@ -565,13 +570,11 @@
                     <div style="width: 100%; margin-left: 50px; margin-top: -10px;">
                         <div style="width: 15%; float: left;"><span>par échéance</span></div>
                         <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1" @if ($contrat->periodicite == 'M')checked @endif><strong>Mensuelle</strong></div>
+                                class="radio1" @if ($contrat->echeance_reversement == 'mensuelle')checked @endif><strong>Mensuelle</strong></div>
                         <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1" @if ($contrat->periodicite == 'T')checked @endif><strong>Trimestrielle</strong></div>
+                                class="radio1" @if ($contrat->echeance_reversement == 'trimestrielle')checked @endif><strong>Trimestrielle</strong></div>
                         <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1" @if ($contrat->periodicite == 'S')checked @endif><strong>Semestrielle</strong></div>
-                        <div style="width: 18%; float: left;"><input type="radio"
-                                class="radio1" @if ($contrat->periodicite == 'A')checked @endif><strong>Annuelle</strong></div>
+                                class="radio1" @if ($contrat->echeance_reversement == 'annuelle')checked @endif><strong>Annuelle</strong></div>
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 {{-- </section> --}}

@@ -126,6 +126,68 @@
                     </div>
                 </div>
             </div>
+            @if($product->CodeProduit == 'CADENCE')
+                <div>
+                    <fieldset class="border p-3">
+                        <legend class="float-none w-auto px-2">
+                            <small>Le capital garanti au contrat doit être réservé au(x) bénéficiaire(s) sous la forme</small>
+                        </legend>
+
+                        <!-- Options principales -->
+                        <div class="form-group mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="mode_reserversement" id="paiement_unique" value="unique">
+                                <label class="form-check-label" for="paiement_unique">
+                                    Paiement unique à la date d’échéance
+                                </label>
+                            </div>
+
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="radio" name="mode_reserversement" id="rente_certaine" value="rente">
+                                <label class="form-check-label" for="rente_certaine">
+                                    Rente certaine payée sur une durée
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Bloc échéance -->
+                        <div id="echeanceBloc" class="mt-3 d-none">
+                            <label class="form-label"><strong>Type d’échéance</strong></label>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="echeance_reversement" id="mensuelle" value="mensuelle">
+                                <label class="form-check-label" for="mensuelle">Mensuelle</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="echeance_reversement" id="trimestrielle" value="trimestrielle">
+                                <label class="form-check-label" for="trimestrielle">Trimestrielle</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="echeance_reversement" id="annuelle" value="annuelle">
+                                <label class="form-check-label" for="annuelle">Annuelle</label>
+                            </div>
+                        </div>
+
+                        <!-- Durée (uniquement rente certaine) -->
+                        <div id="dureeBloc" class="mt-3 d-none">
+                            <label class="form-label">
+                                <strong>Durée de la rente (en années)</strong>
+                            </label>
+                            <input
+                                type="number"
+                                id="duree_reversement"
+                                name="duree_reversement"
+                                class="form-control"
+                                min="1"
+                                placeholder="Ex : 5">
+                        </div>
+
+                    </fieldset>
+                </div>
+            @endif
+
         </div>
         <div class="col-12 col-lg-4">
             <div class="card mx-0">
@@ -346,4 +408,38 @@
             });
         });
     </script>
+
+    <script>
+        const modePaiementRadios = document.querySelectorAll('input[name="mode_reserversement"]');
+        const echeanceBloc = document.getElementById('echeanceBloc');
+
+        modePaiementRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                echeanceBloc.classList.remove('d-none');
+            });
+        });
+    </script>
+
+    <script>
+        const modePaiementRadios = document.querySelectorAll('input[name="mode_reserversement"]');
+        const echeanceBloc = document.getElementById('echeanceBloc');
+        const dureeBloc = document.getElementById('dureeBloc');
+
+        modePaiementRadios.forEach(radio => {
+            radio.addEventListener('change', function () {
+
+                // Toujours afficher les échéances
+                echeanceBloc.classList.remove('d-none');
+
+                // Afficher la durée uniquement pour rente certaine
+                if (this.value === 'rente') {
+                    dureeBloc.classList.remove('d-none');
+                } else {
+                    dureeBloc.classList.add('d-none');
+                    document.getElementById('duree_reversement').value = '';
+                }
+            });
+        });
+    </script>
+
 </div>
