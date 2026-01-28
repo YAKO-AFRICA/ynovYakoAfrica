@@ -28,12 +28,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     el.value = value;
                     el.disabled = true;
 
-                } else {
+                } if (name === 'datenaissance') {
+                    console.log('name === datenaissance');
                     // Cas spécial pour "datenaissance"
                     if (
-                        name === 'datenaissance' &&
-                        simulationData.infoSimulation.isAssure === 'non' &&
-                        simulationData.codeProduit === 'CADENCE'
+                        simulationData.infoSimulation.isAssure === 'non' 
                     ) {
                         el.value = '';           // vide la valeur
                         el.readOnly = false;     // champ modifiable
@@ -41,6 +40,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         el.value = value;
                         el.readOnly = true;      // champ verrouillé sinon
                     }
+                } else {
+                    el.readOnly = false;     // champ modifiable
                 }
             });
         }

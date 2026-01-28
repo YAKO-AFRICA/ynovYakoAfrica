@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 checkbox.addEventListener('change', function() {
                     // Stocker l'état de la checkbox SURETÉ
                     if (garantie.codeproduitgarantie === 'SUR') {
+                        console.log("garantie suerete check after");
                         sessionStorage.setItem('valueSureteCheck', this.checked);
                     }
                     triggerAutoUpdate();
@@ -199,7 +200,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const ageAssure = ageHiddenInput.value; // Récupère la valeur du champ caché
         const duree = dureeInput.value;
         
-        if (!capital || !ageAssure || !duree || !currentCodeGroupe || !currentCodeTable) {
+        
+        if (!capital || !ageAssure || !duree ) {
             console.log("Paramètres manquants pour le calcul SURETÉ");
             return 0;
         }
@@ -265,6 +267,7 @@ document.addEventListener("DOMContentLoaded", function () {
         
         triggerAutoUpdate();
     });
+
     
     // Gestion du changement de périodicité
     document.getElementById("codePeriodicite").addEventListener("change", function () {
@@ -289,10 +292,10 @@ document.addEventListener("DOMContentLoaded", function () {
             return response.json();
         })
         .then(data => {
+            console.log("Données de la table de prime:", data);
             if (data.error === false && data.dataTablePrime && data.dataTablePrime.length > 0) {
                 currentCodeGroupe = data.dataTablePrime[0].CodeGRoupeIntervalle;
                 currentCodeTable = data.dataTablePrime[0].codeTable;
-                
                 // Déclencher une mise à jour après avoir obtenu les nouvelles données
                 triggerAutoUpdate();
             }
@@ -441,6 +444,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         const surCapital = parseFloat(document.getElementById(`sur_capital_${garantieId}`).value);
                         const ageHiddenInput = document.getElementById(`sur_age_assure_${garantieId}`);
                         const selectedAge = ageHiddenInput.value; // Récupère la tranche calculée automatiquement
+                        console.log("garantie suerete id", garantieId, "age", selectedAge, "cap", surCapital);
                         
                         if (!selectedAge) {
                             continue;

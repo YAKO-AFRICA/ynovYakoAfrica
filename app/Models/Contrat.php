@@ -134,8 +134,7 @@ class Contrat extends Model
 
     public function garanties()
     {
-        return $this->hasMany(AssureGarantie::class, 'codecontrat', 'id')
-                    ->where('cleintegration', $this->cleintegration);
+        return $this->hasMany(AssureGarantie::class, 'codecontrat', 'id');
     }
 
 

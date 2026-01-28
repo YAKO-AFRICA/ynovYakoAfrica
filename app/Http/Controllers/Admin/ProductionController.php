@@ -477,6 +477,8 @@ class ProductionController extends Controller
 
         $data = $request->all();
 
+        
+
         Log::info($data);
 
         // On décode inputSessionData
@@ -489,6 +491,9 @@ class ProductionController extends Controller
         if (!empty($request->inputSessionData)) {
             $simulationData = json_decode($request->inputSessionData);
         }
+
+        Log::info("Champs garanties trouvées : ");
+        Log::info($simulationData->garantieData);
 
         $contactsBrut = $data['contacts'] ?? [];
 
@@ -703,6 +708,9 @@ class ProductionController extends Controller
 
                     // creation des garanties
 
+                    Log::info("Champs garanties trouvées : ");
+                    Log::info($simulationData->garantieData);
+
                     foreach ($simulationData->garantieData as $garantie) {
                         // Log::info("garantie". $garantie);
                         $GarantieOnBD = ProduitGarantie::where('codeproduitgarantie', $garantie->codeGarantie)->first();
@@ -909,36 +917,7 @@ class ProductionController extends Controller
 
             // Envoi de l'email 
 
-            // try {
-            //     $to = $request->email;
-            //     $emailSubject = 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉';
-
-            //     $mailData = [
-            //         'title' => 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉',
-            //         'btnLink' => $bulletinData['file_url'],
-            //         'btnText' => 'Télécharger mon bulletin',
-            //         'documents' => $bulletinData['file_url'],
-            //     ];
-
-            //     Mail::to($to)->send(new CustomerMail($mailData, $emailSubject));
-
-            //     // Log si l'envoi est OK
-            //     $details_log = [
-            //         'url' => route('prod.show', $idContrat),
-            //         'user' => auth()->user()->membre->nom . ' ' . auth()->user()->membre->prenom,
-            //         'date' => now(),
-            //         'title' => "Enregistrement de la proposition ID $idContrat",
-            //         'action' => "Voir",
-            //     ];
-            //     Log::info("Email envoyé avec succès", $details_log);
-
-            // } catch (Exception $e) {
-            //     // Si erreur domaine inconnu ou email invalide
-            //     Log::error("Erreur d'envoi d'email : " . $e->getMessage(), [
-            //         'email' => $to,
-            //         'contrat' => $idContrat
-            //     ]);
-            // }
+           
 
             try {
                 $to = $request->email;
@@ -1379,6 +1358,7 @@ class ProductionController extends Controller
         $filliations =  Filliation::select('MonLibelle')->get();
         // $zone =  $contrat->user->membre->zone->libellezone;
         // dd($zone);
+        // dd($contrat->garanties);
 
         return view('productions.show', compact('contrat', 'productGarantie','filliations'));
     }

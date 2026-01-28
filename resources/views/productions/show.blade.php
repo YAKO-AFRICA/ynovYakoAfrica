@@ -235,7 +235,7 @@
                                         <dd>{{ $contrat->organisme ?? '--' }}</dd>
                     
                                         <dt>Agence</dt>
-                                        <dd>{{ $contrat->agence ?? '--' }}</dd>
+                                        <dd>{{ $contrat->user->membre->nomagence ?? '--' }}</dd>
                     
                                         <dt>N° de compte (Matricule)</dt>
                                         <dd>{{ $contrat->numerocompte ?? '--' }}</dd>

@@ -639,16 +639,16 @@
                 <!-- Colonne gauche -->
 
                 @php
-                    $garantieSurete = $contrat->garanties->where('codeproduitgarantie', 'SURETE')->first();
-                    $garantieDeces = $contrat->garanties->where('codeproduitgarantie', 'DECES')->first();
+                    $garantieSurete = $contrat->garanties->where('codeproduitgarantie', 'SUR')->first();
+                    $garantieDeces = $contrat->garanties->where('codeproduitgarantie', 'DECESACC')->first();
                 @endphp
                 <div style="width: 100%; margin-top: 0px;">
 
                     <label>Les primes en couverture de <strong>CAPITAL SURETE</strong> et de <strong>garantie complementaire DECÈS ACCIDENTEL</strong>sont payées en sus de la COTISATION D'ASSURANCE et en même temps qu'elle</label>
                 </div>
                 <div style="width: 100%; margin-top: 7px;">
-                    <label style="margin-top: 0px; margin-left:20px; display:block"> <input type="radio" class="radio1"> Je souhaite souscrit au CAPITAL SURETE de <span><b>{{ $garantieSurete->capitalgarantie ?? 0}}</b> FCFA</span> <span> pour une prime de </span><b>{{ $garantieSurete->prime ?? 0}}</b> FCFA</label>
-                    <label style="margin-top: 7px; margin-left:20px; display:block"> <input type="radio" class="radio1"> Je souhaite souscrit au CAPITAL ACCIDENT de <span><b>{{ $garantieDeces->capitalgarantie ?? 0}}</b> FCFA</span> <span> pour une prime de </span><b>{{ $garantieDeces->prime ?? 0}}</b> FCFA</label>
+                    <label style="margin-top: 0px; margin-left:20px; display:block"> <input type="radio" class="radio1" @if($garantieSurete) checked @endif> Je souhaite souscrit au CAPITAL SURETE de <span><b>{{ $garantieSurete->capitalgarantie ?? 0}}</b> FCFA</span> <span> pour une prime de </span><b>{{ $garantieSurete->prime ?? 0}}</b> FCFA</label>
+                    <label style="margin-top: 7px; margin-left:20px; display:block"> <input type="radio" class="radio1" @if($garantieDeces) checked @endif> Je souhaite souscrit au CAPITAL ACCIDENT de <span><b>{{ $garantieDeces->capitalgarantie ?? 0}}</b> FCFA</span> <span> pour une prime de </span><b>{{ $garantieDeces->prime ?? 0}}</b> FCFA</label>
                                     
                 </div>
             </div>
@@ -789,7 +789,7 @@
             <!-- Contenu -->
             <div class="content" style="margin-top: 0px; padding: 10px; text-align: center;">
                 <!-- Colonne gauche -->
-                    <label style="">Le fonds d'operation est constitué sur la base de ............................. <i style="font-size: 10px !important">(Maximum -50% de la cotisation annuelle)</i> par année</label>
+                    <label style="">Le fonds d'operation est constitué sur la base de {{($contrat->prime * 12) / 2 ?? '............' }} <i style="font-size: 10px !important">(Maximum -50% de la cotisation annuelle)</i> par année</label>
             </div>
         </section>
         <section style="width: 100%; margin-top: 7px;">
@@ -798,7 +798,7 @@
                 <label>Fait à : <strong> {{ $contrat->user->membre->zone->libellezone ?? '' }}  </strong> le <strong> {{ \Carbon\Carbon::parse($contrat->saisiele)->format('d/m/Y à H:i:s') ?? '' }} </strong></label>
             </div>
             <div style="width: 100%; text-align: center;">
-                <div style="width: 33%; float: left;">
+                <div style="width: 43%; float: left;">
                     <strong>Signature du souscripteur</strong>
                     {{-- <p><i style="font-size: 10px !important">(précédée de la mention "LU et APPROUVE)</i></p> --}}
                     <div>
@@ -809,13 +809,11 @@
 
                     {{-- <img src="{{ $qrCodeBase64 }}" alt="QR Code de vérification" style="width: 60px; height: 60px;"> --}}
                 </div>
-                <div style="width: 33%; float: left;">
-                    <strong>Signature de l'Assuré</strong>
-                    <p><i style="font-size: 10px !important">(précédée de la mention "LU et APPROUVE)</i></p>
-                </div>
-                <div style="width: 33%; float: left;">
-                    <strong>Signature du Conseiller</strong> 
-                    <p><i style="font-size: 10px !important">(précédée de la mention "LU et APPROUVE)</i></p>
+                <div style="width: 43%; float: left; padding: 0px; margin: 0px">
+                    <strong>POUR L'ASSUREUR</strong> 
+                    <div style="padding: 0px; margin:0px"> 
+                        <img src="data:image/jpg;base64,{{ base64_encode(file_get_contents(public_path('root/images/Signature_Dta.jpg'))) }}" alt="Logo" style="width: 150px">
+                    </div>
                 </div>
             </div>
             <div style="clear: both;"></div>
