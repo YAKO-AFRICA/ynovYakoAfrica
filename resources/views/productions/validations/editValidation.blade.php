@@ -89,7 +89,7 @@
     <div class="row g-3 mb-3">
         <div class="col-12 col-lg-6">
             <label for="Date_naissance" class="form-label">Date de naissance <span class="star">*</span></label>
-            <input type="date" name="datenaissance" value="{{ $contrat->adherent->datenaissance ?? ''}}" class="form-control" id="Datnaissance"
+            <input type="date" name="datenaissance" value="{{ Carbon\Carbon::parse($contrat->adherent->datenaissance)->format('Y-m-d') ?? ''}}" class="form-control" id="Datnaissance"
                 placeholder="Date de naissance" autocomplete="on" required>
 
             @error('datenaissance')
@@ -294,9 +294,9 @@
 
         <div class="col-12">
 
-            <label for="email" class="form-label">Email <span class="star">*</span></label>
+            <label for="email" class="form-label">Email </label>
 
-            <input type="email" name="email" value="{{ $contrat->adherent->email ?? ''}}" class="form-control" id="email" placeholder="Email" autocomplete="on" required>
+            <input type="email" name="email" value="{{ $contrat->adherent->email ?? ''}}" class="form-control" id="email" placeholder="Email" autocomplete="on">
 
 
 
