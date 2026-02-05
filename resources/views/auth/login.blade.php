@@ -474,13 +474,21 @@
                         <a href="#" class="forgot-password">Mot de passe oublié ?</a>
                     </div>
 
-                    <button type="submit" class="btn-login">
+                    <button type="submit" class="btn-login" id="bntLogin">
                         Se connecter
                     </button>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('bntLogin').addEventListener('click', function() {
+            this.disabled = true;
+            this.innerHTML = 'Connexion en cours...';
+            this.form.submit();
+        });
+    </script>
 
     <script src="{{ asset('assets/js/jquery.min.js')}}"></script>
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js')}}"></script>

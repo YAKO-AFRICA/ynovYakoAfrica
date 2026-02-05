@@ -527,9 +527,6 @@
                         </div>
 
                     </fieldset>
-
-                    
-
                 </section>
 
                 <section id="edit-assurer" class="section-content d-none">

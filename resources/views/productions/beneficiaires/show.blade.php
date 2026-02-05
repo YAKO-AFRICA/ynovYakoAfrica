@@ -44,12 +44,12 @@
                             </div>
                         </div>
         
-                        <div class="row mb-3">
+                        {{-- <div class="row mb-3">
                             <div class="col-12">
                                 <label class="form-label"><strong>Part en % :</strong></label>
                                 <span>{{ $beneficiaire->part ?? 'Non renseigné' }}%</span>
                             </div>
-                        </div>
+                        </div> --}}
                     </fieldset>
             
                 </div>

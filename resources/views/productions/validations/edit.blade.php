@@ -82,49 +82,24 @@
             </center>
 
             <div class="card-body">
-
                 <h5 class="my-3 text-center text-uppercase">Modifier les acteurs</h5>
-
                 <div class="fm-menu">
-
                     <div class="list-group list-group-flush">
-
                         <a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="info-contrat">
-
                             <i class='bx bx-folder me-2'></i><span>Detail du contrat</span>
-
                         </a>
-
                         <a href="javascript:;" class="list-group-item py-2 btn border-0" data-target="edit-adherent">
-
                             <i class='bx bx-devices me-2'></i><span>Adherent</span>
-
                         </a>
-
                         <a href="javascript:;" class="list-group-item py-2 muted  btn border-0" data-target="edit-assurer" disabled>
-
                             <i class='bx bx-analyse me-2'></i><span>Assurés</span>
-
                         </a>
-
                         <a href="javascript:;" class="list-group-item py-1 btn muted" data-target="edit-beneficiaire" disabled>
-
                             <i class='bx bx-plug me-2'></i><span>Beneficiaire</span>
-
                         </a>
-
-                        {{-- <a href="javascript:;" class="list-group-item py-1" data-target="edit-info">
-
-                            <i class='bx bx-analyse me-2'></i><span>Informations</span>
-
-                        </a> --}}
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
         <div class="card">
             <div class="card-body">
@@ -151,11 +126,7 @@
                                     title="Preview">
                                     <i class="bx bx-show"></i>
                                 </a>
-                                {{-- <a class="btn btn-sm btn-outline-secondary" href=""> <i class="bx bx-trash"></i></a> --}}
                             </h6>
-
-
-
                             <div class="modal fade" id="view-bulletin{{ $doc->id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
 
@@ -209,6 +180,7 @@
                     @endforeach
 
                 @else
+                    <p class="text-secondary text-center mt-3">Aucun document trouvé</p>
                 @endif
 
             </div>
@@ -220,49 +192,38 @@
     <div class="col-12 col-lg-9">
 
         <div class="card">
+            
 
             <div class="card-body">
 
-                <section id="info-contrat" class="section-content">
+                <section id="info-contrat" class="section-content d-none">
 
                     <h5>Modifier les Détails du Contrat</h5>
 
-                    @include('productions.components.editContrat')
+                    <center>Vous n'êtes pas autorisé à modifier ce contrat</center>
+
+                    {{-- @include('productions.components.editContrat') --}}
 
                 </section>
 
-                <section id="edit-adherent" class="section-content d-none">
+                <section id="edit-adherent" class="section-content">
 
                     <h5>Adhérent</h5>
 
-                    @include('productions.components.editAdherent')
+                    @include('productions.validations.editValidation')
 
                 </section>
-
-                
-
-
-
             </div>
-
         </div>
-
     </div>
 
-
-
     @include('productions.components.addDoc')
-
-
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
             const links = document.querySelectorAll('.list-group-item');
 
             const sections = document.querySelectorAll('.section-content');
-
-
 
             links.forEach(link => {
 

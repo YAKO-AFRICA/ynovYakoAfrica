@@ -28,8 +28,20 @@ class UserController extends Controller
 
     public function indexCollaborateur()
     {
-        $collaborateurs = Membre::orderby('created_at', 'desc')->with('zone', 'equipe', 'reseau')
-        ->where('codepartenaire', 'LLV')->get();
+        // $collaborateurs = Membre::orderby('created_at', 'desc')->with('zone', 'equipe', 'reseau')
+        // ->where('codepartenaire', 'LLV')->get();
+
+        // $users = User::where('etat', 'actif')->get();
+
+        $collaborateurs = Membre::orderby('created_at', 'desc')
+        ->with('zone', 'equipe', 'reseau')
+        ->where('codepartenaire', 'LLV')
+        ->whereIn('idmembre', function ($query) {
+            $query->select('idmembre')
+                ->from('users')
+                ->where('etat', 'actif');
+        })->get();
+
 
 
         $reseaux = Reseau::where('codepartenaire', 'LLV')->get();
