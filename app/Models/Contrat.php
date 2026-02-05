@@ -58,6 +58,10 @@ class Contrat extends Model
         'periodiciterente',
         'dureerente',
 
+        'mode_reserversement',
+        'echeance_reversement',
+        'duree_reversement',
+
         'personneressource',
         'contactpersonneressource',
         'beneficiaireauterme',
@@ -132,6 +136,8 @@ class Contrat extends Model
     {
         return $this->hasMany(AssureGarantie::class, 'codecontrat', 'id');
     }
+
+
 
 
     public function documentsLoyemp()

@@ -74,10 +74,14 @@ document.addEventListener("DOMContentLoaded", function () {
         resultDiv.innerHTML = "";
         showLoading();
 
+        const isAssureInput = document.querySelector('input[name="isAssure"]:checked');
+        const isAssure = isAssureInput ? isAssureInput.value : '';
+
         // Structure principale pour les données de simulation
         simulationData = {
             garantieData: [],
             infoSimulation: {
+                isAssure : isAssure,
                 primeFinal: totalPrime,
                 primepricipale: totalPurePrime,
                 codeProduit: formData.get("CodeProduit"),
@@ -330,6 +334,43 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
         `;
     }
+
+
+    const souscribBtn = document.getElementById('btn-souscription');
+
+    souscribBtn.addEventListener('click', function(event) {
+        // Récupère la valeur du radio "isAssure"
+        const isAssureInput = document.querySelector('input[name="isAssure"]:checked');
+        const isAssure = isAssureInput ? isAssureInput.value : '';
+
+        // Si aucune option n'est cochée → bloquer la redirection
+        if (!isAssureInput) {
+            event.preventDefault(); 
+
+            swal.fire({
+                title: "Veuillez choisir une option (Oui ou Non) pour l'assuré avant de continuer",
+                icon: "warning",
+                confirmButtonText: "OK"
+            });
+            
+            // Met le focus sur le premier radio pour attirer l’attention
+            const firstRadio = document.querySelector('input[name="isAssure"]');
+            if (firstRadio) {
+                firstRadio.focus();
+            }
+            return;
+        }
+
+        // Si une valeur est cochée → on met à jour la session normalement
+        const sessionData = sessionStorage.getItem('simulationData');
+        if (sessionData) {
+            const simulationData = JSON.parse(sessionData);
+            simulationData.infoSimulation.isAssure = isAssure;
+            sessionStorage.setItem('simulationData', JSON.stringify(simulationData));
+        }
+
+        console.log("donnée de simulation en sessiodddddddddddddddddddddddddn:", sessionData);
+    });
 
     // Fonction pour masquer l'indicateur de chargement
   

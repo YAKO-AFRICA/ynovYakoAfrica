@@ -68,7 +68,7 @@
             <div style="width: 100%; text-align: center;">
                 <div style="width: 33%; float: left;"><strong>Produit</strong> :{{ $contrat->libelleproduit ?? ""}}</div>
                 <div style="width: 33%; float: left;"><strong>Conseiller</strong> : {{ $contrat->nomagent ?? ""}}</div>
-                <div style="width: 33%; float: left;"><strong>Agence</strong> : {{ $contrat->agence ?? ""}}</div>
+                <div style="width: 33%; float: left;"><strong>Agence</strong> : {{ $contrat->user->membre->nomagence ?? ""}}</div>
             </div>
             <div style="clear: both;"></div>
         </section>
@@ -137,9 +137,19 @@
                         <div class="situation" style="margin-bottom: 10px;">
                             <label><strong>Situation Matrimoniale :</strong></label>
                             <div>
-                                <span>Célibataire <span class="checkbox">☐</span></span>
-                                <span>Marié(e) <span class="checkbox">☐</span></span>
-                                <span>Veuf(ve) <span class="checkbox">☐</span></span>
+                                @if ($contrat->adherent->situationMatrimoniale == 'CELIB')
+                                    <span>Célibataire</span>
+                                @elseif ($contrat->adherent->situationMatrimoniale == 'union_libre')
+                                    <span>Union libre</span>
+                                @elseif ($contrat->adherent->situationMatrimoniale == 'MARIE')
+                                    <span>Marié(e)</span>
+                                @elseif ($contrat->adherent->situationMatrimoniale == 'DIVOR')
+                                    <span>Divorcé(e)</span>
+                                @elseif ($contrat->adherent->situationMatrimoniale == 'VEUVE')
+                                    <span>Veuf(ve)</span>
+                                @else
+                                    <span>Non defini</span>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -178,7 +188,7 @@
                         <td>{{ $assure->lieuresidence }}</td>
                     </tr>
                     @endforeach
-                    <tr>
+                    {{-- <tr>
                         <tr>
                             <td>azss</td>
                             <td>ffffff</td>
@@ -186,7 +196,7 @@
                             <td>rfklo</td>
                             <td>bvnnf</td>
                         </tr>
-                    </tr>
+                    </tr> --}}
                     
                 </table>
                 
@@ -278,7 +288,7 @@
                         
                         <tfoot>
                             <tr style="background-color: #e0e0e0; font-weight: bold;">
-                                <td colspan="4" style="text-align: right; padding: 8px;">TOTAL PRIME :</td>
+                                <td colspan="4" style="text-align: right; padding: 8px;">TOTAL PRIME (FcFA) :</td>
                                 <td style="text-align: center; padding: 8px;">{{ $contrat->prime ?? "" }}</td>
                             </tr>
                             
@@ -291,7 +301,7 @@
                                 <tr>
                                     <th>Capital souscrit</th>
                                     <th>Date effet</th>
-                                    <th>Duré</th>
+                                    <th>Durée de cotisation</th>
                                     {{-- <th>Echeance</th> --}}
                                 </tr>
                             </thead>
@@ -299,7 +309,7 @@
                                 <tr>
                                     <td>{{ $contrat->capital ?? "" }}</td>
                                     <td>{{ $contrat->dateeffet ?? "" }}</td>
-                                    <td>{{ $contrat->duree ?? "" }}</td>
+                                    <td>5 ans</td>
                                     {{-- <td>{{ $contrat->echeance ?? "" }}</td> --}}
                                 </tr>
                             </tbody>
@@ -327,7 +337,7 @@
                         <thead style="background-color: #f2f2f2;">
                             <tr>
                                 <th style="text-align: left; padding: 8px;">Mode de paiement</th>
-                                <th style="text-align: center; padding: 8px;">Agence</th>
+                                <th style="text-align: center; padding: 8px;">Guichet</th>
                                 <th style="text-align: center; padding: 8px;">Organisme</th>
                                 <th style="text-align: center; padding: 8px;">N° Compte</th>
                             </tr>
@@ -335,7 +345,7 @@
                         <tbody>
                             <tr>
                                 <td style="padding: 8px;">{{ $contrat->modepaiement ?? "" }}</td>
-                                <td style="text-align: center; padding: 8px;">{{ $contrat->agence ?? "" }}</td>
+                                <td style="text-align: center; padding: 8px;">{{ $contrat->codeguichet ?? "" }}</td>
                                 <td style="text-align: center; padding: 8px;">{{ $contrat->organisme ?? "" }}</td>
                                 <td style="text-align: center; padding: 8px;">{{ $contrat->numerocompte ?? "" }}</td>
                             </tr>

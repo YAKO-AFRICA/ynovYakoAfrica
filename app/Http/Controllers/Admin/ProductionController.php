@@ -47,6 +47,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Throwable;
+
 use App\Notifications\SystemeNotify;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Support\Facades\Auth;
@@ -369,23 +372,15 @@ class ProductionController extends Controller
         $filliations = Filliation::select('MonLibelle')->get();
        
         $resultData = session()->get('adherent', []);
-        // $response = Http::withOptions(['timeout' => 60])->get(env('API_GET_COUNTRIES'));
-        // if ($response->successful()) {
-        //     $countries = $response->json();
-
-        //     $detailCountries = $countries['countries'];
-        //     // dd($detailCountries);
-            
-        // }else {
-        //     $detailCountries = [];
-        // }
+     
         $detailCountries = []; // Valeur par défaut
 
         try {
-            $response = Http::withOptions(['timeout' => 60])->get(env('API_GET_COUNTRIES'));
+            // $response = Http::withOptions(['timeout' => 60])->get(env('API_GET_COUNTRIES'));
+            $response = Http::withOptions(['timeout' => 60])->get(config('services.API_GET_COUNTRIES'));
 
             if ($response->successful()) {
-                $data = $response->json(); // on convertit la réponse JSON en tableau associatif
+                $data = $response->json();
 
                 // Vérifie si la clé "countries" existe
                 if (isset($data['countries'])) {
@@ -482,6 +477,8 @@ class ProductionController extends Controller
 
         $data = $request->all();
 
+        
+
         Log::info($data);
 
         // On décode inputSessionData
@@ -494,6 +491,9 @@ class ProductionController extends Controller
         if (!empty($request->inputSessionData)) {
             $simulationData = json_decode($request->inputSessionData);
         }
+
+        Log::info("Champs garanties trouvées : ");
+        Log::info($simulationData->garantieData);
 
         $contactsBrut = $data['contacts'] ?? [];
 
@@ -546,6 +546,7 @@ class ProductionController extends Controller
             $idBenef = Beneficiaire::max('id') + 1;
             $idContrat = Contrat::max('id') + 1;
             $idDocument = Document::max('id') + 1;
+            $key = now()->format('Ymd');
 
 
             // creation de l'adhérent
@@ -626,6 +627,51 @@ class ProductionController extends Controller
                     'saisieLe' => now(),
                     'saisiepar' => auth::user()->membre->idmembre,
                 ]);
+
+                // creation des garanties
+
+                foreach ($simulationData->garantieData as $garantie) {
+                    // Log::info("garantie". $garantie);
+                    $GarantieOnBD = ProduitGarantie::where('codeproduitgarantie', $garantie->codeGarantie)->first();
+
+                    AssureGarantie::create([
+                        'codeproduitgarantie' => $garantie->codeGarantie,
+                        'idproduitparantie' => $GarantieOnBD->id ?? null,
+                        'monlibelle' => $garantie->libelle,
+                        'prime' => $garantie->prime,
+                        'primetotal' => $request->prime,
+                        'primeaccesoire' => 0,
+                        'type' => "Mixte",
+                        'capitalgarantie' => $garantie->capital,
+                        'codeassure' => $idAssure,
+                        'codecontrat' => $idContrat,
+                        'refcontratsource' => $idContrat,
+                        'estmigre' => 0,
+                    ])->save();
+                }
+            }
+
+            foreach ($simulationData->garantieData as $garantie) {
+                // Log::info("garantie". $garantie);
+                $GarantieOnBD = ProduitGarantie::where('codeproduitgarantie', $garantie->codeGarantie)->first();
+
+                
+
+                AssureGarantie::create([
+                    'codeproduitgarantie' => $garantie->codeGarantie,
+                    'idproduitparantie' => $GarantieOnBD->id ?? null,
+                    'monlibelle' => $garantie->libelle,
+                    'prime' => $garantie->prime,
+                    'primetotal' => $request->prime,
+                    'primeaccesoire' => 0,
+                    'type' => "Mixte",
+                    'capitalgarantie' => $garantie->capital,
+                    'codeassure' => $idAssure,
+                    'codecontrat' => $idContrat,
+                    'refcontratsource' => $idContrat,
+                    'cleintegration' => $key,
+                    'estmigre' => 0,
+                ])->save();
             }
 
 
@@ -659,31 +705,36 @@ class ProductionController extends Controller
                         'saisieLe' => now(),
                         'saisiepar' => Auth::user()->membre->idmembre,
                     ]);
+
+                    // creation des garanties
+
+                    Log::info("Champs garanties trouvées : ");
+                    Log::info($simulationData->garantieData);
+
+                    foreach ($simulationData->garantieData as $garantie) {
+                        // Log::info("garantie". $garantie);
+                        $GarantieOnBD = ProduitGarantie::where('codeproduitgarantie', $garantie->codeGarantie)->first();
+
+                        AssureGarantie::create([
+                            'codeproduitgarantie' => $garantie->codeGarantie,
+                            'idproduitparantie' => $GarantieOnBD->id ?? null,
+                            'monlibelle' => $garantie->libelle,
+                            'prime' => $garantie->prime,
+                            'primetotal' => $request->prime,
+                            'primeaccesoire' => 0,
+                            'type' => "Mixte",
+                            'capitalgarantie' => $garantie->capital,
+                            'codeassure' => $idAssureInsert,
+                            'codecontrat' => $idContrat,
+                            'refcontratsource' => $idContrat,
+                            'estmigre' => 0,
+                        ])->save();
+                    }
                     
                 }
             }
 
-            // creation des garanties
-
-            foreach ($simulationData->garantieData as $garantie) {
-                // Log::info("garantie". $garantie);
-                $GarantieOnBD = ProduitGarantie::where('codeproduitgarantie', $garantie->codeGarantie)->first();
-
-                AssureGarantie::create([
-                    'codeproduitgarantie' => $garantie->codeGarantie,
-                    'idproduitparantie' => $GarantieOnBD->id ?? null,
-                    'monlibelle' => $garantie->libelle,
-                    'prime' => $garantie->prime,
-                    'primetotal' => $request->prime,
-                    'primeaccesoire' => 0,
-                    'type' => "Mixte",
-                    'capitalgarantie' => $garantie->capital,
-                    'codeassure' => $idAssure,
-                    'codecontrat' => $idContrat,
-                    'refcontratsource' => $idContrat,
-                    'estmigre' => 0,
-                ])->save();
-            }
+            
 
             $santeData = DeclarationSante::create([
                 'taille' => $request->taille,
@@ -812,6 +863,11 @@ class ProductionController extends Controller
                 'periodiciterente' => $request->periodiciterente,
                 'dureerente' => $request->dureerente,
 
+                //info de reversement 
+                'mode_reserversement' => $request->mode_reserversement,
+                'echeance_reversement' => $request->echeance_reversement,
+                'duree_reversement' => $request->duree_reversement,
+
                 'personneressource' => $request->personneressource,
                 'contactpersonneressource' => $request->contactpersonneressource,
                 'beneficiaireauterme' => $benefauterm,
@@ -828,7 +884,7 @@ class ProductionController extends Controller
                 'partenaire' => Auth::user()->membre->partenaire,
                 // 'nomaccepterpar' => now(),
                 // 'refcontratsource' => now(),
-                'cleintegration' => now()->format('Ymd'),
+                'cleintegration' => $key,
 
                 'estpaye' => 0,
                 // 'pretconnexe' => now(),
@@ -861,6 +917,8 @@ class ProductionController extends Controller
 
             // Envoi de l'email 
 
+           
+
             try {
                 $to = $request->email;
                 $emailSubject = 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉';
@@ -874,23 +932,30 @@ class ProductionController extends Controller
 
                 Mail::to($to)->send(new CustomerMail($mailData, $emailSubject));
 
-                // Log si l'envoi est OK
-                $details_log = [
-                    'url' => route('prod.show', $idContrat),
-                    'user' => auth()->user()->membre->nom . ' ' . auth()->user()->membre->prenom,
-                    'date' => now(),
-                    'title' => "Enregistrement de la proposition ID $idContrat",
-                    'action' => "Voir",
-                ];
-                Log::info("Email envoyé avec succès", $details_log);
-
-            } catch (Exception $e) {
-                // Si erreur domaine inconnu ou email invalide
-                Log::error("Erreur d'envoi d'email : " . $e->getMessage(), [
+                Log::info("Email envoyé avec succès", [
                     'email' => $to,
                     'contrat' => $idContrat
                 ]);
+
+            } catch (TransportExceptionInterface $e) {
+
+                // Erreurs SMTP (550, 554, etc.)
+                Log::warning("Erreur SMTP lors de l'envoi de mail", [
+                    'email' => $to,
+                    'message' => $e->getMessage(),
+                    'contrat' => $idContrat
+                ]);
+
+            } catch (Throwable $e) {
+
+                // Toute autre erreur système
+                Log::error("Erreur système mail", [
+                    'email' => $to,
+                    'message' => $e->getMessage(),
+                    'contrat' => $idContrat
+                ]);
             }
+
             
             DB::commit();
             
@@ -995,6 +1060,8 @@ class ProductionController extends Controller
 
     private function generateBulletin($idContrat)
     {
+
+        Log::info("demarrage de generation bulletin");
         try {
             $piece_recto = '';
             $piece_verso = '';
@@ -1002,22 +1069,30 @@ class ProductionController extends Controller
             // Récupérer les données nécessaires au bulletin
             $contrat = Contrat::findOrFail($idContrat);
 
+            Log::info("contrat trouvé");
+            Log::info($contrat);
+
             $renderer = new ImageRenderer(
                 new RendererStyle(200),
                 new SvgImageBackEnd()
             );
 
             $imageUrl = env('SIGN_API') . "api/get-signature/" . $idContrat . "/E-SOUSCRIPTION";
+            Log::info("sign url : " . $imageUrl );
             
             $imageData = file_get_contents($imageUrl);
             $base64Image = base64_encode($imageData);
             $imageSrc = 'data:image/png;base64,'.$base64Image;
 
 
+
+
             // $qrContent = "Contrat bien enregistré\n";
             // $qrContent .= "Date: " . $contrat->saisiele . "\n";
             // $qrContent .= "Réf. Contrat: " . $contrat->id;
             $qrContent = url("production/showQrCode/" . $contrat->id);
+
+            Log::info("qr content : " . $qrContent);
 
             
             $writer = new Writer($renderer);
@@ -1034,6 +1109,8 @@ class ProductionController extends Controller
             $options->set('isRemoteEnabled', true);
 
             // Génération du bulletin PDF temporaire
+
+            Log::info("code produit: " . $contrat->codeproduit );
 
             if($contrat->codeproduit == "YKE_2018"){
                 $pdf = PDF::loadView('productions.components.bullettin.ykeBulletin', [
@@ -1122,6 +1199,8 @@ class ProductionController extends Controller
             $finalBulletinPath = $bulletinDir . 'bulletin_' . $contrat->id . '.pdf';
             $finalPdf->Output($finalBulletinPath, 'F');
 
+            Log::info("finalBulletinPath");
+
             // new code 
             $destinationPath = base_path(env('UPLOADS_PATH'));
             $fileName = $idContrat . '-' . now()->timestamp.'-' .'Bulletin_de_souscription' . '.pdf';
@@ -1136,9 +1215,9 @@ class ProductionController extends Controller
                 'source' => "ES",
             ];
 
-            $imageUrl = env('SIGN_API') . "api/get-piece/" . $contrat->id . "/E-SOUSCRIPTION";
+            $imageSignUrl = env('SIGN_API') . "api/get-piece/" . $contrat->id . "/E-SOUSCRIPTION";
             try {
-                $response = Http::timeout(5)->get($imageUrl);
+                $response = Http::timeout(5)->get($imageSignUrl);
 
                 if ($response->successful()) {
                     $data = $response->json();
@@ -1211,7 +1290,7 @@ class ProductionController extends Controller
             return [
                 'success' => true,
                 'file_url' => $fileUrl,
-                'redirect_url' => route('prod.edit', ['id' => $idContrat]),
+                'redirect_url' => route('prod.show', ['id' => $idContrat]),
                 'qrCodeBase64' => $qrCodeBase64
             ];
         } catch (\Exception $e) {
@@ -1279,6 +1358,7 @@ class ProductionController extends Controller
         $filliations =  Filliation::select('MonLibelle')->get();
         // $zone =  $contrat->user->membre->zone->libellezone;
         // dd($zone);
+        // dd($contrat->garanties);
 
         return view('productions.show', compact('contrat', 'productGarantie','filliations'));
     }

@@ -76,7 +76,7 @@
                                     </div>
                                     
                                     <div class="col-md-6">
-                                        <label class="form-label">Date de naissance</label>
+                                        <label class="form-label">Date de naissance de l'assuré</label>
                                         <input type="date" class="form-control" id="dateNaissance" name="dateNaissance" required>
                                     </div>
                                     <div class="col-md-6 d-none">
@@ -92,6 +92,25 @@
                             </div>
                         </div>
                     
+                        <div class="card mb-4">
+                            <div class="card-header bg-primar text-white">
+                                <h5 class="mb-0">Le souscripteur est il l'assuré ?</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="isAssure" id="isAssureOui" value="oui" required>
+                                    <label class="form-check-label" for="isAssureOui">
+                                        Oui
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="isAssure" id="isAssureNon" value="non">
+                                    <label class="form-check-label" for="isAssureNon">
+                                        Non
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card mb-4">
                             <div class="card-header bg-primar text-white">
                                 <h5 class="mb-0">Options supplémentaires</h5>
@@ -158,7 +177,7 @@
                                 <td><span class="text-success">+</span> <strong> {{ number_format(7500, 0, ',', ' ')}}</strong> FCFA</td>
                             </tr>
                         </table>
-                        <div class="ribbon">Prime Totale</div>
+                        <div class="ribbon">Prime Totale (F CFA)</div>
 
                         <table class="table">
                             <tfoot class="table-light">
