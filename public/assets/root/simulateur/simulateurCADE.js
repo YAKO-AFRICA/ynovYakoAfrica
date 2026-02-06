@@ -136,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         sessionStorage.setItem('simulationData', JSON.stringify(simulationData));
         console.log('Données sauvegardées:', simulationData);
+        document.getElementById('inputSessionData').value = JSON.stringify(simulationData, null, 2);
     }
 
     function getSessionData() {

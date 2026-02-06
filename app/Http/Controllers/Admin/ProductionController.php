@@ -484,26 +484,27 @@ class ProductionController extends Controller
         // On décode inputSessionData
         $inputSessionData = json_decode($data['inputSessionData'], true);
 
+        Log::info($inputSessionData['infoSimulation']);
+
         // Maintenant on peut accéder à la périodicité
         $periodicite = $inputSessionData['infoSimulation']['periodicite'] ?? null;
-        $isAssure = $inputSessionData['infoSimulation']['isAssure'] ?? null;
+        Log::info("Champs garanties trouvées fin : ");
+        Log::info($periodicite);
 
-        if (!empty($request->inputSessionData)) {
-            $simulationData = json_decode($request->inputSessionData);
+        Log::info("Champs garanties is assure : ");
+        $isAssure = $request->estAssure ?? 'oui';
+        Log::info($isAssure);
+
+        if (!empty($data['inputSessionData'])) {
+            $simulationData = $inputSessionData['infoSimulation'];
         }
-
-        Log::info("Champs garanties trouvées : ");
-        Log::info($simulationData->garantieData);
 
         $contactsBrut = $data['contacts'] ?? [];
 
-
-        $contacts = json_decode($contactsBrut, true);
         Log::info("conttttt");
-
-        Log::info($contacts);
-
+        Log::info($contactsBrut);
         Log::info("conttttt fin");
+        
 
         DB::beginTransaction();
         try {
@@ -519,6 +520,8 @@ class ProductionController extends Controller
             } else {
                 $prefix = '679710069100117';
             }
+
+            log::info("prefix : " . $prefix);
 
             $increment = Contrat::where('numBullettin', 'like', $prefix . '%')
             ->where('codeproduit', $request->codeproduit)->count() + 1;
@@ -584,6 +587,13 @@ class ProductionController extends Controller
                 'capitalconnexe' => $request->capitalconnexe
             ]);
 
+            log::info("okay pour l'adherent : " . $Adherent->id);
+
+            $contacts = json_decode($contactsBrut, true);
+
+            Log::info("Champs contacts trouvées : ");
+            Log::info($contacts);
+
             foreach ($contacts as $contact) {
                 $code = Refgenerate(Contact::class, 'C', 'code');
 
@@ -629,50 +639,55 @@ class ProductionController extends Controller
                 ]);
 
                 // creation des garanties
+                $garanties = $inputSessionData['garantieData'];
 
-                foreach ($simulationData->garantieData as $garantie) {
-                    // Log::info("garantie". $garantie);
-                    $GarantieOnBD = ProduitGarantie::where('codeproduitgarantie', $garantie->codeGarantie)->first();
+                Log::info("Champs garanties trouvées : ");
+                Log::info($garanties);
+
+                foreach ($garanties as $garantie) {
+                    Log::info("garantie", $garantie);
+                    $GarantieOnBD = ProduitGarantie::where('codeproduitgarantie', $garantie['codeGarantie'])->first();
 
                     AssureGarantie::create([
-                        'codeproduitgarantie' => $garantie->codeGarantie,
+                        'codeproduitgarantie' => $garantie['codeGarantie'],
                         'idproduitparantie' => $GarantieOnBD->id ?? null,
-                        'monlibelle' => $garantie->libelle,
-                        'prime' => $garantie->prime,
+                        'monlibelle' => $garantie['libelle'],
+                        'prime' => $garantie['prime'],
                         'primetotal' => $request->prime,
                         'primeaccesoire' => 0,
                         'type' => "Mixte",
-                        'capitalgarantie' => $garantie->capital,
+                        'capitalgarantie' => $garantie['capital'],
                         'codeassure' => $idAssure,
                         'codecontrat' => $idContrat,
                         'refcontratsource' => $idContrat,
                         'estmigre' => 0,
-                    ])->save();
+                    ]);
                 }
             }
 
-            foreach ($simulationData->garantieData as $garantie) {
-                // Log::info("garantie". $garantie);
-                $GarantieOnBD = ProduitGarantie::where('codeproduitgarantie', $garantie->codeGarantie)->first();
+            // log::info("okay pour les garantie assurer : ");
+            $garantiesData = $inputSessionData['garantieData'];
 
-                
+            // foreach ($garantiesData as $garantie) {
+            //     Log::info("garantie", $garantie);
+            //     $GarantieOnBD = ProduitGarantie::where('codeproduitgarantie', $garantie['codeGarantie'])->first();
 
-                AssureGarantie::create([
-                    'codeproduitgarantie' => $garantie->codeGarantie,
-                    'idproduitparantie' => $GarantieOnBD->id ?? null,
-                    'monlibelle' => $garantie->libelle,
-                    'prime' => $garantie->prime,
-                    'primetotal' => $request->prime,
-                    'primeaccesoire' => 0,
-                    'type' => "Mixte",
-                    'capitalgarantie' => $garantie->capital,
-                    'codeassure' => $idAssure,
-                    'codecontrat' => $idContrat,
-                    'refcontratsource' => $idContrat,
-                    'cleintegration' => $key,
-                    'estmigre' => 0,
-                ])->save();
-            }
+            //     AssureGarantie::create([
+            //         'codeproduitgarantie' => $garantie['codeGarantie'],
+            //         'idproduitparantie' => $GarantieOnBD->id ?? null,
+            //         'monlibelle' => $garantie['libelle'],
+            //         'prime' => $garantie['prime'],
+            //         'primetotal' => $request->prime,
+            //         'primeaccesoire' => 0,
+            //         'type' => "Mixte",
+            //         'capitalgarantie' => $garantie['capital'],
+            //         'codeassure' => $idAssure,
+            //         'codecontrat' => $idContrat,
+            //         'refcontratsource' => $idContrat,
+            //         'cleintegration' => $key,
+            //         'estmigre' => 0,
+            //     ]);
+            // }
 
 
             // recupere & creer les assurer de la session
@@ -709,27 +724,49 @@ class ProductionController extends Controller
                     // creation des garanties
 
                     Log::info("Champs garanties trouvées : ");
-                    Log::info($simulationData->garantieData);
 
-                    foreach ($simulationData->garantieData as $garantie) {
-                        // Log::info("garantie". $garantie);
-                        $GarantieOnBD = ProduitGarantie::where('codeproduitgarantie', $garantie->codeGarantie)->first();
+                    foreach ($garantiesData as $garantie) {
+                        Log::info("garantie", $garantie);
+                        $GarantieOnBD = ProduitGarantie::where('codeproduitgarantie', $garantie['codeGarantie'])->first();
 
                         AssureGarantie::create([
-                            'codeproduitgarantie' => $garantie->codeGarantie,
+                            'codeproduitgarantie' => $garantie['codeGarantie'],
                             'idproduitparantie' => $GarantieOnBD->id ?? null,
-                            'monlibelle' => $garantie->libelle,
-                            'prime' => $garantie->prime,
-                            'primetotal' => $request->prime,
+                            'monlibelle' => $garantie['libelle'],
+                            'prime' => $garantie['prime'],
+                            'primetotal' => $garantie['prime'],
                             'primeaccesoire' => 0,
                             'type' => "Mixte",
-                            'capitalgarantie' => $garantie->capital,
+                            'capitalgarantie' => $garantie['capital'],
                             'codeassure' => $idAssureInsert,
                             'codecontrat' => $idContrat,
                             'refcontratsource' => $idContrat,
+                            'cleintegration' => $key,
                             'estmigre' => 0,
-                        ])->save();
+                        ]);
                     }
+
+                    // foreach ($simulationData->garantieData as $garantie) {
+                    //     // Log::info("garantie". $garantie);
+                    //     $GarantieOnBD = ProduitGarantie::where('codeproduitgarantie', $garantie->codeGarantie)->first();
+
+                    //     AssureGarantie::create([
+                    //         'codeproduitgarantie' => $garantie->codeGarantie,
+                    //         'idproduitparantie' => $GarantieOnBD->id ?? null,
+                    //         'monlibelle' => $garantie->libelle,
+                    //         'prime' => $garantie->prime,
+                    //         'primetotal' => $request->prime,
+                    //         'primeaccesoire' => 0,
+                    //         'type' => "Mixte",
+                    //         'capitalgarantie' => $garantie->capital,
+                    //         'codeassure' => $idAssureInsert,
+                    //         'codecontrat' => $idContrat,
+                    //         'refcontratsource' => $idContrat,
+                    //         'estmigre' => 0,
+                    //     ])->save();
+
+                        
+                    // }
                     
                 }
             }

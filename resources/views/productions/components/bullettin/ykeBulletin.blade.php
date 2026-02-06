@@ -131,7 +131,7 @@
                         </div>
         
                         <div class="telephone" style="margin-bottom: 10px;">
-                            <label><strong>Téléphone / Cell :</strong> {{ $contrat->adherent->mobile ?? ""}}.</label>
+                            <label><strong>Téléphone / Cell :</strong> {{ $contrat->adherent->telephone ?? ""}}.</label>
                         </div>
         
                         <div class="situation" style="margin-bottom: 10px;">

@@ -936,10 +936,7 @@
 
             </div>
         {{-- @elseif ($product->CodeProduit == 'CADENCE') --}}
-       
-            
-
-        @elseif($product->CodeProduit == 'YKE_2018')
+        @elseif($product->CodeProduit == 'YKE_2018' || $product->CodeProduit == 'CADENCE' || $product->CodeProduit == 'CAD_EDUCPLUS')
             <div class="col-12">
                 <div class="card" style="width: 100%">
 

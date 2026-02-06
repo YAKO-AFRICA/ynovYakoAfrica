@@ -71,7 +71,7 @@
                             <div class="col-sm-6 col-md-2 col-lg-2">
                                 <label class="form-label small">Code Banque</label>
                                 <input type="text" class="form-control account-number-input" id="codebanque" 
-                                    placeholder="30003" maxlength="5" pattern="[0-9]{5}" name="codebanque" >
+                                    placeholder="30003" minlength="5" maxlength="5" name="codebanque" >
                             </div> 
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <label class="form-label small">Code Guichet</label>
@@ -409,7 +409,7 @@
         });
     </script>
 
-    <script>
+    {{-- <script>
         const modePaiementRadios = document.querySelectorAll('input[name="mode_reserversement"]');
         const echeanceBloc = document.getElementById('echeanceBloc');
 
@@ -418,7 +418,7 @@
                 echeanceBloc.classList.remove('d-none');
             });
         });
-    </script>
+    </script> --}}
 
     <script>
         const modePaiementRadios = document.querySelectorAll('input[name="mode_reserversement"]');
