@@ -235,15 +235,11 @@
                 <button onclick="event.preventDefault(); stepper1.previous()"
                     class="btn border-btn btn-previous-form"><i class='bx bx-left-arrow-alt'></i>Précédent</button>
 
-                {{-- <button class="btn btn-success px-4" type="submit">Submit</button> --}}
-
-                {{-- <button onclick="event.preventDefault(); stepper1.next()"
-                    class="btn btn-two px-4 btn-next-form" >Suivant<i
-                        class='bx bx-right-arrow-alt ms-2'></i></button> --}}
-
                 <button id="btn-next" stepper1.next() class="btn btn-two btn-next-for btn-auto-generate"
                     type="button">Enregistrer<i class='bx bx-right-arrow-alt'></i>
+                    <span id="spinner" class="spinner-border spinner-border-sm d-none"></span>
                 </button>
+                
 
             </div>
         </div>

@@ -261,17 +261,93 @@
         document.getElementById("simulationDataInput").value = simulationData;
     }
 </script>
-
-
-
-
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("productionForm");
+    const btn = document.getElementById("btn-next");
+
+    btn.addEventListener("click", function (event) {
+
+        event.preventDefault();
+        btn.disabled = true;
+
+        Swal.fire({
+            title: 'Enregistrement en cours...',
+            text: 'Veuillez patienter...',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        const formData = new FormData(form);
+
+        axios.post('{{ route("prod.store") }}', formData)
+
+        .then(response => {
+
+            if (response.data.type !== "success") {
+                throw new Error(response.data.message);
+            }
+
+            sessionStorage.removeItem("simulationData");
+            sessionStorage.removeItem("contacts");
+
+            Swal.close();
+
+            if (response.data.url) {
+                window.open(response.data.url, '_blank');
+            }
+
+            if (response.data.urlback) {
+                window.location.href = response.data.urlback;
+            }
+
+        })
+
+        .catch(error => {
+
+            Swal.close();
+
+            console.error(error);
+
+            Swal.fire({
+                icon: "error",
+                title: "Erreur",
+                text: error.response?.data?.message || error.message
+            });
+
+        })
+
+        .finally(() => {
+
+            btn.disabled = false;
+
+        });
+
+    });
+
+});
+
+</script>
+
+
+
+{{-- <script>
     document.addEventListener("DOMContentLoaded", function () {
         const form = document.getElementById("productionForm");
         const btn = document.getElementById("btn-next");
 
         btn.addEventListener("click", function (event) {
             event.preventDefault();
+
+            swal.fire({
+                title: 'Enregistrement en cours...',
+                text: 'Veuillez patienter pendant que nous enregistrons votre demande.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    swal.showLoading();
+                }
+            });
 
             const formData = new FormData(form);
 
@@ -303,7 +379,7 @@
     });
 
 
-</script>
+</script> --}}
 
 
     

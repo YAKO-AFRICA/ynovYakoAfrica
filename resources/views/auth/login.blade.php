@@ -485,7 +485,7 @@
     <script>
         document.getElementById('bntLogin').addEventListener('click', function() {
             this.disabled = true;
-            this.innerHTML = 'Connexion en cours...';
+            this.innerHTML = 'Connexion en cours...<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
             this.form.submit();
         });
     </script>

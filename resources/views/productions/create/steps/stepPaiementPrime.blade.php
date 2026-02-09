@@ -75,7 +75,7 @@
                             </div> 
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <label class="form-label small">Code Guichet</label>
-                                <input type="text" class="form-control account-number-input" id="codeguichet" 
+                                <input type="text" class="form-control account-number-inpu" id="codeguichet" 
                                     placeholder="02005" minlength="5" maxlength="5" name="codeguichet" >
                             </div> 
                             <div class="col-sm-8 col-md-5 col-lg-5">
