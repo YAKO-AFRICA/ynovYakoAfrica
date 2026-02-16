@@ -100,107 +100,8 @@ class BulletinController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    // public function generate(Request $request, $id)
-    // {
-    //     DB::beginTransaction();
-    //     try {
-    //         $contrat = Contrat::find($id);
-    //         if($contrat)
-    //         {
-    //             // Options pour Dompdf
-    //             $options = new Options();
-    //             $options->set('isRemoteEnabled', true);
-            
-    //             // Générer le bulletin PDF avec Dompdf
-    //             if($contrat->codeproduit == "YKE_2018"){
-    //                 $pdf = PDF::loadView('productions.components.bullettin.ykeBulletin', [
-    //                     'contrat' => $contrat,
-    //                 ]);
-    //                 $cguFile = public_path('root/cgu/cg_yke.pdf');
+   
 
-    //             }else if($contrat->codeproduit == "PFA_IND"){
-    //                 $pdf = PDF::loadView('productions.components.bullettin.pfaINDbulletin', [
-    //                     'contrat' => $contrat,
-    //                 ]);
-    //                 $cguFile = public_path('root/cgu/cg_yke.pdf');
-
-    //             }else{
-    //                 $pdf = PDF::loadView('productions.components.bullettin.basicBulletin', [
-    //                     'contrat' => $contrat,
-    //                 ]);
-    //                 $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
-    //             }
-            
-    //             // Répertoire pour enregistrer les fichiers temporaires
-    //             $bulletinDir = public_path('documents/bulletin/');
-    //             if (!is_dir($bulletinDir)) {
-    //                 mkdir($bulletinDir, 0777, true);
-    //             }
-            
-    //             $bulletinFileName = $bulletinDir . 'temp_bulletin_' . $contrat->id . '.pdf';
-    //             $pdf->save($bulletinFileName);
-            
-    //             // Chemin vers le fichier CGU
-    //             // $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
-                
-            
-    //             // Fusionner les PDF avec FPDI
-    //             $finalPdf = new Fpdi();
-            
-    //             // Ajouter les pages du bulletin
-    //             $finalPdf->AddPage();
-    //             $finalPdf->setSourceFile($bulletinFileName);
-    //             $tplIdx = $finalPdf->importPage(1);
-    //             $finalPdf->useTemplate($tplIdx);
-            
-    //             // Ajouter toutes les pages du fichier CGU
-    //             $pageCount = $finalPdf->setSourceFile($cguFile);
-    //             for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-    //                 $finalPdf->AddPage();
-    //                 $tplIdx = $finalPdf->importPage($pageNo);
-    //                 $finalPdf->useTemplate($tplIdx);
-    //             }
-            
-    //             // Nom final du fichier
-    //             $finalFileName = $bulletinDir . 'assurcompte_' . $contrat->id . '.pdf';
-            
-    //             // Enregistrer le PDF final
-    //             $finalPdf->Output($finalFileName, 'F');
-            
-    //             // Supprimer le fichier temporaire du bulletin
-    //             unlink($bulletinFileName);
-
-    //             DB::commit();
-            
-    //             // Retourner le PDF final en tant que réponse
-    //             return response()->file($finalFileName, [
-    //                 'Content-Type' => 'application/pdf',
-    //                 'Content-Disposition' => 'inline; filename="' . basename($finalFileName) . '"'
-    //             ]);
-
-                
-    //         }else{
-    //             DB::rollBack();
-    //             return response()->json([
-    //                 'type' => 'error',
-    //                 'urlback' => '',
-    //                 'message' => "Erreur lors de la generation du bullettin!",
-    //                 'code' => 500,
-    //             ]);
-    //         }
-            
-    
-    //     } catch (\Throwable $th) {
-    //         DB::rollBack();
-    //         return response()->json([
-    //             'type' => 'error',
-    //             'urlback' => '',
-    //             'message' => "Erreur système! $th",
-    //             'code' => 500,
-    //         ]);
-    //     }
-
-    // }
 
     public function generate(Request $request, $id)
 {
@@ -260,6 +161,14 @@ class BulletinController extends Controller
         
             // Générer le bulletin PDF avec Dompdf
             if($contrat->codeproduit == "YKE_2018"){
+                $pdf = PDF::loadView('productions.components.bullettin.ykeBulletin', [
+                    'contrat' => $contrat,
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc
+                ]);
+                $cguFile = public_path('root/cgu/cg_yke.pdf');
+
+            }else if($contrat->codeproduit == "YKE_2008"){
                 $pdf = PDF::loadView('productions.components.bullettin.ykeBulletin', [
                     'contrat' => $contrat,
                     'qrCodeBase64' => $qrCodeBase64,
@@ -337,7 +246,7 @@ class BulletinController extends Controller
             }
         
             // Nom final du fichier
-            $finalFileName = $bulletinDir . 'assurcompte_' . $contrat->id . '.pdf';
+            $finalFileName = $bulletinDir . $contrat->codeproduit .'_bulletin_'. $contrat->id . '.pdf';
         
             // Enregistrer le PDF final
             $finalPdf->Output($finalFileName, 'F');

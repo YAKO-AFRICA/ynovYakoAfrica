@@ -46,24 +46,29 @@
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="modepaiement" type="radio"
-                            value="BANK" id="Prelevement_bank">
+                                value="BANK" id="Prelevement_bank">
                             <label class="form-check-label" for="Prelevement_bank">
                                 Prélèvement bancaire
                             </label>
                         </div>
                     </div>
 
+                    <!-- SECTION BANCAIRE -->
                     <div class="row mb-3" id="mode_bancaire" style="display: none;">
-
-                        <div class="col-12 mb-3">
+                        <div class="mb-3" style="width: 100%">
                             <label for="banque" class="form-label">Ma banque ou organisme de prélèvement</label>
-                            <select class="form-select selection" id="banque" name="organisme" onchange="ChangeEtat()">
-                                <option selected value="" disabled>Selectionnez la banque</option>
-                                @foreach ($societes as $item)
-                                    <option value="{{ $item->NOM_LONG }}" data-code-guichet="{{ $item->CodeGuichet }}" data-code-banque="{{ $item->CODEBANQUE }}" >
-                                        {{ $item->NOM_LONG ?? '' }}
-                                    </option>
-                                @endforeach 
+                            <br>
+                            <select class="form-select selection" id="banque" name="organisme" style="width: 100%">
+                                <option selected value="" disabled>Sélectionnez la banque</option>
+                                <!-- Les options seront chargées dynamiquement par l'API -->
+                            </select>
+                        </div>
+                        <div class="mb-3" style="width: 100%">
+                            <label for="agence" class="form-label">L'agence de prélèvement</label>
+                            <br>
+                            <select class="form-select selection" id="agence" name="agence" style="width: 100%">
+                                <option selected value="" disabled>Sélectionnez l'agence</option>
+                                <!-- Les options seront chargées dynamiquement par l'API -->
                             </select>
                         </div>
                         
@@ -71,29 +76,32 @@
                             <div class="col-sm-6 col-md-2 col-lg-2">
                                 <label class="form-label small">Code Banque</label>
                                 <input type="text" class="form-control account-number-input" id="codebanque" 
-                                    placeholder="30003" minlength="5" maxlength="5" name="codebanque" >
-                            </div> 
+                                    placeholder="30003" minlength="5" maxlength="5" name="codebanque" readonly>
+                            </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <label class="form-label small">Code Guichet</label>
-                                <input type="text" class="form-control account-number-inpu" id="codeguichet" 
-                                    placeholder="02005" minlength="5" maxlength="5" name="codeguichet" >
+                                <input type="text" class="form-control account-number-input" id="codeguichet" 
+                                    placeholder="02005" minlength="5" maxlength="5" name="codeguichet" readonly>
                             </div> 
                             <div class="col-sm-8 col-md-5 col-lg-5">
                                 <label class="form-label small">Numéro de compte</label>
                                 <input type="text" class="form-control account-number-input" id="numerocompte" 
-                                    placeholder="00123456789" maxlength="12" pattern="[0-9]{12}" name="numerocompte" >
+                                    placeholder="00123456789" maxlength="11" pattern="[0-9]{11}" name="numerocompte" 
+                                    autocomplete="off">
                             </div> 
                             <div class="col-sm-4 col-md-2 col-lg-2">
                                 <label class="form-label small">Clé RIB</label>
                                 <input type="text" class="form-control account-number-input" id="rib" 
-                                    placeholder="12" maxlength="2" pattern="[0-9]{2}" name="rib" >
+                                    placeholder="12" maxlength="2" pattern="[0-9]{2}" name="rib" 
+                                    autocomplete="off">
                             </div>
                         </div>
+                        
                         <div class="col-12 mb-3">
                             <label class="form-label">
                                 <i class="bx bxs-show me-2"></i>Aperçu du numéro complet
                             </label>
-                            <div class="form-control bg-secondary text-white" id="numero_complet" style=" text-align: center; font-size: 18px;">
+                            <div class="form-control bg-secondary text-white" id="numero_complet" style="text-align: center; font-size: 18px;">
                                 _____ - _____ - ___________ - __
                             </div>
                         </div>
@@ -105,6 +113,7 @@
                             <input type="text" class="form-control" id="numMobile" name="numMobile">
                         </div>
                     </div>
+                    
                     <div class="mb-3" id="mode_source" style="display: none;">
                         <div class="col-12 mb-3">
                             <label for="matricule" class="form-label">N° Mecano / N° Matricule</label>
@@ -126,6 +135,7 @@
                     </div>
                 </div>
             </div>
+            
             @if($product->CodeProduit == 'CADENCE')
                 <div>
                     <fieldset class="border p-3">
@@ -183,12 +193,11 @@
                                 min="1"
                                 placeholder="Ex : 5">
                         </div>
-
                     </fieldset>
                 </div>
             @endif
-
         </div>
+
         <div class="col-12 col-lg-4">
             <div class="card mx-0">
                 <div class="card-body">
@@ -309,7 +318,6 @@
                                     <option value="36">36</option> 
                                 </select>
                             </div>
-
                         @else
                             <div class="col-12 mb-3">
                                 <label for="DateEffet" class="form-label">Mon contrat prendra effet le :</label>
@@ -326,7 +334,7 @@
                                 <label for="fraisAdhesion" class="form-label">Frais d’adhésion :</label>
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="fraisAdhesion" name="fraisAdhesion"
-                                        min="0"value="7500">
+                                        min="0" value="7500">
                                     <span class="input-group-text">FCFA</span>
                                 </div>
                             </div>
@@ -344,16 +352,13 @@
                                     <span class="input-group-text">mois</span>
                                 </div>
                             </div>
-
                         @endif
-
                     </div>
                 </div>
             </div>
         </div>
 
         <input type="hidden" id="produitCode" name="produitCode" value="{{ $product->CodeProduit ?? '' }}">
-
 
         <div class="col-12">
             <div class="d-flex align-items-center justify-content-between gap-3">
@@ -364,82 +369,412 @@
             </div>
         </div>
     </div><!---end row-->
+</div>
 
-    <script>
-        function ChangeEtat() {
-            
-            // Pour récupérer la valeur sélectionnée et le data-code-guichet
-            const select = document.getElementById('banque');
-            const selectedOption = select.options[select.selectedIndex];
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // ==================== GESTION MODES DE PAIEMENT ====================
+    const modePaiementRadios = document.querySelectorAll('input[name="modepaiement"]');
+    const modeBancaire = document.getElementById('mode_bancaire');
+    const modeMobile = document.getElementById('mode_mobile');
+    const modeSource = document.getElementById('mode_source');
 
-            const codeGuichet = selectedOption.getAttribute('data-code-guichet');
-            const codeBanque = selectedOption.getAttribute('data-code-banque');
+    if (modeBancaire) modeBancaire.style.display = 'none';
+    if (modeMobile) modeMobile.style.display = 'none';
+    if (modeSource) modeSource.style.display = 'none';
 
-            document.getElementById('codeguichet').value = codeGuichet || '00000';
-            document.getElementById('codebanque').value = codeBanque || '00000';
-        }
-        </script>
+    modePaiementRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (modeBancaire) modeBancaire.style.display = 'none';
+            if (modeMobile) modeMobile.style.display = 'none';
+            if (modeSource) modeSource.style.display = 'none';
 
-
-    <script>
-
-
-        // Fonction pour mettre à jour l'aperçu du numéro complet
-        function updateAccountPreview() {
-            const codeBanque = document.getElementById('codebanque').value || '_____';
-            const codeGuichet = document.getElementById('codeguichet').value || '_____';
-            const numeroCompte = document.getElementById('numerocompte').value || '___________';
-            const cleRib = document.getElementById('rib').value || '__';
-            
-            const preview = `${codeBanque} - ${codeGuichet} - ${numeroCompte} - ${cleRib}`;
-            document.getElementById('numero_complet').textContent = preview;
-        }
-
-        // Écouteurs d'événements pour la mise à jour en temps réel
-        document.getElementById('codebanque').addEventListener('input', updateAccountPreview);
-        document.getElementById('codeguichet').addEventListener('input', updateAccountPreview);
-        document.getElementById('numerocompte').addEventListener('input', updateAccountPreview);
-        document.getElementById('rib').addEventListener('input', updateAccountPreview);
-
-        // Validation des champs numériques
-        document.querySelectorAll('.account-number-input').forEach(input => {
-            input.addEventListener('input', function() {
-                this.value = this.value.replace(/\D/g, '');
-            });
+            if (this.value === 'VIR' || this.value === 'BANK' || this.value === 'CHK') {
+                if (modeBancaire) modeBancaire.style.display = 'block';
+            } else if (this.value === 'Mobile_money') {
+                if (modeMobile) modeMobile.style.display = 'block';
+            } else if (this.value === 'SOURCE') {
+                if (modeSource) modeSource.style.display = 'block';
+            }
         });
-    </script>
+    });
 
-    {{-- <script>
-        const modePaiementRadios = document.querySelectorAll('input[name="mode_reserversement"]');
-        const echeanceBloc = document.getElementById('echeanceBloc');
+    // ==================== GESTION DU REVERSEMENT (CADENCE) ====================
+    const modeReversementRadios = document.querySelectorAll('input[name="mode_reserversement"]');
+    const echeanceBloc = document.getElementById('echeanceBloc');
+    const dureeBloc = document.getElementById('dureeBloc');
 
-        modePaiementRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                echeanceBloc.classList.remove('d-none');
-            });
-        });
-    </script> --}}
-
-    <script>
-        const modePaiementRadios = document.querySelectorAll('input[name="mode_reserversement"]');
-        const echeanceBloc = document.getElementById('echeanceBloc');
-        const dureeBloc = document.getElementById('dureeBloc');
-
-        modePaiementRadios.forEach(radio => {
-            radio.addEventListener('change', function () {
-
-                // Toujours afficher les échéances
-                echeanceBloc.classList.remove('d-none');
-
-                // Afficher la durée uniquement pour rente certaine
+    if (modeReversementRadios.length > 0) {
+        modeReversementRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (echeanceBloc) echeanceBloc.classList.remove('d-none');
+                
                 if (this.value === 'rente') {
-                    dureeBloc.classList.remove('d-none');
+                    if (dureeBloc) dureeBloc.classList.remove('d-none');
                 } else {
-                    dureeBloc.classList.add('d-none');
-                    document.getElementById('duree_reversement').value = '';
+                    if (dureeBloc) dureeBloc.classList.add('d-none');
+                    const dureeInput = document.getElementById('duree_reversement');
+                    if (dureeInput) dureeInput.value = '';
                 }
             });
         });
-    </script>
+    }
 
-</div>
+     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    // ==================== VARIABLES GLOBALES ====================
+    let banquesData = [];
+    
+    // ==================== CHARGEMENT DES BANQUES ====================
+    fetch('/banque-agence', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': token
+        }}).then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+
+        return response.json();
+    })
+    .then(data => {
+        console.log('Données reçues pour les banques :', data);
+        banquesData = data;
+        
+        const banquesDistinctes = extraireBanquesDistinctes(data);
+        remplirSelectBanques(banquesDistinctes);
+        
+        setTimeout(reinitialiserSelect2, 100);
+    })
+    .catch(error => {
+        console.error('Erreur lors de la requête des banques :', error);
+        const selectBanque = document.getElementById('banque');
+        if (selectBanque) {
+            selectBanque.innerHTML = '<option selected value="" disabled>Erreur de chargement des banques</option>';
+            reinitialiserSelect2();
+        }
+    });
+
+    // Fonction pour réinitialiser Select2
+    function reinitialiserSelect2() {
+        try {
+            const selectBanque = document.getElementById('banque');
+            if (selectBanque && typeof jQuery !== 'undefined' && jQuery(selectBanque).data('select2')) {
+                jQuery(selectBanque).select2('destroy');
+                jQuery(selectBanque).select2({
+                    placeholder: 'Sélectionnez la banque',
+                    allowClear: true
+                });
+            }
+            
+            const selectAgence = document.getElementById('agence');
+            if (selectAgence && typeof jQuery !== 'undefined' && jQuery(selectAgence).data('select2')) {
+                jQuery(selectAgence).select2('destroy');
+                jQuery(selectAgence).select2({
+                    placeholder: 'Sélectionnez l\'agence',
+                    allowClear: true
+                });
+            }
+        } catch (e) {
+            console.error('Erreur lors de la réinitialisation de Select2:', e);
+        }
+    }
+
+    // ==================== FONCTIONS DE GESTION DES BANQUES ====================
+    
+    function extraireBanquesDistinctes(data) {
+        const banquesMap = new Map();
+        
+        data.forEach(item => {
+            // Utiliser le SIGLE comme nom de banque
+            const sigle = item.sigle || 'Autre';
+            // Le code banque peut être alphanumérique, on le garde tel quel
+            const codeBanque = item.codebanque ? item.codebanque.toString().trim() : '';
+            const sigleClean = sigle.toString().trim();
+            
+            if (!banquesMap.has(sigleClean) && sigleClean !== '') {
+                banquesMap.set(sigleClean, {
+                    sigle: sigleClean,
+                    codeBanque: codeBanque,
+                    premiereAgence: item
+                });
+            }
+        });
+        
+        return Array.from(banquesMap.values());
+    }
+
+    
+
+    function remplirSelectBanques(banques) {
+        const selectBanque = document.getElementById('banque');
+        if (!selectBanque) return;
+        
+        let select2Active = false;
+        if (typeof jQuery !== 'undefined' && jQuery(selectBanque).data('select2')) {
+            select2Active = true;
+            jQuery(selectBanque).select2('destroy');
+        }
+        
+        selectBanque.innerHTML = '<option selected value="" disabled>Sélectionnez la banque</option>';
+        
+        if (banques.length === 0) {
+            const option = document.createElement('option');
+            option.value = "";
+            option.textContent = "Aucune banque disponible";
+            option.disabled = true;
+            selectBanque.appendChild(option);
+        } else {
+            banques.sort((a, b) => a.sigle.localeCompare(b.sigle));
+            
+            banques.forEach(banque => {
+                const option = document.createElement('option');
+                option.value = banque.sigle;
+                option.textContent = banque.sigle;
+                // Le code banque peut contenir des lettres et des chiffres
+                option.dataset.codeBanque = banque.codeBanque;
+                selectBanque.appendChild(option);
+            });
+        }
+        
+        if (select2Active && typeof jQuery !== 'undefined') {
+            jQuery(selectBanque).select2({
+                placeholder: 'Sélectionnez la banque',
+                allowClear: true
+            });
+        }
+    }
+
+    function chargerAgencesParCodeBanque(codeBanque) {
+        const agenceSelect = document.getElementById('agence');
+        if (!agenceSelect) return;
+        
+        let select2Active = false;
+        if (typeof jQuery !== 'undefined' && jQuery(agenceSelect).data('select2')) {
+            select2Active = true;
+            jQuery(agenceSelect).select2('destroy');
+        }
+        
+        agenceSelect.innerHTML = '<option selected value="" disabled>Chargement des agences...</option>';
+        agenceSelect.disabled = true;
+        
+        const codeBanqueInput = document.getElementById('codebanque');
+        const codeGuichetInput = document.getElementById('codeguichet');
+        const numeroCompteInput = document.getElementById('numerocompte');
+        const ribInput = document.getElementById('rib');
+        
+        // Le code banque peut contenir des lettres et des chiffres
+        if (codeBanqueInput) codeBanqueInput.value = codeBanque || '';
+        if (codeGuichetInput) codeGuichetInput.value = '';
+        if (numeroCompteInput) numeroCompteInput.value = '';
+        if (ribInput) ribInput.value = '';
+        
+        updateNumeroComplet();
+
+        // Envoyer le code banque tel quel (alphanumérique)
+       
+
+        fetch('/banque-agence', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': token
+            },
+            body: JSON.stringify({
+                codeBanque: codeBanque
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(agences => {
+            remplirSelectAgences(agences, select2Active);
+            agenceSelect.disabled = false;
+        })
+        .catch(error => {
+            agenceSelect.innerHTML = '<option selected value="" disabled>Erreur de chargement des agences</option>';
+            agenceSelect.disabled = false;
+            
+            if (select2Active && typeof jQuery !== 'undefined') {
+                jQuery(agenceSelect).select2({
+                    placeholder: 'Sélectionnez l\'agence',
+                    allowClear: true
+                });
+            }
+        });
+    }
+
+    function remplirSelectAgences(agences, reactiverSelect2 = true) {
+        const agenceSelect = document.getElementById('agence');
+        if (!agenceSelect) return;
+        
+        agenceSelect.innerHTML = '<option selected value="" disabled>Sélectionnez l\'agence</option>';
+        
+        if (!agences || agences.length === 0) {
+            const option = document.createElement('option');
+            option.value = "";
+            option.textContent = "Aucune agence disponible";
+            option.disabled = true;
+            agenceSelect.appendChild(option);
+        } else {
+            agences.sort((a, b) => (a.nom_long || '').localeCompare(b.nom_long || ''));
+            
+            agences.forEach(agence => {
+                const option = document.createElement('option');
+                // Créer une valeur unique mais lisible
+                option.value = `${agence.codebanque || ''}_${agence.codeguichet || ''}_${agence.nom_long || ''}`;
+                option.textContent = agence.nom_long || 'Agence sans nom';
+                // Les codes peuvent être alphanumériques
+                option.dataset.codeBanque = agence.codebanque ? agence.codebanque.toString().trim() : '';
+                option.dataset.codeGuichet = agence.codeguichet ? agence.codeguichet.toString().trim() : '';
+                option.dataset.nomAgence = agence.nom_long || '';
+                agenceSelect.appendChild(option);
+            });
+        }
+        
+        if (reactiverSelect2 && typeof jQuery !== 'undefined') {
+            setTimeout(() => {
+                jQuery(agenceSelect).select2({
+                    placeholder: 'Sélectionnez l\'agence',
+                    allowClear: true
+                });
+            }, 50);
+        }
+    }
+
+    // ==================== GESTIONNAIRES D'ÉVÉNEMENTS ====================
+
+    function handleBanqueChange(event) {
+        event.stopPropagation();
+        
+        let codeBanque = null;
+        
+        // Gestion événement natif
+        if (event.target && event.target.tagName === 'SELECT') {
+            const selectedOption = event.target.selectedOptions[0];
+            if (selectedOption && selectedOption.dataset.codeBanque) {
+                codeBanque = selectedOption.dataset.codeBanque;
+            }
+        } 
+        // Gestion événement Select2
+        else if (event.params && event.params.data) {
+            codeBanque = event.params.data.element?.dataset?.codeBanque;
+        }
+        
+        if (!codeBanque) {
+            console.error('Code banque non trouvé');
+            return;
+        }
+        
+        console.log('Code banque sélectionné (alphanumérique):', codeBanque);
+        chargerAgencesParCodeBanque(codeBanque);
+    }
+
+    function handleAgenceChange(event) {
+        event.stopPropagation();
+        
+        let codeBanque = null;
+        let codeGuichet = null;
+        let nomAgence = null;
+        
+        if (event.target && event.target.tagName === 'SELECT') {
+            const selectedOption = event.target.selectedOptions[0];
+            if (selectedOption) {
+                codeBanque = selectedOption.dataset.codeBanque;
+                codeGuichet = selectedOption.dataset.codeGuichet;
+                nomAgence = selectedOption.dataset.nomAgence;
+            }
+        } else if (event.params && event.params.data) {
+            codeBanque = event.params.data.element?.dataset?.codeBanque;
+            codeGuichet = event.params.data.element?.dataset?.codeGuichet;
+            nomAgence = event.params.data.element?.dataset?.nomAgence;
+        }
+        
+        const codeBanqueInput = document.getElementById('codebanque');
+        const codeGuichetInput = document.getElementById('codeguichet');
+        
+        if (codeBanqueInput && codeBanque) codeBanqueInput.value = codeBanque;
+        if (codeGuichetInput && codeGuichet) codeGuichetInput.value = codeGuichet;
+        
+        updateNumeroComplet();
+    }
+
+    function updateNumeroComplet() {
+        const codeBanque = document.getElementById('codebanque');
+        const codeGuichet = document.getElementById('codeguichet');
+        const numeroCompte = document.getElementById('numerocompte');
+        const rib = document.getElementById('rib');
+        const numeroComplet = document.getElementById('numero_complet');
+        
+        if (!numeroComplet) return;
+        
+        // Pour l'affichage, on garde les valeurs telles quelles sans padding si ce sont des lettres
+        const codeBanqueVal = codeBanque?.value || '_____';
+        const codeGuichetVal = codeGuichet?.value || '_____';
+        const numeroCompteVal = numeroCompte?.value || '___________';
+        const ribVal = rib?.value || '__';
+        
+        // Formatage adapté : on complète avec des underscores uniquement si la valeur est plus courte
+        const codeBanqueFormatted = codeBanqueVal.length < 5 ? codeBanqueVal.padEnd(5, '_') : codeBanqueVal.substring(0, 5);
+        const codeGuichetFormatted = codeGuichetVal.length < 5 ? codeGuichetVal.padEnd(5, '_') : codeGuichetVal.substring(0, 5);
+        const numeroCompteFormatted = numeroCompteVal.length < 11 ? numeroCompteVal.padEnd(11, '_') : numeroCompteVal.substring(0, 11);
+        const ribFormatted = ribVal.length < 2 ? ribVal.padEnd(2, '_') : ribVal.substring(0, 2);
+        
+        numeroComplet.textContent = `${codeBanqueVal} - ${codeGuichetFormatted} - ${numeroCompteFormatted} - ${ribFormatted}`;
+    }
+
+    // ==================== INITIALISATION DES ÉCOUTEURS ====================
+    
+    const selectBanque = document.getElementById('banque');
+    if (selectBanque) {
+        selectBanque.addEventListener('change', handleBanqueChange);
+        
+        if (typeof jQuery !== 'undefined') {
+            jQuery(selectBanque).on('select2:select', handleBanqueChange);
+        }
+    }
+
+    const selectAgence = document.getElementById('agence');
+    if (selectAgence) {
+        selectAgence.addEventListener('change', handleAgenceChange);
+        
+        if (typeof jQuery !== 'undefined') {
+            jQuery(selectAgence).on('select2:select', handleAgenceChange);
+        }
+    }
+
+    const inputsCompte = ['numerocompte', 'rib'];
+    inputsCompte.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.addEventListener('input', updateNumeroComplet);
+        }
+    });
+
+    const numeroCompteInput = document.getElementById('numerocompte');
+    if (numeroCompteInput) {
+        numeroCompteInput.addEventListener('input', function(e) {
+            // Pour le numéro de compte, on accepte uniquement les chiffres (standard bancaire)
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 11);
+            updateNumeroComplet();
+        });
+    }
+
+    const ribInput = document.getElementById('rib');
+    if (ribInput) {
+        ribInput.addEventListener('input', function(e) {
+            // Pour la clé RIB, on accepte uniquement les chiffres (standard bancaire)
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 2);
+            updateNumeroComplet();
+        });
+    }
+
+    updateNumeroComplet();
+});
+</script>

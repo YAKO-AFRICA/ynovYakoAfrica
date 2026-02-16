@@ -4,10 +4,10 @@
 
 <style>
     fieldset {
-    border: 1px solid #ddd; /* Bordure grise */
-    padding: 1rem; /* Espacement interne */
-    margin-bottom: 1rem; /* Espacement externe */
-    border-radius: 5px; /* Coins arrondis */
+        border: 1px solid #ddd; /* Bordure grise */
+        padding: 1rem; /* Espacement interne */
+        margin-bottom: 1rem; /* Espacement externe */
+        border-radius: 5px; /* Coins arrondis */
     }
 
     legend {
@@ -20,20 +20,20 @@
         width: 100px; /* Largeur ajustée pour le sélecteur */
     }
     .is-valid {
-  border: 2px solid green;
-  }
+        border: 2px solid green;
+    }
 
 </style>
-    @php
-        $tok = Str::random(80);
-        $token = [
-            'token' => $tok,
-            'operation_type' => "E-SOUSCRIPTION",
-            'key_uuid' => $tok
-        ];
-        $keyUuid = $token['key_uuid'];
-        $operationType = $token['operation_type'];
-    @endphp
+@php
+    $tok = Str::random(80);
+    $token = [
+        'token' => $tok,
+        'operation_type' => "E-SOUSCRIPTION",
+        'key_uuid' => $tok
+    ];
+    $keyUuid = $token['key_uuid'];
+    $operationType = $token['operation_type'];
+@endphp
 
 <div class="productions">
     <div id="stepper1{{ $product->CodeProduit }}" class="bs-stepper">
@@ -112,16 +112,10 @@
                     
                     <form id="productionForm" enctype="multipart/form-data" class="submitFor form">
                         @csrf
-
-                    
                         @include('productions.create.steps.stepAdherent', ['CodeProduit' => $product->CodeProduit])
                         
-
-                    
-                    
                         @include('productions.create.steps.stepAssurer', ['CodeProduit' => $product->CodeProduit])
 
-                    
                         @include('productions.create.steps.stepBeneficiaire', ['CodeProduit' => $product->CodeProduit])
                     
                         <input type="hidden" id="assuresInput" name="assures">
@@ -162,6 +156,7 @@
 <script>
     const SIGN_API = "{{ config('services.sign_api') }}";
 </script>
+
 
 <script>
     let pollingInterval;
@@ -263,126 +258,70 @@
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-
-    const form = document.getElementById("productionForm");
-    const btn = document.getElementById("btn-next");
-
-    btn.addEventListener("click", function (event) {
-
-        event.preventDefault();
-        btn.disabled = true;
-
-        Swal.fire({
-            title: 'Enregistrement en cours...',
-            text: 'Veuillez patienter...',
-            allowOutsideClick: false,
-            didOpen: () => Swal.showLoading()
-        });
-
-        const formData = new FormData(form);
-
-        axios.post('{{ route("prod.store") }}', formData)
-
-        .then(response => {
-
-            if (response.data.type !== "success") {
-                throw new Error(response.data.message);
-            }
-
-            sessionStorage.removeItem("simulationData");
-            sessionStorage.removeItem("contacts");
-
-            Swal.close();
-
-            if (response.data.url) {
-                window.open(response.data.url, '_blank');
-            }
-
-            if (response.data.urlback) {
-                window.location.href = response.data.urlback;
-            }
-
-        })
-
-        .catch(error => {
-
-            Swal.close();
-
-            console.error(error);
-
-            Swal.fire({
-                icon: "error",
-                title: "Erreur",
-                text: error.response?.data?.message || error.message
-            });
-
-        })
-
-        .finally(() => {
-
-            btn.disabled = false;
-
-        });
-
-    });
-
-});
-
-</script>
-
-
-
-{{-- <script>
-    document.addEventListener("DOMContentLoaded", function () {
         const form = document.getElementById("productionForm");
         const btn = document.getElementById("btn-next");
-
         btn.addEventListener("click", function (event) {
-            event.preventDefault();
 
-            swal.fire({
+            event.preventDefault();
+            btn.disabled = true;
+
+            Swal.fire({
                 title: 'Enregistrement en cours...',
-                text: 'Veuillez patienter pendant que nous enregistrons votre demande.',
+                text: 'Veuillez patienter...',
                 allowOutsideClick: false,
-                didOpen: () => {
-                    swal.showLoading();
-                }
+                didOpen: () => Swal.showLoading()
             });
 
             const formData = new FormData(form);
 
             axios.post('{{ route("prod.store") }}', formData)
-            .then(function (response) {
-                if (response.data.type === "success") {
-                    
-                    if (response.data.url) {
-                        window.open(response.data.url, '_blank');
-                    }
 
-                    if (response.data.urlback) {
-                        window.location.href = response.data.urlback;
-                    }
+            .then(response => {
 
-                    sessionStorage.removeItem("simulationData");
-                    sessionStorage.removeItem("simulationData");
-                    sessionStorage.removeItem("contacts");
-                    sessionStorage.removeItem("contacts");
-                } else {
-                    throw new Error(response.data.message || "Erreur lors de l'enregistrement.");
+                if (response.data.type !== "success") {
+                    throw new Error(response.data.message);
                 }
+
+                sessionStorage.removeItem("simulationData");
+                sessionStorage.removeItem("contacts");
+
+                Swal.close();
+
+                if (response.data.url) {
+                    window.open(response.data.url, '_blank');
+                }
+
+                if (response.data.urlback) {
+                    window.location.href = response.data.urlback;
+                }
+
             })
-            .catch(function (error) {
+
+            .catch(error => {
+
+                Swal.close();
+
                 console.error(error);
-                alert(error.response?.data?.message || "Une erreur est survenue.");
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Erreur",
+                    text: error.response?.data?.message || error.message
+                });
+
+            })
+
+            .finally(() => {
+
+                btn.disabled = false;
+
             });
+
         });
     });
+</script>
 
 
-</script> --}}
-
-
-    
 
 
 

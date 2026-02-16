@@ -99,7 +99,7 @@
                             <div class="text-center">
                                 <div class="mx-auto mb-3">
                                     
-                                    <img src="https://www.bnionline.ci/FR/bank_assets/bni/img/logo.png"
+                                    <img src="https://www.bni.ci/images/logo.jpg"
                                             style="background-color: #fff; max-height: 250px; height: 250px; width: 100%;" 
                                             class="logo-icon img-fluid img-thumbnail"
                                             alt="logo default">

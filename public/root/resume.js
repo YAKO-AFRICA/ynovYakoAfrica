@@ -48,8 +48,8 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('displayFraisAdhesion').textContent = formatAmount(getValue('fraisAdhesion'));
         document.getElementById('displayCapital').textContent = formatAmount(getValue('capital'));
         document.getElementById('displayModePaiement').textContent = getPaymentMethodLabel(getValue('modepaiement')) || '--';
-        document.getElementById('displayOrganisme').textContent = $('#banque').val() || '--';
-        document.getElementById('displayAgence').textContent = $('#Agence').val() || '--';
+        document.getElementById('displayOrganisme').textContent = $('#banqueOld').val() || '--';
+        document.getElementById('displayAgence').textContent = $('#AgenceOld').val() || '--';
         document.getElementById('displayNumeroCompte').textContent = getValue('numerocompte') || '--';
         document.getElementById('displayPeriodicite').textContent = getPeriodicityLabel(getValue('periodicite')) || '--';
     }

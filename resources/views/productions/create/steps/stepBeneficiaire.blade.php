@@ -5,36 +5,50 @@
 
     <div class="row g-3">
 
-        
-        <div class="col-12 col-lg-6">
-            <label for="" class="form-label">Au terme du contrat</label>
-            <div class="card" style="width: 80%">
-                <div class="card-body">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="addBeneficiary" value="adherent" name="addBeneficiary" required>
-                        <label class="form-check-label" for="addBeneficiary" >Adhérent</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Conjoint" id="conjoint1">
-                        <label class="form-check-label" for="conjoint1">
-                            Le conjoint non divorcé, ni séparé de corps
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Enfants nés et à naitre" id="enfants">
-                        <label class="form-check-label" for="enfants1">
-                            Les enfants nés et à naître
-                        </label>
-                    </div>
-                    <div class="form-check" data-bs-toggle="modal" data-bs-target="#addBenefModal">
-                        <input class="form-check-input" type="checkbox" value="autre" id="Autres1" data-situation="terme-contrat">
-                        <label class="form-check-label" for="Autres1">
-                            Autres, à présiser
-                        </label>
+        @if ($product->CodeProduit == 'YKE_2018')
+            <div class="col-12 col-lg-6" @disabled(true)>
+                <label for="" class="form-label">Au terme du contrat</label>
+                <div class="card" style="width: 80%">
+                    <div class="card-body" disabled>
+                        <small>
+                            Pas de beneficiaire au terme du contrat pour ce produit
+                        </small>
                     </div>
                 </div>
             </div>
-        </div>
+
+        @else
+            <div class="col-12 col-lg-6">
+                <label for="" class="form-label">Au terme du contrat</label>
+                <div class="card" style="width: 80%">
+                    <div class="card-body">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="addBeneficiary" value="adherent" name="addBeneficiary" required 
+                            @if ($product->CodeProduit == 'DOIHOO') checked readonly @endif>
+                            <label class="form-check-label" for="addBeneficiary" >Adhérent</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Conjoint" id="conjoint1">
+                            <label class="form-check-label" for="conjoint1">
+                                Le conjoint non divorcé, ni séparé de corps
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Enfants nés et à naitre" id="enfants">
+                            <label class="form-check-label" for="enfants1">
+                                Les enfants nés et à naître
+                            </label>
+                        </div>
+                        <div class="form-check" data-bs-toggle="modal" data-bs-target="#addBenefModal">
+                            <input class="form-check-input" type="checkbox" value="autre" id="Autres1" data-situation="terme-contrat">
+                            <label class="form-check-label" for="Autres1">
+                                Autres, à présiser
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
 
 
         <div class="col-12 col-lg-6">
@@ -109,34 +123,26 @@
          // beneficiaire 
          const beneficiaryRowId = "beneficiary-row";
 
-        // Ajoutez un event listener sur le champ "Adherent"
-        document.getElementById('addBeneficiary').addEventListener('change', function () {
-            if (this.checked) {
-                addBeneficiaryRow();
-            } else {
-                removeBeneficiaryRow();
-            }
-        });
-
         function addBeneficiaryRow() {
-            
-            // Vérifiez si la ligne existe déjà pour éviter les doublons
+
             if (document.getElementById(beneficiaryRowId)) return;
 
-            // Obtenez les valeurs d'entrée de l'adhérent
-            const nom = document.getElementById('FisrtName') ? document.getElementById('FisrtName').value : 'Nom';
-            const prenom = document.getElementById('LastName') ? document.getElementById('LastName').value : 'Prénom';
-            const dateNaissance = document.getElementById('Date_naissance') ? document.getElementById('Date_naissance').value : 'Date';
-            const lieuNaissance = document.getElementById('lieunaissance') ? document.getElementById('lieunaissance').value : 'Lieu';
-            const lieuResidence = document.getElementById('lieuresidence') ? document.getElementById('lieuresidence').value : 'Résidence';
-            const telephone = document.querySelector('input[name="mobile"]') ? document.querySelector('input[name="mobile"]').value : 'Téléphone';
-            const email = document.getElementById('email') ? document.getElementById('email').value : 'Email';
-            
-            // Créez une nouvelle ligne et remplissez-la avec les données
-            const table = document.getElementById('beneficiariesTable').getElementsByTagName('tbody')[0];
+            const nom = document.getElementById('FisrtName')?.value.trim();
+            const prenom = document.getElementById('LastName')?.value.trim();
+
+            // 👉 STOP si infos principales absentes
+            if (!nom || !prenom) return;
+
+            const dateNaissance = document.getElementById('Date_naissance')?.value || '';
+            const lieuNaissance = document.getElementById('lieunaissance')?.value || '';
+            const lieuResidence = document.getElementById('lieuresidence')?.value || '';
+            const telephone = document.querySelector('input[name="mobile"]')?.value || '';
+            const email = document.getElementById('email')?.value || '';
+
+            const table = document.getElementById('beneficiariesTable').querySelector('tbody');
             const newRow = table.insertRow();
-            newRow.id = beneficiaryRowId; // Définir un ID unique à la ligne
-            
+            newRow.id = beneficiaryRowId;
+
             newRow.innerHTML = `
                 <td>${nom} ${prenom}</td>
                 <td>${dateNaissance}</td>
@@ -149,6 +155,63 @@
                 <td></td>
             `;
         }
+
+        ['FisrtName','LastName','Date_naissance','lieunaissance','lieuresidence','email']
+        .forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', () => {
+                    if (document.getElementById('addBeneficiary').checked) {
+                        removeBeneficiaryRow();
+                        addBeneficiaryRow();
+                    }
+                });
+            }
+        });
+
+
+
+
+        // Ajoutez un event listener sur le champ "Adherent"
+        document.getElementById('addBeneficiary').addEventListener('change', function () {
+            if (this.checked) {
+                addBeneficiaryRow();
+            } else {
+                removeBeneficiaryRow();
+            }
+        });
+
+        // function addBeneficiaryRow() {
+            
+        //     // Vérifiez si la ligne existe déjà pour éviter les doublons
+        //     if (document.getElementById(beneficiaryRowId)) return;
+
+        //     // Obtenez les valeurs d'entrée de l'adhérent
+        //     const nom = document.getElementById('FisrtName') ? document.getElementById('FisrtName').value : 'Nom';
+        //     const prenom = document.getElementById('LastName') ? document.getElementById('LastName').value : 'Prénom';
+        //     const dateNaissance = document.getElementById('Date_naissance') ? document.getElementById('Date_naissance').value : 'Date';
+        //     const lieuNaissance = document.getElementById('lieunaissance') ? document.getElementById('lieunaissance').value : 'Lieu';
+        //     const lieuResidence = document.getElementById('lieuresidence') ? document.getElementById('lieuresidence').value : 'Résidence';
+        //     const telephone = document.querySelector('input[name="mobile"]') ? document.querySelector('input[name="mobile"]').value : 'Téléphone';
+        //     const email = document.getElementById('email') ? document.getElementById('email').value : 'Email';
+            
+        //     // Créez une nouvelle ligne et remplissez-la avec les données
+        //     const table = document.getElementById('beneficiariesTable').getElementsByTagName('tbody')[0];
+        //     const newRow = table.insertRow();
+        //     newRow.id = beneficiaryRowId; // Définir un ID unique à la ligne
+            
+        //     newRow.innerHTML = `
+        //         <td>${nom} ${prenom}</td>
+        //         <td>${dateNaissance}</td>
+        //         <td>${lieuNaissance}</td>
+        //         <td>${lieuResidence}</td>
+        //         <td>Adhérent</td>
+        //         <td>${telephone}</td>
+        //         <td>${email}</td>
+        //         <td>100%</td>
+        //         <td></td>
+        //     `;
+        // }
 
         function removeBeneficiaryRow() {
             const row = document.getElementById(beneficiaryRowId);

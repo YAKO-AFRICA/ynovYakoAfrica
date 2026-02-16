@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\OTPController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\PaiementController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Setting\SiteWebController;
 use App\Http\Controllers\Admin\PrestationController;
 use App\Http\Controllers\Sites\SitePropositionController;
@@ -48,6 +49,8 @@ Route::post('/rechercher-prospert', function (Request $request) {
         'prospert' => $prospert
         ]);
 });
+
+
 
 
 Route::post('/fetch-contract-details', [PrestationController::class, 'fetchContractDetails']);

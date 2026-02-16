@@ -16,6 +16,14 @@ document.addEventListener("DOMContentLoaded", function () {
     let ageOptions = [];
     let debounceTimer;
     
+    // Indice de périodicité pour le calcul des primes
+    const i_p = {
+        'A': 1,
+        'S': 1/2,
+        'T': 1/4,
+        'M': 1/12
+    };
+    
     // Fonction pour déterminer la tranche d'âge automatiquement
     function getTrancheAge(ageSaisie) {
         if (ageSaisie <= 29) return "30";
@@ -150,14 +158,62 @@ document.addEventListener("DOMContentLoaded", function () {
                     checkbox.addEventListener('change', function() {
                         surContainer.style.display = this.checked ? 'block' : 'none';
                         apiInfoDiv.style.display = this.checked ? 'block' : 'none';
-
-                        
                         
                         // Mettre à jour l'affichage de la tranche d'âge si la case est cochée
                         if (this.checked) {
-                            
                             updateSureteAgeDisplay(garantie.id);
                         }
+                    });
+                }
+                
+                // === Garantie Décès Accidentel ===
+                if (garantie.codeproduitgarantie === 'DECESACC') {
+                    const decesContainer = document.createElement('div');
+                    decesContainer.id = `deces_fields_${garantie.id}`;
+                    decesContainer.className = 'mt-2';
+                    decesContainer.style.display = 'none';
+                    
+                    // Label Capital
+                    const capitalLabel = document.createElement('label');
+                    capitalLabel.textContent = 'Capital décès accidentel (FCFA):';
+                    capitalLabel.className = 'form-label';
+                    
+                    // Select Capital
+                    const capitalSelect = document.createElement('select');
+                    capitalSelect.className = 'form-select mb-2 deces-capital';
+                    capitalSelect.name = `deces_capital_${garantie.id}`;
+                    capitalSelect.id = `deces_capital_${garantie.id}`;
+                    
+                    const capitalOptions = [
+                        {value: '500000', text: '500 000'},
+                        {value: '1000000', text: '1 000 000'},
+                        {value: '2000000', text: '2 000 000'},
+                        {value: '3000000', text: '3 000 000'},
+                        {value: '5000000', text: '5 000 000'},
+                    ];
+                    
+                    capitalOptions.forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt.value;
+                        option.textContent = opt.text;
+                        capitalSelect.appendChild(option);
+                    });
+                    
+                    // Ajouter un événement pour le changement de capital
+                    capitalSelect.addEventListener('change', function() {
+                        triggerAutoUpdate();
+                    });
+                    
+                    // Assemblage des éléments
+                    decesContainer.appendChild(capitalLabel);
+                    decesContainer.appendChild(capitalSelect);
+                    
+                    div.appendChild(decesContainer);
+                    
+                    // Gestion de l'événement change pour la checkbox
+                    checkbox.addEventListener('change', function() {
+                        decesContainer.style.display = this.checked ? 'block' : 'none';
+                        triggerAutoUpdate();
                     });
                 }
                 
@@ -187,19 +243,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     
-    // Fonction pour charger les options d'âge (maintenue pour compatibilité, mais non utilisée pour SURETÉ)
-    function loadAgeOptions(selectElement, codeGroupe) {
-        // Cette fonction est conservée mais ne sera plus utilisée pour SURETÉ
-        // car la tranche d'âge est maintenant calculée automatiquement
-    }
-    
     // Fonction pour calculer la prime SURETÉ via API
     async function calculatePrimeForSurete(garantieId) {
         const capital = document.getElementById(`sur_capital_${garantieId}`).value;
         const ageHiddenInput = document.getElementById(`sur_age_assure_${garantieId}`);
         const ageAssure = ageHiddenInput.value; // Récupère la valeur du champ caché
         const duree = dureeInput.value;
-        
         
         if (!capital || !ageAssure || !duree ) {
             console.log("Paramètres manquants pour le calcul SURETÉ");
@@ -316,7 +365,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const capitalSouscrit = parseFloat(capitalSouscritInput.value);
         const age = parseInt(ageInput.value);
         const duree = dureeInput.value;
-        // const souscripteurAssur = document.querySelector("[name='isAssure']");
         
         // Vérifier que tous les champs requis sont remplis
         if (!capitalSouscrit || isNaN(age) || !codePeriodiciteInput.value || !duree ) {
@@ -353,9 +401,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const isAssureInput = document.querySelector('input[name="isAssure"]:checked');
         const isAssure = isAssureInput ? isAssureInput.value : '';
 
-
-        
-        
         let totalPrime = 0;
         let resultDiv = document.getElementById("result");
         resultDiv.innerHTML = "";
@@ -375,7 +420,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 age: age,
                 fraisAdhesion: fraieadhesion,
                 duree: duree,
-                
             },
             codeProduit: document.getElementById("CodeProduit").value,
             valueSureteCheck: sessionStorage.getItem('valueSureteCheck') === 'true' 
@@ -395,10 +439,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     case 'DIG':
                         prime = capitalSouscrit * 0.5;
                         capital = 0;
-                        break;
-                    case 'DECESACC':
-                        prime = capitalSouscrit * 0.095;
-                        capital = capitalSouscrit;
                         break;
                     default:
                         prime = 0;
@@ -459,13 +499,22 @@ document.addEventListener("DOMContentLoaded", function () {
                             capitalSouhaite: surCapital,
                             ageAssure: selectedAge,
                             duree: duree,
-                            trancheCalculee: true // Indique que la tranche a été calculée automatiquement
+                            trancheCalculee: true
                         };
                         break;
+                        
                     case 'DECESACC':
-                        prime = capitalSouscrit * 0.05;
-                        capital = capitalSouscrit;
+                        // Récupérer le capital sélectionné pour la garantie Décès Accidentel
+                        const decesCapital = parseFloat(document.getElementById(`deces_capital_${garantieId}`).value);
+                        capital = decesCapital;
+                        
+                        // Calcul de l'indice de périodicité
+                        const indice = i_p[codePeriodiciteInput.value] || 1;
+                        
+                        // prime = capital * 0.002 * indice de périodicité
+                        prime = capital * 0.002 * indice;
                         break;
+                        
                     default:
                         prime = capitalSouscrit * 0.05;
                         capital = capitalSouscrit;
@@ -499,7 +548,7 @@ document.addEventListener("DOMContentLoaded", function () {
         simulationData.primeFinale = totalPrime;
         simulationData.infoSimulation.primepricipale = totalPrime;
 
-        const firstPrime = totalPrime + fraieadhesion
+        const firstPrime = totalPrime + fraieadhesion;
         
         // Stocker toutes les données en session
         saveToSession(simulationData);
@@ -530,7 +579,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Charger les garanties optionnelles au démarrage
     loadOptionalGaranties();
 
-    // function pour reiniatialisé le simulateur
+    // Fonction pour réinitialiser le simulateur
     resetBtn.addEventListener('click', function() {
         dureeInput.value = '6';
         capitalSouscritInput.value = '';
@@ -538,8 +587,20 @@ document.addEventListener("DOMContentLoaded", function () {
         dateNaissanceInput.value = '';
         ageInput.value = '';
         resultDiv.innerHTML = "";
+        
+        // Décocher toutes les options
         const selectedOptions = document.querySelectorAll('.garantie-option:checked');
-        selectedOptions.forEach(option => option.checked = false);
+        selectedOptions.forEach(option => {
+            option.checked = false;
+            
+            // Cacher les conteneurs associés
+            const garantieId = option.dataset.garantieId;
+            const surContainer = document.getElementById(`sur_fields_${garantieId}`);
+            if (surContainer) surContainer.style.display = 'none';
+            
+            const decesContainer = document.getElementById(`deces_fields_${garantieId}`);
+            if (decesContainer) decesContainer.style.display = 'none';
+        });
 
         const souscripteurAssur = document.querySelector("[name='isAssure']");
         if(souscripteurAssur) {
@@ -551,6 +612,8 @@ document.addEventListener("DOMContentLoaded", function () {
         sessionStorage.removeItem('simulateurData');
         sessionStorage.removeItem('simulationData');
         
+        document.getElementById('primeTotal').textContent = '0';
+        document.getElementById('btn-souscription').classList.add('btn-inactif');
     });
 
     const souscribBtn = document.getElementById('btn-souscription');
@@ -570,7 +633,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 confirmButtonText: "OK"
             });
             
-            // Met le focus sur le premier radio pour attirer l’attention
+            // Met le focus sur le premier radio pour attirer l'attention
             const firstRadio = document.querySelector('input[name="isAssure"]');
             if (firstRadio) {
                 firstRadio.focus();
@@ -587,8 +650,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-
-    
     // Déclencher le changement de périodicité au chargement pour initialiser les données
     document.getElementById("codePeriodicite").dispatchEvent(new Event('change'));
 });

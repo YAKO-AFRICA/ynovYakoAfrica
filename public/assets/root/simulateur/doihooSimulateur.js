@@ -156,6 +156,13 @@ document.addEventListener('DOMContentLoaded', function () {
     async function calculatePrimes() {
         if (calculationInProgress) return;
 
+        console.log('Démarrage du calcul des primes avec les données suivantes :');
+        console.log('Capital sélectionné :', capitalSelect.value);
+        console.log('Âge sélectionné :', ageSelect.value);
+        console.log('Durée du contrat :', dureeContratInput.value);
+        console.log('Code produit :', codeProduitInput.value);
+        console.log('Code periodicité :', periodiciteSelect.value);
+
         donneesGlobale = [];
         
         const capital = parseFloat(capitalSelect.value);
@@ -175,8 +182,11 @@ document.addEventListener('DOMContentLoaded', function () {
         
         try {
             const calculations = garanties.map(async garantie => {
+                console.log(`Traitement de la garantie : ${garantie.libelle} (Code: ${garantie.codeproduitgarantie})`);
                 const match = tablePrimes.find(t => t.CodeProduitGarantie === garantie.codeproduitgarantie);
                 if (!match) return null;
+                console.log('Match trouvé dans les tables de primes :', match.CodeGRoupeIntervalle, match.codeTable);
+                // console.log(`Calcul de la prime pour ${garantie.libelle} avec capital ${capital}, âge ${age}, durée ${duree}`);
             
                 const isDoihoo = garantie.codeproduitgarantie === "DOI_2020";
                 const adjustedCapital = isDoihoo ? (capital * 0.2) : capital;
@@ -184,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const requestBody = {
                     CodeGroupe: match.CodeGRoupeIntervalle,
                     AgeAssure: age,
-                    Capital: adjustedCapital,
+                    Capital: capital,
                     codeTable: match.codeTable,
                     Duree: duree
                 };
@@ -197,11 +207,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     );
                     
                     const prime = parseFloat(response.dataTablePrimeRes[0]?.Prime || 0);
+                    console.log(`Prime calculée pour ${garantie.libelle}:`, prime);
 
                     donneesGlobale.push({
                         codeGarantie: garantie.codeproduitgarantie,
                         libelle: garantie.libelle,
-                        capital: adjustedCapital,
+                        capital: capital,
                         prime: prime
                     });
 
@@ -225,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     return {
                         libelle: garantie.libelle,
-                        capital: adjustedCapital,
+                        capital: capital,
                         prime: prime
                     };
                 } catch (err) {

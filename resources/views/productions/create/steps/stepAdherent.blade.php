@@ -204,6 +204,18 @@
     </div>
     <fieldset class="border p-3">
         <legend class="float-none w-auto px-2"><small>Contact</small></legend>
+
+        <div class="row my-3">
+            <div class="col-6">
+                <label for="">Telephone</label>
+                <input type="tel" name="telephone" class="form-control" id="contactprincipal" placeholder="+225 00 00 00 00" required minlength="10" maxlength="14" autocomplete="on" pattern="[0-9]{10}" required>
+            </div>
+            <div class="col-6">
+                <label for="">Mobile</label>
+                <input type="tel" name="mobile" class="form-control" pattern="[0-9]{10}" id="contactsecondaire" placeholder="+225 00 00 00 00" minlength="10" maxlength="14" autocomplete="on">
+            </div>
+        </div>
+        
         <!-- Bouton pour ajouter des contacts optionnels -->
         <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#contactModal">
             + Ajouter un contact
@@ -255,9 +267,7 @@
         </div>
 
         <div class="">
-            <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i class='bx bx-right-arrow-alt'></i></button>
-           
-             
+            <button onclick="event.preventDefault(); " class="btn btn-two btn-next-form">Suivant<i class='bx bx-right-arrow-alt'></i></button>
         </div>
         
     </div>

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\ReseauProduct;
 use App\Models\TblPrestation;
 use App\Models\ProductFormule;
+use App\Models\TblBanqueAgence;
 use App\Models\TblTypePrestation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -284,5 +285,27 @@ class SettingsController extends Controller
             ];
         }
         return response()->json($dataResponse);
+    }
+
+    // recuperation des banque agence depuis NSIL
+    public function getBanqueAgence(request $request)
+    {
+        try {
+
+        $codeBanque = $request->input('codeBanque');
+
+            $query = TblBanqueAgence::OrderBy('sigle', 'ASC');
+
+            if($codeBanque) {
+                $query->where('codebanque', $codeBanque);
+            }
+
+            $banqueAgences = $query->get();
+
+            return response()->json($banqueAgences);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erreur système: ' . $e->getMessage()], 500);
+        }
     }
 }

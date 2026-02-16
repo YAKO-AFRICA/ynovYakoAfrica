@@ -148,7 +148,13 @@
         const currentContacts = JSON.parse(sessionStorage.getItem('contacts') || '[]');
 
         if (currentContacts.length === 0) {
-            alert("Veuillez ajouter au moins un contact avant de continuer.");
+            swal.fire({
+                icon: 'warning',
+                title: 'Aucun contact ajouté',
+                text: 'Veuillez ajouter au moins un contact optionnel avant de continuer.',
+                confirmButtonText: 'OK'
+            });
+
             return;
         }
 

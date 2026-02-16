@@ -292,6 +292,7 @@
         <script src="{{ asset('assets/root/simulateur/simulateurCADE.js')}}"></script>
         <script src="{{ asset('assets/root/simulateur/simulateur.js')}}"></script>
         <script src="{{ asset('assets/root/simulateur/ykeSimulateur.js')}}"></script>
+        {{-- <script src="{{ asset('assets/root/simulateur/yke_2008.js')}}"></script> --}}
         <script src="{{ asset('assets/js/fieldsForm.js')}}"></script>
         
        

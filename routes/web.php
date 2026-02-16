@@ -137,6 +137,7 @@ Route::prefix('production')->name('prod.')->group(function(){
         Route::post('search-adherent', [ProductionController::class, 'searchAdherant'])->name('search.adherent');
         Route::get('/create/add/{codeproduit}', [ProductionController::class, 'create'])->name('create');
         Route::get('/createYke/add/{codeproduit}', [ProductionController::class, 'createYke'])->name('createYke');
+        Route::get('/createYke-2008/add/{codeproduit}', [ProductionController::class, 'createYke_2008'])->name('createYke_2008');
         Route::get('/createKds/add/{codeproduit}', [ProductionController::class, 'createKds'])->name('createKds');
         Route::get('/createdoihoo/add/{codeproduit}', [ProductionController::class, 'createdoihoo'])->name('createdoihoo');
         Route::get('/createCAD/add/{codeproduit}', [ProductionController::class, 'createCAD'])->name('createCAD');
@@ -215,6 +216,8 @@ Route::prefix('report')->name('report.')->group(function(){
     });
 
 });
+
+Route::post('/banque-agence', [SettingsController::class, 'getBanqueAgence']);
 
 
 Route::get('prestation/getInfoPrestation/{id}', [PrestationController::class, 'getInfoPrestation'])->name('getInfoPrestation');
@@ -501,9 +504,7 @@ Route::post('/storeSimulationPrime', [ProductionController::class, 'storeSimulat
 
 Route::get('/test-api-local', [TestController::class, 'testApi'])->name('testApi');
 
-Route::get('/welcome', function () {
-    return view('welcome');
-});
+
 
 route::get('/generate-bulletin-demo', [EpretController::class, 'generateBu'])->name('generateBul');
 

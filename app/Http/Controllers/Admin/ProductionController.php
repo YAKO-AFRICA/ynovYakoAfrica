@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use PDF;
 
-use Carbon\Carbon;
+use Throwable;
 
+use Carbon\Carbon;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Models\User;
@@ -35,20 +36,19 @@ use Illuminate\Http\Request;
 use App\Models\ReseauProduct;
 use App\Models\TblProfession;
 use Endroid\QrCode\Logo\Logo;
+
 use App\Models\AssureGarantie;
 
 use App\Models\ProduitGarantie;
-
+use App\Models\TblBanqueAgence;
 use BaconQrCode\Encoder\QrCode;
 use Endroid\QrCode\Label\Label;
 use App\Models\DeclarationSante;
 use App\Models\TblSecteurActivite;
 use Illuminate\Support\Facades\DB;
+
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Throwable;
 
 use App\Notifications\SystemeNotify;
 use Endroid\QrCode\Writer\PngWriter;
@@ -62,6 +62,7 @@ use Illuminate\Support\Facades\Notification;
 use Endroid\QrCode\Writer\ValidationException;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd; // Alternative SVG
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd; // Utilisez Imagick si disponible
 
 class ProductionController extends Controller
@@ -232,22 +233,15 @@ class ProductionController extends Controller
 
     public function stepProduct()
     {
-
-        $productByReseau = ReseauProduct::select('CodeProduit')
-            ->where('codereseau', Auth::user()->membre->codereseau)
-            ->get();
-
+        $productByReseau = ReseauProduct::select('CodeProduit')->where('codereseau', Auth::user()->membre->codereseau)->get();
 
         $codeProduits = $productByReseau->pluck('CodeProduit')->toArray();
-
 
         if (Auth::user()->membre->codepartenaire === "LLV") {
             $products = Product::whereIn('CodeProduit', $codeProduits)->get();
         } else {
             $products = Product::whereIn('CodeProduit', $codeProduits)->get();
         }
-
-
 
         // dd($products);
         return view('productions.create.steps.stepProduct', compact('products'));
@@ -375,6 +369,8 @@ class ProductionController extends Controller
      
         $detailCountries = []; // Valeur par défaut
 
+        // $banqueAgence = TblBanqueAgence::all();
+
         try {
             // $response = Http::withOptions(['timeout' => 60])->get(env('API_GET_COUNTRIES'));
             $response = Http::withOptions(['timeout' => 60])->get(config('services.API_GET_COUNTRIES'));
@@ -417,13 +413,17 @@ class ProductionController extends Controller
     }
     public function createYke($codeProduit)
     {
-
         $product = Product::where('CodeProduit', $codeProduit)->first();
         $productGarantie = ProduitGarantie::where(['codeproduit' => $codeProduit, 'branche' => 'IND'])->get();
 
-
-
         return view('productions.create.simulateur.ykeSimulateur', compact('product', 'productGarantie'));
+    }
+    public function createYke_2008($codeProduit)
+    {
+        $product = Product::where('CodeProduit', $codeProduit)->first();
+        $productGarantie = ProduitGarantie::where(['codeproduit' => $codeProduit, 'branche' => 'IND'])->get();
+
+        return view('productions.create.simulateur.ykeSimulateur2008', compact('product', 'productGarantie'));
     }
     public function createKds($codeProduit)
     {
@@ -477,8 +477,6 @@ class ProductionController extends Controller
 
         $data = $request->all();
 
-        
-
         Log::info($data);
 
         // On décode inputSessionData
@@ -500,6 +498,7 @@ class ProductionController extends Controller
         }
 
         $contactsBrut = $data['contacts'] ?? [];
+        $contacts = json_decode($contactsBrut, true);
 
         Log::info("conttttt");
         Log::info($contactsBrut);
@@ -513,7 +512,7 @@ class ProductionController extends Controller
                 $prefix = '68111105104111111';
             } else if ($request->codeproduit == "CAD_EDUCPLUS") {
                 $prefix = '679710069100117';
-            } else if ($request->codeproduit == "YKE_2018") {
+            } else if ($request->codeproduit == "YKE_2018" || $request->codeproduit == "YKE_2008") {
                 $prefix = '8901001011692018';
             } else if ($request->codeproduit == "CADENCE") {
                 $prefix = '679710010111099';
@@ -531,9 +530,6 @@ class ProductionController extends Controller
                 $numExist = Contrat::where('numBullettin', $numBullettin)->exists();
                 $increment++;
             } while ($numExist);
-
-
-            Log::info($request->all());
 
             // Gestion de la civilité pour l'adhérent et l'assuré
             $sexe = $request->civilite === "Monsieur" ? "M" : "F";
@@ -589,7 +585,7 @@ class ProductionController extends Controller
 
             log::info("okay pour l'adherent : " . $Adherent->id);
 
-            $contacts = json_decode($contactsBrut, true);
+            
 
             Log::info("Champs contacts trouvées : ");
             Log::info($contacts);
@@ -694,6 +690,9 @@ class ProductionController extends Controller
 
             $assures = json_decode($request->input('assures'), true);
 
+            Log::info("Champs garanties trouvées : ");
+            Log::info($assures);
+
             if ($assures) {
                 foreach ($assures as $assure) {
                     $datenaissanceAssur = isset($assure['datenaissance']) ? Carbon::parse($assure['datenaissance'])->format('Y-m-d H:i:s') : null;
@@ -702,7 +701,7 @@ class ProductionController extends Controller
                     $sexeassurAdd = $assure['civilite'] === "Monsieur" ? "M" : "F";
                     Assurer::create([
                         'id' => $idAssureInsert,
-                        'civilite' => $assure['civilite'],
+                        'civilite' => $assure['civilite'] ?? "M",
                         'nom' => $assure['nom'],
                         'prenom' => $assure['prenom'],
                         'datenaissance' => $datenaissanceAssur,
@@ -1150,6 +1149,14 @@ class ProductionController extends Controller
             Log::info("code produit: " . $contrat->codeproduit );
 
             if($contrat->codeproduit == "YKE_2018"){
+                $pdf = PDF::loadView('productions.components.bullettin.ykeBulletin', [
+                    'contrat' => $contrat,
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc,
+                ]);
+                $cguFile = public_path('root/cgu/cg_yke.pdf');
+
+            }else if($contrat->codeproduit == "YKE_2008"){
                 $pdf = PDF::loadView('productions.components.bullettin.ykeBulletin', [
                     'contrat' => $contrat,
                     'qrCodeBase64' => $qrCodeBase64,
