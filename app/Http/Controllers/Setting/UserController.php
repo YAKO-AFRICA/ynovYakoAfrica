@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\Setting;
 
-use App\Models\User;
-use App\Models\Zone;
+use App\Http\Controllers\Controller;
 use App\Models\Equipe;
 use App\Models\Membre;
-use App\Models\Reseau;
 use App\Models\Partner;
 use App\Models\Profile;
-use Illuminate\Support\Str;
+use App\Models\Reseau;
+use App\Models\User;
+use App\Models\Zone;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
+use Throwable;
 
 ini_set('memory_limit', '1024M');
 
@@ -56,27 +57,20 @@ class UserController extends Controller
         $partners = Partner::where('code','LLV')->get();
 
         $roles = Role::all();
-        
+
         $profiles = Profile::all();
 
         return view('settings.users.indexCollaborateur', compact('collaborateurs', 'reseaux', 'zones', 'equipes', 'partners', 'roles', 'profiles'));
     }
     public function index()
     {
-        
+
         $membres = Membre::orderby('created_at', 'desc')
         ->where('typ_membre', '!=', '3')->where('codepartenaire','!=', 'llv')
         ->get()
         ->groupBy('codepartenaire');
 
-        $reseaux = Reseau::all();
-        $zones = Zone::all();
-        $equipes = Equipe::all();
-        $partners = Partner::all();
-        $roles = Role::all();
-        $profiles = Profile::all();
-        
-        return view('settings.users.index', compact('membres', 'reseaux', 'zones', 'equipes', 'partners', 'roles', 'profiles'));
+        return view('settings.users.index', compact('membres'));
     }
 
     public function indexByPartenaire($id)
@@ -89,7 +83,7 @@ class UserController extends Controller
         $equipes = Equipe::all();
         $partners = Partner::all();
         $roles = Role::all();
-        $profiles = Profile::all();
+        $profiles = Profile::where('codereseau', 4)->get();
         $codepartenaire = $id;
 
         return view('settings.users.indexByPartner', compact('membresbypartenaire', 'reseaux', 'zones', 'equipes', 'partners', 'roles', 'codepartenaire', 'profiles'));
@@ -102,6 +96,16 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', 'Colonnes mises à jour avec succès.');
     }
+
+    public function getMembresByPartenaire($codepartenaire)
+    {
+        $membres = Membre::orderby('idmembre', 'desc')
+            ->where('codepartenaire', $codepartenaire)
+            ->paginate(20); // 20 par page
+
+        return response()->json($membres);
+    }
+
 
 
 
@@ -162,7 +166,7 @@ class UserController extends Controller
         Log::info($request->codeequipe);
 
         $agence = Equipe::select('codeequipe','libelleequipe','id')->where('codeequipe', $request->codeequipe)->first();
-        
+
         log::info($agence);
 
         DB::beginTransaction();
@@ -235,7 +239,7 @@ class UserController extends Controller
                 ];
                 DB::rollBack();
             }
-            
+
 
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -251,7 +255,7 @@ class UserController extends Controller
 
     public function sendMail($email, $plainPassword)
     {
-        
+
         $mailData = [
             'title' => 'Identifiant de connexion ! 🎉',
             'btnLink' => url('/'),
@@ -262,38 +266,38 @@ class UserController extends Controller
                         <h2 style=\"color: white; margin: 0; font-size: 24px;\">🎉 Bienvenue sur YNOV !</h2>
                         <p style=\"color: #e8f0fe; margin: 10px 0 0 0; font-size: 16px;\">Votre compte a été créé avec succès</p>
                     </div>
-                    
+
                     <div style=\"background: white; padding: 30px; border: 1px solid #e0e0e0; border-top: none;\">
                         <p style=\"margin: 0 0 20px 0; font-size: 16px;\">Bonjour,</p>
-                        
+
                         <p style=\"margin: 0 0 20px 0; font-size: 16px;\">
                             Félicitations ! Votre compte YNOV a été créé avec succès. Nous sommes ravis de vous accueillir dans notre communauté.
                         </p>
-                        
+
                         <div style=\"background: #f8f9fa; border-left: 4px solid #1a73e8; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0;\">
                             <h3 style=\"margin: 0 0 15px 0; color: #1a73e8; font-size: 18px;\">🔑 Vos identifiants de connexion</h3>
                             <div style=\"background: white; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0;\">
                                 <p style=\"margin: 0 0 10px 0; font-size: 16px;\">
-                                    <strong style=\"color: #1a73e8;\">📧 Email :</strong> 
+                                    <strong style=\"color: #1a73e8;\">📧 Email :</strong>
                                     <span style=\"background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-family: monospace;\">{$email}</span>
                                 </p>
                                 <p style=\"margin: 0; font-size: 16px;\">
-                                    <strong style=\"color: #1a73e8;\">🔐 Mot de passe :</strong> 
+                                    <strong style=\"color: #1a73e8;\">🔐 Mot de passe :</strong>
                                     <span style=\"background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-family: monospace;\">{$plainPassword}</span>
                                 </p>
                             </div>
                         </div>
-                        
+
                         <div style=\"background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;\">
                             <p style=\"margin: 0; font-size: 14px; color: #856404;\">
                                 <strong>⚠️ Important :</strong> Pour des raisons de sécurité, nous vous recommandons fortement de changer votre mot de passe lors de votre première connexion.
                             </p>
                         </div>
-                        
+
                         <p style=\"margin: 20px 0; font-size: 16px; text-align: center;\">
                             Cliquez sur le bouton ci-dessous pour vous connecter et finaliser votre inscription :
                         </p>
-                        
+
                         <div style=\"text-align: center; margin: 30px 0;\">
                             <a href=\"" . url('/') . "\" style=\"
                                 background: #076835;
@@ -310,25 +314,25 @@ class UserController extends Controller
                                 🚀 Se connecter maintenant
                             </a>
                         </div>
-                        
+
                         <div style=\"background: #e8f5e8; border: 1px solid #c3e6c3; padding: 15px; border-radius: 8px; margin: 20px 0;\">
                             <p style=\"margin: 0; font-size: 14px; color: #155724;\">
                                 <strong>💡 Astuce :</strong> Marquez cet email comme favori pour retrouver facilement vos identifiants si nécessaire.
                             </p>
                         </div>
-                        
+
                         <hr style=\"border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;\">
-                        
+
                         <p style=\"margin: 20px 0 0 0; font-size: 16px;\">
                             Si vous avez des questions ou besoin d'assistance, notre équipe support est là pour vous aider. N'hésitez pas à nous contacter.
                         </p>
-                        
+
                         <p style=\"margin: 20px 0 0 0; font-size: 16px;\">
                             Cordialement,<br>
                                                         <strong style=\"color: #076835;\">L'équipe YakoAfrica</strong> 🌍
                         </p>
                     </div>
-                    
+
                     <div style=\"background: #f8f9fa; padding: 15px; border-radius: 0 0 10px 10px; text-align: center; border: 1px solid #e0e0e0; border-top: none;\">
                         <p style=\"margin: 0; font-size: 12px; color: #666;\">
                             © 2025 YAKOAFRICA - Tous droits réservés<br>
@@ -383,122 +387,77 @@ class UserController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
+{
+    Log::info($request->all());
 
-        // log::info($request->all());
+    // Utilisation d'un tableau au lieu d'un switch
+    $rolesMap = [
+        5 => 'Conseiller', 6 => 'Manager', 7 => 'Responsable',
+        8 => 'Superviseur', 9 => 'Administrateur'
+    ];
+    $roleName = $rolesMap[$request->profile_id] ?? 'Inconnu';
 
-        $membreUpdating = Membre::where('idmembre', $id)->first();
+    $agence = Equipe::find($request->codeequipe);
+    if (!$agence) {
+        return response()->json(['type' => 'error', 'message' => "Agence introuvable", 'code' => 404]);
+    }
 
-        switch ($request->profile_id) {
-            case 5:
-                $role = 'Conseiller';
-                break;
-            case 6:
-                $role = 'Manager';
-                break;
-            case 7:
-                $role = 'Responsable';
-                break;
-            case 8:
-                $role = 'Superviseur';
-                break;
-            case 9:
-                $role = 'Administrateur';
-                break;
-            default:
-                $role = 'Inconnu';
-                break;
-        }
+    DB::beginTransaction();
+    try {
+        // Mise à jour Membre
+        Membre::where('idmembre', $id)->update([
+            'codereseau'    => $request->codereseau,
+            'codezone'      => $request->codezone,
+            'codeequipe'    => $agence->id,
+            'sexe'          => $request->sexe,
+            'nom'           => $request->nom,
+            'prenom'        => $request->prenom,
+            'datenaissance' => $request->datenaissance,
+            'profession'    => $request->profession,
+            'agence'        => $agence->codeequipe,
+            'nomagence'     => $agence->libelleequipe,
+            'branche'       => $request->branche,
+            'login'         => $request->login,
+            'role'          => $roleName,
+            'coderole'      => $request->profile_id,
+            'email'         => $request->email,
+            'cel'           => $request->cel,
+            'tel'           => $request->tel,
+            'updated_at'    => now(),
+            'updated_by'    => Auth::user()->name, // Plus court
+        ]);
 
-
-        Log::info("membreUpdating : $membreUpdating->codeequipe" );
-        $agence = Equipe::where('codeequipe', $request->codeequipe)->first();
-        
-        Log::info("Agence : $agence" );
-
-        DB::beginTransaction();
-
-        try {
-            $membre = Membre::where('idmembre', $id)->update([
-                'codereseau' => $request->codereseau,
-                'codezone' => $request->codezone,
-                'codeequipe' => $agence->id,
-                'sexe' => $request->sexe,
-                'nom' => $request->nom,
-                'prenom' => $request->prenom,
-                'datenaissance' => $request->datenaissance,
-                'profession' => $request->profession,
-                'agence' => $agence->codeequipe,  // equipe es une aagence // code
-                'nomagence' => $agence->libelleequipe,
-                'branche' => $request->branche,
-                'login' => $request->login,
-                'role' => $role,
-                'coderole' => $request->profile_id,
-                // 'pass' => $request->pass,
-                'email' => $request->email,
-                'cel' => $request->cel,
-                'tel' => $request->tel,
-                'updated_at' => now(),
-                'updated_by' => Auth::user()->membre->nom . ' ' . Auth::user()->membre->prenom,
+        // Mise à jour User
+        $userAssign = User::where('idmembre', $id)->first();
+        if ($userAssign) {
+            $userAssign->update([
+                'email'   => $request->email,
+                'login'   => $request->login,
+                'id_role' => $request->role_id,
+                'branche' => $request->branche
             ]);
 
-            if ($membre) {
-                Log::info("Membre mis à jour");
-
-                $userAssign = User::where('idmembre', $id)->first();
-
-                Log::info("userAssign : $userAssign");
-                if ($userAssign) {
-                    Log::info("User assigné trouvé");
-
-                    $userAssign->update([
-                        'email' => $request->email,
-                        'login' => $request->login,
-                        'id_role' => $request->role_id,
-                        'branche' => $request->branche
-                    ]);
-
-                    $role_id = Role::find($request->role_id);
-
-                    Log::info("role : $role_id");
-                    if ($role) {
-                        $userAssign->assignRole($role_id);
-                        $userAssign->syncRoles([$role_id->id]);
-                        Log::info("Rôle synchronisé");
-                    }
-                }
-
-                DB::commit();
-
-                $dataResponse = [
-                    'type' => 'success',
-                    'urlback' => "back",
-                    'message' => "Enregistré avec succès !",
-                    'code' => 200,
-                ];
-            } else {
-                DB::rollBack();
-                $dataResponse = [
-                    'type' => 'error',
-                    'urlback' => '',
-                    'message' => "Erreur d'enregistrement !",
-                    'code' => 500,
-                ];
-            }
-
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            $dataResponse = [
-                'type' => 'error',
-                'urlback' => '',
-                'message' => "Erreur système ! " . $th->getMessage(),
-                'code' => 500,
-            ];
+            // Utilise l'ID pour synchroniser le rôle (Spatie Role)
+            $userAssign->syncRoles([$request->role_id]);
         }
 
-        return response()->json($dataResponse);
+        DB::commit();
+        return response()->json([
+            'type' => 'success',
+            'urlback' => "back",
+            'message' => "Enregistré avec succès !",
+            'code' => 200,
+        ]);
 
+    } catch (\Throwable $th) {
+        DB::rollBack();
+        return response()->json([
+            'type' => 'error',
+            'message' => "Erreur système : " . $th->getMessage(),
+            'code' => 500,
+        ]);
     }
+}
 
     /**
      * Remove the specified resource from storage.
@@ -564,14 +523,14 @@ class UserController extends Controller
                 if ($photoProfile) {
                     $imageName = $user->idmembre .'_'.  now()->format('YmdHis'). '.' . $photoProfile->getClientOriginalExtension();
                     $destinationPath = public_path('images/userProfile');
-                    $photoProfile->move($destinationPath, $imageName);   
+                    $photoProfile->move($destinationPath, $imageName);
                 }
             }
             $user->update([
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
                 'cel' => $request->cel,
-                'photo' => $imageName ?? '',           
+                'photo' => $imageName ?? '',
             ]);
             if ($user) {
                 $dataResponse = [
@@ -635,7 +594,7 @@ class UserController extends Controller
                     if ($mp) {
                         // Déconnexion de l'utilisateur
                         auth()->logout();
-    
+
                         $dataResponse = [
                             'type' => 'success',
                             'urlback' => "back",
@@ -652,7 +611,7 @@ class UserController extends Controller
                             'code' => 500,
                         ];
                     }
-    
+
 
                 }
 
@@ -674,6 +633,34 @@ class UserController extends Controller
                 'code'=>500,
             ];
         }
-        return response()->json($dataResponse); 
+        return response()->json($dataResponse);
+    }
+
+    public function userDataApi()
+    {
+
+        $membres = Membre::orderby('created_at', 'desc')
+        ->where('typ_membre', '!=', '3')->where('codepartenaire','!=', 'llv')
+        ->get()
+        ->groupBy('codepartenaire');
+
+        $reseaux = Reseau::all();
+        $zones = Zone::all();
+        $equipes = Equipe::all();
+        $partners = Partner::all();
+        $roles = Role::all();
+        $profiles = Profile::all();
+
+        $data = [
+            'membres' => $membres,
+            'reseaux' => $reseaux,
+            'zones' => $zones,
+            'equipes' => $equipes,
+            'partners' => $partners,
+            'roles' => $roles,
+            'profiles' => $profiles
+        ];
+
+        return $data;
     }
 }

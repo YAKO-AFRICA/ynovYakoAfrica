@@ -87,7 +87,7 @@ Route::prefix('file')->name('file.')->group(function(){
         Route::post('/store/files', [FileManageController::class, 'storeFile'])->name('storeFile');
         Route::get('/file-manager/files/{folder_id}', [FileManageController::class, 'getFilesByFolder']);
 
-       
+
 
     });
 });
@@ -98,7 +98,7 @@ Route::prefix('file')->name('file.')->group(function(){
 Route::prefix('tickets')->name('ticket.')->group(function(){
     Route::middleware('guest')->group(function(){
 
-        
+
     });
 
     Route::middleware(['auth','PreventBackHistory'])->group(function () {
@@ -121,6 +121,10 @@ Route::prefix('tickets')->name('ticket.')->group(function(){
     });
 
 });
+
+// routes/web.php
+Route::get('/api/membres/{partenaire}', [UserController::class, 'getMembresByPartenaire'])
+    ->name('api.membres.byPartenaire');
 
 Route::prefix('production')->name('prod.')->group(function(){
     Route::middleware('guest','PreventBackHistory')->group(function(){
@@ -158,14 +162,14 @@ Route::prefix('production')->name('prod.')->group(function(){
 
         Route::post('/store/benef', [BeneficiairesController::class, 'store'])->name('store.beneficiaires');
         Route::post('/update/benef/{id}', [BeneficiairesController::class, 'update'])->name('update.beneficiaires');
-        
+
         Route::post('/beneficiaires/addBenefType{id}', [BeneficiairesController::class, 'addBenefType'])->name('addBenefType');
 
         Route::post('/update/benefire/{id}', [BeneficiairesController::class, 'updateBeneficiaire'])->name('benef.update');
         Route::post('/update/benefDeces/{id}', [BeneficiairesController::class, 'updateBenefDeces'])->name('benef.deces.update');
 
         Route::post('/delete/beneficiaire/{id}', [BeneficiairesController::class, 'destroy'])->name('delete.beneficiaire');
-        
+
         Route::post('/store/document', [DocumentController::class, 'store'])->name('store.document');
         Route::post('/store/document/pret', [DocumentController::class, 'storeDocPret'])->name('storeDocPret');
         Route::post('/destroy/document/{id}', [DocumentController::class, 'destroy'])->name('destroy.document');
@@ -185,10 +189,10 @@ Route::prefix('production')->name('prod.')->group(function(){
         Route::get('/proposition/edit/{id}', [ValidationController::class, 'edit'])->name('proposition.edit');
         Route::post('/traitement/proposition/valider/{id}', [ValidationController::class, 'acceptContrat'])->name('traitement.proposition.valider');
 
-        
 
 
-        
+
+
 
 
     });
@@ -232,7 +236,7 @@ Route::prefix('prestation')->name('prestation.')->group(function(){
         Route::get('/selectPrestation',[PrestationController::class, 'selectPrestation'])->name('selectPrestation');
         Route::get('/mesPrestations', [PrestationController::class, 'mesPrestations'])->name('mesPrestations');
         Route::get('/print-fiche-prestation', [PrestationController::class, 'printFichePrestation'])->name('printFichePrestation');
-        
+
         // Route::post('prestation/getPrestations', [DemandePrestationController::class, 'getPrestations'])->name('getPrestations');
         // Route::get('prestation/mesPrestations', [PrestationController::class, 'mesPrestations'])->name('mesPrestations');
         Route::get('/create/{id}',[PrestationController::class, 'create'])->name('create');
@@ -247,7 +251,7 @@ Route::prefix('prestation')->name('prestation.')->group(function(){
         Route::post('/destroy/{code}',[PrestationController::class, 'destroy'])->name('destroy');
         Route::post('/addDocPrest',[PrestationController::class, 'addDocPrest'])->name('add.docPrest');
         Route::post('/destroyDoc/{id}',[PrestationController::class, 'destroyDoc'])->name('destroyDoc');
-        
+
     });
 
 });
@@ -277,20 +281,20 @@ Route::prefix('settings')->name('setting.')->group(function(){
 
     });
 
-    
+
     Route::middleware(['auth','PreventBackHistory'])->group(function () {
         Route::get('/index-reseaux', [ReseauxController::class, 'index'])->name('reseau.index');
         Route::post('/store-reseaux', [ReseauxController::class, 'store'])->name('reseau.store');
         Route::post('/update-reseaux/{id}', [ReseauxController::class, 'update'])->name('reseau.update');
         Route::post('/destroy-reseaux/{id}', [ReseauxController::class, 'destroy'])->name('destroy.reseau');
 
-        // Zone 
+        // Zone
         Route::get('/index-zones', [ZoneController::class, 'index'])->name('zone.index');
         Route::post('/store-zones', [ZoneController::class, 'store'])->name('zone.store');
         Route::post('/update-zones/{id}', [ZoneController::class, 'update'])->name('zone.update');
         Route::post('/destroy-zones/{id}', [ZoneController::class, 'destroy'])->name('destroy.zone');
 
-        // equipe 
+        // equipe
         Route::get('/index-equipe', [EquipeController::class, 'index'])->name('equipe.index');
         Route::post('/store-equipe', [EquipeController::class, 'store'])->name('equipe.store');
         Route::post('/update-equipe/{id}', [EquipeController::class, 'update'])->name('equipe.update');
@@ -363,7 +367,7 @@ Route::prefix('settings')->name('setting.')->group(function(){
 Route::prefix('epret')->name('epret.')->group(function(){
     Route::middleware('guest','PreventBackHistory')->group(function(){
 
-        // formule by product reseau 
+        // formule by product reseau
 
     });
     Route::middleware(['auth','PreventBackHistory'])->group(function () {
@@ -372,7 +376,7 @@ Route::prefix('epret')->name('epret.')->group(function(){
         Route::get('/simulateur', [EpretController::class, 'simulateur'])->name('simulateur');
 
         Route::post('/store-simulation', [EpretController::class, 'storeSimulation'])->name('storeSimulation');
-        
+
         Route::get('/create', [EpretController::class, 'create'])->name('create');
         Route::post('/store', [EpretController::class, 'store'])->name('store');
         Route::get('/show/{id}', [EpretController::class, 'show'])->name('show');
@@ -385,7 +389,7 @@ Route::prefix('epret')->name('epret.')->group(function(){
 
         Route::post('/update/adherent/{id}', [AdherentController::class, 'update'])->name('adherent.update');
         Route::post('/store/benef', [BeneficiairesController::class, 'addBenefPret'])->name('addBenefPret');
-        
+
     });
 
 });
@@ -400,17 +404,17 @@ Route::prefix('cotation')->name('cotation.')->group(function(){
         Route::post('/store/{uuid}', [CotationController::class, 'store'])->name('store');
         Route::get('/create/{id}', [CotationController::class, 'create'])->name('create');
     });
-    
+
 });
 
 
 
 Route::prefix('prospect')->name('prospect.')->group(function(){
     Route::middleware('guest','PreventBackHistory')->group(function(){
-        
+
         Route::get('/create/{tokken}', [ProspectController::class, 'create'])->name('create');
         Route::post('/store', [ProspectController::class, 'store']);
-        // formule by product reseau 
+        // formule by product reseau
         Route::get('/finish/{uuid}', [ProspectController::class, 'finish'])->name('finish');
         Route::post('/signaturePad', [ProspectController::class, 'signaturePad'])->name('signaturePad');
 
@@ -425,7 +429,7 @@ Route::prefix('prospect')->name('prospect.')->group(function(){
         // Route::get('/edit/{uuid}', [ProspectController::class, 'edit'])->name('edit');
         Route::put('/update/{uuid}', [ProspectController::class, 'update'])->name('update');
         Route::post('/prospects/{uuid}/convert', [ProspectController::class, 'convertToClient'])->name('convert');
-        
+
 
         Route::delete('/{prospectId}/products/{productId}', [ProspectController::class, 'destroy'])->name('delete');
         Route::post('/assign/{uuid}', [ProspectController::class, 'assign'])->name('assign');
@@ -438,7 +442,7 @@ Route::prefix('prospect')->name('prospect.')->group(function(){
 
         Route::get('/convert/form/{uuid}', [ProspectController::class, 'convertToClient'])->name('convert.form');
 
-        
+
 
     });
 
@@ -464,12 +468,12 @@ Route::get('storage/documents/{file}', function ($file) {
     $mimeType = mime_content_type($path);
 
     return Response::make($fileContents, 200, ['Content-Type' => $mimeType]);
-    
+
 })->where('file', '.*');
 
 Route::get('show/signature/{file}', function ($file) {
     $path = storage_path('app/public/' . $file);
-    
+
     if (!file_exists($path)) {
         abort(404);
     }
@@ -489,7 +493,7 @@ Route::get('storage/prestations/{file}', function ($file) {
     $mimeType = mime_content_type($path);
 
     return Response::make($fileContents, 200, ['Content-Type' => $mimeType]);
-    
+
 })->where('file', '.*');
 
 Route::post('/save-beneficiary-session', [EpretController::class, 'saveBeneficiarySession']);
@@ -498,7 +502,7 @@ Route::post('/save-beneficiary-session', [EpretController::class, 'saveBeneficia
 Route::get('/generate-demoBulletin', [BulletinController::class, 'demoBulletin'])->name('demoBulletin');
 
 
-// donnée de calcule des prime yke 
+// donnée de calcule des prime yke
 Route::post('/storeSimulationPrime', [ProductionController::class, 'storeSimulationPrime'])->name('storeSimulationPrime');
 
 
@@ -524,14 +528,14 @@ Route::post('/cretePaiement', [PaiementController::class, 'cretePaiement']);
 // Téléchargement de fichier
 Route::get('/file-manager/download/{uuid}', function ($uuid) {
     $file = FileManager::where('uuid', $uuid)->firstOrFail();
-    
+
     $disk = Storage::disk('external');
     $filePath = $file->path;
-    
+
     if (!$disk->exists($filePath)) {
         abort(404, 'Fichier non trouvé');
     }
-    
+
     return $disk->download(
         $filePath,
         $file->name . '.' . $file->extension,
@@ -596,7 +600,7 @@ Route::prefix('site')->name('site.')->group(function(){
 
     Route::post('/update-adherent/{id}', [SitePropositionController::class, 'updateAdherent'])->name('update.adherent');
 
-    // assurer 
+    // assurer
     Route::post('/store-assure', [SitePropositionController::class, 'storeAssure'])->name('store.assure');
 
     // benef

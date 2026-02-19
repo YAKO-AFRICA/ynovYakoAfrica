@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-        
+
 	<!--favicon-->
 	<link rel="icon" href="{{ asset('root/images/logo-icon.png')}}" type="image/png"/>
 	<!--plugins-->
@@ -17,7 +17,7 @@
     <link href="{{ asset('assets/plugins/datatable/css/dataTables.bootstrap5.min.css')}}" rel="stylesheet" />
 	<!-- loader-->
     <link href="{{ asset('assets/plugins/bs-stepper/css/bs-stepper.css')}}" rel="stylesheet" />
-    
+
     {{-- <!-- loader-->
 	<link href="assets/css/pace.min.css" rel="stylesheet" />
 	<script src="assets/js/pace.min.js"></script> --}}
@@ -176,24 +176,24 @@
             background-color: rgba(13, 110, 253, 0.05);
             border-left: 3px solid #ff0000;
         }
-        
+
         .read-notification {
             opacity: 0.7;
         }
-        
+
         .notification-item:hover {
             background-color: #f8f9fa !important;
         }
-        
+
         .notification-list::-webkit-scrollbar {
             width: 6px;
         }
-        
+
         .notification-list::-webkit-scrollbar-thumb {
             background-color: #dee2e6;
             border-radius: 3px;
         }
-        
+
         .alert-count {
             font-size: 0.65rem;
             padding: 0.25em 0.4em;
@@ -225,7 +225,7 @@
 
     </style>
 
-    
+
 	<title>YNOV - Plateforme de souscription en ligne</title>
 </head>
 
@@ -239,7 +239,7 @@
     </div>
         <!--wrapper-->
         <div class="wrapper">
-            
+
         @php
             $unreadNotifications = auth()->user()->unreadNotifications;
             $allNotifications = auth()->user()->notifications;
@@ -257,7 +257,7 @@
                 </div>
             </div>
 
-            
+
             @include('layouts.sidebar')
 
             <div class="page-wrapper">
@@ -266,7 +266,7 @@
                 </div>
 
             </div>
-           
+
             <!--start overlay-->
             <div class="overlay toggle-icon"></div>
             <!--end overlay-->
@@ -278,7 +278,7 @@
             </footer>
         </div>
 
-        
+
 
         {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
 
@@ -294,12 +294,12 @@
         <script src="{{ asset('assets/root/simulateur/ykeSimulateur.js')}}"></script>
         {{-- <script src="{{ asset('assets/root/simulateur/yke_2008.js')}}"></script> --}}
         <script src="{{ asset('assets/js/fieldsForm.js')}}"></script>
-        
-       
+
+
         <!-- Bootstrap JS -->
         <script src="{{ asset('assets/js/bootstrap.bundle.min.js')}}"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script src="{{ asset('assets/js/custom.js')}}"></script> 
+        <script src="{{ asset('assets/js/custom.js')}}"></script>
         {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
         <script src="{{ asset('assets/plugins/simplebar/js/simplebar.min.js')}}"></script>
         <script src="{{ asset('assets/plugins/metismenu/js/metisMenu.min.js')}}"></script>
@@ -314,8 +314,8 @@
         <script src="{{ asset('https://cdn.jsdelivr.net/npm/flatpickr')}}"></script>
         <script src="{{ asset('assets/plugins/bs-stepper/js/bs-stepper.min.js')}}"></script>
         <script src="{{ asset('assets/plugins/bs-stepper/js/main.js')}}"></script>
-        
-       
+
+
         <!--app JS-->
         {{-- <script src="{{ asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('assets/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script> --}}
@@ -325,9 +325,9 @@
 
         <script type="module" src="{{ asset('api/request.js') }}"></script>
 
-        <script src=https://touchpay.gutouch.com/touchpay/script/prod_touchpay-0.0.1.js type="text/javascript"></script>
+        {{-- <script src=https://touchpay.gutouch.com/touchpay/script/prod_touchpay-0.0.1.js type="text/javascript"></script> --}}
 
-        
+
 
 
         <script>
@@ -369,12 +369,12 @@
         </script>
 
 
- 
+
 
 
         <script>
             $(document).ready(function() {
-    
+
 
                 var table = $('#example2').DataTable({
                     order: [[ 0, "desc" ]],
@@ -400,7 +400,7 @@
                     .appendTo('#example2_wrapper .col-md-6:eq(0)');
             });
             $(document).ready(function() {
-    
+
 
                 var table = $('#example3').DataTable({
                     order: [[ 0, "desc" ]],
@@ -436,7 +436,7 @@
             });
         </script>
 
-        
+
 
         <script src="{{ asset('assets/js/script.js')}}"></script>
         <script src="{{ asset('assets/js/app.js')}}"></script>
@@ -468,54 +468,54 @@
         </script>
 
 
-        
-        
+
+
         <script>
-		
+
             $(".datepicker").flatpickr({
                 // altInput: true,
                 altFormat: "F j, Y",
                 dateFormat: "d-m-Y",
                 maxDate: "today",
             });
-        
+
             $(".time-picker").flatpickr({
                     enableTime: true,
                     noCalendar: true,
                     dateFormat: "Y-m-d H:i",
                 });
-        
+
             $(".date-time").flatpickr({
                     enableTime: true,
                     dateFormat: "Y-m-d H:i",
             });
-        
+
             $(".date-format").flatpickr({
                 altFormat: "j F, Y",
                 dateFormat: "d-m-Y", // Format réel de la date envoyée (10-12-2024)
                 minDate: "today", // La date minimale est aujourd'hui
                 locale: "fr" // Définit la langue en français
             });
-        
+
             $(".date-range").flatpickr({
                 mode: "range",
                 altInput: true,
                 altFormat: "F j, Y",
                 dateFormat: "Y-m-d",
             });
-        
+
             $(".date-inline").flatpickr({
                 inline: true,
                 altInput: true,
                 altFormat: "F j, Y",
                 dateFormat: "Y-m-d",
             });
-        
+
         </script>
 
-        
 
-    
+
+
 
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -528,7 +528,7 @@
                 const nextBtn = document.getElementById("nextBtn");
                 const submitBtn = document.getElementById("submit");
                 let currentStep = 0;
-                
+
                 // Met à jour l'affichage des étapes du formulaire et du stepper
                 function updateFormAndStepper() {
                     // Mettre à jour les étapes du formulaire
@@ -641,7 +641,7 @@
         </script>
 
 
-        
+
 
     </body>
 

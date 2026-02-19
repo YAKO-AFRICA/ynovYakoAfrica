@@ -50,16 +50,16 @@
                                 <li id="step-edit-4" class="step-indicator-edit">4. Contacts</li>
                             </ul>
                         </div>
-    
+
                         <div id="step-group-1" class="step-edit">
                             <fieldset class="border p-3" style="width: 100%;">
-    
+
                                 <legend class="float-none w-auto px-2"><small><h5 class="mb-4">Étape 1 : Reseau</h5></small></legend>
-                            
-                                <div class="mb-3">
+
+                                {{-- <div class="mb-3">
                                     <label for="codeagent" class="form-label">Code Agent <span class="text-danger">*</span></label>
-                                    <input type="text" name="codeagent" id="codeagent" class="form-control" value="{{ $item->codeagent }}" readonly required>
-                                </div>
+                                    <input type="text" name="codeagent" id="codeagent" class="form-control" value="{{ $item->codeagent }}" required>
+                                </div> --}}
                                 <div class="row">
                                     <div class="mb-3 col-sm-12 col-md-6">
                                         <label for="codereseau" class="form-label">Réseau de commercialisation</label>
@@ -97,14 +97,14 @@
                                         <input type="text" name="codePart" class="form-control" value="{{ $item->partenaire ?? '' }}" readonly disabled>
                                     </div>
                                 </div>
-    
+
                             </fieldset>
                         </div>
-    
+
                         <div id="step-group-2" class="step-edit d-none">
                             <fieldset class="border p-3" style="width: 100%;">
                                 <legend class="float-none w-auto px-2"><small><h5 class="mb-4">Étape 2 : Informations personnelles</h5></small></legend>
-                                
+
                                 <div class="mb-3">
                                     <label class="form-label d-block">Sexe</label>
                                     <div class="form-check form-check-inline">
@@ -116,7 +116,7 @@
                                         <label class="form-check-label" for="sexeM">Masculin</label>
                                     </div>
                                 </div>
-                                
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
@@ -145,74 +145,77 @@
                                         </div>
                                     </div>
                                 </div>
-    
+
                             </fieldset>
                         </div>
-    
+
                         <div id="step-group-3" class="step-edit d-none">
                             <fieldset class="border p-3" style="width: 100%;">
-    
+
                                 <legend class="float-none w-auto px-2"><small><h5 class="mb-4">Étape 3 : Comptes</h5></small></legend>
                                 <div class="mb-3">
                                     <label for="login" class="form-label">Nom d'utilisateur (Login) <span class="text-danger">*</span></label>
                                     <input type="text" name="login" id="login" class="form-control" required value="{{ $item->login ?? '' }}">
                                 </div>
-                                <div class="mb-3">
-                                    <label for="branche" class="form-label">Branche <span class="text-danger">*</span></label>
-                                    <select name="branche" class="form-select" id="">
-                                        <option value="{{ $item->branche ?? '' }}">{{ $item->branche ?? '' }}</option>
-                                        <option value="BANKASS">BANKASS</option>
-                                        <option value="COURTAGE">COURTAGE</option>
-                                        <option value="COM">COM</option>
-                                        <option value="IND">IND</option>
+                                <div class="mb-3 form-group">
+                                    <label for="brancheSelect" class="form-label">
+                                        Branche <span class="text-danger">*</span>
+                                    </label>
+
+                                    <select name="branche" id="brancheSelect" class="form-select" required>
+                                        <option value="" disabled {{ !isset($item->branche) ? 'selected' : '' }}>-- Choisir une option --</option>
+
+                                        <option value="BANKASS" @selected(isset($item) && $item->branche == 'BANKASS')>BANKASS</option>
+                                        <option value="COURTAGE" @selected(isset($item) && $item->branche == 'COURTAGE')>COURTAGE</option>
+                                        <option value="COM" @selected(isset($item) && $item->branche == 'COM')>COM</option>
+                                        <option value="IND" @selected(isset($item) && $item->branche == 'IND')>IND</option>
                                     </select>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3 form-group">
-                                            <label for="profile" class="form-label">Profile <span class="text-danger">*</span></label>
+                                            <label for="profileSelect" class="form-label">
+                                                Profile <span class="text-danger">*</span>
+                                            </label>
+
                                             <select name="profile_id" id="profileSelect" class="form-control" required>
-                                                <option value="{{ $item->coderole ?? '' }}">{{ $item->role ?? '' }}</option>
+                                                <option value="" disabled {{ !isset($item) ? 'selected' : '' }}>Choisir un profil...</option>
+
                                                 @foreach ($profiles as $profile)
-                                                    <option class="form-option" value="{{ $profile->id }}">{{ $profile->role }}</option>
+                                                    <option value="{{ $profile->id }}"
+                                                        {{ (isset($item) && $item->coderole == $profile->id) ? 'selected' : '' }}>
+                                                        {{ $profile->role }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="mb-3 form-group">
-                                            <label for="role_id" class="form-label">Role <span class="text-danger">*</span></label>
-                                            <select name="role_id" id="" class="form-control" required>
-                                                <option value="{{ $item->id_role ?? '' }}">{{ $item->role ?? "" }}</option>
-                                                @foreach ($roles as $role)
-                                                    <option value="{{ $role->id }}">{{ $role->name ?? "" }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                    <div class="mb-3 form-group">
+                                        <label for="roleSelect" class="form-label">
+                                            Rôle <span class="text-danger">*</span>
+                                        </label>
+
+                                        <select name="role_id" id="roleSelect" class="form-control" required>
+                                            {{-- Option par défaut si aucune donnée n'est sélectionnée --}}
+                                            <option value="" disabled {{ !isset($item) ? 'selected' : '' }}>Choisir un rôle...</option>
+
+                                            @foreach ($roles as $role)
+                                                <option value="{{ $role->id }}"
+                                                    @selected(isset($item) && $item->id_role == $role->id)>
+                                                    {{ $role->name ?? 'Nom non défini' }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
-                                
-                                {{-- <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="pass" class="form-label">Mot de passe <span class="text-danger">*</span></label>
-                                            <input type="password" name="pass" id="pass" class="form-control" >
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="cpass" class="form-label">Confirmation Mot de passe</label>
-                                            <input type="password" name="cpass" id="cpass" class="form-control">
-                                        </div>
-                                    </div>
-                                </div> --}}
-                                
-    
+
+
                             </fieldset>
                         </div>
                         <div id="step-group-4" class="step-edit d-none">
                             <fieldset class="border p-3" style="width: 100%;">
-    
+
                                 <legend class="float-none w-auto px-2"><small><h5 class="mb-4">Étape 4 : Contacts</h5></small></legend>
                                 <div class="mb-3">
                                     <label for="login" class="form-label">Email  <span class="text-danger">*</span></label>
@@ -232,8 +235,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                
-    
+
+
                             </fieldset>
                         </div>
                     </div>
@@ -250,48 +253,151 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Gestion des étapes pour tous les modals
-            $('.modal').on('shown.bs.modal', function() {
-                const modal = $(this);
-                let currentStep = 1;
-                
-                modal.find('.next-edit-step').click(function() {
-                    if (currentStep < 4) {
-                        currentStep++;
-                        updateStepDisplay(modal, currentStep);
+    // 1. Gestion des étapes du Modal
+    $('.modal').on('shown.bs.modal', function() {
+        const modal = $(this);
+        let currentStep = 1;
+
+        // Reset au cas où le modal est réouvert
+        currentStep = 1;
+        updateStepDisplay(modal, currentStep);
+
+        modal.find('.next-edit-step').off('click').click(function() {
+            if (currentStep < 4) {
+                currentStep++;
+                updateStepDisplay(modal, currentStep);
+            }
+        });
+
+        modal.find('.prev-edit-step').off('click').click(function() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepDisplay(modal, currentStep);
+            }
+        });
+
+        function updateStepDisplay(modal, step) {
+            modal.find('.step-edit').addClass('d-none');
+            modal.find(`#step-group-${step}`).removeClass('d-none');
+
+            modal.find('.step-indicator-edit').removeClass('active');
+            modal.find(`#step-edit-${step}`).addClass('active');
+
+            // Affichage des boutons
+            modal.find('.prev-edit-step').toggleClass('d-none', step === 1);
+            modal.find('.next-edit-step').toggleClass('d-none', step === 4);
+            modal.find('.finish-edit-step').toggleClass('d-none', step !== 4);
+        }
+    });
+
+    // 2. Gestion de la soumission avec SweetAlert2
+    $(document).on('submit', '.submitForm', function(e) {
+        e.preventDefault();
+
+        const form = this;
+        const formData = new FormData(form);
+        const url = form.getAttribute('action');
+
+            Swal.fire({
+                title: 'Confirmer la modification ?',
+                text: "Voulez-vous enregistrer les changements ?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#076633',
+                confirmButtonText: 'Oui, enregistrer',
+                cancelButtonText: 'Annuler'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                // Affichage du loader
+                Swal.fire({
+                    title: 'Traitement en cours...',
+                    allowOutsideClick: false,
+                    didOpen: () => { Swal.showLoading(); }
+                });
+
+                // Envoi des données via AJAX (fetch)
+                        fetch(url, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.type === 'success') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Succès !',
+                                    text: data.message,
+                                    confirmButtonColor: '#076633'
+                                }).then(() => {
+                                    // Optionnel : recharger la page ou rediriger
+                                    if(data.urlback === 'back') {
+                                        window.location.reload();
+                                    } else if(data.urlback) {
+                                        window.location.href = data.urlback;
+                                    }
+                                });
+                            } else {
+                                Swal.fire('Erreur', data.message, 'error');
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire('Erreur', 'Une erreur système est survenue.', 'error');
+                            console.error(error);
+                        });
                     }
                 });
-                
-                modal.find('.prev-edit-step').click(function() {
-                    if (currentStep > 1) {
-                        currentStep--;
-                        updateStepDisplay(modal, currentStep);
-                    }
-                });
-                
-                function updateStepDisplay(modal, step) {
-                    modal.find('.step-edit').addClass('d-none');
-                    modal.find(`#step-group-${step}`).removeClass('d-none');
-                    
-                    modal.find('.step-indicator-edit').removeClass('active');
-                    modal.find(`#step-edit-${step}`).addClass('active');
-                    
-                    if (step === 1) {
-                        modal.find('.prev-edit-step').addClass('d-none');
-                    } else {
-                        modal.find('.prev-edit-step').removeClass('d-none');
-                    }
-                    
-                    if (step === 4) {
-                        modal.find('.next-edit-step').addClass('d-none');
-                        modal.find('.finish-edit-step').removeClass('d-none');
-                    } else {
-                        modal.find('.next-edit-step').removeClass('d-none');
-                        modal.find('.finish-edit-step').addClass('d-none');
-                    }
-                }
             });
         });
-        </script>>
+    </script>
+
+        {{-- <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Gestion des étapes pour tous les modals
+                $('.modal').on('shown.bs.modal', function() {
+                    const modal = $(this);
+                    let currentStep = 1;
+
+                    modal.find('.next-edit-step').click(function() {
+                        if (currentStep < 4) {
+                            currentStep++;
+                            updateStepDisplay(modal, currentStep);
+                        }
+                    });
+
+                    modal.find('.prev-edit-step').click(function() {
+                        if (currentStep > 1) {
+                            currentStep--;
+                            updateStepDisplay(modal, currentStep);
+                        }
+                    });
+
+                    function updateStepDisplay(modal, step) {
+                        modal.find('.step-edit').addClass('d-none');
+                        modal.find(`#step-group-${step}`).removeClass('d-none');
+
+                        modal.find('.step-indicator-edit').removeClass('active');
+                        modal.find(`#step-edit-${step}`).addClass('active');
+
+                        if (step === 1) {
+                            modal.find('.prev-edit-step').addClass('d-none');
+                        } else {
+                            modal.find('.prev-edit-step').removeClass('d-none');
+                        }
+
+                        if (step === 4) {
+                            modal.find('.next-edit-step').addClass('d-none');
+                            modal.find('.finish-edit-step').removeClass('d-none');
+                        } else {
+                            modal.find('.next-edit-step').removeClass('d-none');
+                            modal.find('.finish-edit-step').addClass('d-none');
+                        }
+                    }
+                });
+            });
+        </script> --}}
 
 </div>
