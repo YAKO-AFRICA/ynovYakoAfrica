@@ -398,7 +398,7 @@
         if (elements.age) {
             const age = parseInt(elements.age.value);
             if (isNaN(age) || age < 18) errors.push("L'assuré doit avoir au moins 18 ans");
-            if (age > 99) errors.push("L'assuré ne doit pas dépasser 99 ans");
+            if (age > 74) errors.push("L'assuré ne doit pas dépasser 74 ans");
         }
 
         if (errors.length > 0) {
