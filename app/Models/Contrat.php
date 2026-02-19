@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use App\Models\User;
-use App\Models\Membre;
-use App\Models\Assurer;
-use App\Models\Product;
 use App\Models\Adherent;
-use App\Models\Document;
-use App\Models\Beneficiaire;
 use App\Models\AgenceByParter;
 use App\Models\AssureGarantie;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Assurer;
+use App\Models\Beneficiaire;
+use App\Models\DeclarationSante;
+use App\Models\Document;
+use App\Models\Membre;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Contrat extends Model
 {
@@ -111,6 +112,10 @@ class Contrat extends Model
     public function assures()
     {
         return $this->hasMany(Assurer::class, 'codecontrat', 'id');
+    }
+    public function santes()
+    {
+        return $this->belongsTo(DeclarationSante::class, 'id', 'codeContrat');
     }
     public function beneficiaires()
     {
