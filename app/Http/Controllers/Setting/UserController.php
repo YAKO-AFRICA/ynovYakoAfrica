@@ -387,77 +387,83 @@ class UserController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-{
-    Log::info($request->all());
+    {
+        Log::info($request->all());
 
-    // Utilisation d'un tableau au lieu d'un switch
-    $rolesMap = [
-        5 => 'Conseiller', 6 => 'Manager', 7 => 'Responsable',
-        8 => 'Superviseur', 9 => 'Administrateur'
-    ];
-    $roleName = $rolesMap[$request->profile_id] ?? 'Inconnu';
+        // Utilisation d'un tableau au lieu d'un switch
+        $rolesMap = [
+            5 => 'Conseiller', 6 => 'Manager', 7 => 'Responsable',
+            8 => 'Superviseur', 9 => 'Administrateur'
+        ];
+        $roleName = $rolesMap[$request->profile_id] ?? 'Inconnu';
 
-    $agence = Equipe::find($request->codeequipe);
-    if (!$agence) {
-        return response()->json(['type' => 'error', 'message' => "Agence introuvable", 'code' => 404]);
-    }
-
-    DB::beginTransaction();
-    try {
-        // Mise à jour Membre
-        Membre::where('idmembre', $id)->update([
-            'codereseau'    => $request->codereseau,
-            'codezone'      => $request->codezone,
-            'codeequipe'    => $agence->id,
-            'sexe'          => $request->sexe,
-            'nom'           => $request->nom,
-            'prenom'        => $request->prenom,
-            'datenaissance' => $request->datenaissance,
-            'profession'    => $request->profession,
-            'agence'        => $agence->codeequipe,
-            'nomagence'     => $agence->libelleequipe,
-            'branche'       => $request->branche,
-            'login'         => $request->login,
-            'role'          => $roleName,
-            'coderole'      => $request->profile_id,
-            'email'         => $request->email,
-            'cel'           => $request->cel,
-            'tel'           => $request->tel,
-            'updated_at'    => now(),
-            'updated_by'    => Auth::user()->name, // Plus court
-        ]);
-
-        // Mise à jour User
-        $userAssign = User::where('idmembre', $id)->first();
-        if ($userAssign) {
-            $userAssign->update([
-                'email'   => $request->email,
-                'login'   => $request->login,
-                'id_role' => $request->role_id,
-                'branche' => $request->branche
-            ]);
-
-            // Utilise l'ID pour synchroniser le rôle (Spatie Role)
-            $userAssign->syncRoles([$request->role_id]);
+        $agence = Equipe::find($request->codeequipe);
+        if (!$agence) {
+            return response()->json(['type' => 'error', 'message' => "Agence introuvable", 'code' => 404]);
         }
 
-        DB::commit();
-        return response()->json([
-            'type' => 'success',
-            'urlback' => "back",
-            'message' => "Enregistré avec succès !",
-            'code' => 200,
-        ]);
+        DB::beginTransaction();
+        try {
+            // Mise à jour Membre
+            Membre::where('idmembre', $id)->update([
+                'codereseau'    => $request->codereseau,
+                'codezone'      => $request->codezone,
+                'codeequipe'    => $agence->id,
+                'sexe'          => $request->sexe,
+                'nom'           => $request->nom,
+                'prenom'        => $request->prenom,
+                'datenaissance' => $request->datenaissance,
+                'profession'    => $request->profession,
+                'agence'        => $agence->codeequipe,
+                'nomagence'     => $agence->libelleequipe,
+                'branche'       => $request->branche,
+                'login'         => $request->login,
+                'role'          => $roleName,
+                'coderole'      => $request->profile_id,
+                'email'         => $request->email,
+                'cel'           => $request->cel,
+                'tel'           => $request->tel,
+                'updated_at'    => now(),
+                'updated_by'    => Auth::user()->idmembre,
+            ]);
 
-    } catch (\Throwable $th) {
-        DB::rollBack();
-        return response()->json([
-            'type' => 'error',
-            'message' => "Erreur système : " . $th->getMessage(),
-            'code' => 500,
-        ]);
+            // Mise à jour User
+            if ($userAssign) {
+                $userAssign->update([
+                    'email'   => $request->email,
+                    'login'   => $request->login,
+                    'id_role' => $request->role_id,
+                    'branche' => $request->branche
+                ]);
+
+                // 1. On récupère l'instance réelle du rôle par son ID
+                $roleModel = Role::find($request->role_id);
+
+                if ($roleModel) {
+                    $userAssign->syncRoles([$roleModel->name]);
+
+                    // Ou plusieurs guards :
+                    // $userAssign->syncRoles($roleModel);
+                }
+            }
+
+            DB::commit();
+            return response()->json([
+                'type' => 'success',
+                'urlback' => "back",
+                'message' => "Enregistré avec succès !",
+                'code' => 200,
+            ]);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'type' => 'error',
+                'message' => "Erreur système : " . $th->getMessage(),
+                'code' => 500,
+            ]);
+        }
     }
-}
 
     /**
      * Remove the specified resource from storage.
