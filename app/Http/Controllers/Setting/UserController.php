@@ -427,6 +427,8 @@ class UserController extends Controller
                 'updated_by'    => Auth::user()->idmembre,
             ]);
 
+            $userAssign = User::where('idmembre', $id)->where('email', $request->email)->first();
+
             // Mise à jour User
             if ($userAssign) {
                 $userAssign->update([
