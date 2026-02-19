@@ -296,7 +296,11 @@ class ValidationController extends Controller
     public function edit(string $id)
     {
 
+        
+
         // $contrat = Contrat::where('id', $id)->first();
+
+        // dd($contrat);
 
         $contrat = Contrat::where('id', $id)->with('adherent','produit')->first();
         $productGarantie = ProduitGarantie::where('CodeProduit',$contrat->codeproduit)->get(); 

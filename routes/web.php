@@ -182,7 +182,7 @@ Route::prefix('production')->name('prod.')->group(function(){
         Route::get('/traitement/prodByPartner/{code}', [ValidationController::class, 'prodByPartner'])->name('validation.prodByPartner');
         Route::get('/traitement/proposition/show/{id}', [ValidationController::class, 'show'])->name('validation.show');
         Route::post('/traitement/proposition/rejet/{id}', [ValidationController::class, 'rejetContrat'])->name('traitement.proposition.rejet');
-        Route::get('/proposition/edit{id}', [ValidationController::class, 'edit'])->name('proposition.edit');
+        Route::get('/proposition/edit/{id}', [ValidationController::class, 'edit'])->name('proposition.edit');
         Route::post('/traitement/proposition/valider/{id}', [ValidationController::class, 'acceptContrat'])->name('traitement.proposition.valider');
 
         
