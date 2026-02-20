@@ -147,16 +147,16 @@
         // Vérifie si AU MOINS un contact existe
         const currentContacts = JSON.parse(sessionStorage.getItem('contacts') || '[]');
 
-        if (currentContacts.length === 0) {
-            swal.fire({
-                icon: 'warning',
-                title: 'Aucun contact ajouté',
-                text: 'Veuillez ajouter au moins un contact optionnel avant de continuer.',
-                confirmButtonText: 'OK'
-            });
+        // if (currentContacts.length === 0) {
+        //     swal.fire({
+        //         icon: 'warning',
+        //         title: 'Aucun contact ajouté',
+        //         text: 'Veuillez ajouter au moins un contact optionnel avant de continuer.',
+        //         confirmButtonText: 'OK'
+        //     });
 
-            return;
-        }
+        //     return;
+        // }
 
         // Sauvegarde dans input caché
         document.getElementById('contactsInput').value = JSON.stringify(currentContacts);

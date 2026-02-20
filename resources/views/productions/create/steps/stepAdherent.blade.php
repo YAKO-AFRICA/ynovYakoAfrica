@@ -192,8 +192,8 @@
     </div>
     <div class="row g-3 mb-3">
         <div class="col-12">
-            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-            <input type="email" name="email" class="form-control" id="email" placeholder="Email" autocomplete="on" required>
+            <label for="email" class="form-label">Email </label>
+            <input type="email" name="email" class="form-control" id="email" placeholder="Email" autocomplete="on" >
 
             @error('email')
 
@@ -207,7 +207,7 @@
 
         <div class="row my-3">
             <div class="col-6">
-                <label for="">Telephone</label>
+                <label for="">Telephone <span class="text-danger">*</span></label>
                 <input type="tel" name="telephone" class="form-control" id="contactprincipal" placeholder="+225 00 00 00 00" required minlength="10" maxlength="14" autocomplete="on" pattern="[0-9]{10}" required>
             </div>
             <div class="col-6">
