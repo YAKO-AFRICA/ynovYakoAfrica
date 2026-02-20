@@ -503,6 +503,8 @@ class ProductionController extends Controller
         Log::info("conttttt");
         Log::info($contactsBrut);
         Log::info("conttttt fin");
+
+        
         
 
         DB::beginTransaction();
@@ -546,6 +548,7 @@ class ProductionController extends Controller
             $idContrat = Contrat::max('id') + 1;
             $idDocument = Document::max('id') + 1;
             $key = now()->format('Ymd');
+            $keyUniq = $request->codeproduit . '_' . $key;
 
 
             // creation de l'adhérent
@@ -576,7 +579,7 @@ class ProductionController extends Controller
                 'saisieLe' => now(),
                 'saisiepar' => Auth::user()->membre->idmembre,
                 'refcontratsource' => $request->refcontratsource,
-                'cleintegration' => $request->cleintegration,
+                'cleintegration' => $keyUniq,
                 'id_maj' => $request->id_maj,
                 'connexe' => $request->connexe,
                 'contratconnexe' => $request->contratconnexe,
@@ -631,6 +634,7 @@ class ProductionController extends Controller
                     'codemembre' => 0,
                     'mobile1' => $request->mobile1,
                     'saisieLe' => now(),
+                    'cleintegration' => $keyUniq,
                     'saisiepar' => auth::user()->membre->idmembre,
                 ]);
 
@@ -656,6 +660,7 @@ class ProductionController extends Controller
                         'codeassure' => $idAssure,
                         'codecontrat' => $idContrat,
                         'refcontratsource' => $idContrat,
+                        'cleintegration' => $keyUniq,
                         'estmigre' => 0,
                     ]);
                 }
@@ -717,6 +722,7 @@ class ProductionController extends Controller
                         'email' => $assure['emailAssur'] ?? null,
                         'sexe' => $sexeassurAdd,
                         'saisieLe' => now(),
+                        'cleintegration' => $keyUniq,
                         'saisiepar' => Auth::user()->membre->idmembre,
                     ]);
 
@@ -740,7 +746,7 @@ class ProductionController extends Controller
                             'codeassure' => $idAssureInsert,
                             'codecontrat' => $idContrat,
                             'refcontratsource' => $idContrat,
-                            'cleintegration' => $key,
+                            'cleintegration' => $keyUniq,
                             'estmigre' => 0,
                         ]);
                     }
@@ -822,6 +828,7 @@ class ProductionController extends Controller
                     'mobile' => $request->mobile ?? $request->telephone ?? null,
                     'email' => $request->email,
                     'saisieLe' => now(),
+                    'cleintegration' => $keyUniq,
                     'saisiepar' => Auth::user()->membre->idmembre,
                 ])->save();
             }
@@ -847,6 +854,7 @@ class ProductionController extends Controller
                         'mobile' => $beneficiaire['telephone'],
                         'email' => $beneficiaire['email'],
                         'saisieLe' => now(),
+                        'cleintegration' => $keyUniq,
                         'saisiepar' => Auth::user()->membre->idmembre,
                     ]);
                 }
@@ -920,7 +928,7 @@ class ProductionController extends Controller
                 'partenaire' => Auth::user()->membre->partenaire,
                 // 'nomaccepterpar' => now(),
                 // 'refcontratsource' => now(),
-                'cleintegration' => $key,
+                'cleintegration' => $keyUniq,
 
                 'estpaye' => 0,
                 // 'pretconnexe' => now(),
