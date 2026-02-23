@@ -28,13 +28,13 @@
                             <label class="form-check-label" for="addBeneficiary" >Adhérent</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="Conjoint" id="conjoint1">
+                            <input class="form-check-input" type="checkbox" value="Conjoint" id="conjoint1" name="benefAuTerme">
                             <label class="form-check-label" for="conjoint1">
                                 Le conjoint non divorcé, ni séparé de corps
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="Enfants nés et à naitre" id="enfants">
+                            <input class="form-check-input" type="checkbox" value="Enfants nés et à naitre" id="enfants" name="benefAuTerme">
                             <label class="form-check-label" for="enfants1">
                                 Les enfants nés et à naître
                             </label>
@@ -123,6 +123,9 @@
          // beneficiaire 
          const beneficiaryRowId = "beneficiary-row";
 
+        // Temporary storage for beneficiaries
+        let beneficiaries = [];
+
         function addBeneficiaryRow() {
 
             if (document.getElementById(beneficiaryRowId)) return;
@@ -181,37 +184,7 @@
             }
         });
 
-        // function addBeneficiaryRow() {
-            
-        //     // Vérifiez si la ligne existe déjà pour éviter les doublons
-        //     if (document.getElementById(beneficiaryRowId)) return;
-
-        //     // Obtenez les valeurs d'entrée de l'adhérent
-        //     const nom = document.getElementById('FisrtName') ? document.getElementById('FisrtName').value : 'Nom';
-        //     const prenom = document.getElementById('LastName') ? document.getElementById('LastName').value : 'Prénom';
-        //     const dateNaissance = document.getElementById('Date_naissance') ? document.getElementById('Date_naissance').value : 'Date';
-        //     const lieuNaissance = document.getElementById('lieunaissance') ? document.getElementById('lieunaissance').value : 'Lieu';
-        //     const lieuResidence = document.getElementById('lieuresidence') ? document.getElementById('lieuresidence').value : 'Résidence';
-        //     const telephone = document.querySelector('input[name="mobile"]') ? document.querySelector('input[name="mobile"]').value : 'Téléphone';
-        //     const email = document.getElementById('email') ? document.getElementById('email').value : 'Email';
-            
-        //     // Créez une nouvelle ligne et remplissez-la avec les données
-        //     const table = document.getElementById('beneficiariesTable').getElementsByTagName('tbody')[0];
-        //     const newRow = table.insertRow();
-        //     newRow.id = beneficiaryRowId; // Définir un ID unique à la ligne
-            
-        //     newRow.innerHTML = `
-        //         <td>${nom} ${prenom}</td>
-        //         <td>${dateNaissance}</td>
-        //         <td>${lieuNaissance}</td>
-        //         <td>${lieuResidence}</td>
-        //         <td>Adhérent</td>
-        //         <td>${telephone}</td>
-        //         <td>${email}</td>
-        //         <td>100%</td>
-        //         <td></td>
-        //     `;
-        // }
+  
 
         function removeBeneficiaryRow() {
             const row = document.getElementById(beneficiaryRowId);
@@ -221,8 +194,7 @@
         }
 
 
-        // Temporary storage for beneficiaries
-        let beneficiaries = [];
+        
 
         function validateField(element, value) {
             if (!value) {

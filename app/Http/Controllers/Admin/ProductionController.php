@@ -914,7 +914,7 @@ class ProductionController extends Controller
 
                 'personneressource' => $request->personneressource,
                 'contactpersonneressource' => $request->contactpersonneressource,
-                'beneficiaireauterme' => $benefauterm,
+                'beneficiaireauterme' => $request->benefAuTerme,
                 'beneficiaireaudeces' => $request->audecesContrat,
 
                 'personneressource2' => $request->personneressource2,
