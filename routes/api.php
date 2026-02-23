@@ -1,16 +1,18 @@
 <?php
 
+use App\Http\Controllers\Admin\OTPController;
+use App\Http\Controllers\Admin\PaiementController;
+use App\Http\Controllers\Admin\PrestationController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Setting\SiteWebController;
+use App\Http\Controllers\Setting\UserController;
+use App\Http\Controllers\Sites\SitePropositionController;
+use App\Models\AdherentProspert;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\AdherentProspert;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\OTPController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Admin\PaiementController;
-use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Setting\SiteWebController;
-use App\Http\Controllers\Admin\PrestationController;
-use App\Http\Controllers\Sites\SitePropositionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,12 +27,12 @@ use App\Http\Controllers\Sites\SitePropositionController;
 
 // Route::post('/login', [PlatformController::class, 'login']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 // Route::middleware('auth:sanctum')->group(function () {
-    
+
 // });
 
 Route::post('/rechercher-prospert', function (Request $request) {
@@ -53,6 +55,8 @@ Route::post('/rechercher-prospert', function (Request $request) {
 
 
 
+
+
 Route::post('/fetch-contract-details', [PrestationController::class, 'fetchContractDetails']);
 
 Route::post('/getPrestations', [PrestationController::class, 'getPrestations'])->name('getPrestations');
@@ -64,7 +68,7 @@ Route::post('/verify-otp', [OTPController::class, 'verifyOtp']);
 Route::get('/sitewebs/list', [SiteWebController::class, 'index'])->name('sitewebs.list');
 Route::get('/sitewebs/update', [SiteWebController::class, 'update'])->name('sitewebs.update');
 Route::apiResource('sitewebs', SiteWebController::class);
-    
+
     // Route supplémentaire pour changer l'état
 Route::patch('sitewebs/{siteWeb}/toggle-status', [SiteWebController::class, 'toggleStatus']);
 
@@ -93,9 +97,9 @@ Route::patch('/sitewebs/{siteweb}/toggle-status', [SiteWebController::class, 'to
 Route::get('/collaborateurs/users', function(Request $request) {
 
     $requiredToken = "azertyuiopqsddfghjklmwxcvbn";
-    
+
     $providedToken = $request->header('Authorization');
-    
+
     if (!$providedToken || $providedToken !== $requiredToken) {
         return response()->json([
             'success' => false,
@@ -122,6 +126,14 @@ Route::get('/collaborateurs/users', function(Request $request) {
 
 
 Route::post('/save-site-simulateur-data', [SitePropositionController::class, 'saveSiteSimulateurData']);
+
+// Route::get('/get-user-data', [UserController::class, 'userDataApi']);
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/get-user-data', [App\Http\Controllers\UserController::class, 'userDataApi']);
+    Route::delete('/setting/destroy/user/{id}', [App\Http\Controllers\UserController::class, 'destroyApi']);
+    // Ajoutez d'autres routes API selon vos besoins
+});
 
 
 

@@ -16,27 +16,27 @@
             </nav>
         </div>
         <div class="ms-auto">
-            
+
         </div>
     </div>
     <!--end breadcrumb-->
-  
+
     <div class="card p-2">
         <div class="card-hedear">
             <div class="d-flex align-items-center justify-content-end mb-4">
                 <div class="">
-                    <a href="javascript:;" 
-                    class="btn btn-primary radius-30 mt-2 mt-lg-0" 
-                    data-bs-toggle="modal" 
+                    <a href="javascript:;"
+                    class="btn btn-primary radius-30 mt-2 mt-lg-0"
+                    data-bs-toggle="modal"
                     data-bs-target="#addUsers">
                     <i class="bx bxs-plus-square"></i>Ajouter un utilisateur</a>
                 </div>
             </div>
         </div>
         <div class="card-body">
-            
 
-            
+
+
             <div class="table-responsive">
                 @php
                     // Colonnes par défaut
@@ -114,8 +114,8 @@
                             @endforeach
 
                             <th>Actions</th>
-                            
-                            
+
+
                         </tr>
                     </thead>
                     <tbody>
@@ -179,7 +179,7 @@
                                     @foreach ($additionalColumns as $label => $key)
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" name="columns[]" value="{{ $key }}"
-                                                id="col-{{ $key }}" 
+                                                id="col-{{ $key }}"
                                                 {{ in_array($key, $activeColumns) ? 'checked' : '' }}>
                                             <label class="form-check-label" for="col-{{ $key }}">{{ $label }}</label>
                                         </div>
@@ -191,17 +191,17 @@
                                 </div>
                             </form>
                         </div>
-                        
+
 
                     </div>
                 </div>
-            
+
             </div>
         </div>
     </div>
     @include('settings.users.addModal')
 
-    
+
 
 </div>
 @endsection
