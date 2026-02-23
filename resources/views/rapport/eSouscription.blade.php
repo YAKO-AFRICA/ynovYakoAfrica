@@ -29,53 +29,94 @@
     </div>
     <!--end breadcrumb-->
 
-    <div class="card p-3">
-        <form id="searchForm" class="row g-3" method="GET" action="{{ route('report.eSouscription') }}">
+   <div class="card p-3">
+    <form id="searchForm" class="row g-3" method="GET" action="{{ route('report.eSouscription') }}">
 
-            <fieldset class="col-md-6">
-                <legend class="float-none w-auto px-2">Recherche par Date</legend>
-        
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="dateFrom" class="form-label">Date de Saisie (De)</label>
-                        <input type="date" class="form-control" id="dateFrom" name="dateFrom" value="{{ request('dateFrom') }}">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="dateTo" class="form-label">Date de Saisie (À)</label>
-                        <input type="date" class="form-control" id="dateTo" name="dateTo" value="{{ request('dateTo') }}">
-                    </div>
+        {{-- 🔎 Recherche par date --}}
+        <fieldset class="border rounded p-3">
+            <legend class="float-none w-auto px-2 fw-bold text-primary">
+                Recherche par Date
+            </legend>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="dateFrom" class="form-label">Date de Saisie (De)</label>
+                    <input type="date" class="form-control" id="dateFrom" name="dateFrom"
+                        value="{{ request('dateFrom') }}">
                 </div>
-            </fieldset>
-            
-            <div class="col-md-3">
-                <label for="agent" class="form-label">Recherche par Agent</label>
-                <select name="agent" id="agent" class="form-select selection">
-                    <option value="" selected>-- Choisir une option --</option>
-                    @foreach ($agents as $item)
-                        <option value="{{ $item->idmembre }}" {{ request('agent') == $item->idmembre ? 'selected' : '' }}>
-                            {{ $item->nom }} {{ $item->prenom }}
-                        </option>
-                    @endforeach
-                </select>
+
+                <div class="col-md-3">
+                    <label for="dateTo" class="form-label">Date de Saisie (À)</label>
+                    <input type="date" class="form-control" id="dateTo" name="dateTo"
+                        value="{{ request('dateTo') }}">
+                </div>
             </div>
-        
-            <div class="col-md-3">
-                <label for="searchEtape" class="form-label">Recherche par Étape</label>
-                <select class="form-select selection" id="searchEtape" name="etape">
-                    <option value="">Choisir un statut</option>
-                    <option value="1" {{ request('etape') == '1' ? 'selected' : '' }}>En saisie</option>
-                    <option value="2" {{ request('etape') == '2' ? 'selected' : '' }}>Transmis</option>
-                    <option value="3" {{ request('etape') == '3' ? 'selected' : '' }}>Accepté</option>
-                    <option value="4" {{ request('etape') == '4' ? 'selected' : '' }}>Rejeté</option>
-                </select>
+        </fieldset>
+
+        {{-- 🎯 Filtres --}}
+        <fieldset class="border rounded p-3">
+            <legend class="float-none w-auto px-2 fw-bold text-success">
+                Filtres avancés
+            </legend>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="agent" class="form-label">Agent</label>
+                    <select name="agent" id="agent" class="form-select selection">
+                        <option value="">-- Choisir une option --</option>
+                        @foreach ($agents as $item)
+                            <option value="{{ $item->idmembre }}"
+                                {{ request('agent') == $item->idmembre ? 'selected' : '' }}>
+                                {{ $item->nom }} {{ $item->prenom }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="partenaire" class="form-label">Partenaire</label>
+                    <select name="partenaire" id="partenaire" class="form-select selection">
+                        <option value="">-- Choisir une option --</option>
+                        @foreach ($partenaire as $item)
+                            <option value="{{ $item->code }}"
+                                {{ request('partenaire') == $item->code ? 'selected' : '' }}>
+                                {{ $item->designation }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="searchEtape" class="form-label">Étape</label>
+                    <select class="form-select selection" id="searchEtape" name="etape">
+                        <option value="">Choisir un statut</option>
+                        <option value="1" {{ request('etape') == '1' ? 'selected' : '' }}>En saisie</option>
+                        <option value="2" {{ request('etape') == '2' ? 'selected' : '' }}>Transmis</option>
+                        <option value="3" {{ request('etape') == '3' ? 'selected' : '' }}>Accepté</option>
+                        <option value="4" {{ request('etape') == '4' ? 'selected' : '' }}>Rejeté</option>
+                    </select>
+                </div>
             </div>
-        
-            <div class="col-3">
-                <button type="submit" class="btn btn-primary w-100">Rechercher</button>
+        </fieldset>
+
+        {{-- 🚀 Action --}}
+        <fieldset class="border rounded p-3">
+            <legend class="float-none w-auto px-2 fw-bold text-dark">
+                Action
+            </legend>
+
+            <div class="row">
+                <div class="col-md-3 ms-auto">
+                    <button type="submit" class="btn btn-primary w-100">
+                        🔍 Rechercher
+                    </button>
+                </div>
             </div>
-        </form>
-        
-    </div>
+        </fieldset>
+
+    </form>
+</div>
+
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
     

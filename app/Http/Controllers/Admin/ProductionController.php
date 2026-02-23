@@ -900,7 +900,7 @@ class ProductionController extends Controller
                 'codeadherent' => $idAdherent,
                 'estMigre' => 0,
                 'codeproduit' => $request->codeproduit,
-                // 'numBullettin' => $numBullettin,
+                'numBullettin' => $numBullettin,
 
                 'libelleproduit' => $product->MonLibelle,
                 'montantrente' => $request->montantrente,

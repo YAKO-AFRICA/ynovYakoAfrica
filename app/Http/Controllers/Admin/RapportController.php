@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers\Admin;
 
-use PDF;
+use App\Http\Controllers\Controller;
+use App\Models\Contrat;
+use App\Models\Membre;
+use App\Models\MotifRejet;
+use App\Models\Partner;
+use App\Models\Pret;
+use App\Models\Product;
+use App\Models\Profession;
+use App\Models\Prospect;
+use App\Models\TblPrestation;
+use App\Models\TblSecteurActivite;
+use App\Models\TblVille;
 use Carbon\Carbon;
 use Dompdf\Dompdf;
-use App\Models\Pret;
-use App\Models\Membre;
-use App\Models\Contrat;
-use App\Models\Product;
-use App\Models\Prospect;
-use App\Models\TblVille;
-use App\Models\MotifRejet;
-use App\Models\Profession;
 use Illuminate\Http\Request;
-use App\Models\TblSecteurActivite;
-use App\Http\Controllers\Controller;
-use App\Models\TblPrestation;
 use Illuminate\Support\Facades\Auth;
+use PDF;
 
 class RapportController extends Controller
 {
@@ -26,12 +27,17 @@ class RapportController extends Controller
         $userPartner = Auth::user()->codepartenaire;
 
         $agents = Membre::where('codepartenaire', $userPartner)->get();
+        $partenaire = Partner::all();
 
-        $query = Contrat::where('partenaire', $userPartner);
+        $query = Contrat::where("saisiele", "!=", null);
 
         // Filtrer par date (de et à)
         if ($request->filled('dateFrom') && $request->filled('dateTo')) {
             $query->whereBetween('saisiele', [$request->dateFrom, $request->dateTo]);
+        }
+        // Filtrer par partenaire (de et à)
+        if ($request->filled('partenaire')) {
+            $query->where('partenaire', $request->partenaire);
         }
 
         // Filtrer par agent
@@ -104,7 +110,7 @@ class RapportController extends Controller
         $selectedStatus = $request->input('etape');
 
         // Retourner la vue avec les données
-        return view('rapport.eSouscription', compact('contrats', 'agents', 'activeColumns', 'defaultColumns', 'additionalColumns'));
+        return view('rapport.eSouscription', compact('contrats', 'agents', 'activeColumns', 'defaultColumns', 'additionalColumns','partenaire'));
     }
 
     public function ePrestation(Request $request)

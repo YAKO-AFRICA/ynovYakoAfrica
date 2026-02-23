@@ -61,7 +61,7 @@
         </section>
 
         <section>
-            <CENTER><strong>N° : YAKO AFRICA ASSURANCE-YKE-XXXXXXX</strong></CENTER>
+            <CENTER><strong>N° : YAKO AFRICA ASSURANCE-YKE-{{ $contrat->numBullettin ?? "" }}</strong></CENTER>
         </section>
 
         <section style="width: 100%; margin-top: 15px;">
