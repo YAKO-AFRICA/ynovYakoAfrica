@@ -44,6 +44,7 @@
                     <tr>
                         <th>#</th>
                         <th>Code</th>
+                        <th>Id Contrat</th>
                         <th>Souscripteur</th>
                         <th>Téléphone</th>
                         <th>Status</th>
@@ -55,10 +56,11 @@
                 <tbody>
                     @forelse($cotations as $key => $cotation)
                         <tr>
-                            <td>{{ $key + 1 }}</td>
-                            <td>{{ $cotation->code }}</td>
-                            <td>{{ $cotation->nomCompletSouscripteur }}</td>
-                            <td>{{ $cotation->telephoneSouscripteur }}</td>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $cotation->code ?? ""}}</td>
+                            <td>{{ $cotation->contrat->id ?? "" }}</td>
+                            <td>{{ $cotation->nomCompletSouscripteur ?? ""}}</td>
+                            <td>{{ $cotation->telephoneSouscripteur ?? ""}}</td>
 
                             <td>
                                 @if ($cotation->status == 'sending')
@@ -83,7 +85,7 @@
 
                             <td>
                                 <span class="badge bg-secondary">
-                                    {{ ucfirst(Str::limit($cotation->note, 20, '...')) }}
+                                    {{ ucfirst(Str::limit($cotation->note, 20, 'Aucune Note')) }}
                                 </span>
                             </td>
 
@@ -93,12 +95,9 @@
                             @if ($cotation->status == 'sending')
                                 <td class="text-center">
 
-                                    <form action="{{ route('cotation.store', $cotation->uuid)}}" method="post">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-success">
-                                            <i class='bx bx-check-double'></i> Traiter
-                                        </button>
-                                    </form>
+                                    <a href="{{ route('cotation.show', $cotation->uuid) }}" class="btn btn-sm btn-primary">
+                                        <i class='bx bx-show'></i> Voir
+                                    </a>
                                 </td>
                             @else
                                 <td class="text-center text-muted" disabled style="opacity: 0.5;">

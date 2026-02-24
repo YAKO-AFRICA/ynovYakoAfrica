@@ -93,7 +93,6 @@ class Contrat extends Model
         'typesouscipteur',
         'numBullettin',
         'Formule'
-
     ];
 
     public function user()

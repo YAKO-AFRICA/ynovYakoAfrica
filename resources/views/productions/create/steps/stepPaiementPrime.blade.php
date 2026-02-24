@@ -349,7 +349,7 @@
                                 <label for="duree" class="form-label">Durée de mes cotisations :</label>
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="duree" name="duree" min="0"> 
-                                    <span class="input-group-text">mois</span>
+                                    <span class="input-group-text">Année</span>
                                 </div>
                             </div>
                         @endif

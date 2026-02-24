@@ -403,6 +403,8 @@ Route::prefix('cotation')->name('cotation.')->group(function(){
         Route::get('/index', [CotationController::class, 'index'])->name('index');
         Route::post('/store/{uuid}', [CotationController::class, 'store'])->name('store');
         Route::get('/create/{id}', [CotationController::class, 'create'])->name('create');
+        Route::get('/show/{uuid}', [CotationController::class, 'show'])->name('show');
+        Route::post('/update/{uuid}', [CotationController::class, 'update'])->name('update');
     });
 
 });

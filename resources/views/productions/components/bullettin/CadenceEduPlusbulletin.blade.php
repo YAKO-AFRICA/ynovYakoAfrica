@@ -609,15 +609,15 @@
                 <div style="width: 100%; text-alig: center;">
                     <div style="width: 33%; float: left;">
                         <strong>Nom :</strong>
-                        <span>...........................</span>
+                        <span>{{ $contrat->nom ?? '....'}}</span>
                     </div>
                     <div style="width: 33%; float: left;">
                         <strong>Prénoms :</strong>
-                        <span>...........................</span>
+                        <span>{{ $contrat->prenom ?? '....'}}</span>
                     </div>
                     <div style="width: 33%; float: left;">
                         <strong>Né(e) le :</strong> 
-                        <span>...........................</span>
+                        <span>{{ $contrat->datenaissance ?? '....'}}</span>
                     </div>
                     <div style="clear: both;"></div>
                 </div>
@@ -625,16 +625,21 @@
                 <div style="width: 100%; margin-top: 7px;">
                     <div style="width: 33%; float: left;">
                         <strong>1. Taille :</strong>
-                        <span>...........................</span>
+                        <span>{{ $contrat->santes->taille ?? '....'}}</span>
                     </div>
                     <div style="width: 33%; float: left;">
                         <strong>2. Poids</strong>
-                        <span>...........................</span>
+                        <span>{{ $contrat->santes->poids ?? '....'}}</span>
                     </div>
                     <div style="width: 33%; float: left;">
                         <strong>3. Fumez-vous ? :</strong> 
-                        <span><input type="radio" class="radio1"><span>Oui</span></span>
-                        <span><input type="radio" class="radio1"><span>Non</span></span>
+                        <span>
+                            @if ($contrat->santes->smoking == "Oui")
+                                Oui
+                            @else
+                                Non
+                            @endif
+                        </span>
                     </div>
                     <div style="clear: both;"></div>
                 </div>
@@ -642,12 +647,15 @@
 
                     <div style="width: 100%;">
                         <div style="width: 30%; float: left;"><strong>4. Buvez-vous de l'alcool ? :</strong></div>
-                        <div style="width: 18%; float: left;"><input type="radio" class="radio1"><span>Pas du
-                                tout</span></div>
-                        <div style="width: 18%; float: left;"><input type="radio" class="radio1"><span>À
-                                l'occasion</span></div>
-                        <div style="width: 55%; float: left;"><input type="radio"
-                                class="radio1"><span>Régulièrement (Au moins une fois par semaine)</span></div>
+                        <div style="width: 18%; float: left;"><input type="radio" class="radio1">
+                            @if ($contrat->santes->alcool == "Partiel")
+                                <span>À l'occasion</span>
+                            @if ($contrat->santes->alcool == "Oui")
+                                <span>Régulièrement (Au moins une fois par semaine)</span>
+                            @else
+                                <span>Pas du tout</span>
+                            @endif
+                        </div>
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
@@ -657,9 +665,12 @@
                     <div style="width: 100%;">
                         <div style="width: 50%; float: left;"><strong>6. Êtes-vous atteint d'une infirmité ? :</strong>
                         </div>
-                        <div style="width: 18%; float: left;"><input type="radio" class="radio1"><span>Oui</span>
-                        </div>
-                        <div style="width: 18%; float: left;"><input type="radio" class="radio1"><span>Non</span>
+                        <div style="width: 18%; float: left;">
+                            @if ($contrat->santes->accident == "Oui")
+                                <span>Oui</span>
+                            @else
+                                <span>Non</span>
+                            @endif
                         </div>
                         <div style="width: 55%; float: left;"><input type="radio" class="radio1"><span>Si Oui,
                                 Nature <strong>.....................</strong></span></div>
@@ -710,7 +721,13 @@
                     </tr>
                     <tr>
                         <td>Avez-vous déjà été victime d'un accident ?</td>
-                        <td>Non</td>
+                        <td>
+                            @if ($contrat->santes->accident == "Oui")
+                                <span>Oui</span>
+                            @else
+                                <span>Non</span>
+                            @endif
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -724,7 +741,13 @@
                     </tr>
                     <tr>
                         <td>Avez-vous déjà subit une tranfusion sanguine ?</td>
-                        <td>Non</td>
+                        <td>
+                            @if ($contrat->santes->transSang == "Oui")
+                                <span>Oui</span>
+                            @else
+                                <span>Non</span>
+                            @endif
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -738,14 +761,26 @@
                     </tr>
                     <tr>
                         <td>Avez-vous déjà subi des interventions churigicales ?</td>
-                        <td>Non</td>
+                        <td>
+                            @if ($contrat->santes->interChirugiale == "Oui")
+                                <span>Oui</span>
+                            @else
+                                <span>Non</span>
+                            @endif
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Devez-vous subir des interventions churigicales ?</td>
-                        <td>Non</td>
+                        <td>
+                            @if ($contrat->santes->prochaineInterChirugiale == "Oui")
+                                <span>Oui</span>
+                            @else
+                                <span>Non</span>
+                            @endif
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -756,35 +791,65 @@
                     </tr>
                     <tr>
                         <td>Diabète</td>
-                        <td>Non</td>
+                        <td>
+                            @if ($contrat->santes->diabetes == "Oui")
+                                <span>Oui</span>
+                            @else
+                                <span>Non</span>
+                            @endif
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Hypertension artérielle</td>
-                        <td>Non</td>
+                        <td>
+                            @if ($contrat->santes->hypertension == "Oui")
+                                <span>Oui</span>
+                            @else
+                                <span>Non</span>
+                            @endif
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Drépanocytose</td>
-                        <td>Non</td>
+                        <td>
+                            @if ($contrat->santes->sickleCell == "Oui")
+                                <span>Oui</span>
+                            @else
+                                <span>Non</span>
+                            @endif
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Cirhose de foie</td>
-                        <td>Non</td>
+                        <td>
+                            @if ($contrat->santes->liverCirrhosis == "Oui")
+                                <span>Oui</span>
+                            @else
+                                <span>Non</span>
+                            @endif
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Infection pulmonaire</td>
-                        <td>Non</td>
+                        <td>
+                            @if ($contrat->santes->lungDisease == "Oui")
+                                <span>Oui</span>
+                            @else
+                                <span>Non</span>
+                            @endif
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>

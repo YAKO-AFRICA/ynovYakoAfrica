@@ -170,7 +170,7 @@ class ValidationController extends Controller
                             'accepterpar' => Auth::user()->membre->idmembre,
                             'etape' => 3,
                             'estMigre' => 1,
-                            'cleintegration' => now()->format('YmdHis'),
+                            // 'cleintegration' => now()->format('YmdHis'),
                         ]
                     );
 
