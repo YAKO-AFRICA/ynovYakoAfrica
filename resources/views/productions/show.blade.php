@@ -39,7 +39,7 @@
                 </form>
             @endif
         @endcan
-        
+
         <a href="{{ route('prod.generate.bulletin', $contrat->id) }}" target="_blank" class="btn btn-primary btn-sm text-decoration-none px-2 px-md-3">
             <i class="bx bx-download me-1" title="Bulletin"></i>
             <span class="d-none d-sm-inline">Bulletin</span>
@@ -52,7 +52,7 @@
     <div class="card">
         <div class="card-header">
             <div class="d-lg-flex flex-lg-row align-items-lg-center justify-content-lg-between" role="tablist">
-          
+
                 <div class="step" data-target="#test-l-1">
                     <div class="step-trigger" role="tab" id="stepper1trigger1" aria-controls="test-l-1">
                         <div class="bs-stepper-circle">1</div>
@@ -104,7 +104,7 @@
     <div class="col-12 col-lg-3">
         <div class="card">
             <div class="card-body">
-                
+
                 <div class="fm-menu">
                     <div class="list-group list-group-flush">
                         <a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="info-contrat">
@@ -115,7 +115,8 @@
                         </a>
                         <a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="edit-assurer">
                             <i class='bx bx-analyse me-2'></i><span>Assurés</span>
-                        </a>
+                        </a><a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="edit-questionnaire">
+                            <i class='bx bx-heart me-2'></i><span>Etat de sante</span>
                         <a href="javascript:;" class="list-group-item py-1 btn border-0" data-target="edit-beneficiaire">
                             <i class='bx bx-plug me-2'></i><span>Bénéficiaires</span>
                         </a>
@@ -161,11 +162,11 @@
 
                         </div>
                         <h6 class="text-primary mb-0">
-                            <a class="btn btn-sm btn-outline-secondary" data-bs-target="#view-bulletin{{$doc->id}}" data-bs-toggle="modal" title="Preview"> 
+                            <a class="btn btn-sm btn-outline-secondary" data-bs-target="#view-bulletin{{$doc->id}}" data-bs-toggle="modal" title="Preview">
                                 <i class="bx bx-show"></i>
                             </a>
                         </h6>
-                        
+
                         <div class="modal fade" id="view-bulletin{{$doc->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
                             <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
@@ -217,7 +218,7 @@
                                 <dl class="mb-4">
                                     <dt>ID du contrat</dt>
                                     <dd>{{ $contrat->id ?? '--' }}</dd>
-                    
+
                                     <dt>Mode de paiement</dt>
                                     <dd>
                                         @switch($contrat->modepaiement)
@@ -229,18 +230,18 @@
                                             @default --
                                         @endswitch
                                     </dd>
-                    
+
                                     @if ($contrat->modepaiement === 'VIR' || $contrat->modepaiement === 'SOURCE')
                                         <dt>Banque / Organisme</dt>
                                         <dd>{{ $contrat->organisme ?? '--' }}</dd>
-                    
+
                                         <dt>Agence</dt>
                                         <dd>{{ $contrat->user->membre->nomagence ?? '--' }}</dd>
-                    
+
                                         <dt>N° de compte (Matricule)</dt>
                                         <dd>{{ $contrat->numerocompte ?? '--' }}</dd>
                                     @endif
-                    
+
                                     @if ($contrat->modepaiement === 'Mobile_money')
                                         <dt>N° Mobile</dt>
                                         <dd>{{ $contrat->numerocompte ?? '--' }}</dd>
@@ -250,7 +251,7 @@
                                     <dd>{{ $contrat->codebanque ?? '--' }}</dd>
                                 </dl>
                             </div>
-                    
+
                             <!-- Colonne 2 -->
                             <div class="col-sm-12 col-md-6 col-lg-4">
                                 <dl class="mb-4">
@@ -265,43 +266,43 @@
                                             @default --
                                         @endswitch
                                     </dd>
-                    
+
                                     <dt>Date d'effet</dt>
                                     <dd>{{ $contrat->dateeffet ?? '--' }}</dd>
-                    
+
                                     <dt>Capital</dt>
                                     <dd>{{ number_format($contrat->capital ?? 0, 0, ',', ' ') }} FCFA</dd>
-                    
+
                                     <dt>Rente</dt>
                                     <dd>{{ number_format($contrat->montantrente ?? 0, 0, ',', ' ') }} Fcfa</dd>
 
                                     <dt>Code Guichet</dt>
                                     <dd>{{ $contrat->codeguichet ?? '--' }}</dd>
-                    
+
                                     <dt>Conseiller client</dt>
                                     <dd>{{ $contrat->nomagent ?? ""}}</dd>
 
-                                    
+
                                 </dl>
                             </div>
-                    
+
                             <!-- Colonne 3 -->
                             <div class="col-sm-12 col-md-6 col-lg-4">
                                 <dl class="mb-4">
                                     <dt>Surprime</dt>
                                     <dd>{{ number_format($contrat->surprime ?? 0, 0, ',', ' ') }} FCFA</dd>
-                    
+
                                     <dt>Prime</dt>
                                     <dd>{{ number_format($contrat->prime ?? 0, 0, ',', ' ') }} FCFA</dd>
-                    
+
                                     <dt>Prime principale</dt>
                                     <dd>{{ number_format($contrat->primepricipale ?? 0, 0, ',', ' ') }} FCFA</dd>
 
                                     <dt>Frais d'adhésion</dt>
                                     <dd>{{ number_format($contrat->fraisadhesion ?? 0, 0, ',', ' ') }} FCFA</dd>
-                    
-                                    
-                    
+
+
+
                                     <dt>Clé RIB</dt>
                                     <dd>{{ $contrat->rib ?? '--' }}</dd>
                                     <dt>Code conseiller</dt>
@@ -318,7 +319,7 @@
                         <legend class="float-none w-auto px-2"><small>Adhérent</small></legend>
                         <div class="my-3">
                             <strong class=""><label class="form-label">Civilité :</label></strong>
-                            <span class="">{{ $contrat->adherent->civilite ?? 'Non renseigné' }}</span>      
+                            <span class="">{{ $contrat->adherent->civilite ?? 'Non renseigné' }}</span>
                         </div>
 
                         <!---end row-->
@@ -379,7 +380,7 @@
 
                                 <span>{{ $contrat->adherent->naturepiece ?? 'Non renseigné' }}</span>
 
-                            </div>        
+                            </div>
 
                             <div class="col-12 col-lg-4">
 
@@ -577,7 +578,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <!-- Version mobile (cartes) -->
                         <div class="d-md-none">
                             @if ($contrat->assures->count() > 0)
@@ -585,7 +586,7 @@
                                     <div class="card mb-3">
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $assure->nom ?? '-' }} {{ $assure->prenom ?? '-' }}</h5>
-                                            
+
                                             <div class="mb-2">
                                                 <h6 class="fw-bold mb-1">Garanties :</h6>
                                                 <ul class="mb-0 ps-3">
@@ -594,14 +595,14 @@
                                                     @endforeach
                                                 </ul>
                                             </div>
-                                            
+
                                             <div class="mb-3">
                                                 <h6 class="fw-bold mb-1">Garanties complémentaires :</h6>
                                                 <ul class="mb-0 ps-3">
                                                     <li>Pas de garanties complémentaires</li>
                                                 </ul>
                                             </div>
-                                            
+
                                             <div class="text-end">
                                                 <a href="" class="btn btn-sm btn-primary" data-bs-target="#showAssureModal{{ $assure->id }}" data-bs-toggle="modal">
                                                     <i class="bx bx-show me-1"></i> Voir détails
@@ -614,6 +615,68 @@
                             @else
                                 <div class="alert alert-info text-center">Aucun assuré trouvé</div>
                             @endif
+                        </div>
+                    </fieldset>
+                </section>
+
+                <section id="edit-questionnaire" class="section-content d-none">
+                    <fieldset class="border rounded p-3">
+                        <legend class="float-none w-auto px-2 text-primary fw-bold">
+                            <small><i class="bi bi-heart-pulse"></i> Questionnaire Médical</small>
+                        </legend>
+
+                        {{-- Infos physiques --}}
+                        <div class="row mb-3">
+                            <div class="col-md-4 mb-2">
+                                <strong>Taille :</strong>
+                                <span class="ms-2">{{ $contrat->santes->taille ?? '--' }} cm</span>
+                            </div>
+
+                            <div class="col-md-4 mb-2">
+                                <strong>Poids :</strong>
+                                <span class="ms-2">{{ $contrat->santes->poids ?? '--' }} kg</span>
+                            </div>
+
+                            <div class="col-md-4 mb-2">
+                                <strong>Tension :</strong>
+                                <span class="ms-2">
+                                    {{ $contrat->santes->tensionMin ?? '--' }} /
+                                    {{ $contrat->santes->tensionMax ?? '--' }} mmHg
+                                </span>
+                            </div>
+                        </div>
+
+                        @php
+                            $santeFields = [
+                                'diabetes' => "Diabète",
+                                'hypertension' => "Hypertension",
+                                'sickleCell' => "Drépanocytose",
+                                'liverCirrhosis' => "Cirrhose du foie",
+                                'lungDisease' => "Maladie pulmonaire",
+                                'cancer' => "Cancer",
+                                'anemia' => "Anémie",
+                                'kidneyFailure' => "Insuffisance rénale",
+                                'stroke' => "AVC",
+                                'smoking' => "Fumeur",
+                                'alcohol' => "Consommation d’alcool",
+                                'sport' => "Pratique sportive",
+                                'accident' => "Accident récent",
+                                'treatment' => "Traitement médical (6 derniers mois)",
+                                'transSang' => "Transfusion sanguine (6 derniers mois)",
+                                'interChirugiale' => "Intervention chirurgicale subie",
+                                'prochaineInterChirugiale' => "Prochaine intervention prévue",
+                            ];
+                        @endphp
+
+                        <div class="row">
+                            @foreach ($santeFields as $field => $label)
+                                <div class="col-md-6 mb-2 d-flex justify-content-between border-bottom pb-1">
+                                    <span>{{ $label }}</span>
+                                    <span class="badge {{ ($contrat->santes->$field ?? 'Non') == 'Oui' ? 'bg-success' : 'bg-secondary' }}">
+                                        {{ $contrat->santes->$field ?? 'Non' }}
+                                    </span>
+                                </div>
+                            @endforeach
                         </div>
                     </fieldset>
                 </section>
@@ -682,7 +745,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <!-- Version Mobile (cartes) -->
                         <div class="d-md-none">
                             @if ($contrat->beneficiaires->count() > 0)
@@ -690,7 +753,7 @@
                                     <div class="card mb-3 shadow-sm">
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $beneficiaire->nom ?? '--' }} {{ $beneficiaire->prenom ?? '--' }}</h5>
-                                            
+
                                             <div class="row g-2 mb-2">
                                                 <div class="col-6">
                                                     <small class="text-muted">Né(e) le</small>
@@ -701,22 +764,22 @@
                                                     <div>{{ $beneficiaire->part ?? '--' }}%</div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="mb-2">
                                                 <small class="text-muted">Lieu de naissance</small>
                                                 <div>{{ $beneficiaire->lieunaissance ?? '--' }}</div>
                                             </div>
-                                            
+
                                             <div class="mb-2">
                                                 <small class="text-muted">Lieu de résidence</small>
                                                 <div>{{ $beneficiaire->lieuresidence ?? '--' }}</div>
                                             </div>
-                                            
+
                                             <div class="mb-2">
                                                 <small class="text-muted">Filiation</small>
                                                 <div>{{ $beneficiaire->filiation ?? '--' }}</div>
                                             </div>
-                                            
+
                                             <div class="row g-2">
                                                 <div class="col-6">
                                                     <small class="text-muted">Téléphone</small>
@@ -727,7 +790,7 @@
                                                     <div class="text-truncate">{{ $beneficiaire->email ?? '--' }}</div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="text-end mt-3">
                                                 <a href="" class="btn btn-sm btn-primary" data-bs-target="#showBenefModal{{ $beneficiaire->id }}" data-bs-toggle="modal">
                                                     <i class="bx bx-show me-1"></i> Détails
@@ -837,7 +900,7 @@
     </div>
 
 
-    
+
 
     <script>
 
@@ -847,7 +910,7 @@
 
             const sections = document.querySelectorAll('.section-content');
 
-    
+
 
             links.forEach(link => {
 
@@ -855,13 +918,13 @@
 
                     const targetId = link.getAttribute('data-target');
 
-    
+
 
                     // Masquer toutes les sections
 
                     sections.forEach(section => section.classList.add('d-none'));
 
-    
+
 
                     // Afficher la section correspondante
 
@@ -881,7 +944,7 @@
 
     </script>
 
-    
+
 
 </div>
 
@@ -903,14 +966,14 @@
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
-            
+
             return `${year}${month}${day}${hours}${minutes}${seconds}`;
         }
 </script>
 
 <script type="text/javascript">
     function calltouchpay(contratId) {
-        
+
         const code = Math.floor(Math.random() * 9999) + 1;
 
         // Construire le code paiement
