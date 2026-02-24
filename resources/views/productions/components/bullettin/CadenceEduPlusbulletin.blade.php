@@ -111,7 +111,7 @@
                     <strong style="font-size: 15px">n° Bulletin </strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <span style="color: red; font-size: 20px">{{ $contrat->numBullettin ?? ''}}</span>
                 </div>
-                
+
                 <div
                     style="width: 46%; margin: auto; border: 1px solid #444; padding: 5px; border-radius: 7px; float:right">
                     <strong style="font-size: 15px">IND-CEP-2304-</strong>
@@ -167,7 +167,7 @@
                             la remise de toutes les pièces prévues au contrat.</li>
                         <p style="margin-bottom: 8px">En cas de décès de l'assuré avant terme du contrat, dans le cadre de la garantie <strong>OBSÈQUES</strong>, le capital est payé au(x) bénéficiaire(s) désigné(s), à défaut, aux ayants droit de l'assuré, dans le délai de <strong>TRENTE (30) JOURS</strong> suivant la remise de toutes les pièces justificatives.</p>
                         <p style="margin-bottom: 8px">En cas de décès de l'assuré avant terme du contrat, dans le cadre de la garantie <strong>RENTE</strong>, les rentes sont remise au(x) bénéficiaire(s) désigné(s), à défaut, aux ayants droit de l'assuré le 1er JANVIER de chaque année jusqu'au terme du contrat.</p>
-                        
+
                         <li style="margin-bottom: 8px">Chaque année, la participation aux bénéfices est déterminée à partir de moins de 90% des
                             resultats techniques et 85% des resultats financiers, conformement aux dispositions des
                             articles 82, 83 et 84 du code CIMA et virée au compte "Provision pour la participation aux
@@ -260,7 +260,7 @@
                         <label><strong>à
                         </strong><span>{{ $contrat->adherent->lieunaissance ?? '....' }}</span></label>
                     </div>
-                    
+
                 </div>
 
                 <section style="width: 80%; margin-top: 25px; border-radius: 7px;">
@@ -268,19 +268,19 @@
                     <div style="width: 100%;">
                         <div style="width: 45%; float: left;"><strong>Situation Matrimoniale :</strong></div>
                         <div style="width: 18%; float: left;">
-                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'CELIB') checked @endif>
+                            <input type="radio" class="radio1" @if(isset($contrat->adherent->situationMatrimoniale) && $contrat->adherent->situationMatrimoniale == 'CELIB') checked @endif>
                             <span>Célibataire</span>
                         </div>
                         <div style="width: 18%; float: left;">
-                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'MARIE') checked @endif>
+                            <input type="radio" class="radio1" @if(isset($contrat->adherent->situationMatrimoniale) && $contrat->adherent->situationMatrimoniale == 'MARIE') checked @endif>
                             <span>Marié(e)</span>
                         </div>
                         <div style="width: 18%; float: left;">
-                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'DIVOR') checked @endif>
+                            <input type="radio" class="radio1" @if(isset($contrat->adherent->situationMatrimoniale) && $contrat->adherent->situationMatrimoniale == 'DIVOR') checked @endif>
                             <span>Divorcé(e)</span>
                         </div>
                         <div style="width: 18%; float: left;">
-                            <input type="radio" class="radio1" @if($contrat->adherent->situationMatrimoniale == 'VEUVE') checked @endif>
+                            <input type="radio" class="radio1" @if(isset($contrat->adherent->situationMatrimoniale) && $contrat->adherent->situationMatrimoniale == 'VEUVE') checked @endif>
                             <span>Veuf(ve)</span>
                         </div>
                     </div>
@@ -317,7 +317,7 @@
                         </strong><span>{{ $contrat->adherent->mobile ?? '....' }}</span></label>
                     </div>
                     @php
-                    $whatsapp = $contrat->adherent->contacts;
+                    $whatsapp = $contrat->adherent->contacts ?? collect();
                     @endphp
 
                     <div style="width: 33%; float: right;">
@@ -349,7 +349,7 @@
                         <th>Teléphone</th>
                         <th>Résidence</th>
                     </tr>
-                    @foreach ($contrat->assures as $item)
+                    @forelse ($contrat->assures ?? [] as $item)
                         <tr>
                             <td>{{ $item->nom ?? ''}} {{ $item->prenom ?? ''}}</td>
                             <td>{{ $item->filiation ?? ''}}</td>
@@ -357,7 +357,11 @@
                             <td>{{ $item->telephone ?? ''}}</td>
                             <td>{{ $item->lieuresidence ?? ''}}</td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="5" style="text-align: center;">Aucun assuré</td>
+                        </tr>
+                    @endforelse
                 </table>
 
             </div>
@@ -448,7 +452,7 @@
                         <th>Teléphone</th>
                         <th>Résidence</th>
                     </tr>
-                    @foreach ($contrat->beneficiaires as $item)
+                    @forelse ($contrat->beneficiaires ?? [] as $item)
                         <tr>
                             <td>{{ $item->nom ?? ''}} {{ $item->prenom ?? ''}} </td>
                             <td>{{ $item->filiation ?? ''}}</td>
@@ -456,7 +460,11 @@
                             <td>{{ $item->telephone ?? ''}}</td>
                             <td>{{ $item->lieuresidence ?? ''}}</td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="5" style="text-align: center;">Aucun bénéficiaire</td>
+                        </tr>
+                    @endforelse
                 </table>
             </div>
         </section>
@@ -472,12 +480,12 @@
             <!-- Contenu -->
             <div class="content" style="margin-top: 0px; padding: 10px;">
                 <!-- Colonne gauche -->
-                
+
                 <div style="width: 100%; margin-top: 0px;">
 
-                    <label>Je souhaite souscrire au contrat " <strong style="text-transform: uppercase">Cadence Education Plus</strong>" pour une durée de <strong>{{ $contrat->duree ?? 10}}</strong> ANS </label> 
+                    <label>Je souhaite souscrire au contrat " <strong style="text-transform: uppercase">Cadence Education Plus</strong>" pour une durée de <strong>{{ $contrat->duree ?? 10}}</strong> ANS </label>
 
-                    <label style="text-decoration: underline">Date Effet souhaitée :</label><strong>{{ \Carbon\Carbon::parse($contrat->dateeffet)->format('d/m/Y') ?? '' }}</strong></label>
+                    <label style="text-decoration: underline">Date Effet souhaitée :</label><strong>{{ isset($contrat->dateeffet) ? \Carbon\Carbon::parse($contrat->dateeffet)->format('d/m/Y') : '' }}</strong>
                 </div><br>
                 {{-- <section style="width: 80%; border-radius: 7px;"> --}}
                 <div style="width: 100%; margin-top: -10px;">
@@ -499,7 +507,7 @@
                 <div style="width: 100%; margin-top: 5px;">
                     <div style="width: 50%; float: left;">
                         <label><strong>CAPITAL ETUDE :
-                        </strong><span>{{ number_format($contrat->capital) ?? 0}}</span><span> FCFA</span></label>
+                        </strong><span>{{ isset($contrat->capital) ? number_format($contrat->capital) : 0}}</span><span> FCFA</span></label>
                     </div>
                     <div style="width: 50%; float: left;">
                         <label><strong>MONTANT PRIME :
@@ -511,23 +519,22 @@
 
                 <section style="width: 90%; border-radius: 7px; margin-bottom: 7px;">
                     <div style="width: 100%;">
-                        <div style="width: 38%; float: left;"><span>Adhésion aux services en ligne e-Nov : </span>
+                        <div style="width: 38%; float: left;"><span>Adhésion aux services en ligne e-Nov : </span></div>
+                        <div style="width: 35%; float: left;">
+                            <input type="radio" class="radio1" @if(isset($contrat->enov_abonnement) && $contrat->enov_abonnement == 'mensuel') checked @endif>
+                            <strong>Abonnement mensuel: 500 FCFA</strong>
                         </div>
-                        <div style="width: 35%; float: left;"><input type="radio" class="radio1"><strong>Abonnement
-                                mensuel: 500 FCFA</strong></div>
-                        <div style="width: 35%; float: left;"><input type="radio" class="radio1"><strong>Abonnement
-                                annuelle: 6000 FCFA</strong></div>
+                        <div style="width: 35%; float: left;">
+                            <input type="radio" class="radio1" @if(isset($contrat->enov_abonnement) && $contrat->enov_abonnement == 'annuel') checked @endif>
+                            <strong>Abonnement annuelle: 6000 FCFA</strong>
+                        </div>
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
             </div>
         </section>
 
-        <section 
-    style="
-        margin-bottom: 7px; 
-        font-family: Arial, sans-serif; 
-        border-bottom: 1px dotted #444;  ">
+        <section style="margin-bottom: 7px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
             <!-- Titre -->
             <div class="" style="width: 2%; background-color: #747171; padding: 3px; float: left;">
                 <h4 style="color: #fff; font-size: 13px; margin: 0; text-align: center">V</h4>
@@ -542,13 +549,13 @@
                 <!-- Colonne gauche -->
                 <div style="width: 100%; margin-top: 0px;">
 
-                    <label>La cotisation et les primes d'Assurance d'un montant total de <span><b>{{ number_format($contrat->prime) ?? 0}}</b>
+                    <label>La cotisation et les primes d'Assurance d'un montant total de <span><b>{{ isset($contrat->prime) ? number_format($contrat->prime) : 0}}</b>
                             FCFA</span> seront payée par :</label>
                 </div>
 
                 <div style="width: 100%; margin-top: 10px;">
                     <label style="margin-top: 0px; margin-left:20px; display:block"> <input type="radio"
-                            class="radio1"@if(isset($contrat->modepaiement) && $contrat->modepaiement == 'VIR') checked @endif>Prélèvement bancaire sur mon compte (<small><i>Joindre l'attestation
+                            class="radio1" @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'VIR') checked @endif>Prélèvement bancaire sur mon compte (<small><i>Joindre l'attestation
                                 de prélèvement et un relevé d'identité bancaire</i></small>)</label>
                     <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio"
                             class="radio1" @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'SOURCE') checked @endif>Retenue sur salaire auprès de mon employeur (<small><i>Joindre
@@ -561,19 +568,6 @@
                                     Assurances Vie</strong> ou auprès des mandataires autorisés</i></small>)</label>
                     <label style="margin-top: 5px; margin-left:20px; display:block"> <input type="radio"
                             class="radio1" @if(isset($contrat->modepaiement) && $contrat->modepaiement == 'Mobile_money') checked @endif>Moble money ou Internet</label>
-                    {{-- <!-- Autres (autres valeurs) -->
-                    <label style="margin-top: 5px; margin-left:20px; display:block">
-                        <input type="radio" class="radio1" name="modepaiement_etat"
-                               @if(isset($contrat->modepaiement) && !in_array($contrat->modepaiement, ['VIR', 'SOURCE', 'CHK', 'ESP', 'Mobile_money'])) checked @endif>
-                        Autres, préciser : &nbsp; 
-                        <b>
-                            @if(isset($contrat->modepaiement) && !in_array($contrat->modepaiement, ['VIR', 'SOURCE', 'CHK', 'ESP', 'Mobile_money']))
-                                {{ $contrat->modepaiement }}
-                            @else
-                                ...............................................................................................................................................
-                            @endif
-                        </b>
-                    </label> --}}
                 </div>
 
             </div>
@@ -605,7 +599,7 @@
             </section>
             <div class="content" style="margin-top: 0px; padding: 5px;">
                 <!-- Colonne gauche -->
-               
+
                 <div style="width: 100%; text-alig: center;">
                     <div style="width: 33%; float: left;">
                         <strong>Nom :</strong>
@@ -616,7 +610,7 @@
                         <span>{{ $contrat->prenom ?? '....'}}</span>
                     </div>
                     <div style="width: 33%; float: left;">
-                        <strong>Né(e) le :</strong> 
+                        <strong>Né(e) le :</strong>
                         <span>{{ $contrat->datenaissance ?? '....'}}</span>
                     </div>
                     <div style="clear: both;"></div>
@@ -632,85 +626,133 @@
                         <span>{{ $contrat->santes->poids ?? '....'}}</span>
                     </div>
                     <div style="width: 33%; float: left;">
-                        <strong>3. Fumez-vous ? :</strong> 
+                        <strong>3. Fumez-vous ? :</strong>
                         <span>
-                            @if ($contrat->santes->smoking == "Oui")
-                                Oui
+                            @if(isset($contrat->santes->smoking))
+                                @if($contrat->santes->smoking == "Oui")
+                                    Oui
+                                @else
+                                    Non
+                                @endif
                             @else
-                                Non
+                                ....
                             @endif
                         </span>
                     </div>
                     <div style="clear: both;"></div>
                 </div>
-                <section style="width: 90%; border-radius: 7px; margin-top: 7px;">
 
+                <!-- Section 4 corrigée -->
+                <section style="width: 90%; border-radius: 7px; margin-top: 7px;">
                     <div style="width: 100%;">
                         <div style="width: 30%; float: left;"><strong>4. Buvez-vous de l'alcool ? :</strong></div>
-                        <div style="width: 18%; float: left;"><input type="radio" class="radio1">
-                            @if ($contrat->santes->alcool == "Partiel")
-                                <span>À l'occasion</span>
-                            @if ($contrat->santes->alcool == "Oui")
-                                <span>Régulièrement (Au moins une fois par semaine)</span>
+                        <div style="width: 70%; float: left;">
+                            @if(isset($contrat->santes->alcool))
+                                @if($contrat->santes->alcool == "Partiel")
+                                    <span>À l'occasion</span>
+                                @elseif($contrat->santes->alcool == "Oui")
+                                    <span>Régulièrement (Au moins une fois par semaine)</span>
+                                @else
+                                    <span>Pas du tout</span>
+                                @endif
                             @else
-                                <span>Pas du tout</span>
+                                <span>....</span>
                             @endif
                         </div>
                     </div>
                     <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                 </section>
-                
-                <section style="width: 85%; border-radius: 7px; margin-top: 7px;">
 
+                <!-- Section 5 corrigée -->
+                <div style="width: 100%; margin-top: 7px;">
+                    <label><strong>5. Vos distractions : </strong>
+                        <span>{{ $contrat->santes->distractions ?? '...............................................................' }}</span>
+                    </label>
+                </div>
+
+                <!-- Section 6 corrigée -->
+                <section style="width: 85%; border-radius: 7px; margin-top: 7px;">
                     <div style="width: 100%;">
-                        <div style="width: 50%; float: left;"><strong>6. Êtes-vous atteint d'une infirmité ? :</strong>
-                        </div>
+                        <div style="width: 50%; float: left;"><strong>6. Êtes-vous atteint d'une infirmité ? :</strong></div>
                         <div style="width: 18%; float: left;">
-                            @if ($contrat->santes->accident == "Oui")
-                                <span>Oui</span>
+                            @if(isset($contrat->santes->accident))
+                                @if($contrat->santes->accident == "Oui")
+                                    <span>Oui</span>
+                                @else
+                                    <span>Non</span>
+                                @endif
                             @else
-                                <span>Non</span>
+                                <span>....</span>
                             @endif
                         </div>
-                        <div style="width: 55%; float: left;"><input type="radio" class="radio1"><span>Si Oui,
-                                Nature <strong>.....................</strong></span></div>
+                        <div style="width: 55%; float: left;">
+                            @if(isset($contrat->santes->nature_infirmite) && !empty($contrat->santes->nature_infirmite))
+                                <span>Nature: <strong>{{ $contrat->santes->nature_infirmite }}</strong></span>
+                            @else
+                                <span>Nature: .....................</span>
+                            @endif
+                        </div>
                     </div>
+                    <div style="clear: both;"></div>
 
-                    <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
                     <div style="width: 100%; margin-top:7px">
                         <div style="width: 10%; float: left;"><strong>Cause :</strong></div>
-                        <div style="width: 18%; float: left;"><input type="radio" class="radio1"><span>Par
-                                maladie</span></div>
-                        <div style="width: 18%; float: left;"><input type="radio" class="radio1"><span>Par
-                                accident</span></div>
-                        <div style="width: 55%; float: left;"><input type="radio" class="radio1"><span>Autres :
-                                <strong>...........................</strong></span>&nbsp; &nbsp;<span>La date :
-                                <strong>...........................</strong></span></div>
+                        <div style="width: 18%; float: left;">
+                            @if(isset($contrat->santes->cause_infirmite))
+                                @if($contrat->santes->cause_infirmite == "maladie")
+                                    <span>Par maladie</span>
+                                @elseif($contrat->santes->cause_infirmite == "accident")
+                                    <span>Par accident</span>
+                                @else
+                                    <span>Autres: {{ $contrat->santes->cause_infirmite }}</span>
+                                @endif
+                            @else
+                                <span>...........................</span>
+                            @endif
+                        </div>
+                        <div style="width: 72%; float: left;">
+                            @if(isset($contrat->santes->date_infirmite))
+                                <span>Date: <strong>{{ $contrat->santes->date_infirmite }}</strong></span>
+                            @else
+                                <span>Date: ...........................</span>
+                            @endif
+                        </div>
                     </div>
                     <div style="clear: both;"></div>
                 </section>
+
+                <!-- Section 7 corrigée -->
                 <section style="width: 90%; border-radius: 7px; margin-top: 7px;">
                     <div style="width: 100%;">
-                        <div style="width: 33%; float: left;"><strong>7. Êtes-vous en arrêt de travail ? :</strong>
+                        <div style="width: 33%; float: left;"><strong>7. Êtes-vous en arrêt de travail ? :</strong></div>
+                        <div style="width: 67%; float: left;">
+                            @if(isset($contrat->santes->arret_travail))
+                                @if($contrat->santes->arret_travail == "Oui")
+                                    <span>Oui</span>
+                                @else
+                                    <span>Non</span>
+                                @endif
+                            @else
+                                <span>....</span>
+                            @endif
                         </div>
-                        <div style="width: 18%; float: left;"><input type="radio" class="radio1"><span>Oui</span>
-                        </div>
-                        <div style="width: 18%; float: left;"><input type="radio" class="radio1"><span>Non</span>
-                        </div>
-                    </div>
-                    <div style="clear: both;"></div> <!-- Pour éviter les problèmes d'affichage -->
-                    <div style="width: 100%; margin-left:50px;margin-top:5px">
-                        <div style="width: 90%; float: left;"><span>Si Oui, depuis combien de temps ?
-                                <strong>........</strong></span>&nbsp; &nbsp;<span>Motifs :
-                                <strong>...........................</strong></span>&nbsp; &nbsp;<span>Date de reprise :
-                                <strong>...........................</strong></span></div>
                     </div>
                     <div style="clear: both;"></div>
+
+                    @if(isset($contrat->santes->arret_travail) && $contrat->santes->arret_travail == "Oui")
+                    <div style="width: 100%; margin-left:50px; margin-top:5px">
+                        <div style="width: 90%; float: left;">
+                            <span>Si Oui, depuis combien de temps ?
+                                <strong>{{ $contrat->santes->duree_arret ?? '........' }}</strong>
+                            </span>&nbsp; &nbsp;
+                            <span>Motifs: <strong>{{ $contrat->santes->motif_arret ?? '...........................' }}</strong></span>&nbsp; &nbsp;
+                            <span>Date de reprise: <strong>{{ $contrat->santes->date_reprise ?? '...........................' }}</strong></span>
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                    @endif
                 </section>
-                <div style="width: 100%; margin-top: 7px;">
-                    <label><strong>5. Vos distractions :
-                        </strong><span>...............................................................</span></label>
-                </div>
+
                 <table border="1" cellpadding="6" cellspacing="0" width="100%">
                     <tr>
                         <th>Nature</th>
@@ -722,10 +764,14 @@
                     <tr>
                         <td>Avez-vous déjà été victime d'un accident ?</td>
                         <td>
-                            @if ($contrat->santes->accident == "Oui")
-                                <span>Oui</span>
+                            @if(isset($contrat->santes->accident))
+                                @if($contrat->santes->accident == "Oui")
+                                    <span>Oui</span>
+                                @else
+                                    <span>Non</span>
+                                @endif
                             @else
-                                <span>Non</span>
+                                <span>....</span>
                             @endif
                         </td>
                         <td></td>
@@ -742,10 +788,14 @@
                     <tr>
                         <td>Avez-vous déjà subit une tranfusion sanguine ?</td>
                         <td>
-                            @if ($contrat->santes->transSang == "Oui")
-                                <span>Oui</span>
+                            @if(isset($contrat->santes->transSang))
+                                @if($contrat->santes->transSang == "Oui")
+                                    <span>Oui</span>
+                                @else
+                                    <span>Non</span>
+                                @endif
                             @else
-                                <span>Non</span>
+                                <span>....</span>
                             @endif
                         </td>
                         <td></td>
@@ -754,7 +804,17 @@
                     </tr>
                     <tr>
                         <td>Avez-vous fait récemment l'objet d'un test de dépistage de l'hépartie B ?</td>
-                        <td>Non</td>
+                        <td>
+                            @if(isset($contrat->santes->test_hepatiteB))
+                                @if($contrat->santes->test_hepatiteB == "Oui")
+                                    <span>Oui</span>
+                                @else
+                                    <span>Non</span>
+                                @endif
+                            @else
+                                <span>....</span>
+                            @endif
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -762,10 +822,14 @@
                     <tr>
                         <td>Avez-vous déjà subi des interventions churigicales ?</td>
                         <td>
-                            @if ($contrat->santes->interChirugiale == "Oui")
-                                <span>Oui</span>
+                            @if(isset($contrat->santes->interChirugiale))
+                                @if($contrat->santes->interChirugiale == "Oui")
+                                    <span>Oui</span>
+                                @else
+                                    <span>Non</span>
+                                @endif
                             @else
-                                <span>Non</span>
+                                <span>....</span>
                             @endif
                         </td>
                         <td></td>
@@ -775,10 +839,14 @@
                     <tr>
                         <td>Devez-vous subir des interventions churigicales ?</td>
                         <td>
-                            @if ($contrat->santes->prochaineInterChirugiale == "Oui")
-                                <span>Oui</span>
+                            @if(isset($contrat->santes->prochaineInterChirugiale))
+                                @if($contrat->santes->prochaineInterChirugiale == "Oui")
+                                    <span>Oui</span>
+                                @else
+                                    <span>Non</span>
+                                @endif
                             @else
-                                <span>Non</span>
+                                <span>....</span>
                             @endif
                         </td>
                         <td></td>
@@ -787,15 +855,19 @@
                     </tr>
                     <tr>
                         <td colspan="5" style="text-align: center">Êtes-vous sous traitement pour, ou soufrez-vous d'une de ces maladies ?</td>
-                        
+
                     </tr>
                     <tr>
                         <td>Diabète</td>
                         <td>
-                            @if ($contrat->santes->diabetes == "Oui")
-                                <span>Oui</span>
+                            @if(isset($contrat->santes->diabetes))
+                                @if($contrat->santes->diabetes == "Oui")
+                                    <span>Oui</span>
+                                @else
+                                    <span>Non</span>
+                                @endif
                             @else
-                                <span>Non</span>
+                                <span>....</span>
                             @endif
                         </td>
                         <td></td>
@@ -805,10 +877,14 @@
                     <tr>
                         <td>Hypertension artérielle</td>
                         <td>
-                            @if ($contrat->santes->hypertension == "Oui")
-                                <span>Oui</span>
+                            @if(isset($contrat->santes->hypertension))
+                                @if($contrat->santes->hypertension == "Oui")
+                                    <span>Oui</span>
+                                @else
+                                    <span>Non</span>
+                                @endif
                             @else
-                                <span>Non</span>
+                                <span>....</span>
                             @endif
                         </td>
                         <td></td>
@@ -818,10 +894,14 @@
                     <tr>
                         <td>Drépanocytose</td>
                         <td>
-                            @if ($contrat->santes->sickleCell == "Oui")
-                                <span>Oui</span>
+                            @if(isset($contrat->santes->sickleCell))
+                                @if($contrat->santes->sickleCell == "Oui")
+                                    <span>Oui</span>
+                                @else
+                                    <span>Non</span>
+                                @endif
                             @else
-                                <span>Non</span>
+                                <span>....</span>
                             @endif
                         </td>
                         <td></td>
@@ -831,10 +911,14 @@
                     <tr>
                         <td>Cirhose de foie</td>
                         <td>
-                            @if ($contrat->santes->liverCirrhosis == "Oui")
-                                <span>Oui</span>
+                            @if(isset($contrat->santes->liverCirrhosis))
+                                @if($contrat->santes->liverCirrhosis == "Oui")
+                                    <span>Oui</span>
+                                @else
+                                    <span>Non</span>
+                                @endif
                             @else
-                                <span>Non</span>
+                                <span>....</span>
                             @endif
                         </td>
                         <td></td>
@@ -844,10 +928,14 @@
                     <tr>
                         <td>Infection pulmonaire</td>
                         <td>
-                            @if ($contrat->santes->lungDisease == "Oui")
-                                <span>Oui</span>
+                            @if(isset($contrat->santes->lungDisease))
+                                @if($contrat->santes->lungDisease == "Oui")
+                                    <span>Oui</span>
+                                @else
+                                    <span>Non</span>
+                                @endif
                             @else
-                                <span>Non</span>
+                                <span>....</span>
                             @endif
                         </td>
                         <td></td>
@@ -939,8 +1027,8 @@
         <section style="width: 100%; margin-top: 5px;">
             <div style="width: 100%; margin-bottom: 10px;">
 
-                <label>Fait à : <strong> {{ $contrat->user->membre->zone->libellezone ?? '' }}  </strong> le <strong> {{ \Carbon\Carbon::parse($contrat->saisiele)->format('d/m/Y à H:i:s') ?? '' }} </strong></label>
-                
+                <label>Fait à : <strong> {{ $contrat->user->membre->zone->libellezone ?? '' }}  </strong> le <strong> {{ isset($contrat->saisiele) ? \Carbon\Carbon::parse($contrat->saisiele)->format('d/m/Y à H:i:s') : '' }} </strong></label>
+
             </div>
             <div style="width: 100%; text-align: center;">
                 <div style="width: 45%; float: left;">
@@ -948,7 +1036,7 @@
                     {{-- <p><i style="font-size: 10px !important">(précédée de la mention "LU et APPROUVE)</i></p> --}}
                     {{-- <img src="{{ $qrCodeBase64 }}" alt="QR Code de vérification" style="width: 60px; height: 60px;"> --}}
                     <div>
-                        @if ($imageSrc != null)
+                        @if(isset($imageSrc) && $imageSrc != null)
                             <img src="{{ $imageSrc }}" alt="QR Code de vérification" style="width: 55px; height: 55px;">
                         @endif
                     </div>
