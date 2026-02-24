@@ -29,7 +29,7 @@
         </div>
 
         {{-- @can('traiter cotation') --}}
-            @if ($contrat->etape && !in_array($contrat->etape, [2, 3]))
+            @if ($contrat->etape && !in_array($contrat->etape, [1,4]))
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#traiterModal">
                     <i class="bx bx-check"></i> Traiter
                 </button>
