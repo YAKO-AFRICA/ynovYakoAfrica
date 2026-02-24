@@ -207,6 +207,7 @@ public function eSouscription(Request $request)
         'Est Paye' => 'estpaye',
         'Pret Connexe' => 'pretconnexe',
         'Details' => 'details',
+        'Motif Rejet' => 'motifrejet',
     ];
     
     $activeColumns = session('activeColumns', []);
