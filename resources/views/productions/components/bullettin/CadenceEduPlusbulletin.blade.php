@@ -202,7 +202,7 @@
         </section>
     </div>
     <div class="a4-container">
-        <section style="margin-bottom: 7px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
+        <section style="margin-bottom: 7px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444; display: none;">
             <!-- Titre -->
             <div class="" style="width: 2%; background-color: #747171; padding: 3px; float: left;">
                 <h4 style="color: #fff; font-size: 13px; margin: 0; text-align: center">I</h4>
@@ -329,6 +329,194 @@
                 </div>
             </div>
         </section>
+
+        <section style="margin-bottom: 25px; font-family: 'Arial', sans-serif;">
+    <!-- Titre avec design amélioré -->
+    <div style="display: flex; align-items: center; margin-bottom: 20px;">
+        <div style="width: 35px; height: 35px; background: linear-gradient(135deg, #368257, #2a6b45); border-radius: 8px 0 8px 0; display: flex; align-items: center; justify-content: center; margin-right: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+            <h4 style="color: white; font-size: 18px; margin: 0; font-weight: bold;">I</h4>
+        </div>
+        <div style="background: linear-gradient(135deg, #f5f5f5, #e8e8e8); padding: 8px 25px; border-radius: 0 20px 20px 0; border-left: 4px solid #F8B133; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+            <h4 style="color: #333; font-size: 16px; margin: 0; font-weight: 600; letter-spacing: 0.5px;">SOUSCRIPTEUR</h4>
+        </div>
+    </div>
+
+    <!-- Contenu avec design moderne -->
+    <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0;">
+
+        <!-- Première ligne: Civilité et Type de pièce -->
+        <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
+            <!-- Civilité -->
+            <div style="flex: 1; min-width: 250px;">
+                <label style="display: block; font-size: 12px; color: #666; margin-bottom: 5px; font-weight: 500;">CIVILITÉ</label>
+                <div style="display: flex; gap: 15px; background: #f9f9f9; padding: 10px 15px; border-radius: 8px; border: 1px solid #eaeaea;">
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: default;">
+                        <input type="radio" class="radio1" @if(isset($contrat->adherent->civilite) && strtolower($contrat->adherent->civilite) === 'madame') checked @endif disabled>
+                        <span style="font-size: 13px;">Madame</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: default;">
+                        <input type="radio" class="radio1" @if(isset($contrat->adherent->civilite) && strtolower($contrat->adherent->civilite) === 'mademoiselle') checked @endif disabled>
+                        <span style="font-size: 13px;">Mademoiselle</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: default;">
+                        <input type="radio" class="radio1" @if(isset($contrat->adherent->civilite) && strtolower($contrat->adherent->civilite) === 'monsieur') checked @endif disabled>
+                        <span style="font-size: 13px;">Monsieur</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Type de pièce -->
+            <div style="flex: 2; min-width: 400px;">
+                <label style="display: block; font-size: 12px; color: #666; margin-bottom: 5px; font-weight: 500;">PIÈCE D'IDENTITÉ</label>
+                <div style="display: flex; align-items: center; gap: 10px; background: #f9f9f9; padding: 10px 15px; border-radius: 8px; border: 1px solid #eaeaea;">
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="radio" class="radio1" @if(isset($contrat->adherent->naturepiece) && strtolower($contrat->adherent->naturepiece) === 'passport') checked @endif disabled>
+                            <span style="font-size: 13px;">Passeport</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="radio" class="radio1" @if(isset($contrat->adherent->naturepiece) && strtolower($contrat->adherent->naturepiece) === 'cni') checked @endif disabled>
+                            <span style="font-size: 13px;">CNI</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="radio" class="radio1" @if(isset($contrat->adherent->naturepiece) && strtolower($contrat->adherent->naturepiece) === 'at') checked @endif disabled>
+                            <span style="font-size: 13px;">AT</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="radio" class="radio1" @if(isset($contrat->adherent->naturepiece) && strtolower($contrat->adherent->naturepiece) === 'cc') checked @endif disabled>
+                            <span style="font-size: 13px;">CC</span>
+                        </label>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 5px; margin-left: auto;">
+                        <span style="font-weight: 500; color: #555;">N°</span>
+                        <input type="text" value="{{ $contrat->adherent->numeropiece ?? '' }}"
+                               style="border: 1px solid #ddd; border-radius: 5px; padding: 6px 10px; width: 200px; background: white; font-size: 13px;"
+                               readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grille d'informations personnelles -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 20px;">
+            <!-- Nom -->
+            <div style="background: #f9f9f9; padding: 12px 15px; border-radius: 8px; border-left: 3px solid #368257;">
+                <label style="display: block; font-size: 11px; color: #666; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px;">Nom</label>
+                <span style="font-size: 16px; font-weight: 500; color: #333;">{{ $contrat->adherent->nom ?? '....' }}</span>
+            </div>
+
+            <!-- Prénoms -->
+            <div style="background: #f9f9f9; padding: 12px 15px; border-radius: 8px; border-left: 3px solid #368257;">
+                <label style="display: block; font-size: 11px; color: #666; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px;">Prénoms</label>
+                <span style="font-size: 16px; font-weight: 500; color: #333;">{{ $contrat->adherent->prenom ?? '....' }}</span>
+            </div>
+
+            <!-- Date de naissance -->
+            <div style="background: #f9f9f9; padding: 12px 15px; border-radius: 8px; border-left: 3px solid #368257;">
+                <label style="display: block; font-size: 11px; color: #666; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px;">Né(e) le</label>
+                <span style="font-size: 14px; font-weight: 500; color: #333;">{{ $contrat->adherent->datenaissance ?? '....' }}</span>
+            </div>
+
+            <!-- Lieu de naissance -->
+            <div style="background: #f9f9f9; padding: 12px 15px; border-radius: 8px; border-left: 3px solid #368257;">
+                <label style="display: block; font-size: 11px; color: #666; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px;">à</label>
+                <span style="font-size: 14px; font-weight: 500; color: #333;">{{ $contrat->adherent->lieunaissance ?? '....' }}</span>
+            </div>
+        </div>
+
+        <!-- Situation Matrimoniale -->
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-size: 12px; color: #666; margin-bottom: 8px; font-weight: 500;">SITUATION MATRIMONIALE</label>
+            <div style="display: flex; gap: 20px; background: #f9f9f9; padding: 12px 20px; border-radius: 8px; border: 1px solid #eaeaea; flex-wrap: wrap;">
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    <input type="radio" class="radio1" @if(isset($contrat->adherent->situationMatrimoniale) && $contrat->adherent->situationMatrimoniale == 'CELIB') checked @endif disabled>
+                    <span style="font-size: 13px;">Célibataire</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    <input type="radio" class="radio1" @if(isset($contrat->adherent->situationMatrimoniale) && $contrat->adherent->situationMatrimoniale == 'MARIE') checked @endif disabled>
+                    <span style="font-size: 13px;">Marié(e)</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    <input type="radio" class="radio1" @if(isset($contrat->adherent->situationMatrimoniale) && $contrat->adherent->situationMatrimoniale == 'DIVOR') checked @endif disabled>
+                    <span style="font-size: 13px;">Divorcé(e)</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    <input type="radio" class="radio1" @if(isset($contrat->adherent->situationMatrimoniale) && $contrat->adherent->situationMatrimoniale == 'VEUVE') checked @endif disabled>
+                    <span style="font-size: 13px;">Veuf(ve)</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Grille professionnelle -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 20px;">
+            <!-- Profession -->
+            <div style="background: #f9f9f9; padding: 12px 15px; border-radius: 8px; border-left: 3px solid #F8B133;">
+                <label style="display: block; font-size: 11px; color: #666; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px;">Profession</label>
+                <span style="font-size: 14px; font-weight: 500; color: #333;">{{ $contrat->adherent->profession ?? '....' }}</span>
+            </div>
+
+            <!-- Employeur -->
+            <div style="background: #f9f9f9; padding: 12px 15px; border-radius: 8px; border-left: 3px solid #F8B133;">
+                <label style="display: block; font-size: 11px; color: #666; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px;">Employeur</label>
+                <span style="font-size: 14px; font-weight: 500; color: #333;">{{ $contrat->adherent->employeur ?? '....' }}</span>
+            </div>
+
+            <!-- Adresse -->
+            <div style="background: #f9f9f9; padding: 12px 15px; border-radius: 8px; border-left: 3px solid #F8B133;">
+                <label style="display: block; font-size: 11px; color: #666; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px;">Adresse</label>
+                <span style="font-size: 14px; font-weight: 500; color: #333;">{{ $contrat->adherent->telephone1 ?? '....' }}</span>
+            </div>
+
+            <!-- Lieu de résidence -->
+            <div style="background: #f9f9f9; padding: 12px 15px; border-radius: 8px; border-left: 3px solid #F8B133;">
+                <label style="display: block; font-size: 11px; color: #666; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px;">Lieu de résidence</label>
+                <span style="font-size: 14px; font-weight: 500; color: #333;">{{ $contrat->adherent->lieuresidence ?? '....' }}</span>
+            </div>
+        </div>
+
+        <!-- Section Contacts avec icônes -->
+        <div style="background: linear-gradient(to right, #f0f7f3, #ffffff); padding: 15px; border-radius: 8px; border: 1px dashed #368257;">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                <!-- Email -->
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 35px; height: 35px; background: #368257; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: white; font-size: 16px;">✉</span>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 10px; color: #666; text-transform: uppercase;">Email</label>
+                        <span style="font-size: 12px; font-weight: 500;">{{ $contrat->adherent->email ?? '....' }}</span>
+                    </div>
+                </div>
+
+                <!-- Téléphone -->
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 35px; height: 35px; background: #F8B133; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: white; font-size: 16px;">📞</span>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 10px; color: #666; text-transform: uppercase;">Téléphone</label>
+                        <span style="font-size: 12px; font-weight: 500;">{{ $contrat->adherent->mobile ?? '....' }}</span>
+                    </div>
+                </div>
+
+                <!-- WhatsApp -->
+                @php
+                $whatsapp = $contrat->adherent->contacts ?? collect();
+                @endphp
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 35px; height: 35px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: white; font-size: 16px;">📱</span>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 10px; color: #666; text-transform: uppercase;">WhatsApp</label>
+                        <span style="font-size: 12px; font-weight: 500;">{{ $whatsapp->where('type', 'Whatsapp')->first()->valeur ?? '....' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
         <section style="margin-bottom: 7px; font-family: Arial, sans-serif; border-bottom: 1px dotted #444;">
             <!-- Titre -->
             <div class="" style="width: 2%; background-color: #747171; padding: 3px; float: left;">
