@@ -745,18 +745,22 @@
             <div class="content" style="margin-top: 0px; padding: 5px;">
                 <!-- Colonne gauche -->
 
+               @php
+                   $assureSante = $contrat->assures->first();
+               @endphp
+
                 <div style="width: 100%; text-alig: center;">
                     <div style="width: 33%; float: left;">
                         <strong>Nom :</strong>
-                        <span>{{ $contrat->nom ?? '....'}}</span>
+                        <span>{{ $assureSante->nom ?? '....'}}</span>
                     </div>
                     <div style="width: 33%; float: left;">
                         <strong>Prénoms :</strong>
-                        <span>{{ $contrat->prenom ?? '....'}}</span>
+                        <span>{{ $assureSante->prenom ?? '....'}}</span>
                     </div>
                     <div style="width: 33%; float: left;">
                         <strong>Né(e) le :</strong>
-                        <span>{{ $contrat->datenaissance ?? '....'}}</span>
+                        <span>{{ $assureSante->datenaissance ?? '....'}}</span>
                     </div>
                     <div style="clear: both;"></div>
                 </div>
