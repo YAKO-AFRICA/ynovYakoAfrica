@@ -1389,54 +1389,31 @@
             </div>
             <div class="col-12">
                 <div class="card" style="width: 100%">
-
                     <div class="card-body">
-
                         <div class="row">
-
                             <div class="col-12 col-lg-9 border-r">
-
                                 <label for="" class="form-label">L'assure a t'il été hospitalisé au cours des
                                     ces 3 (trois) derniers mois ?</label>
-
                             </div>
-
                             <div class="col-12 col-lg-3">
-
                                 <div class="form-check form-check-inline">
-
                                     <input class="form-check-input" name="treatment" type="radio" value="Oui"
                                         id="treatmentOui">
-
                                     <label class="form-check-label" for="treatmentOui">
-
                                         Oui
-
                                     </label>
-
                                 </div>
-
                                 <div class="form-check form-check-inline">
-
                                     <input class="form-check-input" name="treatment" type="radio" value="Non"
                                         id="treatmentNon">
-
                                     <label class="form-check-label" for="treatmentNon">
-
                                         Non
-
                                     </label>
-
                                 </div>
-
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
             <div class="col-12">
                 <div class="card" style="width: 100%">
@@ -1888,107 +1865,6 @@
                     </div>
                 </div>
             </div>
-
-        @elseif($product->CodeProduit == 'YKE_2018' || $product->CodeProduit == 'YKE_2008')
-
-        <div class="border rounded p-3 mt-3">
-            <h6 class="fw-bold text-decoration-underline mb-3">
-                Questionnaire Médical
-            </h6>
-
-            {{-- Hospitalisation --}}
-            <div class="mb-3">
-                <label class="form-label fw-semibold">
-                    L'assuré a-t-il été hospitalisé au cours des trois derniers mois ?
-                </label>
-
-                <div class="d-flex gap-3">
-                    <div class="form-check">
-                        <input class="form-check-input"
-                            type="radio"
-                            name="treatment"
-                            id="hospitalise_oui"
-                            value="Oui">
-                        <label class="form-check-label" for="hospitalise_oui">
-                            Oui
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input"
-                            type="radio"
-                            name="treatment"
-                            id="hospitalise_non"
-                            value="Non">
-                        <label class="form-check-label" for="hospitalise_non">
-                            Non
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                {{-- Pourquoi --}}
-                <div class="mb-3 col-md-6">
-                    <label class="form-label fw-semibold">
-                        Si oui, pourquoi ?
-                    </label>
-                    <input type="text"
-                        name="hospitalisation_pourquoi"
-                        class="form-control"
-                        placeholder="Précisez la raison">
-                </div>
-
-                {{-- Durée --}}
-                <div class="mb-3 col-md-6">
-                    <label class="form-label fw-semibold">
-                        Quelle est la durée du séjour ?
-                    </label>
-
-                    <div class="input-group">
-                        <input type="number"
-                            name="hospitalisation_duree"
-                            class="form-control"
-                            placeholder="Nombre de jours"
-                            min="0">
-                        <span class="input-group-text">Jour(s)</span>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Maladie chronique --}}
-            <div class="mb-1">
-                <label class="form-label fw-semibold">
-                    L'assuré souffre-t-il d'une maladie chronique
-                    (diabète, hypertension artérielle, cancer, insuffisance rénale, etc.) ?
-                </label>
-
-                <div class="d-flex gap-3">
-                    <div class="form-check">
-                        <input class="form-check-input"
-                            type="radio"
-                            name="maladie_chronique"
-                            id="maladie_oui"
-                            value="oui">
-                        <label class="form-check-label" for="maladie_oui">
-                            Oui
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input"
-                            type="radio"
-                            name="maladie_chronique"
-                            id="maladie_non"
-                            value="non">
-                        <label class="form-check-label" for="maladie_non">
-                            Non
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         @endif
 
         @if($product->CodeProduit == 'CADENCE')
@@ -2439,6 +2315,7 @@
 
 
                             </div>
+
                         </div>
 
                     </div>
@@ -2920,6 +2797,107 @@
 
                 </div>
             </div>
+
+        @endif
+
+        @if($product->CodeProduit == 'YKE_2018' || $product->CodeProduit == 'YKE_2008')
+            <div class="border rounded p-3 mt-3">
+                <h6 class="fw-bold text-decoration-underline mb-3">
+                    Questionnaire Médical
+                </h6>
+
+                {{-- Hospitalisation --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        L'assuré a-t-il été hospitalisé au cours des trois derniers mois ?
+                    </label>
+
+                    <div class="d-flex gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                type="radio"
+                                name="treatment"
+                                id="hospitalise_oui"
+                                value="Oui">
+                            <label class="form-check-label" for="hospitalise_oui">
+                                Oui
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                type="radio"
+                                name="treatment"
+                                id="hospitalise_non"
+                                value="Non">
+                            <label class="form-check-label" for="hospitalise_non">
+                                Non
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    {{-- Pourquoi --}}
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label fw-semibold">
+                            Si oui, pourquoi ?
+                        </label>
+                        <input type="text"
+                            name="hospitalisation_pourquoi"
+                            class="form-control"
+                            placeholder="Précisez la raison">
+                    </div>
+
+                    {{-- Durée --}}
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label fw-semibold">
+                            Quelle est la durée du séjour ?
+                        </label>
+
+                        <div class="input-group">
+                            <input type="number"
+                                name="hospitalisation_duree"
+                                class="form-control"
+                                placeholder="Nombre de jours"
+                                min="0">
+                            <span class="input-group-text">Jour(s)</span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Maladie chronique --}}
+                <div class="mb-1">
+                    <label class="form-label fw-semibold">
+                        L'assuré souffre-t-il d'une maladie chronique
+                        (diabète, hypertension artérielle, cancer, insuffisance rénale, etc.) ?
+                    </label>
+
+                    <div class="d-flex gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                type="radio"
+                                name="maladie_chronique"
+                                id="maladie_oui"
+                                value="oui">
+                            <label class="form-check-label" for="maladie_oui">
+                                Oui
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                type="radio"
+                                name="maladie_chronique"
+                                id="maladie_non"
+                                value="non">
+                            <label class="form-check-label" for="maladie_non">
+                                Non
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
         @endif
 
         <div class="col-12">
@@ -2958,3 +2936,5 @@
 
 
 </div>
+
+

@@ -15,7 +15,7 @@
         </div>
     </div>
     <hr>
-        
+
     <div class="row g-3 mb-3">
         <div class="col-6">
             <label class="form-label">Civilité <span class="star">*</span></label> <br>
@@ -58,7 +58,7 @@
                 <input class="form-check-input" type="radio" name="situation_matrimoniale" id="marie" value="MARIE" required>
                 <label class="form-check-label" for="marie">Marié(e)</label>
             </div>
-            
+
 
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="situation_matrimoniale" id="divorce" value="DIVOR" required>
@@ -106,17 +106,17 @@
                 <span class="text-danger"> Veuillez remplir la date de naissance </span>
             @enderror
         </div>
-        
+
         <div class="col-12 col-lg-6">
             <label for="lieunaissance" class="form-label">Lieu de naissance</label>
             <select class="form-select selection" name="lieunaissance" id="lieunaissance"
                 data-codeproduit="{{ $product->CodeProduit }}" data-placeholder="Sélectionner le lieu" autocomplete="on">
                 <option value="" disabled selected>Sélectionner le lieu</option>
 
-              
+
             </select>
         </div>
-        
+
     </div>
 
     <!---end row-->
@@ -207,20 +207,21 @@
 
         <div class="row my-3">
             <div class="col-6">
-                <label for="">Telephone <span class="text-danger">*</span></label>
-                <input type="tel" name="telephone" class="form-control" id="contactprincipal" placeholder="+225 00 00 00 00" required minlength="10" maxlength="14" autocomplete="on" pattern="[0-9]{10}" required>
+                <label for="">Mobile <span class="text-danger">*</span></label>
+                <input type="tel" name="mobile" class="form-control" pattern="[0-9]{10}" id="contactprincipal" placeholder="+225 00 00 00 00" minlength="10" maxlength="14" autocomplete="on" required>
             </div>
             <div class="col-6">
-                <label for="">Mobile</label>
-                <input type="tel" name="mobile" class="form-control" pattern="[0-9]{10}" id="contactsecondaire" placeholder="+225 00 00 00 00" minlength="10" maxlength="14" autocomplete="on">
+                <label for="">Telephone </label>
+                <input type="tel" name="telephone" class="form-control" id="contactsecondaire" placeholder="+225 00 00 00 00" minlength="10" maxlength="14" autocomplete="on" pattern="[0-9]{10}">
             </div>
+
         </div>
-        
+
         <!-- Bouton pour ajouter des contacts optionnels -->
         <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#contactModal">
             + Ajouter un contact
         </button>
-        
+
         <!-- Aperçu des contacts -->
         <div id="contactsPreview" class="mt-3"></div>
 
@@ -228,7 +229,7 @@
         <input type="hidden" name="contacts" id="contactsInput">
     </fieldset>
 
-    
+
     <fieldset class="border p-3">
         <legend class="float-none w-auto px-2"><small>Personnes à contacter en cas de besoin</small></legend>
 
@@ -269,11 +270,11 @@
         <div class="">
             <button onclick="event.preventDefault(); " class="btn btn-two btn-next-form">Suivant<i class='bx bx-right-arrow-alt'></i></button>
         </div>
-        
+
     </div>
 
 
-    
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -314,7 +315,7 @@
 
 
     <script>
-       
+
         document.addEventListener('DOMContentLoaded', function () {
             const apiUrl = 'https://api.yakoafricassur.com/enov/villes';
             const apiProfessions = 'https://api.yakoafricassur.com/enov/professions';
@@ -332,7 +333,7 @@
                 .then(data => {
                     const villeSelect = document.getElementById('lieuresidence');
                     const lieuSelect = document.getElementById('lieunaissance');
-                    
+
                     data.forEach(ville => {
                         const libelleFormate = capitalizeFirstLetter(ville.MonLibelle);
 
@@ -354,7 +355,7 @@
                 .then(response => response.json())
                 .then(data => {
                     const professionSelect = document.getElementById('profession');
-                    
+
                     data.forEach(profession => {
                         const libelleFormate = capitalizeFirstLetter(profession.MonLibelle);
 
