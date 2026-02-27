@@ -194,17 +194,13 @@
         <div class="col-12">
             <label for="email" class="form-label">Email </label>
             <input type="email" name="email" class="form-control" id="email" placeholder="Email" autocomplete="on" >
-
             @error('email')
-
                 <span class="text-danger"> Veuillez remplir votre email </span>
-
             @enderror
         </div>
     </div>
     <fieldset class="border p-3">
         <legend class="float-none w-auto px-2"><small>Contact</small></legend>
-
         <div class="row my-3">
             <div class="col-6">
                 <label for="">Mobile <span class="text-danger">*</span></label>
@@ -214,7 +210,6 @@
                 <label for="">Telephone </label>
                 <input type="tel" name="telephone" class="form-control" id="contactsecondaire" placeholder="+225 00 00 00 00" minlength="10" maxlength="14" autocomplete="on" pattern="[0-9]{10}">
             </div>
-
         </div>
 
         <!-- Bouton pour ajouter des contacts optionnels -->

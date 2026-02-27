@@ -131,7 +131,6 @@
         </div>
 
         <div class="card">
-
             <div class="card-body">
 
                 <h5 class="mb-0 font-weight-bold">Documents joints </h5>
@@ -201,9 +200,7 @@
                     <p class="text-secondary">Aucun document joint</p>
                 @endif
             </div>
-
         </div>
-
     </div>
 
     <div class="col-12 col-lg-9">
@@ -620,6 +617,10 @@
                 </section>
 
                 <section id="edit-questionnaire" class="section-content d-none">
+                    @if ($contrat->codeproduit == "yke_2008" || $contrat->codeproduit == "yke_2012")
+                        <span>Questionnaire yako</span>
+                    @else
+                    
                     <fieldset class="border rounded p-3">
                         <legend class="float-none w-auto px-2 text-primary fw-bold">
                             <small><i class="bi bi-heart-pulse"></i> Questionnaire Médical</small>
@@ -679,6 +680,7 @@
                             @endforeach
                         </div>
                     </fieldset>
+                    @endif
                 </section>
 
                 <section id="edit-beneficiaire" class="section-content d-none">
@@ -896,21 +898,12 @@
             </div>
 
         </div>
-
     </div>
 
-
-
-
     <script>
-
         document.addEventListener('DOMContentLoaded', () => {
-
             const links = document.querySelectorAll('.list-group-item');
-
             const sections = document.querySelectorAll('.section-content');
-
-
 
             links.forEach(link => {
 

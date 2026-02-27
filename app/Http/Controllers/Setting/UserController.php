@@ -397,7 +397,10 @@ class UserController extends Controller
         ];
         $roleName = $rolesMap[$request->profile_id] ?? 'Inconnu';
 
-        $agence = Equipe::find($request->codeequipe);
+        $agence = Equipe::where('id', $request->codeequipe)->first();
+
+        log::info("Agence trouvée: " . ($agence ? $agence->id : 'null'));
+
         if (!$agence) {
             return response()->json(['type' => 'error', 'message' => "Agence introuvable", 'code' => 404]);
         }
