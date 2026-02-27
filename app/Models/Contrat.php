@@ -99,6 +99,10 @@ class Contrat extends Model
     {
         return $this->belongsTo(User::class, 'saisiepar', 'idmembre');
     }
+    public function membre()
+    {
+        return $this->belongsTo(Membre::class, 'saisiepar', 'idmembre');
+    }
 
     public function adherent()
     {
@@ -109,17 +113,18 @@ class Contrat extends Model
         return $this->belongsTo(Product::class, 'codeproduit', 'CodeProduit');
     }
     public function assures()
-{
-    return $this->hasMany(Assurer::class, 'codecontrat', 'id')
-                ->where('cleintegration', $this->cleintegration);
-}
+    {
+        return $this->hasMany(Assurer::class, 'codecontrat', 'id');
+                    // ->where('cleintegration', $this->cleintegration);
+    }
     public function santes()
     {
         return $this->belongsTo(DeclarationSante::class, 'id', 'codeContrat');
     }
     public function beneficiaires()
     {
-        return $this->hasMany(Beneficiaire::class, 'codecontrat', 'id')->where('cleintegration', $this->cleintegration);
+        return $this->hasMany(Beneficiaire::class, 'codecontrat', 'id');
+        // ->where('cleintegration', $this->cleintegration);
     }
 
     public function documents()

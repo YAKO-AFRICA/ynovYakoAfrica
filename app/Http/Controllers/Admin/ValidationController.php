@@ -61,10 +61,6 @@ class ValidationController extends Controller
     public function prodByPartner(Request $request, $code)
     {
 
-        // $unreadNotifications = auth()->user()->unreadNotifications;
-        // $allNotifications = auth()->user()->notifications;
-
-        // dd($unreadNotifications);
         set_time_limit(300);
 
         $partners = Partner::where('code', $code)->first();
@@ -76,7 +72,7 @@ class ValidationController extends Controller
         $contratsEtape2Today = Contrat::where(['etape' => 2, 'partenaire' => $code])
         ->whereDate('saisiele', now()->toDateString()) // Filtre pour aujourd'hui
         ->count();
-        $defaultColumns = ['#', 'Produit', 'Date Effet', 'Prime', 'Capital', 'Saisir Par', 'Status'];
+        $defaultColumns = ['#', 'Produit', 'Souscripteur', 'Age Souscripteur', 'Date Effet', 'Prime', 'Capital', 'Saisir Par', 'Status'];
 
         $additionalColumns = [
             'Mode de Paiement' => 'modepaiement',

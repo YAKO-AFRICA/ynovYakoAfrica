@@ -109,10 +109,12 @@
                         <tr class="articleByCat">
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->libelleproduit ?? "" }}</td>
-                            <td>{{ $item->dateeffet ?? "" }}</td>
+                            <td>{{ $item->adherent->nom ?? "" }} {{ $item->adherent->prenom ?? "" }}</td>
+                            <td>{{ Carbon\Carbon::parse($item->adherent->datenaissance)->locale('fr')->translatedFormat('d M Y') ?? "" }}</td>
+                            <td>{{ Carbon\Carbon::parse($item->dateeffet)->locale('fr')->translatedFormat('d M Y') ?? "" }}</td>
                             <td>{{ $item->prime ?? "" }}</td>
                             <td>{{ $item->capital ?? "" }}</td>
-                            <td>{{ $item->user->membre->nom ?? "" }} {{ $item->user->membre->prenom ?? "" }}</td>
+                            <td>{{ $item->membre->nom ?? "" }} {{ $item->membre->prenom ?? "" }}</td>
                             <td>
                                 @if ($item->etape == '0')
 									<div class="badge rounded-pill text-secondary bg-light-secondary p-2 text-uppercase px-3"><i class='bx bxs-circle me-1'></i>Saisie non achevée</div>
