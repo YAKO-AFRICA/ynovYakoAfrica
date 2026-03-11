@@ -89,7 +89,13 @@
                 <p class="text-center"><small class="text-danger"><i>Les champs obligatoires sont marqués par (<strong>*</strong>) </i></small></p>
                 <div class="row">
                     <div class="col-12 d-flex justify-content-end gap-3">
-                        <button class="btn btn-primary next-step-btn" type="button">Suivant <i
+                        <button class="btn btn-primary p-2 {{ $action != 'next' ? 'd-none' : '' }}" type="button" data-bs-toggle="modal"
+                            data-bs-target="#otpModal" id="btn-signature1">
+                            Signer
+                        </button>
+                        {{-- <button class="btn btn-primary next-step-btn" id="next-stepPrest-btn" type="button">Suivant <i
+                            class='bx bx-right-arrow-alt fs-4 ms-2'></i></button> --}}
+                        <button class="btn btn-primary next-step-btn {{ $action != 'next' ? '' : 'd-none' }}" id="next-stepPrest-btn" type="button">Suivant <i
                             class='bx bx-right-arrow-alt fs-4 ms-2'></i></button>
                     </div>
                 </div>

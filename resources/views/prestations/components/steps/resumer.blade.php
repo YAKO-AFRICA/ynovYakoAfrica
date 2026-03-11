@@ -74,9 +74,16 @@
             </div>
 
             <div class="row">
-                <div class="col-12 d-flex justify-content-end gap-3">
-                    {{-- <button class="btn btn-primary px-4" id="prev-btnPrest1" type="button" onclick="stepper1.previous()"><i class='bx bx-left-arrow-alt me-2 fs-4'></i>étape prédédente</button> --}}
-                    <button type="submit" class="btn btn-primary"
+                <div class="col-6 d-flex justify-content-start gap-3">
+                    <button class="btn btn-primary px-4" id="prev-btnPre" type="button" onclick="stepper1.previous()"><i class='bx bx-left-arrow-alt me-2 fs-4'></i> retour</button>
+                    
+                </div>
+                <div class="col-6 d-flex justify-content-end gap-3">
+                    <button class="btn btn-primary p-2" type="button" data-bs-toggle="modal"
+                        data-bs-target="#otpModal" id="btn-signature">
+                        Signer
+                    </button>
+                    <button type="submit" class="btn btn-primary d-none"
                         id="submit-btnPrest">Soumettre</button>
                 </div>
             </div>
@@ -84,35 +91,3 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const stepElement = document.getElementById("test-l-3");
-        
-        // Initialisation du modal Bootstrap
-        const qrModal = new bootstrap.Modal(document.getElementById('qrCodeModal'), {
-            keyboard: false,
-            backdrop: 'static'
-        });
-
-        
-        if (stepElement) {
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(mutation => {
-                    if (mutation.attributeName === 'class' && 
-                        stepElement.classList.contains('active')) {
-                        console.log("Element actif détecté - ouverture du modal");
-                        qrModal.show();
-                    }
-                });
-            });
-    
-            
-            observer.observe(stepElement, { 
-                attributes: true 
-            });
-        }
-
-    });
-
-
-</script>

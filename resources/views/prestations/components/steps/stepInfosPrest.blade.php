@@ -47,12 +47,24 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
-                                        <label for="montant" class="form-label">Quel est le montant que vous
+                                        <label for="montant" class="form-label">
+                                        @if($action == 'next')
+                                            Montant  
+                                            @else
+                                            Quel est le montant que vous souhaitez
+                                            demander ? 
+                                            @endif
+                                        <span class="star">*</span></label>
+                                        <input type="text" class="form-control" min="0" name="montantSouhaite"
+                                            id="montantSouhaite" value="{{ $prestation->montantSouhaite ?? '' }}" placeholder="Saisir le montant souhaité" required
+                                            disabled>
+
+                                        {{-- <label for="montant" class="form-label">Quel est le montant que vous
                                             souhaitez
                                             demander ? <span class="star">*</span></label>
                                         <input type="text" class="form-control" min="0"
                                             name="montantSouhaite" id="montantSouhaite"
-                                            placeholder="Saisir le montant souhaité" required disabled>
+                                            placeholder="Saisir le montant souhaité" required disabled> --}}
                                         <small><i id="msgerror" class="text-danger"></i></small>
                                         <small><i id="msgesucces" class="text-success"></i></small>
                                     </div>
@@ -155,7 +167,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="row mb-3" id="IBANPaiement">
+                                <div class="row mb-3" id="IBANPaiement" hidden>
                                     <div class="col-12 px-0 py-3 text-center">
                                         <label for="IBAN" class="form-label">Quel est votre RIB sur lequel vous souhaitez
                                             recevoir le paiement <span class="star">*</span></label>
@@ -201,12 +213,12 @@
                                         </div>
                                         <input type="hidden" class="form-control" name="IBAN" id="IBAN">
                                             
-                                        <input type="hidden" name="TelOtp" value="" id="TelOtp">
                                     </div>
+                                        
                                     <small class="text-center"><span class="form-label star"><i>Veuillez saisir le RIB de votre compte
                                                 courant </i></span></small>
                                 </div>
-                                
+                                <input type="hidden" name="TelOtp" value="" id="TelOtp">
                                 <div class="row g-3 mb-3" id="TelephonePaiement">
                                     <div class="col-12 col-lg-6">
                                         
@@ -291,8 +303,8 @@
                                     </div>
                                     <div class="col-6 d-flex justify-content-end gap-3">
 
-                                        {{-- vers confirmation otp --}}
-                                        <button class="btn btn-primary next-btn" type="button" id="next-stepper3"
+                                        {{-- vers l'etape 3 --}}
+                                        <button class="btn btn-primary next-bt next-stepper3" type="button" id="next-stepper3"
                                             data-next="etapePrest5">
                                             Suivant <i class='bx bx-right-arrow-alt fs-4'></i>
                                         </button>

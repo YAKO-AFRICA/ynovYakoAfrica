@@ -201,7 +201,9 @@
 </head>
 <body >
 
-    
+    @php
+        \Carbon\Carbon::setLocale('fr');
+    @endphp
     <main class="main">   
         <section class="main-section" style="position: relative; height: 100%; width: 100%; overflow: hidden;">
            
@@ -546,8 +548,8 @@
                         </div>
                     </div>
                     @php
-                        $user = Auth::user()->idmembre;
-                        $membre = App\Models\Membre::where('idmembre', $user)->with('zone')->first();
+                        $user = Auth::user()->idmembre ?? null;
+                        $membre = $user ? App\Models\Membre::where('idmembre', $user)->with('zone')->first() : null;
                         $Signature = $prestation->docPrestation->where('idPrestation', $prestation->id)->where('type', 'Signature')->first();
                     @endphp
                     <div class="Signature">
@@ -562,7 +564,7 @@
                                 padding: 5px;
                                 font-size: 14px;
                                 border-radius: 3px;
-                                background-color: #ffffff;" id="nom" name="nom" value="{{ Auth::user()->membre->typ_membre !== 3 ? $membre->zone->libellezone : $prestation->lieuresidence ?? '.' }}" />
+                                background-color: #ffffff;" id="nom" name="nom" value="{{Auth::check() && Auth::user()->membre ? (Auth::user()->membre->typ_membre !== 3 ? $membre->zone->libellezone : $prestation->lieuresidence ?? '.') : $prestation->lieuresidence ?? '.' }}" />
                         </div>
                         <div class="form-group">
                             <label for="prenom">Le &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</label>&nbsp;
@@ -574,7 +576,7 @@
                                 padding: 5px;
                                 font-size: 14px;
                                 border-radius: 3px;
-                                background-color: #ffffff;" name="" value="{{ $prestation->created_at->format('d/m/Y') ?? '.' }}" /> <br> <br>
+                                background-color: #ffffff;" name="" value="{{ \Carbon\Carbon::parse($prestation->created_at)->translatedFormat('d F Y') }}" /> <br> <br>
                             
                         </div>
                     </div>
@@ -598,7 +600,7 @@
                             font-size: 14px;
                             border-radius: 3px;
                             background-color: #ffffff;"
-                        value="{{ (optional($prestation->membre)->typ_membre !== 3) ? (optional($prestation->membre)->nom ?? '.') . ' ' . (optional($prestation->membre)->prenom ?? '') : 'Demande en ligne' }}" />
+                        value="{{ (optional($prestation->membre)->typ_membre !== 3) ? (optional($prestation->membre)->nom ?? '') . 'Demande en ligne' . (optional($prestation->membre)->prenom ?? '') : 'Demande en ligne' }}" />
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 
                     <label for="prenom" style="margin-right: 2px;">Code Manager&nbsp;</label>
@@ -611,7 +613,7 @@
                             font-size: 14px;
                             border-radius: 3px;
                             background-color: #ffffff;"
-                        value="{{ (optional($prestation->membre)->typ_membre !== 3) ? (optional($prestation->membre)->codeagent ?? '.') : 'DL999' }}" />
+                        value="{{ (optional($prestation->membre)->typ_membre !== 3) ? (optional($prestation->membre)->codeagent ?? 'DL999') : 'DL999' }}" />
                 </div>
                 <p for="prenom" style="margin-right: 2px;"><strong>Pièce jointes</strong></p>
                 

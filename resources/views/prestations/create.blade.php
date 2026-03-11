@@ -78,6 +78,7 @@
                             $operationType = $token['operation_type'];
                         @endphp
                         @include('prestations.components.steps.stepInfosPrest')
+                        <input type="hidden" name="actionOperation" id="actionOperation" value="{{ $action ?? '' }}">
 
                         @include('prestations.components.steps.resumer')
                     </form>
@@ -86,6 +87,10 @@
             </div>
         </div>
     </div>
+
+    @include('prestations.components.modals.detailContratModal')
+    @include('productions.create.steps.signModal')
+    @include('prestations.components.modals.otpModal')
     <!--end stepper one-->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -154,6 +159,37 @@
             });
         });
     </script>
+
+    <script>
+        // Activer la géolocalisation de l'utilisateur uniquement si le site est sécurisé (HTTPS)
+        if (location.protocol === 'https:') {
+            map.locate({
+                setView: true,
+                maxZoom: 16
+            });
+
+            function onLocationFound(e) {
+                var radius = e.accuracy / 2;
+
+                L.marker(e.latlng).addTo(map)
+                // .bindPopup("Vous êtes ici").openPopup();
+                // .bindPopup("Vous êtes ici, à " + radius + " mètres près.").openPopup();
+
+                L.circle(e.latlng, radius).addTo(map);
+            }
+
+            map.on('locationfound', onLocationFound);
+
+            function onLocationError(e) {
+                alert(e.message);
+            }
+
+            map.on('locationerror', onLocationError);
+        } else {
+            console.log("Géolocalisation désactivée en raison d'une origine non sécurisée (HTTP).");
+        }
+    </script>
+
     <script>
         
         document.addEventListener('DOMContentLoaded', function() {
@@ -175,6 +211,10 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             const formulaire = document.querySelector('#PrestationForm');
+            const changePhoneButton = document.getElementById('changePhoneButton');
+            const changePhoneButtonForMobileMoney = document.getElementById('changePhoneButtonForMobileMoney');
+            
+            
             // alert(formulaire);
 
             if (!formulaire) {
@@ -206,12 +246,16 @@
                     const cel = formulaire.querySelector('[name="cel"]')?.value || '';
                     const email = formulaire.querySelector('[name="email"]')?.value || '';
                     const lieuResidence = formulaire.querySelector('[name="lieuresidence"]')?.value || '';
-
+                    {{-- const phoneInput = document.getElementById('phoneInput'); --}}
                     // Mise à jour du résumé
                     document.getElementById('TelOtp').value = cel;
                     document.getElementById('Prestation').textContent = typePrestation;
                     document.getElementById('Contrat').textContent = idContrat;
                     document.getElementById('montant').textContent = montantSouhaite + ' FCFA';
+
+                    phoneInput.value = cel;
+
+                    changePhoneButtonForMobileMoney.classList.add('d-none');
 
                     const moyenPaiementText = moyenPaiement === 'Virement_Bancaire' ? 'Virement Bancaire' :
                         'Mobile Money';
@@ -222,18 +266,26 @@
                     const ibanPaiementSection = document.getElementById('IBANPaiement');
 
                     if (ibanPaiementSection.classList.contains('d-none') && moyenPaiement === 'Mobile_Money') {
+                        changePhoneButton.classList.add('d-none');
+                        changePhoneButtonForMobileMoney.classList.remove('d-none');
                         const operateurText = operateur === 'Orange_money' ? 'Orange Money' :
                             operateur === 'MTN_money' ? 'MTN Money' :
                             operateur === 'Moov_money' ? 'Moov Money' : '';
                         document.getElementById('Opera').textContent = operateurText;
                         document.getElementById('TelPmt').textContent = telPaiement;
                         document.getElementById('NIBAN').textContent = '';
+                        phoneInput.value = telPaiement;
+                        phoneInput.readOnly = true;
                     } else if (telPaiementSection.classList.contains('d-none') && moyenPaiement ===
                         'Virement_Bancaire') {
+                        changePhoneButton.classList.remove('d-none');
+                        changePhoneButtonForMobileMoney.classList.add('d-none');
                         document.getElementById('NIBAN').textContent = iban;
                         document.getElementById('Opera').textContent = '';
                         document.getElementById('TelPmt').textContent = '';
-
+                        // Mise à jour du champ du Numéro de téléphone pour la confirmation via OTP du numéro de paiement
+                        phoneInput.value = cel;
+                        {{-- phoneInput.readOnly = true; --}}
 
                     }
 
@@ -311,24 +363,401 @@
             });
         });
     </script>
+
     <script>
         let TotalEncaissement = @json($TotalEncaissement);
-        // alert(TotalEncaissement);
     </script>
 
+    
     <script>
         const SIGN_API = "{{ config('services.sign_api') }}";
+        const OTP_API = "{{ config('services.otp_api') }}";
     </script>
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sendOTPForm = document.getElementById('sendOTPForm');
+        const OTPSendID = document.getElementById('OTPSendID');
+        const OTPVerifyID = document.getElementById('OTPVerifyID');
+        const verifyOTPForm = document.getElementById('verifyOTPForm');
+        const sendOTPButton = document.getElementById('sendOTPButton');
+        
 
-@include('prestations.components.modals.detailContratModal')
-@include('productions.create.steps.signModal')
+        const otpInputs = document.querySelectorAll('.otp-input');
+
+        // Envoi de l’OTP
+        sendOTPButton.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const indicatif = document.getElementById('countryPrefix').value;
+            const telephone = document.getElementById('phoneInput').value;
+            const operation_type = document.getElementById('operation_type').value;
+            const csrfToken = document.querySelector('input[name="_token"]').value;
+
+            fetch(`${OTP_API}api/send-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({
+                        telIndicatif: indicatif,
+                        telephone: telephone,
+                        operation_type: operation_type
+                    })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status == 200) {
+                    // Masquer sendOTPForm, afficher verifyOTPForm
+                    OTPSendID.classList.add('d-none');
+                    OTPVerifyID.classList.remove('d-none');
+
+                    // Stocker les valeurs pour la vérification
+                    document.getElementById('hiddenTelephone').value = telephone;
+                    document.getElementById('hiddenIndicatif').value = indicatif;
+
+                    // Afficher un message
+                    const lastTwo = telephone.slice(-4);
+                    const firstTwo = telephone.slice(0, 2);
+                    //utilise sweetalert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Un code de confirmation a été envoyé par SMS au numéro +' +
+                            indicatif + firstTwo + '**' + lastTwo,
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        position: 'center',
+                        timerProgressBar: true,
+                        timer: 5000
+                    });
+                    //alert('Un code de confirmation a été envoyé par SMS au numéro +' + indicatif + firstTwo + '**' + lastTwo);
+
+                    startOtpTimer();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: data.message || 'Erreur lors de l’envoi de l’OTP.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        position: 'center',
+                        timerProgressBar: true,
+                        timer: 5000
+                    });
+                    //alert(data.message || 'Erreur lors de l’envoi de l’OTP.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur réseau ou serveur.',
+                    showConfirmButton: true,
+                    confirmButtonText: 'OK',
+                    position: 'center',
+                    timerProgressBar: true,
+                    timer: 5000
+                });
+                //alert('Erreur réseau ou serveur.');
+            });
+        });
+
+
+        // Autofocus entre les champs OTP
+        otpInputs.forEach((input, index) => {
+            input.addEventListener("input", function() {
+                if (this.value.length === this.maxLength) {
+                    if (index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                } else if (this.value.length === 0 && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+
+            input.addEventListener("keydown", function(e) {
+                if (e.key === "Backspace" && input.value === "" && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+        });
+
+        const verifyOtpButton = document.getElementById('verifyOtpButton');
+        const changePhoneButton = document.getElementById('changePhoneButton');
+        const changePhoneButtonForMobileMoney = document.getElementById('changePhoneButtonForMobileMoney');
+        const otpContainer = document.getElementById('OTP');
+        const btnSignature = document.getElementById('btn-signature');
+        const btnSignature1 = document.getElementById('btn-signature1');
+        const btnSubmit = document.getElementById('submit-btnPrest');
+        const nextStepPrestBtn = document.getElementById('next-stepPrest-btn');
+        const resendOtpButton = document.querySelector(".resend-otp-btn");
+        const otpTimer = document.createElement("div"); // Timer pour afficher le compte à rebours
+        // initialisation pour le hide modal bootstrap
+        const qrCodeModal = new bootstrap.Modal(document.getElementById('qrCodeModal'));
+        const myModal = new bootstrap.Modal(document.getElementById('otpModal'));
+        verifyOtpButton.addEventListener('click', function() {
+            const telephone = document.getElementById('hiddenTelephone').value;
+            const indicatif = document.getElementById('hiddenIndicatif').value;
+            const operation_type = document.getElementById('operation_type').value;
+            const phoneNumber = indicatif + telephone;
+            const csrfToken = document.querySelector('input[name="_token"]').value;
+            let latitude = '';
+            let longitude = '';
+
+            let otp = '';
+            otpInputs.forEach(input => {
+                otp += input.value;
+            });
+
+            if (otp.length !== 6) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Veuillez saisir les 6 chiffres du code.',
+                    showConfirmButton: true,
+                    confirmButtonText: 'OK',
+                    position: 'center',
+                    timerProgressBar: true,
+                    timer: 5000
+                });
+                otpInputs.forEach(input => {
+                    input.classList.remove("is-valid");
+                    input.classList.add("is-invalid");
+                });
+                return;
+            }
+            // Récupération de la position GPS
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        latitude = position.coords.latitude;
+                        longitude = position.coords.longitude;
+
+                        
+                        
+                    },
+                    (error) => {
+                        alert('La géolocalisation est requise pour continuer. Veuillez autoriser l\'accès.');
+                        console.error('Erreur de géolocalisation:', error);
+                    }
+                );
+            } else {
+                alert('Votre navigateur ne supporte pas la géolocalisation.');
+            }
+
+            fetch(`${OTP_API}api/verify-otp`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    telIndicatif: indicatif,
+                    telephone: telephone,
+                    otp: otp,
+                    latitude: latitude,
+                    longitude: longitude
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status == 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Votre numéro de téléphone a été vérifié avec succès.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        position: 'center',
+                        timerProgressBar: true,
+                        timer: 5000
+                    });
+                    otpInputs.forEach(input => {
+                        input.classList.remove("is-invalid");
+                        input.classList.add("is-valid");
+                    });
+
+                    // Masquer btnSignature, afficher btnSubmit et ouvrir la modale qrCodeModal avec un delay de 5 secondes
+                    setTimeout(() => {
+                        //btnSignature.classList.add('d-none');
+                        //btnSubmit.classList.remove('d-none');
+                        myModal.hide();
+                        qrCodeModal.show()
+                    }, 5000);
+
+                    ;
+                } else if (data.status == 400) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Le code de confirmation saisi est incorrect.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        position: 'center',
+                        timerProgressBar: true,
+                        timer: 5000
+                    });
+                    otpInputs.forEach(input => {
+                        input.classList.remove("is-valid");
+                        input.classList.add("is-invalid");
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Le code de confirmation a expiré.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        position: 'center',
+                        timerProgressBar: true,
+                        timer: 5000
+                    });
+                    otpInputs.forEach(input => {
+                        input.classList.remove("is-valid");
+                        input.classList.add("is-invalid");
+                    });
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Une erreur s’est produite lors de la vérification.',
+                    showConfirmButton: true,
+                    confirmButtonText: 'OK',
+                    position: 'center',
+                    timerProgressBar: true,
+                    timer: 5000
+                });
+            });
+        });
+
+        // Fonction pour démarrer le compte à rebours pour l'expiration de l'OTP
+        let otpExpirationTime = 3 * 60; // 3 minutes en secondes
+        let otpInterval;
+
+        function startOtpTimer() {
+            otpTimer.classList.add("otp-expi-timer");
+            otpContainer.appendChild(otpTimer); // Ajouter le timer à l'interface
+            updateOtpTimer();
+
+            otpInterval = setInterval(() => {
+                otpExpirationTime--;
+                updateOtpTimer();
+
+                if (otpExpirationTime <= 0) {
+                    clearInterval(otpInterval);
+                    otpTimer.textContent = "Le code de confirmation a expiré.";
+                    resendOtpButton.classList.remove("d-none"); // Afficher le lien pour renvoyer l'OTP
+                    changePhoneButton.disabled = false; // Afficher le lien pour renvoyer l'OTP
+                    changePhoneButtonForMobileMoney.disabled = false; // Afficher le lien pour renvoyer l'OTP
+                }
+            }, 1000); // Met à jour chaque seconde
+        }
+
+        function updateOtpTimer() {
+            const minutes = Math.floor(otpExpirationTime / 60);
+            const seconds = otpExpirationTime % 60;
+            otpTimer.textContent = `Temps restant: ${minutes}:${
+            seconds < 10 ? "0" : ""
+            }${seconds}`;
+        }
+
+        // Fonction pour renvoyer l'OTP
+        resendOtpButton.addEventListener("click", async function() {
+            otpExpirationTime = 3 * 60; // Réinitialiser le temps d'expiration
+            clearInterval(otpInterval); // Arrêter l'ancien intervalle
+            resendOtpButton.classList.add("d-none"); // Cacher le lien pendant l'envoi de l'OTP
+            const telephone = document.getElementById('hiddenTelephone').value;
+            const indicatif = document.getElementById('hiddenIndicatif').value;
+            const phoneNumber = indicatif + telephone;
+            const csrfToken = document.querySelector('input[name="_token"]').value;
+
+
+            try {
+
+                const response = await fetch(`${OTP_API}api/send-otp`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": csrfToken,
+                    },
+                    body: JSON.stringify({
+                        {{-- telephone: phoneNumber, --}}
+                        telIndicatif: indicatif,
+                        telephone: telephone,
+                        operation_type: operation_type
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (data.status === 200) {
+                    // Afficher un message
+                    const lastTwo = telephone.slice(-4);
+                    const firstTwo = telephone.slice(0, 2);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Le code de confirmation a été réenvoyé par SMS au numéro +' +
+                            indicatif +
+                            firstTwo + '**' + lastTwo,
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        position: 'center',
+                        timerProgressBar: true,
+                        timer: 5000
+                    });
+                    startOtpTimer();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Une erreur s’est produite lors de l’envoi de l’OTP.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        position: 'center',
+                        timerProgressBar: true,
+                        timer: 5000
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Une erreur s’est produite lors de l’envoi de l’OTP.',
+                    showConfirmButton: true,
+                    confirmButtonText: 'OK',
+                    position: 'center',
+                    timerProgressBar: true,
+                    timer: 5000
+                });
+            }
+        });
+
+        changePhoneButton.addEventListener('click', function() {
+            // Masquer OTPVerifyID, afficher OTPSendID
+            OTPSendID.classList.remove('d-none');
+            OTPVerifyID.classList.add('d-none');
+        })
+        changePhoneButtonForMobileMoney.addEventListener('click', function() {
+            // Masquer le modal otp et afficher le collapse
+            myModal.hide();
+            const collapseTwo = document.querySelector("#collapseTwo");
+            const bsCollapse = new bootstrap.Collapse(collapseTwo, {
+                toggle: true
+            });
+        })
+    });
+</script>
+
 
 <script>
     let pollingInterval;
 
     const qrCodeModal = document.getElementById('qrCodeModal');
+    const btnSignature = document.getElementById('btn-signature');
+    const btnSignature1 = document.getElementById('btn-signature1');
+    const btnSubmit = document.getElementById('submit-btnPrest');
+    const nextStepPrestBtn = document.getElementById('next-stepPrest-btn');
 
     qrCodeModal.addEventListener('shown.bs.modal', function () {
         const keyUuid = "{{ $keyUuid }}"; // Variable Blade pour key_uuid
@@ -346,6 +775,12 @@
                         // Masquer la modale si la signature est terminée
                         const modal = bootstrap.Modal.getInstance(qrCodeModal);
                         modal.hide();
+                        
+                        // Afficher le bouton de signature
+                        btnSignature.classList.add('d-none');
+                        btnSignature1.classList.add('d-none');
+                        btnSubmit.classList.remove('d-none');
+                        nextStepPrestBtn.classList.remove('d-none');
 
                         swal.fire({
                             icon: 'success',
@@ -368,4 +803,38 @@
         }
     });
 </script>
+
+
+{{-- <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const stepElement = document.getElementById("test-l-3");
+        
+        // Initialisation du modal Bootstrap
+        const qrModal = new bootstrap.Modal(document.getElementById('qrCodeModal'), {
+            keyboard: false,
+            backdrop: 'static'
+        });
+
+        
+        if (stepElement) {
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(mutation => {
+                    if (mutation.attributeName === 'class' && 
+                        stepElement.classList.contains('active')) {
+                        console.log("Element actif détecté - ouverture du modal");
+                        qrModal.show();
+                    }
+                });
+            });
+    
+            
+            observer.observe(stepElement, { 
+                attributes: true 
+            });
+        }
+
+    });
+
+
+</script> --}}
 @endsection

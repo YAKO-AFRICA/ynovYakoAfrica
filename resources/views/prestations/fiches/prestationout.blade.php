@@ -491,8 +491,8 @@
                         </div>
                     </div>
                     @php
-                        $user = $prestation->saisiepar;
-                        $membre = App\Models\Membre::where('idmembre', $user)->with('zone')->first();
+                        $user = Auth::user()->idmembre ?? null;
+                        $membre = $user ? App\Models\Membre::where('idmembre', $user)->with('zone')->first() : null;
                     @endphp
                     <div class="Signature">
                         <h6>Signature du déclarant</h6><small><p style="font-size: 0.57em; margin-top: -98px; margin-left:130px">Contrôle éffectué par OTP du {{ ($prestation->moyenPaiement !== 'Virement_Bancaire') ? $prestation->otp->created_at->format('d/m/Y à H:i:s') : $prestation->created_at->format('d/m/Y à H:i:s') ?? '.' }}</p></small>
@@ -506,7 +506,7 @@
                                 padding: 5px;
                                 font-size: 14px;
                                 border-radius: 3px;
-                                background-color: #ffffff;" id="nom" name="nom" value="{{ $prestation->membre->typ_membre !== 3 ? $membre->zone->libellezone : $prestation->lieuresidence ?? '.' }}" />
+                                background-color: #ffffff;" id="nom" name="nom" value="{{ Auth::check() && Auth::user()->membre ? (Auth::user()->membre->typ_membre !== 3 ? $membre->zone->libellezone : $prestation->lieuresidence ?? '.') : $prestation->lieuresidence ?? '.' }}" />
                         </div>
                         <div class="form-group">
                             <label for="prenom">Le &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</label>&nbsp;
@@ -573,7 +573,7 @@
                             font-size: 14px;
                             border-radius: 3px;
                             background-color: #ffffff;"
-                        value="." />
+                        value="{{ \Carbon\Carbon::parse($prestation->rdv->daterdveff)->translatedFormat('d F Y') ?? '.' }}" />
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 
                     <label for="prenom" style="margin-right: 2px;">Code RDV &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
@@ -586,7 +586,7 @@
                             font-size: 14px;
                             border-radius: 3px;
                             background-color: #ffffff;"
-                        value="." />
+                        value="{{ $prestation->rdv->idrdv ?? '.' }}" />
                 </div>
                 <div class="form-group" style="margin-top: 10px">
                     <label for="" style="margin-right: 2px;">Montants <br> des primes</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

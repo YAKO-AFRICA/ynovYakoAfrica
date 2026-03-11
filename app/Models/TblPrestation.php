@@ -77,4 +77,9 @@ class TblPrestation extends Model
     {
         return $this->hasMany(TblMotifrejetbyprestat::class, 'codeprestation', 'code');
     }
+
+    public function rdv()
+    {
+        return $this->hasOne(Tblrdv::class, 'idCourrier', 'id');
+    }
 }
