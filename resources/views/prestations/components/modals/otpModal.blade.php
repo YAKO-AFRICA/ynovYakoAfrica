@@ -48,7 +48,7 @@
                         <input type="hidden" name="telephone" id="hiddenTelephone">
                         <input type="hidden" name="telIndicatif" id="hiddenIndicatif">
     
-                        <div class="row g-3 mb-3 text-center" id="OTP">
+                        <div class="row g-3 mb-3 text-center" id="OTPContainer">
                             <span class="form-label">Un code de confirmation a été envoyé par SMS, veuillez le
                                 rentrer ci-dessous</span>
                             <div class="col-12 d-flex justify-content-center align-items-center">
@@ -61,7 +61,7 @@
                                     <input type="text" class="otp-input" maxlength="1">
                                 </div>
                             </div>
-                            <div class="otp-expi-timer" id="otp-expi-timer">
+                            <div class="otp-expi-time" id="otp-expi-time">
                                 {{-- afficher le deconte ici  --}}
                             </div>
                             <a href="#" class="d-none resend-otp-btn">Renvoyer l'OTP</a>

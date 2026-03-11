@@ -486,7 +486,7 @@
         const verifyOtpButton = document.getElementById('verifyOtpButton');
         const changePhoneButton = document.getElementById('changePhoneButton');
         const changePhoneButtonForMobileMoney = document.getElementById('changePhoneButtonForMobileMoney');
-        const otpContainer = document.getElementById('OTP');
+        const otpContainer = document.getElementById('OTPContainer');
         const btnSignature = document.getElementById('btn-signature');
         const btnSignature1 = document.getElementById('btn-signature1');
         const btnSubmit = document.getElementById('submit-btnPrest');
