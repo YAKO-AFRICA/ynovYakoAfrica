@@ -288,7 +288,7 @@
 </div>
 
 <!-- Input file caché pour la galerie -->
-<input type="file" id="hiddenGalleryInput" accept="image/*, " style="display: none;">
+<input type="file" id="hiddenGalleryInput" accept="image/*, .pdf" style="display: none;">
 
 <!-- Styles pour le délimiteur universel -->
 <style>
@@ -1474,7 +1474,7 @@
         const scaleY = video.videoHeight / videoRect.height;
         
         // Calculer la zone de recadrage avec une marge pour s'assurer que tout le document est capturé
-        const marginPercent = 0.012; // 1.2% de marge
+        const marginPercent = 0.03; // 2% de marge
         const frameWidth = frameRect.width * (1 + marginPercent * 2);
         const frameHeight = frameRect.height * (1 + marginPercent * 2);
         const frameLeft = frameRect.left - (frameRect.width * marginPercent);
@@ -1693,7 +1693,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /*padding: 20px;*/
+            padding: 20px;
             background: #111;
         }
         
