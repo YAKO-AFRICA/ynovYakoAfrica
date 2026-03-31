@@ -149,11 +149,56 @@ class ValidationController extends Controller
         try {
                 $contrat = Contrat::find($id);
 
-                if (!$contrat->duree || !$contrat->periodicite) {
+                $champsManquants = [];
+
+                if (!$contrat->duree) {
+                    $champsManquants[] = 'durée';
+                }
+                if (!$contrat->periodicite) {
+                    $champsManquants[] = 'périodicité';
+                }
+                if (!$contrat->prime) {
+                    $champsManquants[] = 'prime';
+                }
+                if (!$contrat->numerocompte) {
+                    $champsManquants[] = 'numéro de compte';
+                }
+                if (!$contrat->codebanque) {
+                    $champsManquants[] = 'code banque';
+                }
+                if (!$contrat->codeguichet) {
+                    $champsManquants[] = 'code guichet';
+                }
+                if (!$contrat->rib) {
+                    $champsManquants[] = 'RIB';
+                }
+
+                if (!empty($champsManquants)) {
                     return response()->json([
                         'type' => 'error',
                         'urlback' => 'back',
-                        'message' => "Impossible de valider cette proposition ! Le contrat doit avoir une 'durée' et une 'périodicité'.",
+                        'message' => "Impossible de valider cette proposition ! Champs manquants : " . implode(', ', $champsManquants),
+                        'code' => 422,
+                    ]);
+                }
+
+                $nbBenef = count($contrat->beneficiaires);
+                $nbAssure = count($contrat->assures);
+
+                if ($nbBenef == 0) {
+                    return response()->json([
+                        'type' => 'error',
+                        'urlback' => 'back',
+                        'message' => "Impossible aucun beneficiaire trouver pour ce contrat !",
+                        'code' => 422,
+                    ]);
+                }
+
+                if ($nbAssure == 0) {
+                    return response()->json([
+                        'type' => 'error',
+                        'urlback' => 'back',
+                        'message' => "Impossible aucun assure trouver pour ce contrat !",
                         'code' => 422,
                     ]);
                 }
@@ -252,7 +297,7 @@ class ValidationController extends Controller
                 'rejeterpar' => Auth::id()
             ]);
 
-            // Notifier seulement les utilisateurs concernés (ex: admins)
+            // Notifier seulement les utilisateurs concernés
             $details_log = [
                 'url' => '/production/show/' . $id,
                 'user' => \auth()->user()->membre->nom . ' ' . \auth()->user()->membre->prenom,
@@ -291,9 +336,6 @@ class ValidationController extends Controller
      */
     public function edit(string $id)
     {
-
-        
-
         // $contrat = Contrat::where('id', $id)->first();
 
         // dd($contrat);
@@ -309,6 +351,60 @@ class ValidationController extends Controller
         return view('productions.validations.edit', compact('contrat', 'product', 'villes', 'secteurActivites', 'professions','productGarantie','societes','agences'));
 
     }
+
+
+    // public function register(Request $request)
+    // {
+    //     $saving = TblCreationCompte::create([
+    //         'nom' => $request->nom,
+    //         'prenom' => $request->prenom,
+    //         'email' => $request->email,
+    //         'cel' => $request->cel,
+    //         'login' => $request->login,
+    //         'password' => $request->password,
+    //         'estClient' => 0,
+    //         'estnotifie' => 0,
+    //         'estnotifieLe' => null,
+    //         'idCustomer' => null,
+    //     ]);
+
+    //     $savingMembre = Membre::create([
+    //         'login' => $customer->login,
+    //         'pass' => $customer->password,
+    //         'nom' => $customer->nom,
+    //         'prenom' => $customer->prenom,
+    //         'email' => $customer->email,
+    //         'cel' => $customer->cel,
+    //         'typ_membre' => 3,
+    //         'activer' => 1,
+    //         'estajour' => 1,
+    //         'memberok' => 1,
+    //         'datenaissance' => $request->datenaissance,
+    //     ]);
+    //     MembreContrat::create([
+    //         'codemembre' => $savingMembre->idmembre,
+    //         'idcontrat' => $idcontrat,
+    //     ]);
+    //     $password = Hash::make($customer->password);
+    //     $savingCustomer = TblCustomer::create([
+    //         'login' => $customer->login,
+    //         'password' => $password,
+    //         'activer' => 1,
+    //         'estajour' => 0,
+    //         'memberok' => 1,
+    //         'idmembre' => $savingMembre->idmembre,
+    //         'isFirstLog' => 0,
+    //     ]);
+
+    //     if ($savingCustomer) {
+    //         // mettre à jour TblCreationCompte
+    //         TblCreationCompte::where('id', $customer->id)->update([
+    //             'idCustomer' => $savingCustomer->id,
+    //             'password' => $password,
+    //             'estClient' => 1,
+    //         ]);
+    //     }
+    // }
 
    
 

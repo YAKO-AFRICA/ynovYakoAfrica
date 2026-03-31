@@ -134,7 +134,7 @@ class SettingsController extends Controller
                 'codereseau' => $request->codereseau,
                 'codeproduit' => $request->codeproduit,
                 'codeproduitformule' => $request->codeproduitformule,
-                'libelleproduit' => $libelle->MonLibelle,
+                'libelleproduit' => $request->libelleformule,
                 'estactif' => "1",
             ])->save();
 
@@ -292,7 +292,7 @@ class SettingsController extends Controller
     {
         try {
 
-        $codeBanque = $request->input('codeBanque');
+            $codeBanque = $request->input('codeBanque');
 
             $query = TblBanqueAgence::OrderBy('sigle', 'ASC');
 

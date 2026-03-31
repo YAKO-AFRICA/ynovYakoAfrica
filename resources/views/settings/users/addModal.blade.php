@@ -87,7 +87,7 @@
                                        
                                         <option value="" disabled selected>-- Choisir une équipe --</option>
                                         @foreach ($equipes as $equipe)
-                                            <option class="form-control" value="{{ $equipe->codeequipe }}">
+                                            <option class="form-control" value="{{ $equipe->id }}">
                                                 {{ $equipe->libelleequipe ?? ''}}
                                             </option>
                                         @endforeach

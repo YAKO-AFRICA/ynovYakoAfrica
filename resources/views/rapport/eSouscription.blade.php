@@ -199,6 +199,7 @@
                     @forelse ($contrats as $item)
                     <tr class="">
                         <td>{{ $item->id }}</td>
+                        <td>{{ $item->numBullettin ?? "" }}</td>
                         <td>{{ $item->libelleproduit ?? "" }}</td>
                         <td>{{ $item->dateeffet ?? "" }}</td>
                         <td>{{ $item->prime ?? "" }}</td>

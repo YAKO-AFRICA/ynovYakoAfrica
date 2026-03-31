@@ -114,8 +114,8 @@ class Contrat extends Model
     }
     public function assures()
     {
-        return $this->hasMany(Assurer::class, 'codecontrat', 'id');
-                    // ->where('cleintegration', $this->cleintegration);
+        return $this->hasMany(Assurer::class, 'codecontrat', 'id')
+                    ->where('cleintegration', $this->cleintegration);
     }
     public function santes()
     {
@@ -123,8 +123,7 @@ class Contrat extends Model
     }
     public function beneficiaires()
     {
-        return $this->hasMany(Beneficiaire::class, 'codecontrat', 'id');
-        // ->where('cleintegration', $this->cleintegration);
+        return $this->hasMany(Beneficiaire::class, 'codecontrat', 'id')->where('cleintegration', $this->cleintegration);
     }
 
     public function documents()

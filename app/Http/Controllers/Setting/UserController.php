@@ -124,52 +124,38 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $partenaire = $request->codePart == "092" ? "BNI" : $request->codePart;
+        $type = $request->codePart == "092" ? null : 2;
 
-
-        if ($request->codePart == "092") {
-            $partenaire = "BNI";
-            $type = null;
-        } else {
-            $partenaire = $request->codePart;
-            $type = 2;
-        }
-
-        $id = now()->format('YmdHis') . Str::random(2);
-
+        $id = Membre::max('idmembre') + 1;
         do {
-            $id = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-        } while (Membre::where('idmembre', $id)->exists() && User::where('idmembre', $id)->exists());
+            $id++;
+        } while (Membre::where('idmembre', $id)->exists());
 
-        Log::info($id);
+        Log::info($request->all());
 
-        switch ($request->profile_id) {
-            case 5:
-                $role = 'Conseiller';
-                break;
-            case 6:
-                $role = 'Manager';
-                break;
-            case 7:
-                $role = 'Responsable';
-                break;
-            case 8:
-                $role = 'Superviseur';
-                break;
-            case 9:
-                $role = 'Administrateur';
-                break;
-            default:
-                $role = 'Inconnu';
-                break;
+        $rolesMap = [
+            5 => 'Conseiller',
+            6 => 'Manager',
+            7 => 'Responsable',
+            8 => 'Superviseur',
+            9 => 'Administrateur',
+        ];
+
+        $role = $rolesMap[$request->profile_id] ?? 'Inconnu';
+
+        $agence = Equipe::where('id', $request->codeequipe)->first();
+
+        if (!$agence) {
+            return response()->json([
+                'type' => 'error',
+                'message' => "Agence introuvable",
+                'code' => 404
+            ]);
         }
-
-        Log::info($request->codeequipe);
-
-        $agence = Equipe::select('codeequipe','libelleequipe','id')->where('codeequipe', $request->codeequipe)->first();
-
-        log::info($agence);
 
         DB::beginTransaction();
+
         try {
             $membre = Membre::create([
                 'idmembre' => $id,
@@ -179,13 +165,13 @@ class UserController extends Controller
                 'codepartenaire' => $request->codePart,
                 'partenaire' => $partenaire,
                 'codezone' => $request->codezone,
-                'codeequipe' => $agence->id, // id agence // equipe
+                'codeequipe' => $agence->id,
                 'sexe' => $request->sexe,
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
                 'datenaissance' => $request->datenaissance,
                 'profession' => $request->profession,
-                'agence' => $request->codeequipe,  // equipe es une aagence // code
+                'agence' => $request->codeequipe,
                 'nomagence' => $agence->libelleequipe,
                 'branche' => $request->branche,
                 'login' => $request->login,
@@ -195,62 +181,45 @@ class UserController extends Controller
                 'email' => $request->email,
                 'cel' => $request->cel,
                 'tel' => $request->tel,
-                'created_at' => now(),
                 'created_by' => Auth::user()->membre->nom . ' ' . Auth::user()->membre->prenom,
-            ])->save();
+            ]);
 
-            if($membre){
-                $user = User::create([
-                    'idmembre' => $id,
-                    'email' => $request->email,
-                    'login' => $request->login,
-                    'id_role' => $request->role_id,
-                    'password' => bcrypt($request->pass),
-                    'codepartenaire' => $request->codePart,
-                    'branche' => $request->branche
-                ]);
+            $user = User::create([
+                'idmembre' => $id,
+                'email' => $request->email,
+                'login' => $request->login,
+                'id_role' => $request->role_id,
+                'password' => bcrypt($request->pass),
+                'codepartenaire' => $request->codePart,
+                'branche' => $request->branche
+            ]);
 
-                $role = Role::find($request->role_id);
-                $user->assignRole($role);
-                $user->syncRoles([$role->id]);
-
-                DB::commit();
-            }
-
-            $this->sendMail($request->email, $request->pass);
+            $roleModel = Role::find($request->role_id);
+            $user->assignRole($roleModel);
 
             DB::commit();
 
-            if($membre){
-                $dataResponse =[
-                    'type'=>'success',
-                    'urlback'=>"back",
-                    'message'=>"Enregistré avec succes!",
-                    'data'=>$membre,
-                    'code'=>200,
-                ];
-                DB::commit();
-            }else{
-                $dataResponse =[
-                    'type'=>'error',
-                    'urlback'=>'',
-                    'message'=>"Erreur d'enregistrement !",
-                    'code'=>500,
-                ];
-                DB::rollBack();
-            }
+            // 👉 envoyer mail après succès
+            $this->sendMail($request->email, $request->pass);
 
+            return response()->json([
+                'type' => 'success',
+                'message' => "Enregistré avec succès !",
+                'data' => $membre,
+                'code' => 200,
+            ]);
 
         } catch (\Throwable $th) {
+
             DB::rollBack();
-            $dataResponse =[
-                'type'=>'error',
-                'urlback'=>'',
-                'message'=>"Erreur systeme! ". $th->getMessage(),
-                'code'=>500,
-            ];
+
+            return response()->json([
+                'type' => 'error',
+                'message' => "Erreur système: " . $th->getMessage(),
+                Log::error("Erreur système: ", ['error' => $th]),
+                'code' => 500,
+            ]);
         }
-        return response()->json($dataResponse);
     }
 
     public function sendMail($email, $plainPassword)
@@ -397,9 +366,9 @@ class UserController extends Controller
         ];
         $roleName = $rolesMap[$request->profile_id] ?? 'Inconnu';
 
-        $agence = Equipe::where('id', $request->codeequipe)->first();
+        $agence = Equipe::where('codeequipe', $request->codeequipe)->first();
 
-        log::info("Agence trouvée: " . ($agence ? $agence->id : 'null'));
+        // log::info("Agence trouvée: " . ($agence ? $agence->id : 'null'));
 
         if (!$agence) {
             return response()->json(['type' => 'error', 'message' => "Agence introuvable", 'code' => 404]);
