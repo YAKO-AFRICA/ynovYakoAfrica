@@ -40,7 +40,7 @@ class PrestationController extends Controller
         // dd($contractDetails, $membreDetails);
         if (!session()->has('contractDetails')) {
             return redirect()->route('prestation.index');
-        }else{
+        } else {
             $contract = session('contractDetails', []);
             $contractDetails = $contract['details'][0] ?? [];
             $membreDetails   = $contract['membre'] ?? [];
@@ -92,6 +92,12 @@ class PrestationController extends Controller
         // dd($prestation);
         return view('prestations.fiches.infoPrestByQrcode', compact('prestation'));
     }
+
+    public function repriseDemande()
+    {
+        return view('prestations.repriseDemande');
+    }
+
     public function fetchContractDetails(Request $request)
     {
         $idcontrat = $request->input('idcontrat');
@@ -128,10 +134,198 @@ class PrestationController extends Controller
         }
     }
 
+    public function verifCodeDemande(Request $request)
+    {
+        try {
+            $code = $request->code;
+            session(['action' => 'next']);
+
+
+            // --- Vérification de la demande
+            $demande = Tblrdv::where('idrdv', $code)->first();
+            if (!$demande) {
+                return $this->jsonError("Aucune demande trouvée pour le code $code !");
+            }
+
+
+            // --- Vérification que le RDV est autorisé
+            if ($demande->estPermit != 1) {
+                return $this->jsonError("Aucune demande en attente trouvée pour ce code $code !");
+            }
+
+            // --- Récupération prestation
+            $prestation = TblPrestation::find($demande->idCourrier);
+            if (!$prestation) {
+                return $this->jsonError("La prestation associée à cette demande est introuvable.");
+            }
+
+            // === GESTION DES ÉTAPES ===
+            if ($prestation->etape == 0) {
+                return $this->jsonError(
+                    "La demande N°$code a déjà été enregistrée (Code : {$prestation->code}), "
+                        . "mais n’a pas encore été transmise. Veuillez la soumettre.",
+                    // route('customer.prestation.edit', $prestation->code)
+                );
+            }
+
+            if ($prestation->etape == 1) {
+                return $this->jsonError(
+                    "La demande N°$code a déjà été soumise pour traitement (Code : {$prestation->code}). Veuillez patienter !"
+                );
+            }
+
+            if ($prestation->etape != -1) {
+                return $this->jsonError(
+                    "La demande N°$code a déjà été traitée (Code : {$prestation->code})."
+                );
+            }
+
+            // --- Type prestation
+            $typePrestation = TblTypePrestation::where('libelle', $prestation->typeprestation)->first();
+            if (!$typePrestation) {
+                return $this->jsonError("Type de prestation non reconnu : {$prestation->typeprestation}");
+            }
+
+            session(['prestation' => $prestation]);
+            session(['PrestationRdv' => $prestation]);
+
+            // --- Vérifier si une même prestation est déjà soumise
+            $prestationExist = TblPrestation::where([
+                'idcontrat' => $prestation->idcontrat,
+                'typeprestation' => $typePrestation->libelle,
+                'etape' => 1
+            ])->first();
+
+            if ($prestationExist) {
+                return $this->jsonError(
+                    "La demande N°$code a déjà été soumise (Code : {$prestationExist->code}). Veuillez patienter !"
+                );
+            }
+
+            $response = Http::withOptions(['timeout' => 60])
+                ->post(config('services.api.encaissement_bis'), [
+                    'idContrat' => $prestation->idcontrat,
+                ]);
+
+            $contractMembre   = MembreContrat::where('idcontrat', $prestation->idcontrat)->with('membre')->first();
+
+            if ($response->successful()) {
+                $data = $response->json();
+                $data['membre'] = $contractMembre->membre ?? [];
+                if (!empty($data['details']) && !empty($data['enc']['confirmer'])) {
+                    // Stocker les informations dans la session pour l'utiliser après redirection
+                    session(['contractDetails' => $data]);
+                    session(['details' => $data['details'][0]]);
+                    session(['encConfirmer' => $data['enc']['confirmer']]);
+                    session(['NbrencConfirmer' => count($data['enc']['confirmer'])]);
+                    $NbrencConfirmer = session('NbrencConfirmer', 0);
+                    $prime = (float) $data['details'][0]['TotalPrime'];
+                    // $TotalEncaissement = 0
+                    $TotalEncaissement = array_sum(array_map(function ($item) {
+                        return isset($item['RegltMontant']) ? (float) $item['RegltMontant'] : 0;
+                    }, $data['enc']['confirmer']));
+
+                    // $TotalEncaissement = (float) $NbrencConfirmer * $prime;
+                    $DureeCotisationMois = ((float) $data['details'][0]['DureeCotisationAns'] * 12);
+
+
+                    switch ($data['details'][0]['periodicite']) {
+                        case "M":
+                            $Duree = $DureeCotisationMois;
+                            break;
+                        case "T":
+                            $Duree = $DureeCotisationMois / 3; // Trimestriel = tous les 3 mois
+                            break;
+                        case "S":
+                            $Duree = $DureeCotisationMois / 6; // Semestriel = tous les 6 mois
+                            break;
+                        case "A":
+                            $Duree = $DureeCotisationMois / 12; // Annuel = tous les 12 mois
+                            break;
+                        case "U":
+                            $Duree = $NbrencConfirmer; // Annuel = tous les 12 mois
+                            break;
+                        default:
+                            $Duree = 0; // Gérer les cas non définis
+                            break;
+                    }
+
+                    // calculer le cumul des Cotisation à Terme du contrat
+                    $cumulCotisationTerme = $Duree * $prime;
+                    // calculer 15% du cumul des Cotisation à Terme du contrat
+                    $contisationPourcentage = $cumulCotisationTerme * 0.15;
+                    session(['contisationPourcentage' => $contisationPourcentage]);
+                    session(['cumulCotisationTerme' => $cumulCotisationTerme]);
+                    session(['TotalEncaissement' => $TotalEncaissement]);
+
+                    // afficher le dernier encaissement
+                    $dernierEncaissement = end($data['enc']['confirmer']);
+                    session(['dernierEncaissement' => $dernierEncaissement]);
+                    session(['payeur' => $data['payeur']]);
+
+                    session([
+                        'contratActeur' => $data['allActeur'] ?? [],
+                        'contratActeurAssure' => collect($data['allActeur'])->where('CodeRole', 'ASS') ?? [],
+                        'contratActeurPayeur' => collect($data['allActeur'])->where('CodeRole', 'PAY') ?? [],
+                        'contratActeurBeneficiaire' => collect($data['allActeur'])->where('CodeRole', 'BEN') ?? [],
+                    ]);
+
+
+                    if ($data['details'][0]['OnStdbyOff'] == "3") {
+                        return response()->json([
+                            'type' => 'error',
+                            'urlback' => '', // URL du PDF
+                            'message' => 'Ce contrat est arreté ou en veille.',
+                            'code' => 400,
+                        ]);
+                    } else {
+                        return response()->json([
+                            'type' => 'success',
+                            'message' => "Demande de {$typePrestation->libelle}",
+                            'urlback' => route('prestation.create', ['id' => $typePrestation->id]),
+                            'code' => 200,
+                        ]);
+                    }
+                }
+
+                if (empty($data['details'][0]) || empty($data['enc']['confirmer'])) {
+                    return $this->jsonError(
+                        "Aucun détail trouvé pour le contrat N°{$prestation->idcontrat}."
+                    );
+                }
+            }
+
+            return response()->json([
+                'type' => 'error',
+                'urlback' => '', // URL du PDF
+                'message' => "Erreur : Impossible de récupérer les informations du contrat.",
+                'code' => 400,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'type' => 'error',
+                'urlback' => '', // URL du PDF
+                'message' => 'Une erreur s\'est produite : ' . $e->getMessage(),
+                'code' => 400,
+            ]);
+        }
+    }
+
+    private function jsonError($message, $urlback = "", $code = 400)
+    {
+        return response()->json([
+            'type' => 'error',
+            'message' => $message,
+            'urlback' => $urlback,
+            'code' => $code
+        ], 200);
+    }
+
     public function fetchCustomerDetails(Request $request)
     {
         $idcontrat = $request->input('idcontrat');
         session(['idcontrat' => $idcontrat]);
+        session(['action' => 'new']);
         if (!$idcontrat) {
             // retourner une erreur ou un message d'erreur approprié en json
             return response()->json([
@@ -165,10 +359,10 @@ class PrestationController extends Controller
                     $TotalEncaissement = array_sum(array_map(function ($item) {
                         return isset($item['RegltMontant']) ? (float) $item['RegltMontant'] : 0;
                     }, $data['enc']['confirmer']));
-                    
+
                     // $TotalEncaissement = (float) $NbrencConfirmer * $prime;
                     $DureeCotisationMois = ((float) $data['details'][0]['DureeCotisationAns'] * 12);
-                    
+
 
                     switch ($data['details'][0]['periodicite']) {
                         case "M":
@@ -190,7 +384,7 @@ class PrestationController extends Controller
                             $Duree = 0; // Gérer les cas non définis
                             break;
                     }
-                    
+
                     // calculer le cumul des Cotisation à Terme du contrat
                     $cumulCotisationTerme = $Duree * $prime;
                     // calculer 15% du cumul des Cotisation à Terme du contrat
@@ -215,7 +409,7 @@ class PrestationController extends Controller
                     // dd($data);
                     // dd($data['details']);
                     // return redirect()->route('prestation.selectPrestation');
-                    if ($data['details'][0]['OnStdbyOff'] != "1") {
+                    if ($data['details'][0]['OnStdbyOff'] == "3") {
                         return response()->json([
                             'type' => 'error',
                             'urlback' => '', // URL du PDF
@@ -225,7 +419,7 @@ class PrestationController extends Controller
                     } else {
                         return response()->json([
                             'type' => 'success',
-                            'urlback' =>route('prestation.selectPrestation'), // URL du PDF
+                            'urlback' => route('prestation.selectPrestation'), // URL du PDF
                             'message' => 'Détails du contrat trouvé.',
                             'code' => 200,
                         ]);
@@ -256,13 +450,14 @@ class PrestationController extends Controller
         }
     }
 
-    
+
     public function create(string $id)
     {
         $idcontrat = session('idcontrat');
         if (!session()->has('contractDetails')) {
             return redirect()->route('prestation.index');
         }
+
         $typePrestation = TblTypePrestation::where('id', $id)->first();
         $typePrestationAutre = TblTypePrestation::where('impact', 'Autre')->where('etat', 'Actif')->first();
         $TotalEncaissement = session('TotalEncaissement', 0);
@@ -278,19 +473,47 @@ class PrestationController extends Controller
         $contractDetails = $contract['details'][0] ?? [];
         $membreDetails   = $contract['membre'] ?? [];
         // dd($contractDetails, $membreDetails);
+        $action = session('action');
+        $prestation = session('prestation', null);
 
-        $prestation = TblPrestation::where(['idcontrat'=> $idcontrat, 'typeprestation' => $typePrestation->libelle, 'etape' => 1])->first();
-        
-        $rdv = Tblrdv::where(['police'=> $idcontrat, 'motifrdv' => $typePrestation->libelle, 'etat' => 1])->first();
+        $isPrestationExist = TblPrestation::where(['idcontrat' => $idcontrat, 'typeprestation' => $typePrestation->libelle, 'etape' => 1])->first();
 
-        
-       if ($prestation) {
-            return redirect()->back()->with('fail','Une prestation de type "' . $typePrestation->libelle . '" pour le contrat ' . $idcontrat . ' est déja en cours. N° de prestation : ' . $prestation->code);
-        }else{
-            session()->forget('contractDetails');
-            return view('prestations.create', compact('typePrestation', 'contractDetails', 'membreDetails', 'typePrestationAutre', 'TotalEncaissement', 'token', 'tok'));
+        $rdv = Tblrdv::where(['police' => $idcontrat, 'motifrdv' => $typePrestation->libelle, 'etat' => 1])->first();
+
+        $detailCountries = []; // Valeur par défaut
+
+        // $banqueAgence = TblBanqueAgence::all();
+
+        try {
+            // $response = Http::withOptions(['timeout' => 60])->get(env('API_GET_COUNTRIES'));
+            $response = Http::withOptions(['timeout' => 60])->get(config('services.API_GET_COUNTRIES'));
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                // Vérifie si la clé "countries" existe
+                if (isset($data['countries'])) {
+
+                    $detailCountries = $data['countries'];
+                    Log::info('La clé "countries" est trouvée dans la réponse API.');
+                } else {
+                    Log::info('La clé "countries" est absente de la réponse API.');
+                }
+            } else {
+                Log::error('Échec de la récupération des pays depuis l\'API.');
+            }
+        } catch (\Exception $e) {
+            Log::error('Exception lors de l\'appel à l\'API des pays : ' . $e->getMessage());
         }
-        
+
+
+        if ($isPrestationExist) {
+            return redirect()->back()->with('fail', 'Une prestation de type "' . $typePrestation->libelle . '" pour le contrat ' . $idcontrat . ' est déja en cours. N° de prestation : ' . $isPrestationExist->code);
+        } else {
+            session()->forget('contractDetails');
+            session()->forget('prestation');
+            return view('prestations.create', compact('prestation', 'typePrestation', 'contractDetails', 'membreDetails', 'typePrestationAutre', 'TotalEncaissement', 'token', 'tok', 'detailCountries', 'action'));
+        }
     }
 
     // public function createAutre(string $id)
@@ -308,7 +531,7 @@ class PrestationController extends Controller
     //     ]);
     //     if ($response->successful()) {
     //         $typeOperation = $response->json();
-            
+
     //     }
     //     session()->forget('contractDetails');
     //     return view('prestations.createAutre', compact('typePrestation', 'typeOperation', 'contractDetails', 'membreDetails'));
@@ -328,7 +551,7 @@ class PrestationController extends Controller
         $dernierEncaissement = session('dernierEncaissement', null);
         $payeur = session('payeur', null);
 
-        
+
 
         // $TotalEncaissement = (float) $NbrencConfirmer * $prime;
         // $NbreCotisationMois = ((float) $contratDetails['DureeCotisationAns'] * 12);
@@ -338,19 +561,19 @@ class PrestationController extends Controller
                 $NbreCotisationMois = $NbrencConfirmer;
                 break;
             case "T":
-                $NbreCotisationMois = $NbrencConfirmer * 3; 
+                $NbreCotisationMois = $NbrencConfirmer * 3;
                 break;
             case "S":
-                $NbreCotisationMois = $NbrencConfirmer * 6; 
+                $NbreCotisationMois = $NbrencConfirmer * 6;
                 break;
             case "A":
-                $NbreCotisationMois = $NbrencConfirmer * 12; 
+                $NbreCotisationMois = $NbrencConfirmer * 12;
                 break;
             case "U":
-                $NbreCotisationMois = $NbrencConfirmer; 
+                $NbreCotisationMois = $NbrencConfirmer;
                 break;
             default:
-                $NbreCotisationMois = 0; 
+                $NbreCotisationMois = 0;
                 break;
         }
 
@@ -361,7 +584,7 @@ class PrestationController extends Controller
         $beneficiaires = session('contratActeurBeneficiaire');
         $NbreEmission = intval($contratDetails['NbreEmission']);
         // dd($NbreEmission);
-        $codeProduitYAKO = ['YKE_2008','YKE_2018','YKS_2008','YKS_2018','YKF_2008','YKF_2018','YKR_2021','YKL_2004'];
+        $codeProduitYAKO = ['YKE_2008', 'YKE_2018', 'YKS_2008', 'YKS_2018', 'YKF_2008', 'YKF_2018', 'YKR_2021', 'YKL_2004'];
         $codeProduitEPAGNE = ["DOIHOO"];
         if (in_array($contratDetails['codeProduit'], $codeProduitYAKO)) {
             $peuSuspendreContrat = false;
@@ -400,7 +623,7 @@ class PrestationController extends Controller
             $typeOperation = $response->json();
         }
         $this->clearPrestationSessions();
-        return view('prestations.createAutre', compact('typePrestation', 'typeOperation', 'contratDetails', 'dernierEncaissement', 'token', 'tok', 'payeur','acteurs','assurees','acteurPayeur','beneficiaires','filiations','NbreEmission','peuSuspendreContrat','peuModifDureeContrat','peuReduireCapital','peuReduirePrime'));
+        return view('prestations.createAutre', compact('typePrestation', 'typeOperation', 'contratDetails', 'dernierEncaissement', 'token', 'tok', 'payeur', 'acteurs', 'assurees', 'acteurPayeur', 'beneficiaires', 'filiations', 'NbreEmission', 'peuSuspendreContrat', 'peuModifDureeContrat', 'peuReduireCapital', 'peuReduirePrime'));
     }
 
     private function clearPrestationSessions()
@@ -416,129 +639,7 @@ class PrestationController extends Controller
         ]);
     }
 
-    // public function fetchContractDetails(Request $request)
-    // {
-    //     $idcontrat = $request->input('idcontrat') ?? $request->input('MonContrat');
-    //     session(['idcontrat' => $idcontrat]);
-    //     if (!$idcontrat) {
-    //         // retourner une erreur ou un message d'erreur approprié en json
-    //         return response()->json([
-    //             'type' => 'error',
-    //             'urlback' => '', // URL du PDF
-    //             'message' => "Aucun ID de contrat fourni.",
-    //             'code' => 400,
-    //         ]);
-    //     }
 
-    //     try {
-    //         $response = Http::withOptions(['timeout' => 60])
-    //             ->post(config('services.api.encaissement_bis'), [
-    //                 'idContrat' => $idcontrat,
-    //             ]);
-
-    //         if ($response->successful()) {
-    //             $data = $response->json();
-    //             if (!empty($data['details']) && !empty($data['enc']['confirmer'])) {
-    //                 // Stocker les informations dans la session pour l'utiliser après redirection
-    //                 session(['contractDetails' => $data['details'][0]]);
-    //                 session(['encConfirmer' => $data['enc']['confirmer']]);
-    //                 session(['NbrencConfirmer' => count($data['enc']['confirmer'])]);
-    //                 $NbrencConfirmer = session('NbrencConfirmer', 0);
-    //                 $prime = (float) $data['details'][0]['TotalPrime'];
-    //                 // $TotalEncaissement = 0
-    //                 $TotalEncaissement = array_sum(array_map(function ($item) {
-    //                     return isset($item['RegltMontant']) ? (float) $item['RegltMontant'] : 0;
-    //                 }, $data['enc']['confirmer']));
-
-    //                 // $TotalEncaissement = (float) $NbrencConfirmer * $prime;
-    //                 $DureeCotisationMois = ((float) $data['details'][0]['DureeCotisationAns'] * 12);
-
-    //                 switch ($data['details'][0]['periodicite']) {
-    //                     case "M":
-    //                         $Duree = $DureeCotisationMois;
-    //                         break;
-    //                     case "T":
-    //                         $Duree = $DureeCotisationMois / 3; // Trimestriel = tous les 3 mois
-    //                         break;
-    //                     case "S":
-    //                         $Duree = $DureeCotisationMois / 6; // Semestriel = tous les 6 mois
-    //                         break;
-    //                     case "A":
-    //                         $Duree = $DureeCotisationMois / 12; // Annuel = tous les 12 mois
-    //                         break;
-    //                     case "U":
-    //                         $Duree = $NbrencConfirmer; // Annuel = tous les 12 mois
-    //                         break;
-    //                     default:
-    //                         $Duree = 0; // Gérer les cas non définis
-    //                         break;
-    //                 }
-
-    //                 // calculer le cumul des Cotisation à Terme du contrat
-    //                 $cumulCotisationTerme = $Duree * $prime;
-    //                 // calculer 15% du cumul des Cotisation à Terme du contrat
-    //                 $contisationPourcentage = $cumulCotisationTerme * 0.15;
-    //                 session(['contisationPourcentage' => $contisationPourcentage]);
-    //                 session(['cumulCotisationTerme' => $cumulCotisationTerme]);
-    //                 session(['TotalEncaissement' => $TotalEncaissement]);
-    //                 // afficher le dernier encaissement
-    //                 $dernierEncaissement = end($data['enc']['confirmer']);
-    //                 session(['dernierEncaissement' => $dernierEncaissement]);
-    //                 session(['payeur' => $data['payeur']]);
-
-    //                 session([
-    //                     'contratActeur' => $data['allActeur'] ?? [],
-    //                     'contratActeurAssure' => collect($data['allActeur'])->where('CodeRole', 'ASS') ?? [],
-    //                     'contratActeurPayeur' => collect($data['allActeur'])->where('CodeRole', 'PAY') ?? [],
-    //                     'contratActeurBeneficiaire' => collect($data['allActeur'])->where('CodeRole', 'BEN') ?? [],
-    //                 ]);
-                    
-                    
-    //                 // dd($data);
-    //                 // dd($data, $prime, $TotalEncaissement, $contisationPourcentage, $cumulCotisationTerme, $Duree); 
-    //                 if ($data['details'][0]['OnStdbyOff'] != "1") {
-    //                     return response()->json([
-    //                         'type' => 'error',
-    //                         'urlback' => '', // URL du PDF
-    //                         'message' => 'Ce contrat est arreté ou en veille.',
-    //                         'code' => 400,
-    //                     ]);
-    //                 } else {
-
-    //                     return response()->json([
-    //                         'type' => 'success',
-    //                         'urlback' => ($request->type == 'Prestation') ? route('customer.selectPrestation') : route('customer.rdv.selectPrestation'), // URL du PDF
-    //                         'message' => 'Un instant...',
-    //                         'code' => 200,
-    //                     ]);
-    //                 }
-    //             }
-
-    //             return response()->json([
-    //                 'type' => 'error',
-    //                 'urlback' => '', // URL du PDF
-    //                 'message' => 'Aucun détail trouvé pour ce contrat.',
-    //                 'code' => 400,
-    //             ]);
-    //         }
-
-    //         return response()->json([
-    //             'type' => 'error',
-    //             'urlback' => '', // URL du PDF
-    //             'message' => "Erreur : Impossible de récupérer les informations du contrat.",
-    //             'code' => 400,
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'type' => 'error',
-    //             'urlback' => '', // URL du PDF
-    //             'message' => 'Une erreur s\'est produite : ' . $e->getMessage(),
-    //             'code' => 400,
-    //         ]);
-    //     }
-    // }
-
-    
     /**
      * Store a newly created resource in storage.
      */
@@ -547,21 +648,23 @@ class PrestationController extends Controller
 
         DB::beginTransaction();
         try {
-            $saisiepar = auth()->user()->idmembre;
+            $saisiepar = auth()->user()->idmembre ?? '';
             $otp = $request->otp_1 . $request->otp_2 . $request->otp_3 . $request->otp_4 . $request->otp_5 . $request->otp_6;
             $otpVerif = Tblotp::where('codeOTP', $otp)->first();
 
             // if ($otpVerif) {
             $idOtp = $otpVerif->id ?? null;
+            $prestationUpdated = session('PrestationRdv', null);
+            $code = RefgenerateCodePrest(TblPrestation::class, 'PREST-', 'code');
             // Vérifier si une prestation similaire existe déjà
 
             $moyenPaiement = $request->moyenPaiement;
             $TelPaiement = ($moyenPaiement == 'Virement_Bancaire') ? null : $request->TelPaiement;
             // 5 caracteres
-            $codeBanque = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_1 . $request->rib_2 . $request->rib_3 .$request->rib_4 . $request->rib_5 : null;
+            $codeBanque = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_1 . $request->rib_2 . $request->rib_3 . $request->rib_4 . $request->rib_5 : null;
 
             // 5 caracteres
-            $codeGuichet = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_6 . $request->rib_7 . $request->rib_8 .$request->rib_9 . $request->rib_10 : null;
+            $codeGuichet = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_6 . $request->rib_7 . $request->rib_8 . $request->rib_9 . $request->rib_10 : null;
 
             // 12 caracteres
             $numCompte = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_11 . $request->rib_12 . $request->rib_13 . $request->rib_14 . $request->rib_15 . $request->rib_16 . $request->rib_17 . $request->rib_18 . $request->rib_19 . $request->rib_20 . $request->rib_21 . $request->rib_22 : null;
@@ -573,42 +676,123 @@ class PrestationController extends Controller
             // supprimer Espace en cas de $TelPaiement
             $montantSouhaite = preg_replace('/\s+/u', '', $request->montantSouhaite);
 
-            // Création de la prestation
-            $prestation = TblPrestation::create([
-                'code' => RefgenerateCodePrest(TblPrestation::class, 'PREST-', 'code'),
-                'idOtp' => $idOtp,
-                'idcontrat' => $request->idcontrat,
-                'typeprestation' => $request->typeprestation,
-                'prestationlibelle' => $request->typeprestation,
-                'idclient' => $request->idclient,
-                'nom' => $request->nom,
-                'prenom' => $request->prenom,
-                'datenaissance' => $request->datenaissance,
-                'lieunaissance' => $request->lieunaissance,
-                'sexe' => $request->sexe,
-                'cel' => $request->cel,
-                'tel' => $request->tel,
-                'email' => $request->email,
-                'msgClient' => $request->msgClient,
-                'lieuresidence' => $request->lieuresidence,
-                'montantSouhaite' => $montantSouhaite,
-                'moyenPaiement' => $moyenPaiement,
-                'Operateur' => $request->Operateur,
-                'telPaiement' => $TelPaiement,
-                'codeBanque' => $codeBanque,
-                'codeGuichet' => $codeGuichet,
-                'numCompte' => $numCompte,
-                'cleRIB' => $cleRIB,
-                'IBAN' => $IBAN,
-                'saisiepar' => $saisiepar,
-                'etape' => 0,
-                // 'villedeclaration' => $request->villedeclaration,
-                // 'mailtraitement' => $request->mailtraitement,
-            ]);
+            // dd($montantSouhaite);
+            $PrestationEnCours = TblPrestation::where([
+                ['idcontrat', '=', $request->idcontrat],
+                ['typeprestation', '=', $request->typeprestation],
+                ['idclient', '=', $request->idclient],
+                ['etape', '=', 1],
+            ])->first();
 
-            // Vérification si la prestation a été créée
-            if (!$prestation) {
-                throw new \Exception("Erreur lors de l'enregistrement de la prestation");
+            $PrestationRdv = ($prestationUpdated != null) ? TblPrestation::where([
+                ['idcontrat', '=', $prestationUpdated->idcontrat],
+                ['typeprestation', '=', $prestationUpdated->typeprestation],
+                ['etape', '=', -1],
+                // ['idclient', '=', $prestationUpdated->idclient],
+            ])->first() : null;
+
+            $PrestationInachevee = TblPrestation::where([
+                ['idcontrat', '=', $request->idcontrat],
+                ['typeprestation', '=', $request->typeprestation],
+                ['idclient', '=', $request->idclient],
+                ['etape', '=', 0],
+            ])->first();
+            if ($PrestationInachevee) {
+                Log::info('PrestationInachevee');
+                return response()->json([
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Vous avez une prestation N° $PrestationInachevee->code de type $PrestationInachevee->typeprestation inachevée pour le contrat $PrestationInachevee->idcontrat . Veuillez terminer la demande.",
+                    'code' => 500,
+                ]);
+            } else if ($PrestationEnCours) {
+                Log::info('PrestationEnCours');
+                return response()->json([
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Une prestation N° $PrestationEnCours->code de type $PrestationEnCours->typeprestation pour le contrat $PrestationEnCours->idcontrat est en cours de traitement. Veuillez patienter.",
+                    'code' => 500,
+                ]);
+            } else {
+                if ($PrestationRdv != null) {
+                    Log::info('PrestationRdv');
+                    $PrestationRdv->update([
+                        'etape' => 1,
+                        'code' => $code,
+                        'idOtp' => $idOtp,
+                        'idcontrat' => $request->idcontrat,
+                        'prestationlibelle' => $request->typeprestation,
+                        'typeprestation' => $request->typeprestation,
+                        'idclient' => $request->idclient,
+                        'nom' => $request->nom,
+                        'prenom' => $request->prenom,
+                        'datenaissance' => $request->datenaissance,
+                        'lieunaissance' => $request->lieunaissance,
+                        'sexe' => $request->sexe,
+                        'cel' => $request->cel,
+                        'tel' => $request->tel,
+                        'email' => $request->email,
+                        'msgClient' => $request->msgClient,
+                        'lieuresidence' => $request->lieuresidence,
+                        'montantSouhaite' => $montantSouhaite,
+                        'moyenPaiement' => $moyenPaiement,
+                        'Operateur' => $request->Operateur,
+                        'telPaiement' => $TelPaiement,
+                        'codeBanque' => $codeBanque,
+                        'codeGuichet' => $codeGuichet,
+                        'numCompte' => $numCompte,
+                        'cleRIB' => $cleRIB,
+                        'IBAN' => $IBAN,
+                        'saisiepar' => $saisiepar,
+                    ]);
+                    // Vérification si la prestation a été créée
+                    if (!$PrestationRdv) {
+                        return response()->json([
+                            'type' => 'error',
+                            'urlback' => '',
+                            'message' => "Erreur lors de l'enregistrement de la prestation",
+                            'code' => 500,
+                        ]);
+                    }
+                } else {
+                    // Création de la prestation
+                    $prestation = TblPrestation::create([
+                        'code' => $code,
+                        'idOtp' => $idOtp,
+                        'idcontrat' => $request->idcontrat,
+                        'typeprestation' => $request->typeprestation,
+                        'prestationlibelle' => $request->typeprestation,
+                        'idclient' => $request->idclient,
+                        'nom' => $request->nom,
+                        'prenom' => $request->prenom,
+                        'datenaissance' => $request->datenaissance,
+                        'lieunaissance' => $request->lieunaissance,
+                        'sexe' => $request->sexe,
+                        'cel' => $request->cel,
+                        'tel' => $request->tel,
+                        'email' => $request->email,
+                        'msgClient' => $request->msgClient,
+                        'lieuresidence' => $request->lieuresidence,
+                        'montantSouhaite' => $montantSouhaite,
+                        'moyenPaiement' => $moyenPaiement,
+                        'Operateur' => $request->Operateur,
+                        'telPaiement' => $TelPaiement,
+                        'codeBanque' => $codeBanque,
+                        'codeGuichet' => $codeGuichet,
+                        'numCompte' => $numCompte,
+                        'cleRIB' => $cleRIB,
+                        'IBAN' => $IBAN,
+                        'saisiepar' => $saisiepar,
+                        'etape' => 1,
+                        // 'villedeclaration' => $request->villedeclaration,
+                        // 'mailtraitement' => $request->mailtraitement,
+                    ]);
+                
+                    // Vérification si la prestation a été créée
+                    if (!$prestation) {
+                        throw new \Exception("Erreur lors de l'enregistrement de la prestation");
+                    }
+                }
             }
 
             // Chemin externe pour stocker les fichiers
@@ -627,6 +811,7 @@ class PrestationController extends Controller
                 if ($moyenPaiement != 'Virement_Bancaire') {
                     foreach ($request->file('libelle') as $index => $file) {
                         $fileType = $request->type[$index];
+                        $fileLabel = $request->filename[$index];
 
                         // Si le fichier est de type 'IBAN', ne pas l'enregistrer
                         if ($fileType === 'RIB') {
@@ -641,16 +826,18 @@ class PrestationController extends Controller
                             $fileName = Carbon::now()->format('Ymd_His') . '_' . $contrat . '_' . $fileType . '.' . $file->extension();
                             $file->move($externalUploadDir . 'docsPrestation/', $fileName);
                             $prestationFiles[] = [
-                                'idPrestation' => $prestation->id,
+                                'idPrestation' => ($PrestationRdv == null) ? $prestation->id : $PrestationRdv->id,
                                 'libelle' => $fileName,
                                 'path' => 'storage/prestations/docsPrestation/' . $fileName,
                                 'type' => $fileType,
+                                'filename' => $fileLabel,
                             ];
                         }
                     }
                 } else {
                     foreach ($request->file('libelle') as $index => $file) {
                         $fileType = $request->type[$index];
+                        $fileLabel = $request->filename[$index];
 
                         // Si le fichier est de type 'FicheIDNum', ne pas l'enregistrer
                         if ($fileType === 'FicheIDNum') {
@@ -665,10 +852,12 @@ class PrestationController extends Controller
                             $fileName = Carbon::now()->format('Ymd_His') . '_' . $contrat . '_' . $fileType . '.' . $file->extension();
                             $file->move($externalUploadDir . 'docsPrestation/', $fileName);
                             $prestationFiles[] = [
-                                'idPrestation' => $prestation->id,
+                                 'idPrestation' => ($PrestationRdv == null) ? $prestation->id : $PrestationRdv->id,
                                 'libelle' => $fileName,
                                 'path' => 'storage/prestations/docsPrestation/' . $fileName,
                                 'type' => $fileType,
+                                'filename' => $fileLabel,
+                               
                             ];
                         }
                     }
@@ -696,10 +885,11 @@ class PrestationController extends Controller
 
                     // Enregistrer dans la base de données
                     $prestationFiles[] = [
-                        'idPrestation' => $prestation->id,
+                        'idPrestation' => ($PrestationRdv == null) ? $prestation->id : $PrestationRdv->id,
                         'libelle' => $mergedFileName,
                         'path' => 'storage/prestations/docsPrestation/' . $mergedFileName,
                         'type' => 'CNI',
+                        'filename' => 'CNI complète',
                     ];
                 }
 
@@ -710,12 +900,13 @@ class PrestationController extends Controller
             }
             $sign = Signature::where('key_uuid', $request->tokGenerate)->first();
             $sign->update([
-                'reference_key' => $prestation->code
+                'reference_key' => $code
             ]);
-            $prestationPdfUrl = $this->generatePrestationPdf($prestation);
+            $prestationPdfUrl = ($PrestationRdv == null) ? $this->generatePrestationPdf($prestation) : $this->generatePrestationPdf($PrestationRdv);
+            // $prestationPdfUrl = $this->generatePrestationPdf($prestation);
             return response()->json([
                 'type' => 'success',
-                'urlback' => route('prestation.edit', $prestation->code),
+                'urlback' => $prestationPdfUrl['redirect_url'],
                 'url' => $prestationPdfUrl['file_url'],
                 'message' => "Demande Enregistré avec succès !",
                 'code' => 200,
@@ -739,9 +930,9 @@ class PrestationController extends Controller
     //         if (!is_dir($externalUploadDir)) {
     //             mkdir($externalUploadDir, 0777, true);
     //         }
-            
+
     //         $imageUrl = env('SIGN_API') . "api/get-signature/".$prestation->code."/E-PRESTATION";
-            
+
     //         $imageSrc = '';
     //         try {
     //             $response = Http::timeout(5)->get($imageUrl);
@@ -753,7 +944,7 @@ class PrestationController extends Controller
     //                 if (isset($data['error']) && $data['error'] === true) {
     //                     Log::info('Signature non trouvée pour la prestation N°: ' . $prestation->code);
     //                 } else {
-                    
+
     //                     $imageData = $response->body(); 
     //                     $base64Image = base64_encode($imageData);
     //                     $imageSrc = 'data:image/png;base64,' . $base64Image;
@@ -855,17 +1046,17 @@ class PrestationController extends Controller
                         'margin-top' => 0,
                         'margin-bottom' => 0,
                     ]);
-            }else{
+            } else {
                 $pdf = Pdf::loadView('prestations.fiches.prestationout', compact('qrcode', 'prestation', 'imageSrc'))
-                ->setPaper('a4', 'portrait')
-                ->setOptions([
-                    'isHtml5ParserEnabled' => true,
-                    'isRemoteEnabled' => true,
-                    'margin-left' => 0,
-                    'margin-right' => 0,
-                    'margin-top' => 0,
-                    'margin-bottom' => 0,
-                ]);
+                    ->setPaper('a4', 'portrait')
+                    ->setOptions([
+                        'isHtml5ParserEnabled' => true,
+                        'isRemoteEnabled' => true,
+                        'margin-left' => 0,
+                        'margin-right' => 0,
+                        'margin-top' => 0,
+                        'margin-bottom' => 0,
+                    ]);
             }
             // Dossier pour enregistrer l'état de la prestation
             $etatPrestationDir = $externalUploadDir . 'etatPrestations/';
@@ -904,142 +1095,6 @@ class PrestationController extends Controller
         }
     }
 
-
-    // public function storePrestAutre(Request $request)
-    // {
-    //     DB::beginTransaction();
-    //     try {
-    //         $saisiepar = auth()->user()->idmembre;
-    //         $otp = $request->otp_1 . $request->otp_2 . $request->otp_3 . $request->otp_4 . $request->otp_5 . $request->otp_6;
-    //         // $idOtp = Tblotp::select('id')->where('codeOTP', $otp)->first();
-    //         $otpVerif = Tblotp::where('codeOTP', $otp)->first();
-
-    //         // if ($otpVerif) {
-    //         $idOtp = $otpVerif->id ?? null;
-    //         // Vérifier si une prestation similaire existe déjà
-
-    //         $Operateur = ($otp == null || $otp == '') ? null : $request->Operateur;
-    //         $TelPaiement = ($otp == null || $otp == '') ? null : $request->TelPaiement;
-    //         $IBAN = ($otp == null || $otp == '') ? $request->IBAN : null;
-
-    //         $PrestationEnCours = TblPrestation::where([
-    //             ['idcontrat', '=', $request->idcontrat],
-    //             ['typeprestation', '=', $request->typeprestation],
-    //             ['idclient', '=', $request->idclient],
-    //             ['etape', '=', 1]
-    //         ])->first();
-    //         if ($PrestationEnCours) {
-    //             return response()->json([
-    //                 'type' => 'error',
-    //                 'urlback' => '',
-    //                 'message' => "Une prestation N° $PrestationEnCours->code de type $PrestationEnCours->typeprestation pour le contrat $PrestationEnCours->idcontrat est en cours de traitement. Veuillez patienter.",
-    //                 'code' => 500,
-    //             ]);
-    //         } else {
-    //             $prestation = TblPrestation::create([
-    //                 'code'              => RefgenerateCodePrest(TblPrestation::class, 'PREST-', 'code'),
-    //                 'idOtp'             => $idOtp,
-    //                 'idcontrat'         => $request->idcontrat,
-    //                 'typeprestation'    => $request->typeprestation,
-    //                 'idclient'          => $request->idclient,
-    //                 'nom'               => $request->nom,
-    //                 'prenom'            => $request->prenom,
-    //                 'datenaissance'     => $request->datenaissance,
-    //                 'lieunaissance'     => $request->lieunaissance,
-    //                 'sexe'              => $request->sexe,
-    //                 'cel'               => $request->cel,
-    //                 'tel'               => $request->tel,
-    //                 'email'             => $request->email,
-    //                 'msgClient'         => $request->msgClient,
-    //                 'lieuresidence'     => $request->lieuresidence,
-    //                 'montantSouhaite'   => $request->montantSouhaite,
-    //                 'moyenPaiement'     => $request->moyenPaiement,
-    //                 'Operateur'         => $Operateur,
-    //                 'telPaiement'       => $TelPaiement,
-    //                 'IBAN'              => $IBAN,
-    //                 'saisiepar'         => $saisiepar,
-    //                 // 'villedeclaration' => $request->villedeclaration,
-    //                 // 'mailtraitement' => $request->mailtraitement,
-    //             ]);
-    //             // Vérification si la prestation a été créée
-    //             if (!$prestation) {
-    //                 throw new \Exception("Erreur lors de l'enregistrement de la prestation");
-    //             }
-
-    //             // Chemin externe pour stocker les fichiers
-    //             $externalUploadDir = base_path(env('UPLOAD_PRESTATION_FILE'));
-    //             if (!is_dir($externalUploadDir)) {
-    //                 mkdir($externalUploadDir, 0777, true);
-    //             }
-
-    //             // Gestion des fichiers uploadés
-    //             if ($request->hasFile('libelle')) {
-    //                 $contrat = $request->idcontrat;
-    //                 $rectoFile = null;
-    //                 $versoFile = null;
-    //                 $prestationFiles = [];
-
-    //                 foreach ($request->file('libelle') as $index => $file) {
-    //                     $fileType = $request->type[$index];
-
-    //                     if ($fileType === 'CNIrecto') {
-    //                         $rectoFile = $file;
-    //                     } elseif ($fileType === 'CNIverso') {
-    //                         $versoFile = $file;
-    //                     }
-    //                 }
-    //                 // Si les fichiers recto et verso sont présents, fusionner en un fichier PDF
-    //                 if ($rectoFile && $versoFile) {
-    //                     $mergedFileName = Carbon::now()->format('Ymd_His') . '_CNI_' . $contrat . '.pdf';
-    //                     $mergedFilePath = $externalUploadDir . 'docsPrestation/' . $mergedFileName;
-
-    //                     // Charger les fichiers recto et verso
-    //                     $rectoContent = file_get_contents($rectoFile->getPathname());
-    //                     $versoContent = file_get_contents($versoFile->getPathname());
-
-    //                     // Créer une vue HTML pour le PDF
-    //                     $html = view('prestations.fiches.cni', [
-    //                         'rectoContent' => base64_encode($rectoContent),
-    //                         'versoContent' => base64_encode($versoContent)
-    //                     ])->render();
-
-    //                     // Générer le PDF
-    //                     $pdf = Pdf::loadHTML($html)->setPaper('a4', 'portrait');
-    //                     $pdf->save($mergedFilePath);
-
-    //                     // Enregistrer dans la base de données
-    //                     $prestationFiles[] = [
-    //                         'idPrestation' => $prestation->id,
-    //                         'libelle' => $mergedFileName,
-    //                         'path' => 'storage/prestations/docsPrestation/' . $mergedFileName,
-    //                         'type' => 'CNI',
-    //                     ];
-    //                 }
-
-    //                 // Enregistrer tous les fichiers
-    //                 foreach ($prestationFiles as $fileData) {
-    //                     TblDocPrestation::create($fileData);
-    //                 }
-    //             }
-
-    //             DB::commit();
-    //             return response()->json([
-    //                 'type' => 'success',
-    //                 'urlback' => "back",
-    //                 'message' => "Enregistré avec succès!",
-    //             ]);
-    //         }
-    //     } catch (\Throwable $th) {
-    //         DB::rollBack();
-
-    //         return response()->json([
-    //             'type' => 'error',
-    //             'urlback' => '',
-    //             'message' => "Erreur système! $th",
-    //             'code' => 500,
-    //         ]);
-    //     }
-    // }
 
     public function storePrestAutre(Request $request)
     {
@@ -1132,10 +1187,10 @@ class PrestationController extends Controller
                         if (!$file) {
                             continue;
                         }
-                    
+
                         $fileType = $request->type[$index];
                         $filename = $request->filename[$index];
-                    
+
                         if ($fileType === 'CNIrecto') {
                             $rectoFile = $file;
                         } elseif ($fileType === 'CNIverso') {
@@ -1160,7 +1215,7 @@ class PrestationController extends Controller
                             // Cas général
                             $libelle = Carbon::now()->format('Ymd_His') . '_' . $contrat . '_' . $fileType . '.' . $file->extension();
                             $file->move($externalUploadDir . 'docsPrestation/', $libelle);
-                    
+
                             $prestationFiles[] = [
                                 'idPrestation' => $prestation->id,
                                 'filename'     => $filename,
@@ -1170,7 +1225,7 @@ class PrestationController extends Controller
                             ];
                         }
                     }
-                    
+
                     // Si les fichiers recto et verso sont présents, fusionner en un fichier PDF
                     if ($rectoFile && $versoFile) {
                         $mergedFileName = Carbon::now()->format('Ymd_His') . '_CNI_' . $contrat . '.pdf';
@@ -1198,7 +1253,7 @@ class PrestationController extends Controller
                             'path' => 'storage/prestations/docsPrestation/' . $mergedFileName,
                             'type' => 'CNI',
                         ];
-                    }elseif ($rectoFileBeneficiaire && $versoFileBeneficiaire) {
+                    } elseif ($rectoFileBeneficiaire && $versoFileBeneficiaire) {
                         $mergedFileName = Carbon::now()->format('Ymd_His') . '_CNI_Beneficiaire_' . $contrat . '.pdf';
                         $mergedFilePath = $externalUploadDir . 'docsPrestation/' . $mergedFileName;
 
@@ -1224,7 +1279,7 @@ class PrestationController extends Controller
                             'path' => 'storage/prestations/docsPrestation/' . $mergedFileName,
                             'type' => 'CNI',
                         ];
-                    }elseif ($rectoFilePayeurPrime && $versoFilePayeurPrime) {
+                    } elseif ($rectoFilePayeurPrime && $versoFilePayeurPrime) {
                         $mergedFileName = Carbon::now()->format('Ymd_His') . '_CNI_PayeurPrime_' . $contrat . '.pdf';
                         $mergedFilePath = $externalUploadDir . 'docsPrestation/' . $mergedFileName;
 
@@ -1250,7 +1305,7 @@ class PrestationController extends Controller
                             'path' => 'storage/prestations/docsPrestation/' . $mergedFileName,
                             'type' => 'CNI',
                         ];
-                    }elseif ($rectoFileAssure && $versoFileAssure) {
+                    } elseif ($rectoFileAssure && $versoFileAssure) {
                         $mergedFileName = Carbon::now()->format('Ymd_His') . '_CNI_Assure_' . $contrat . '.pdf';
                         $mergedFilePath = $externalUploadDir . 'docsPrestation/' . $mergedFileName;
 
@@ -1276,7 +1331,7 @@ class PrestationController extends Controller
                             'path' => 'storage/prestations/docsPrestation/' . $mergedFileName,
                             'type' => 'CNI',
                         ];
-                    }elseif ($rectoFileSouscripteur && $versoFileSouscripteur) {
+                    } elseif ($rectoFileSouscripteur && $versoFileSouscripteur) {
                         $mergedFileName = Carbon::now()->format('Ymd_His') . '_CNI_Souscripteur_' . $contrat . '.pdf';
                         $mergedFilePath = $externalUploadDir . 'docsPrestation/' . $mergedFileName;
 
@@ -1324,7 +1379,7 @@ class PrestationController extends Controller
                         'message' => "Une erreur est survenue lors de la génération de la fiche de prestation! " . $prestationPdfUrl['message'],
                         'code' => 500,
                     ]);
-                }else{
+                } else {
                     return response()->json([
                         'type' => 'success',
                         'urlback' =>  $prestationPdfUrl['redirect_url'],
@@ -1375,7 +1430,7 @@ class PrestationController extends Controller
             ], 500);
         }
     }
-    
+
 
     public function show(string $code)
     {
@@ -1404,12 +1459,11 @@ class PrestationController extends Controller
             if (array_key_exists($doc->type, $types)) {
                 $types[$doc->type] = $doc->type; // Stocke la valeur si elle existe
             }
-
         }
         // Vérification des conditions obligatoires
         $conditionsInvalides = (
-            is_null($types['CNI']) || 
-            (is_null($types['Police']) && is_null($types['AttestationPerteContrat']) && is_null($types['bulletin'])) || 
+            is_null($types['CNI']) ||
+            (is_null($types['Police']) && is_null($types['AttestationPerteContrat']) && is_null($types['bulletin'])) ||
             (is_null($types['RIB']) && is_null($types['FicheIDNum']))
         );
         // dd($types, $conditionsInvalides);
@@ -1434,12 +1488,11 @@ class PrestationController extends Controller
             if (array_key_exists($doc->type, $types)) {
                 $types[$doc->type] = $doc->type; // Stocke la valeur si elle existe
             }
-
         }
         // Vérification des conditions obligatoires
         $conditionsInvalides = (
-            is_null($types['CNI']) || 
-            (is_null($types['Police']) && is_null($types['AttestationPerteContrat']) && is_null($types['bulletin'])) || 
+            is_null($types['CNI']) ||
+            (is_null($types['Police']) && is_null($types['AttestationPerteContrat']) && is_null($types['bulletin'])) ||
             (is_null($types['RIB']) && is_null($types['FicheIDNum']))
         );
         // dd($types, $conditionsInvalides);
@@ -1463,10 +1516,10 @@ class PrestationController extends Controller
             $TelPaiement = ($moyenPaiement == 'Virement_Bancaire') ? null : $request->TelPaiement;
             $Operateur = ($moyenPaiement == 'Mobile_Money') ? $request->Operateur : null;
             // 5 caracteres
-            $codeBanque = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_1 . $request->rib_2 . $request->rib_3 .$request->rib_4 . $request->rib_5 : null;
+            $codeBanque = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_1 . $request->rib_2 . $request->rib_3 . $request->rib_4 . $request->rib_5 : null;
 
             // 5 caracteres
-            $codeGuichet = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_6 . $request->rib_7 . $request->rib_8 .$request->rib_9 . $request->rib_10 : null;
+            $codeGuichet = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_6 . $request->rib_7 . $request->rib_8 . $request->rib_9 . $request->rib_10 : null;
 
             // 12 caracteres
             $numCompte = ($moyenPaiement == 'Virement_Bancaire') ? $request->rib_11 . $request->rib_12 . $request->rib_13 . $request->rib_14 . $request->rib_15 . $request->rib_16 . $request->rib_17 . $request->rib_18 . $request->rib_19 . $request->rib_20 . $request->rib_21 . $request->rib_22 : null;
@@ -1495,7 +1548,7 @@ class PrestationController extends Controller
             if ($isUpdated) {
                 $prestationPdfUrl = $this->updatePrestationPdf($isUpdated);
                 $motifsRejet = TblMotifrejetbyprestat::where('codeprestation', $code)->get();
-                
+
                 foreach ($motifsRejet as $motif) {
                     $motif->delete();
                 }
@@ -1566,7 +1619,7 @@ class PrestationController extends Controller
                         ];
                     }
                 }
-                
+
 
 
                 // Si les fichiers recto et verso sont présents, fusionner en un fichier PDF
@@ -1610,7 +1663,6 @@ class PrestationController extends Controller
                 'message' => "Document ajouté avec succès!",
                 'code' => 200,
             ];
-            
         } catch (\Throwable $th) {
             DB::rollBack();
             $dataResponse = [
@@ -1622,7 +1674,7 @@ class PrestationController extends Controller
         }
         return response()->json($dataResponse);
     }
-    
+
 
     public function transmettrePrest(string $code)
     {
@@ -1647,8 +1699,8 @@ class PrestationController extends Controller
             }
             // Vérification des conditions obligatoires
             $conditionsInvalides = (
-                is_null($types['CNI']) || 
-                (is_null($types['Police']) && is_null($types['AttestationPerteContrat']) && is_null($types['bulletin'])) || 
+                is_null($types['CNI']) ||
+                (is_null($types['Police']) && is_null($types['AttestationPerteContrat']) && is_null($types['bulletin'])) ||
                 (is_null($types['RIB']) && is_null($types['FicheIDNum']))
             );
             if ($conditionsInvalides) {
@@ -1659,7 +1711,7 @@ class PrestationController extends Controller
                     'code' => 500,
                 ];
                 return response()->json($dataResponse);
-            }else {
+            } else {
                 $isTransmitted->update([
                     'etape' => 1
                 ]);
@@ -1775,7 +1827,6 @@ class PrestationController extends Controller
                 'message' => "Document supprimé avec succès!",
                 'code' => 200,
             ];
-            
         } catch (\Throwable $th) {
             DB::rollBack();
             $dataResponse = [
@@ -1788,7 +1839,7 @@ class PrestationController extends Controller
         return response()->json($dataResponse);
     }
 
-    
+
     // private function updatePrestationPdf($prestation)
     // {
     //     try {
@@ -1816,7 +1867,7 @@ class PrestationController extends Controller
     //                 if (isset($data['error']) && $data['error'] === true) {
     //                     Log::info('Signature non trouvée pour la prestation N°: ' . $prestation->code);
     //                 } else {
-                    
+
     //                     $imageData = $response->body(); 
     //                     $base64Image = base64_encode($imageData);
     //                     $imageSrc = 'data:image/png;base64,' . $base64Image;
@@ -1916,7 +1967,7 @@ class PrestationController extends Controller
             } catch (\Exception $e) {
                 Log::error('Exception lors de la récupération de la signature : ' . $e->getMessage());
             }
-            
+
 
             $typePrestation = TblTypePrestation::where('libelle', $prestation->prestationlibelle)->first();
             $qrcode = base64_encode(QrCode::format('svg')->size(80)->generate(url('prestation/getInfoPrestation/' . $prestation->id)));
@@ -1942,17 +1993,17 @@ class PrestationController extends Controller
                         'margin-top' => 0,
                         'margin-bottom' => 0,
                     ]);
-            }else{
+            } else {
                 $pdf = Pdf::loadView('prestations.fiches.prestationout', compact('qrcode', 'prestation', 'imageSrc'))
-                ->setPaper('a4', 'portrait')
-                ->setOptions([
-                    'isHtml5ParserEnabled' => true,
-                    'isRemoteEnabled' => true,
-                    'margin-left' => 0,
-                    'margin-right' => 0,
-                    'margin-top' => 0,
-                    'margin-bottom' => 0,
-                ]);
+                    ->setPaper('a4', 'portrait')
+                    ->setOptions([
+                        'isHtml5ParserEnabled' => true,
+                        'isRemoteEnabled' => true,
+                        'margin-left' => 0,
+                        'margin-right' => 0,
+                        'margin-top' => 0,
+                        'margin-bottom' => 0,
+                    ]);
             }
 
             // Dossier pour enregistrer l'état de la prestation

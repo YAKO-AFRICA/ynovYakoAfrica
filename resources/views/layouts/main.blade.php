@@ -241,8 +241,8 @@
         <div class="wrapper">
 
         @php
-            $unreadNotifications = auth()->user()->unreadNotifications;
-            $allNotifications = auth()->user()->notifications;
+            $unreadNotifications = auth()->user()->unreadNotifications ?? collect();
+            $allNotifications = auth()->user()->notifications ?? collect();
 
         @endphp
 
@@ -260,7 +260,7 @@
 
             @include('layouts.sidebar')
 
-            <div class="page-wrapper">
+            <div class="{{ Auth::check() ? 'page-wrapper' : '' }}">
                 <div class="page-content" id="app">
                     @yield('content')
                 </div>

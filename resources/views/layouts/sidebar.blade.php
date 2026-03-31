@@ -1,4 +1,6 @@
 <!--sidebar wrapper -->
+{{-- vérifié si l'utilisateur est connecté --}}
+@if (Auth::check())
 <div class="sidebar-wrapper sidebar" data-simplebar="true">
     <div class="sidebar-header" style="background-color: #076633">
         <div class="px-3">
@@ -102,7 +104,8 @@
 
                 @can('Demarrer une prestation')
                     <li>
-                        <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <a href="{{ route('prestation.index')}}">
+                        {{-- <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#exampleModal"> --}}
                             <div class="parent-icon"><i class="bx bx-dollar-circle fs-5"></i>
                             </div>
                             <div class="menu-title">Nouvelle demande</div>
@@ -268,38 +271,18 @@
     </ul>
     <!--end navigation-->
 </div>
+@endif
 <!--end sidebar wrapper -->
 <!--start header -->
-<header class="top-header">
-    <div class="topbar d-flex align-items-center">
+<header class="top-header border ">
+    <div class="{{ !Auth::check() ? 'w-100 container-fluid' : 'topbar' }} d-flex align-items-center">
         <nav class="navbar navbar-expand gap-3">
             <div class="mobile-toggle-menu"><i class='bx bx-menu text-white'></i>
             </div>
 
 
               <div class="top-menu ms-auto ">
-                {{-- <ul class="navbar-nav align-items-center gap-1">
-
-                    <li class="nav-item dropdown dropdown-large">
-                        <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" data-bs-toggle="dropdown"><span class="alert-count">0</span>
-                            <i class='bx bx-bell text-white'></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <a href="javascript:;" >
-                                <div class="msg-header" style="background-color: #fff">
-                                    <p class="msg-header-title">Notifications</p>
-                                    <p class="msg-header-badge">0</p>
-                                </div>
-                            </a>
-                            <div class="header-notifications-list header-message-list app-container">
-                                <a class="dropdown-item" href="javascript:;">
-                                    <div class="d-flex align-items-center">
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-                </ul> --}}
+                
                 <ul class="navbar-nav align-items-center gap-1">
 
                     <li class="nav-item dropdown dropdown-large">
@@ -353,7 +336,7 @@
                     {{-- <img src="{{ asset('root/images/login-images/default.png') }}" 
                          class="user-img rounded-circle" 
                          alt="User Avatar"> --}}
-                    @if(Auth::user()->membre->photo != null && Auth::user()->membre->photo != '')
+                    @if(Auth::check() && Auth::user()->membre && Auth::user()->membre->photo != null && Auth::user()->membre->photo != '')
                         <img src="{{ asset('images/userProfile/' . Auth::user()->membre->photo) }}" class="user-img" alt="user avatar">
                     @else
                         <img src="{{ asset('root/images/login-images/default.png')}}" class="user-img" alt="user avatar">
@@ -365,7 +348,7 @@
                             {{ Auth::user()->membre->nom ?? '' }} {{ Auth::user()->membre->prenom ?? '' }}
                         </p>
                         <p class="designation mb-0 text-white fst-italic">
-                            {{ Auth::user()->membre->role ?? 'Role Indéfini' }}
+                            {{ Auth::user()->membre->role ?? '' }}
                         </p>
                     </div>
                 </a>
