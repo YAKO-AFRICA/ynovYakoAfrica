@@ -10,6 +10,7 @@
     <link href="{{ asset('assets/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>YNOV - Authentification</title>
     <style>
         * {
@@ -116,7 +117,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .login-image::after {
             content: '';
             position: absolute;
@@ -418,28 +419,28 @@
                     <p>Accédez à votre compte</p>
                 </div>
 
-                <form action="{{ route('login')}}" method="POST">
+                <form action="{{ route('login.submit')}}" method="POST">
                     @csrf
-                    
+
                     <div class="form-group">
-                        <label for="email">Adresse email</label>
+                        <label>Adresse email ou Code Agent</label>
                         <div class="input-wrapper">
                             <i class="fas fa-envelope input-icon"></i>
-                            <input 
-                                type="email" 
-                                class="form-control" 
-                                id="email" 
-                                name="email" 
-                                placeholder="votre.email@exemple.com"
-                                value="{{ old('email')}}"
+                            <input
+                                type="email"
+                                class="form-control"
+                                id="login"
+                                name="login"
+                                placeholder="email ou code agent"
+                                value="{{ old('login') }}"
                                 required
                             >
                         </div>
-                        @error('email')
-                            <div class="error-message">
-                                <i class="fas fa-exclamation-circle"></i>
-                                <span>Veuillez remplir un email valable</span>
-                            </div>
+                        @error('login')
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ $message }}</span>
+                        </div>
                         @enderror
                     </div>
 
@@ -447,11 +448,11 @@
                         <label for="password">Mot de passe</label>
                         <div class="input-wrapper">
                             <i class="fas fa-lock input-icon"></i>
-                            <input 
-                                type="password" 
-                                class="form-control" 
-                                id="password" 
-                                name="password" 
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="password"
+                                name="password"
                                 placeholder="Entrez votre mot de passe"
                                 value="{{ old('password')}}"
                                 required
@@ -468,10 +469,10 @@
 
                     <div class="options-row">
                         <div class="remember-me">
-                            <input type="checkbox" id="rememberMe">
+                            <input type="checkbox" id="rememberMe" name="remember">
                             <label for="rememberMe">Se souvenir de moi</label>
                         </div>
-                        <a href="#" class="forgot-password">Mot de passe oublié ?</a>
+                        <a href="{{ route('password.request') }}" class="forgot-password">Mot de passe oublié ?</a>
                     </div>
 
                     <button type="submit" class="btn-login" id="bntLogin">
@@ -497,7 +498,7 @@
         document.getElementById('togglePassword').addEventListener('click', function() {
             const passwordInput = document.getElementById('password');
             const icon = this;
-            
+
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 icon.classList.remove('fa-eye');
@@ -515,11 +516,58 @@
             input.addEventListener('focus', function() {
                 this.parentElement.style.transform = 'scale(1.02)';
             });
-            
+
             input.addEventListener('blur', function() {
                 this.parentElement.style.transform = 'scale(1)';
             });
         });
+    </script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                text: "{{ session('error') }}",
+                timer: 2000,
+                showConfirmButton: false
+            });
+        @endif
+
+
+        @if(session('lockout'))
+            let seconds = {{ session('seconds') }};
+            const btn = document.getElementById('bntLogin');
+            btn.disabled = true;
+
+            const swalInstance = Swal.fire({
+                icon: 'warning',
+                title: 'Compte temporairement bloqué',
+                html: `Réessayez dans <b>${seconds}</b> secondes`,
+                allowOutsideClick: false,
+                showConfirmButton: false
+            });
+
+            const timer = setInterval(() => {
+                seconds--;
+
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    Swal.close();
+                    btn.disabled = false;
+                    return;
+                }
+
+                Swal.update({
+                    html: `Réessayez dans <b>${seconds}</b> secondes`
+                });
+
+            }, 1000);
+        @endif
+
+    });
     </script>
 </body>
 </html>

@@ -1,48 +1,51 @@
 <?php
 
-use Carbon\Carbon;
-use App\Models\FileManager;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use BaconQrCode\Encoder\QrCode;
-use App\Models\AdherentProspert;
-use App\Models\TblTypePrestation;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\MailController;
-use Illuminate\Support\Facades\Response;
-use App\Http\Controllers\TicketController;
-use App\Http\Controllers\MessageController;
-use App\Http\Controllers\Admin\RdvController;
-use App\Http\Controllers\Admin\TestController;
-use App\Http\Controllers\AttachmentController;
-use App\Http\Controllers\Admin\EpretController;
-use App\Http\Controllers\Setting\RoleController;
-use App\Http\Controllers\Setting\UserController;
-use App\Http\Controllers\Setting\ZoneController;
-use App\Http\Controllers\Admin\AssurerController;
-use App\Http\Controllers\Admin\RapportController;
-use App\Http\Controllers\Setting\MotifController;
 use App\Http\Controllers\Admin\AdherentController;
+use App\Http\Controllers\Admin\AssurerController;
+use App\Http\Controllers\Admin\BeneficiairesController;
 use App\Http\Controllers\Admin\BulletinController;
 use App\Http\Controllers\Admin\CotationController;
 use App\Http\Controllers\Admin\DocumentController;
-use App\Http\Controllers\Admin\PaiementController;
-use App\Http\Controllers\Admin\ProspectController;
-use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Setting\EquipCcontroller;
-use App\Http\Controllers\Setting\EquipeController;
-use App\Http\Controllers\Setting\PartnerController;
-use App\Http\Controllers\Setting\ReseauxController;
+use App\Http\Controllers\Admin\EpretController;
 use App\Http\Controllers\Admin\FileManageController;
+use App\Http\Controllers\Admin\PaiementController;
 use App\Http\Controllers\Admin\PrestationController;
 use App\Http\Controllers\Admin\ProductionController;
+use App\Http\Controllers\Admin\ProspectController;
+use App\Http\Controllers\Admin\RapportController;
+use App\Http\Controllers\Admin\RdvController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\TestController;
 use App\Http\Controllers\Admin\ValidationController;
-use App\Http\Controllers\Admin\BeneficiairesController;
+use App\Http\Controllers\AttachmentController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\Setting\EquipCcontroller;
+use App\Http\Controllers\Setting\EquipeController;
+use App\Http\Controllers\Setting\MotifController;
+use App\Http\Controllers\Setting\PartnerController;
+use App\Http\Controllers\Setting\ReseauxController;
+use App\Http\Controllers\Setting\RoleController;
+use App\Http\Controllers\Setting\UserController;
+use App\Http\Controllers\Setting\ZoneController;
 use App\Http\Controllers\Sites\SitePropositionController;
+use App\Http\Controllers\TicketController;
+use App\Models\AdherentProspert;
+use App\Models\FileManager;
+use App\Models\TblTypePrestation;
+use BaconQrCode\Encoder\QrCode;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 
 /*
@@ -55,14 +58,43 @@ use App\Http\Controllers\Sites\SitePropositionController;
 | be assigned to the "web" middleware group. Make something great!
 */
 
-Auth::routes();
+// Auth::routes();
 
 
-Route::middleware('guest','PreventBackHistory')->group(function(){
+// Route::middleware('guest','PreventBackHistory')->group(function(){
 
-    Route::get('/', function () {
-        return view('auth.login');
-    });
+//     Route::get('/', function () {
+//         return view('auth.login');
+//     });
+
+// });
+
+
+
+
+Route::middleware(['guest','PreventBackHistory'])->group(function(){
+
+    Route::get('/', [LoginController::class, 'loginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
+        ->name('password.request');
+
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+        ->name('password.email');
+
+    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])
+        ->name('password.reset');
+
+    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
+        ->name('password.update');
+
+});
+
+Route::middleware(['auth','PreventBackHistory'])->group(function(){
+
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 });
 
@@ -229,14 +261,14 @@ Route::prefix('prestation')->name('prestation.')->group(function(){
     Route::middleware('guest')->group(function(){
         Route::get('reprise-demande',[PrestationController::class, 'repriseDemande'])->name('repriseDemande');
         Route::post('verif-code-demande',[PrestationController::class, 'verifCodeDemande'])->name('verifCodeDemande');
-    
+
         // customer prestation routes
         Route::get('/index',[PrestationController::class, 'index'])->name('index');
         Route::post('/fetch-Customer-details', [PrestationController::class, 'fetchCustomerDetails'])->name('fetchCustomerDetails');
         Route::get('/selectPrestation',[PrestationController::class, 'selectPrestation'])->name('selectPrestation');
         Route::get('/mesPrestations', [PrestationController::class, 'mesPrestations'])->name('mesPrestations');
         Route::get('/print-fiche-prestation', [PrestationController::class, 'printFichePrestation'])->name('printFichePrestation');
-    
+
         // Route::post('prestation/getPrestations', [DemandePrestationController::class, 'getPrestations'])->name('getPrestations');
         // Route::get('prestation/mesPrestations', [PrestationController::class, 'mesPrestations'])->name('mesPrestations');
         Route::get('/create/{id}',[PrestationController::class, 'create'])->name('create');
@@ -255,14 +287,14 @@ Route::prefix('prestation')->name('prestation.')->group(function(){
     Route::middleware(['auth','PreventBackHistory'])->group(function () {
         // Route::get('reprise-demande',[PrestationController::class, 'repriseDemande'])->name('repriseDemande');
         // Route::post('verif-code-demande',[PrestationController::class, 'verifCodeDemande'])->name('verifCodeDemande');
-    
+
         // // customer prestation routes
         // Route::get('/index',[PrestationController::class, 'index'])->name('index');
         // Route::post('/fetch-Customer-details', [PrestationController::class, 'fetchCustomerDetails'])->name('fetchCustomerDetails');
         // Route::get('/selectPrestation',[PrestationController::class, 'selectPrestation'])->name('selectPrestation');
         // Route::get('/mesPrestations', [PrestationController::class, 'mesPrestations'])->name('mesPrestations');
         // Route::get('/print-fiche-prestation', [PrestationController::class, 'printFichePrestation'])->name('printFichePrestation');
-    
+
         // // Route::post('prestation/getPrestations', [DemandePrestationController::class, 'getPrestations'])->name('getPrestations');
         // // Route::get('prestation/mesPrestations', [PrestationController::class, 'mesPrestations'])->name('mesPrestations');
         // Route::get('/create/{id}',[PrestationController::class, 'create'])->name('create');
