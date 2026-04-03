@@ -12,7 +12,6 @@ class Equipe extends Model
 
     protected $connection = 'mysql';
     protected $table = 'tblequipe';
-    protected $primaryKey = 'id';
     public $timestamps = false;
 
     protected $fillable = [

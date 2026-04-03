@@ -38,7 +38,7 @@
                             <select id="lieuresidenceBenef" class="form-select">
                                 <option selected value="">Sélectionner le lieu</option>
                                 @foreach($villes as $ville)
-                                    <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option> 
+                                    <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle ?? '' }}</option> 
                                 @endforeach 
                             </select>
                         </div>
@@ -47,7 +47,7 @@
                             
                             @foreach ($filliations as $item)
                                 @if(!empty($item->MonLibelle))
-                                    <option value="{{ $item->MonLibelle }}">{{ $item->MonLibelle }}</option>
+                                    <option value="{{ $item->CodeFiliation }}">{{ $item->MonLibelle ?? '' }}</option>
                                 @endif
                             @endforeach
                         </select>

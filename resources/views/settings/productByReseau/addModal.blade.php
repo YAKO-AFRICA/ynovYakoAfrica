@@ -17,7 +17,7 @@
                                 <select name="codeproduit" class="form-select produit-select" id="codeproduitId-{{ $item->id }}" required>
                                     <option value="">-- Choisir une option --</option>
                                     @foreach ($products as $product)
-                                        <option value="{{ $product->CodeProduit }}" data-code-produit-value="{{ $product->CodeProduit }}">{{ $product->MonLibelle }}</option>
+                                        <option value="{{ $product['CodeProduit'] }}" data-code-produit-value="{{ $product['CodeProduit'] }}">{{ $product['MonLibelle'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -27,12 +27,13 @@
                                     <option value="">-- Choisir une option --</option>
                                 </select>
                             </div>
+                            <input type="hidden" name="libelleformule" id="libelleformule-{{ $item->id }}">
                         </fieldset>
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Femer</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
                     <button type="submit" class="btn btn-success">Sauvegarder</button>
                 </div>
             </form>
@@ -40,60 +41,117 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.addEventListener('change', function(e) {
-                if (e.target && e.target.classList.contains('produit-select')) {
-                    const produitSelect = e.target;
-                    const reseauId = produitSelect.id.split('-')[1];
-                    const formuleSelect = document.getElementById('codeproduitformule-' + reseauId);
-                    
-                    const selectedOption = produitSelect.options[produitSelect.selectedIndex];
-                    const codeProduit = selectedOption.value;
-        
-                    console.log('Code Produit sélectionné:', codeProduit);
-        
-                    // Réinitialiser les options
+    document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('change', function(e) {
+            if (e.target && e.target.classList.contains('produit-select')) {
+                const produitSelect = e.target;
+                const reseauId = produitSelect.id.split('-')[1];
+                const formuleSelect = document.getElementById('codeproduitformule-' + reseauId);
+                const codeProduit = produitSelect.value;
+
+                console.log('Produit sélectionné:', codeProduit);
+
+                // Vide et désactiver le select
+                formuleSelect.innerHTML = '<option value="">Chargement...</option>';
+                formuleSelect.disabled = true;
+
+                if (!codeProduit) {
                     formuleSelect.innerHTML = '<option value="">-- Choisir une option --</option>';
-        
-                    if (codeProduit) {
-                        console.log('Envoi requête AJAX pour code:', codeProduit);
-                        
-                        fetch('/formules/' + codeProduit)
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Erreur réseau');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                console.log('Réponse API:', data);
-                                
-                                if (Array.isArray(data) && data.length > 0) {
-                                    data.forEach(item => {
-                                        if (item.CodeProduitFormule && item.MonLibelle) {
-                                            const option = document.createElement('option');
-                                            option.value = item.CodeProduitFormule;
-                                            option.textContent = item.MonLibelle;
-                                            formuleSelect.appendChild(option);
-                                        }
-                                    });
-                                } else {
-                                    console.warn('Aucune formule disponible');
-                                    const option = document.createElement('option');
-                                    option.value = '';
-                                    option.textContent = 'Aucune formule disponible';
-                                    formuleSelect.appendChild(option);
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Erreur fetch:', error);
-                                alert('Erreur lors du chargement des formules');
-                            });
-                    }
+                    formuleSelect.disabled = false;
+                    return;
                 }
-            });
+
+                // Ajouter un timestamp pour éviter le cache
+                const params = new URLSearchParams({
+                    CodeProduit: codeProduit,
+                    _: Date.now()
+                });
+
+                fetch(API_BASE_URL + '/enov/get-formul-product', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        // 'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        // 'Pragma': 'no-cache',
+                        // 'Expires': '0',
+                        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MjExODcyLCJlbWFpbCI6ImZvcm1hdGlvbi5ibmlAYm5pLmNvbSIsIm5vbSI6IkJOSSIsImNvZGVhZ2VudCI6IkIwNDAiLCJ0eXBlbWVicmUiOm51bGwsInByZW5vbSI6IkZvcm1hdGlvbiJ9.gwxwy43VeMDcfaTpgpFbuWkxjirIBqvuXq3UZOuw_nA'
+                    },
+                    body: params.toString()
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Réponse API pour le produit", codeProduit, ":", data);
+                    
+                    // Vérifier si les formules correspondent au produit sélectionné
+                    if (data.getProduitByFormule && data.getProduitByFormule.length > 0) {
+                        const firstFormule = data.getProduitByFormule[0];
+
+                        if (firstFormule.CodeProduit && firstFormule.CodeProduit !== codeProduit) {
+                            console.warn('Incohérence détectée: les formules ne correspondent pas au produit');
+                        }
+                    }
+
+                    
+                    
+                    remplirSelectFormule(formuleSelect, data);
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    formuleSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+                    formuleSelect.disabled = false;
+                });
+            }
         });
-        </script>
+
+        function remplirSelectFormule(formuleSelect, data) {
+            formuleSelect.innerHTML = '';
+
+            if (data.getProduitByFormule && data.getProduitByFormule.length > 0) {
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = '-- Choisir une option --';
+                formuleSelect.appendChild(defaultOption);
+
+                data.getProduitByFormule.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.CodeProduitFormule;
+                    option.textContent = item.MonLibelle;
+                    formuleSelect.appendChild(option);
+                });
+            } else {
+                const noOption = document.createElement('option');
+                noOption.value = '';
+                noOption.textContent = 'Aucune formule disponible';
+                formuleSelect.appendChild(noOption);
+            }
+
+            formuleSelect.disabled = false;
+        }
+    });
+    </script>
+
+    <script>
+        document.addEventListener('change', function(e) {
+
+            if (e.target && e.target.classList.contains('formule-select')) {
+
+                const formuleSelect = e.target;
+                const reseauId = formuleSelect.id.split('-')[1];
+                const libelleInput = document.getElementById('libelleformule-' + reseauId);
+
+                const selectedOption = formuleSelect.options[formuleSelect.selectedIndex];
+
+                const libelle = selectedOption.text;
+
+                console.log("Libellé formule:", libelle);
+
+                libelleInput.value = libelle;
+
+            }
+
+        });
+    </script>
 
 
 </div>

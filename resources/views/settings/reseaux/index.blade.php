@@ -92,7 +92,6 @@
                                     data-bs-target="#addProductReseau{{$item->id}}">
                                     <i class="bx bx-dots-horizontal-rounded"></i>
                                     </a>
-
                                 </div>
                             </td>
                         </tr>

@@ -639,6 +639,10 @@
             });
         </script>
 
+        <script>
+            const API_BASE_URL = "{{ config('services.base_url_api') }}";
+        </script>
+
 
 
 

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Setting;
 
-use App\Models\Reseau;
-use App\Models\Product;
-use Illuminate\Http\Request;
-use App\Models\ProductFormule;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\ProductFormule;
+use App\Models\Reseau;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class ReseauxController extends Controller
 {
@@ -18,7 +19,14 @@ class ReseauxController extends Controller
     {
 
         $reseaux = Reseau::orderBy('id', 'desc')->get();
-        $products = Product::all();
+        // $products = Product::all();
+
+        // $response = Http::get('https://api.yakoafricassur.com/enov/produits');
+        $response = Http::get(config('services.base_url_api') . '/enov/produits');
+        
+
+        $products = $response->json();
+
         $formules = ProductFormule::all();
         return view('settings.reseaux.index', compact('reseaux', 'products', 'formules'));
     }

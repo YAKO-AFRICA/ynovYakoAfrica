@@ -743,5 +743,7 @@ class ProspectController extends Controller
             ->header('Content-Disposition', 'attachment; filename="qr-code-prospection.svg"');
     }
 
-  
+
+    
+
 }
