@@ -739,6 +739,9 @@
             OTPVerifyID.classList.add('d-none');
         })
         changePhoneButtonForMobileMoney.addEventListener('click', function() {
+            stepper1.previous()
+            OTPSendID.classList.remove('d-none');
+            OTPVerifyID.classList.add('d-none');
             // Masquer le modal otp et afficher le collapse
             myModal.hide();
             const collapseTwo = document.querySelector("#collapseTwo");

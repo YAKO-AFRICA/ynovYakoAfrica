@@ -147,6 +147,8 @@ class PrestationController extends Controller
                 return $this->jsonError("Aucune demande trouvée pour le code $code !");
             }
 
+            // dd($demande);
+
 
             // --- Vérification que le RDV est autorisé
             if ($demande->estPermit != 1) {
@@ -212,7 +214,9 @@ class PrestationController extends Controller
             if ($response->successful()) {
                 $data = $response->json();
                 $data['membre'] = $contractMembre->membre ?? [];
-                if (!empty($data['details']) && !empty($data['enc']['confirmer'])) {
+                // dd($data);
+                if (!empty($data['details'])) {
+                // if (!empty($data['details']) && !empty($data['enc']['confirmer'])) {
                     // Stocker les informations dans la session pour l'utiliser après redirection
                     session(['contractDetails' => $data]);
                     session(['details' => $data['details'][0]]);
@@ -288,7 +292,8 @@ class PrestationController extends Controller
                     }
                 }
 
-                if (empty($data['details'][0]) || empty($data['enc']['confirmer'])) {
+                if (empty($data['details'][0])) {
+                // if (empty($data['details'][0]) || empty($data['enc']['confirmer'])) {
                     return $this->jsonError(
                         "Aucun détail trouvé pour le contrat N°{$prestation->idcontrat}."
                     );
@@ -481,8 +486,6 @@ class PrestationController extends Controller
         $rdv = Tblrdv::where(['police' => $idcontrat, 'motifrdv' => $typePrestation->libelle, 'etat' => 1])->first();
 
         $detailCountries = []; // Valeur par défaut
-
-        // $banqueAgence = TblBanqueAgence::all();
 
         try {
             // $response = Http::withOptions(['timeout' => 60])->get(env('API_GET_COUNTRIES'));

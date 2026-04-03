@@ -123,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const useClientBtn = document.getElementById('useClientBtn');
     const searchText = document.getElementById('searchText');
     const searchSpinner = document.getElementById('searchSpinner');
+    
 
     // Adaptation du placeholder selon la méthode
     methodSelect.addEventListener('change', function() {
