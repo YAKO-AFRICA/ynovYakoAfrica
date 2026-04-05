@@ -19,3 +19,16 @@ export function getPropositions() {
         return [];
     });
 }
+
+
+export function getDashbordData() {
+    return fetch('/dashboard/data')
+    .then(response => response.json())
+    .then(data => {
+        return data;
+    })
+    .catch(error => {
+        console.error('Erreur API:', error);
+        return null;
+    });
+}

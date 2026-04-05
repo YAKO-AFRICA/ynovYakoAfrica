@@ -124,6 +124,8 @@ Route::prefix('file')->name('file.')->group(function(){
     });
 });
 
+Route::get('/dashboard/data', [HomeController::class, 'calculHomeData'])->name('dashboard.data');
+
 
 
 
