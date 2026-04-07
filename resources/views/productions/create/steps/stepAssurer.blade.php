@@ -21,7 +21,6 @@
         </div>
 
 
-        {{-- @if ($CodeProduit != 'ASSCPTBNI' && Auth::user()->codepartenaire == 'DIFIN') --}}
         <div class="col-12 col-lg-6 d-flex justify-content-center align-items-center">
             <!-- Button trigger modal -->
             <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#createPropositionModal"><i
@@ -41,11 +40,11 @@
                     <th scope="col">Action</th>
                 </tr>
             </thead>
-    
+
             <tbody>
                 {{-- coàntenue dynamique --}}
             </tbody>
-    
+
             <tfoot>
                 <tr id="conditional-tr" style="display: none;">
                     <td id="display-nom-prenom"></td>
@@ -67,9 +66,9 @@
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input garantie-optionnelle" type="radio"
                                                 name="GarantiesOptionnelles[{{ $item->id }}]"
-                                                id="OuiGarantiesOptionnelles{{ $item->id }}" 
+                                                id="OuiGarantiesOptionnelles{{ $item->id }}"
                                                 data-gar-value="{{ $item->codeproduitgarantie }}"
-                                                @if ($product->CodeProduit == 'CADENCE') checked readonly @endif 
+                                                @if ($product->CodeProduit == 'CADENCE') checked readonly @endif
                                                 value="Oui">
                                             <label class="form-check-label"
                                                 for="OuiGarantiesOptionnelles{{ $item->id }}">Oui</label>
@@ -77,8 +76,8 @@
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input garantie-optionnelle" type="radio"
                                                 name="GarantiesOptionnelles[{{ $item->id }}]"
-                                                id="NonGarantiesOptionnelles{{ $item->id }}" 
-                                                data-gar-value="{{ $item->codeproduitgarantie }}" 
+                                                id="NonGarantiesOptionnelles{{ $item->id }}"
+                                                data-gar-value="{{ $item->codeproduitgarantie }}"
                                                 value="Non">
                                             <label class="form-check-label"
                                                 for="NonGarantiesOptionnelles{{ $item->id }}">Non</label>
@@ -186,7 +185,7 @@
             <button onclick="event.preventDefault(); stepper1.next()" class="btn btn-two btn-next-form">Suivant<i
                     class='bx bx-right-arrow-alt'></i></button>
 
-                    
+
         </div>
         {{-- </div> --}}
     </div>
@@ -204,6 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!sessionData) return;
 
     const simulationData = JSON.parse(sessionData);
+    console.log('Données de simulation chargées depuis la session:', simulationData);
     const info = simulationData.infoSimulation || {};
 
     // --- 1️⃣ Mise à jour des champs nom & prénom ---

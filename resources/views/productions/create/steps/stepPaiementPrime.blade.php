@@ -10,15 +10,8 @@
                     <label for="" class="form-label">Je souhaite payer mes primes par : <span class="text-danger">*</span></label>
                     <div class="mb-3">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="modepaiement" type="radio" value="VIR"
-                                id="Virement_bancaire" required>
-                            <label class="form-check-label" for="Virement_bancaire">
-                                Virement bancaire
-                            </label>
-                        </div>
-                        <div class="form-check form-check-inline">
                             <input class="form-check-input" name="modepaiement" type="radio" value="ESP"
-                                id="Espece">
+                                id="Espece" disabled>
                             <label class="form-check-label" for="Espece">
                                 Espèce
                             </label>
@@ -31,24 +24,45 @@
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" name="modepaiement" type="radio" value="Mobile_money"
-                                id="Mobile_money">
-                            <label class="form-check-label" for="Mobile_money">
-                                Mobile money
+                            <input class="form-check-input" name="modepaiement" type="radio" value="VIR"
+                                id="Virement_bancaire" required>
+                            <label class="form-check-label" for="Virement_bancaire">
+                                Virement bancaire
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="modepaiement" type="radio"
                                 value="SOURCE" id="Prelevement_source">
                             <label class="form-check-label" for="Prelevement_source">
-                                Prélèvement à la source
+                                Solde
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="modepaiement" type="radio"
-                                value="BANK" id="Prelevement_bank">
-                            <label class="form-check-label" for="Prelevement_bank">
-                                Prélèvement bancaire
+                                value="SOCIETE" id="Prelevement_societe">
+                            <label class="form-check-label" for="Prelevement_societe">
+                                SOCIETE
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="modepaiement" type="radio" value="EBANK"
+                                id="EBANK">
+                            <label class="form-check-label" for="EBANK">
+                                Electronique Banking
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="modepaiement" type="radio" value="DEF"
+                                id="DEF">
+                            <label class="form-check-label" for="DEF">
+                                Defense
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="modepaiement" type="radio"
+                                value="ADF" id="Prelevement_ADF">
+                            <label class="form-check-label" for="Prelevement_ADF">
+                                A definir
                             </label>
                         </div>
                     </div>
@@ -71,32 +85,32 @@
                                 <!-- Les options seront chargées dynamiquement par l'API -->
                             </select>
                         </div>
-                        
+
                         <div class="col-12 mb-3 row w-100">
                             <div class="col-sm-6 col-md-2 col-lg-2">
                                 <label class="form-label small">Code Banque</label>
-                                <input type="text" class="form-control account-number-input" id="codebanque" 
+                                <input type="text" class="form-control account-number-input" id="codebanque"
                                     placeholder="30003" minlength="5" maxlength="5" name="codebanque" readonly>
                             </div>
                             <div class="col-sm-6 col-md-3 col-lg-3">
                                 <label class="form-label small">Code Guichet</label>
-                                <input type="text" class="form-control account-number-input" id="codeguichet" 
+                                <input type="text" class="form-control account-number-input" id="codeguichet"
                                     placeholder="02005" minlength="5" maxlength="5" name="codeguichet" readonly>
-                            </div> 
+                            </div>
                             <div class="col-sm-8 col-md-5 col-lg-5">
                                 <label class="form-label small">Numéro de compte</label>
-                                <input type="text" class="form-control account-number-input" id="numerocompte" 
-                                    placeholder="00123456789" maxlength="11" pattern="[0-9]{11}" name="numerocompte" 
+                                <input type="text" class="form-control account-number-input" id="numerocompte"
+                                    placeholder="00123456789" maxlength="11" pattern="[0-9]{11}" name="numerocompte"
                                     autocomplete="off">
-                            </div> 
+                            </div>
                             <div class="col-sm-4 col-md-2 col-lg-2">
                                 <label class="form-label small">Clé RIB</label>
-                                <input type="text" class="form-control account-number-input" id="rib" 
-                                    placeholder="12" maxlength="2" pattern="[0-9]{2}" name="rib" 
+                                <input type="text" class="form-control account-number-input" id="rib"
+                                    placeholder="12" maxlength="2" pattern="[0-9]{2}" name="rib"
                                     autocomplete="off">
                             </div>
                         </div>
-                        
+
                         <div class="col-12 mb-3">
                             <label class="form-label">
                                 <i class="bx bxs-show me-2"></i>Aperçu du numéro complet
@@ -107,14 +121,14 @@
                         </div>
                     </div>
 
-                    <div class="mb-3" id="mode_mobile" style="display: none;">
+                    <div class="mb-3" id="mode_ebank" style="display: none;">
                         <div class="col-12 mb-3">
                             <label for="numMobile" class="form-label">Mon N° Mobile</label>
                             <input type="text" class="form-control" id="numMobile" name="numMobile">
                         </div>
                     </div>
-                    
-                    <div class="mb-3" id="mode_source" style="display: none;">
+
+                    <div class="mb-3" id="mode_defense" style="display: none;">
                         <div class="col-12 mb-3">
                             <label for="matricule" class="form-label">N° Mecano / N° Matricule</label>
                             <input type="text" class="form-control" id="matricule" name="matricule">
@@ -135,7 +149,7 @@
                     </div>
                 </div>
             </div>
-            
+
             @if($product->CodeProduit == 'CADENCE')
                 <div>
                     <fieldset class="border p-3">
@@ -217,7 +231,7 @@
                                 Trimestre
                             </label>
                         </div>
-                        
+
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="periodicite" type="radio" value="S"
                                 id="Semestre">
@@ -240,7 +254,7 @@
                             </label>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         @if ($product->CodeProduit == 'PFA_IND')
                             <div class="col-12 mb-3">
@@ -315,7 +329,7 @@
                                     <option value="" selected>Selectionnez la durée de service de la rente</option>
                                     <option value="12">12</option>
                                     <option value="24">24</option>
-                                    <option value="36">36</option> 
+                                    <option value="36">36</option>
                                 </select>
                             </div>
                         @else
@@ -331,10 +345,17 @@
                                 </div>
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="fraisAdhesion" class="form-label">Frais d’adhésion :</label>
+                                <label for="fraisadhesion" class="form-label">Frais d’adhésion :</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="fraisAdhesion" name="fraisAdhesion"
-                                        min="0" value="7500">
+                                    <input type="number" class="form-control" id="fraisadhesion" name="fraisadhesion"
+                                        min="0"  value="7500">
+                                    <span class="input-group-text">FCFA</span>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="surprime" class="form-label">Surprime :</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="surprime" name="surprime">
                                     <span class="input-group-text">FCFA</span>
                                 </div>
                             </div>
@@ -348,8 +369,8 @@
                             <div class="col-12 mb-3">
                                 <label for="duree" class="form-label">Durée de mes cotisations :</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="duree" name="duree" min="0"> 
-                                    <span class="input-group-text">Année</span>
+                                    <input type="number" class="form-control" id="duree" name="duree" min="0">
+                                    <span class="input-group-text">ANNEES</span>
                                 </div>
                             </div>
                         @endif
@@ -375,28 +396,71 @@
     document.addEventListener('DOMContentLoaded', function() {
     // ==================== GESTION MODES DE PAIEMENT ====================
     const modePaiementRadios = document.querySelectorAll('input[name="modepaiement"]');
-    const modeBancaire = document.getElementById('mode_bancaire');
-    const modeMobile = document.getElementById('mode_mobile');
-    const modeSource = document.getElementById('mode_source');
 
-    if (modeBancaire) modeBancaire.style.display = 'none';
-    if (modeMobile) modeMobile.style.display = 'none';
-    if (modeSource) modeSource.style.display = 'none';
+    const modeBancaire = document.getElementById('mode_bancaire');
+    const modeEbank = document.getElementById('mode_ebank');
+    const modeDefense = document.getElementById('mode_defense');
+
+    // Inputs bancaires
+    const inputsBancaire = document.querySelectorAll('#mode_bancaire input, #mode_bancaire select');
+
+    // Inputs ebank
+    const inputsEbank = document.querySelectorAll('#mode_ebank input');
+
+    // Inputs défense
+    const inputsDefense = document.querySelectorAll('#mode_defense input');
+
+    function resetAll() {
+
+        // cacher les blocs
+        modeBancaire.style.display = 'none';
+        modeEbank.style.display = 'none';
+        modeDefense.style.display = 'none';
+
+        // enlever required partout
+        [...inputsBancaire, ...inputsEbank, ...inputsDefense].forEach(input => {
+            input.required = false;
+            input.value = '';
+        });
+    }
 
     modePaiementRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            if (modeBancaire) modeBancaire.style.display = 'none';
-            if (modeMobile) modeMobile.style.display = 'none';
-            if (modeSource) modeSource.style.display = 'none';
 
-            if (this.value === 'VIR' || this.value === 'BANK' || this.value === 'CHK') {
-                if (modeBancaire) modeBancaire.style.display = 'block';
-            } else if (this.value === 'Mobile_money') {
-                if (modeMobile) modeMobile.style.display = 'block';
-            } else if (this.value === 'SOURCE') {
-                if (modeSource) modeSource.style.display = 'block';
+        radio.addEventListener('change', function () {
+
+            resetAll();
+
+            // 👉 VIREMENT
+            if (this.value === 'VIR' || this.value === 'BANK') {
+                modeBancaire.style.display = 'block';
+
+                inputsBancaire.forEach(input => {
+                    input.required = true;
+                });
             }
+
+            // 👉 EBANK
+            if (this.value === 'EBANK' || this.value === 'Mobile_money') {
+                modeEbank.style.display = 'block';
+
+                inputsEbank.forEach(input => {
+                    input.required = true;
+                });
+            }
+
+            // 👉 DEFENSE
+            if (this.value === 'DEF') {
+                modeDefense.style.display = 'block';
+
+                inputsDefense.forEach(input => {
+                    input.required = true;
+                });
+            }
+
+            // 👉 ADF, CHK, SOCIETE, ESP → rien (pas de required)
+
         });
+
     });
 
     // ==================== GESTION DU REVERSEMENT (CADENCE) ====================
@@ -408,7 +472,7 @@
         modeReversementRadios.forEach(radio => {
             radio.addEventListener('change', function() {
                 if (echeanceBloc) echeanceBloc.classList.remove('d-none');
-                
+
                 if (this.value === 'rente') {
                     if (dureeBloc) dureeBloc.classList.remove('d-none');
                 } else {
@@ -420,11 +484,11 @@
         });
     }
 
-     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     // ==================== VARIABLES GLOBALES ====================
     let banquesData = [];
-    
+
     // ==================== CHARGEMENT DES BANQUES ====================
     fetch('/banque-agence', {
         method: 'POST',
@@ -442,10 +506,10 @@
     .then(data => {
         console.log('Données reçues pour les banques :', data);
         banquesData = data;
-        
+
         const banquesDistinctes = extraireBanquesDistinctes(data);
         remplirSelectBanques(banquesDistinctes);
-        
+
         setTimeout(reinitialiserSelect2, 100);
     })
     .catch(error => {
@@ -468,7 +532,7 @@
                     allowClear: true
                 });
             }
-            
+
             const selectAgence = document.getElementById('agence');
             if (selectAgence && typeof jQuery !== 'undefined' && jQuery(selectAgence).data('select2')) {
                 jQuery(selectAgence).select2('destroy');
@@ -483,17 +547,17 @@
     }
 
     // ==================== FONCTIONS DE GESTION DES BANQUES ====================
-    
+
     function extraireBanquesDistinctes(data) {
         const banquesMap = new Map();
-        
+
         data.forEach(item => {
             // Utiliser le SIGLE comme nom de banque
             const sigle = item.sigle || 'Autre';
             // Le code banque peut être alphanumérique, on le garde tel quel
             const codeBanque = item.codebanque ? item.codebanque.toString().trim() : '';
             const sigleClean = sigle.toString().trim();
-            
+
             if (!banquesMap.has(sigleClean) && sigleClean !== '') {
                 banquesMap.set(sigleClean, {
                     sigle: sigleClean,
@@ -502,24 +566,24 @@
                 });
             }
         });
-        
+
         return Array.from(banquesMap.values());
     }
 
-    
+
 
     function remplirSelectBanques(banques) {
         const selectBanque = document.getElementById('banque');
         if (!selectBanque) return;
-        
+
         let select2Active = false;
         if (typeof jQuery !== 'undefined' && jQuery(selectBanque).data('select2')) {
             select2Active = true;
             jQuery(selectBanque).select2('destroy');
         }
-        
+
         selectBanque.innerHTML = '<option selected value="" disabled>Sélectionnez la banque</option>';
-        
+
         if (banques.length === 0) {
             const option = document.createElement('option');
             option.value = "";
@@ -528,7 +592,7 @@
             selectBanque.appendChild(option);
         } else {
             banques.sort((a, b) => a.sigle.localeCompare(b.sigle));
-            
+
             banques.forEach(banque => {
                 const option = document.createElement('option');
                 option.value = banque.sigle;
@@ -538,7 +602,7 @@
                 selectBanque.appendChild(option);
             });
         }
-        
+
         if (select2Active && typeof jQuery !== 'undefined') {
             jQuery(selectBanque).select2({
                 placeholder: 'Sélectionnez la banque',
@@ -550,31 +614,31 @@
     function chargerAgencesParCodeBanque(codeBanque) {
         const agenceSelect = document.getElementById('agence');
         if (!agenceSelect) return;
-        
+
         let select2Active = false;
         if (typeof jQuery !== 'undefined' && jQuery(agenceSelect).data('select2')) {
             select2Active = true;
             jQuery(agenceSelect).select2('destroy');
         }
-        
+
         agenceSelect.innerHTML = '<option selected value="" disabled>Chargement des agences...</option>';
         agenceSelect.disabled = true;
-        
+
         const codeBanqueInput = document.getElementById('codebanque');
         const codeGuichetInput = document.getElementById('codeguichet');
         const numeroCompteInput = document.getElementById('numerocompte');
         const ribInput = document.getElementById('rib');
-        
+
         // Le code banque peut contenir des lettres et des chiffres
         if (codeBanqueInput) codeBanqueInput.value = codeBanque || '';
         if (codeGuichetInput) codeGuichetInput.value = '';
         if (numeroCompteInput) numeroCompteInput.value = '';
         if (ribInput) ribInput.value = '';
-        
+
         updateNumeroComplet();
 
         // Envoyer le code banque tel quel (alphanumérique)
-       
+
 
         fetch('/banque-agence', {
             method: 'POST',
@@ -600,7 +664,7 @@
         .catch(error => {
             agenceSelect.innerHTML = '<option selected value="" disabled>Erreur de chargement des agences</option>';
             agenceSelect.disabled = false;
-            
+
             if (select2Active && typeof jQuery !== 'undefined') {
                 jQuery(agenceSelect).select2({
                     placeholder: 'Sélectionnez l\'agence',
@@ -613,9 +677,9 @@
     function remplirSelectAgences(agences, reactiverSelect2 = true) {
         const agenceSelect = document.getElementById('agence');
         if (!agenceSelect) return;
-        
+
         agenceSelect.innerHTML = '<option selected value="" disabled>Sélectionnez l\'agence</option>';
-        
+
         if (!agences || agences.length === 0) {
             const option = document.createElement('option');
             option.value = "";
@@ -624,7 +688,7 @@
             agenceSelect.appendChild(option);
         } else {
             agences.sort((a, b) => (a.nom_long || '').localeCompare(b.nom_long || ''));
-            
+
             agences.forEach(agence => {
                 const option = document.createElement('option');
                 // Créer une valeur unique mais lisible
@@ -637,7 +701,7 @@
                 agenceSelect.appendChild(option);
             });
         }
-        
+
         if (reactiverSelect2 && typeof jQuery !== 'undefined') {
             setTimeout(() => {
                 jQuery(agenceSelect).select2({
@@ -652,37 +716,37 @@
 
     function handleBanqueChange(event) {
         event.stopPropagation();
-        
+
         let codeBanque = null;
-        
+
         // Gestion événement natif
         if (event.target && event.target.tagName === 'SELECT') {
             const selectedOption = event.target.selectedOptions[0];
             if (selectedOption && selectedOption.dataset.codeBanque) {
                 codeBanque = selectedOption.dataset.codeBanque;
             }
-        } 
+        }
         // Gestion événement Select2
         else if (event.params && event.params.data) {
             codeBanque = event.params.data.element?.dataset?.codeBanque;
         }
-        
+
         if (!codeBanque) {
             console.error('Code banque non trouvé');
             return;
         }
-        
+
         console.log('Code banque sélectionné (alphanumérique):', codeBanque);
         chargerAgencesParCodeBanque(codeBanque);
     }
 
     function handleAgenceChange(event) {
         event.stopPropagation();
-        
+
         let codeBanque = null;
         let codeGuichet = null;
         let nomAgence = null;
-        
+
         if (event.target && event.target.tagName === 'SELECT') {
             const selectedOption = event.target.selectedOptions[0];
             if (selectedOption) {
@@ -695,13 +759,13 @@
             codeGuichet = event.params.data.element?.dataset?.codeGuichet;
             nomAgence = event.params.data.element?.dataset?.nomAgence;
         }
-        
+
         const codeBanqueInput = document.getElementById('codebanque');
         const codeGuichetInput = document.getElementById('codeguichet');
-        
+
         if (codeBanqueInput && codeBanque) codeBanqueInput.value = codeBanque;
         if (codeGuichetInput && codeGuichet) codeGuichetInput.value = codeGuichet;
-        
+
         updateNumeroComplet();
     }
 
@@ -711,30 +775,30 @@
         const numeroCompte = document.getElementById('numerocompte');
         const rib = document.getElementById('rib');
         const numeroComplet = document.getElementById('numero_complet');
-        
+
         if (!numeroComplet) return;
-        
+
         // Pour l'affichage, on garde les valeurs telles quelles sans padding si ce sont des lettres
         const codeBanqueVal = codeBanque?.value || '_____';
         const codeGuichetVal = codeGuichet?.value || '_____';
         const numeroCompteVal = numeroCompte?.value || '___________';
         const ribVal = rib?.value || '__';
-        
+
         // Formatage adapté : on complète avec des underscores uniquement si la valeur est plus courte
         const codeBanqueFormatted = codeBanqueVal.length < 5 ? codeBanqueVal.padEnd(5, '_') : codeBanqueVal.substring(0, 5);
         const codeGuichetFormatted = codeGuichetVal.length < 5 ? codeGuichetVal.padEnd(5, '_') : codeGuichetVal.substring(0, 5);
         const numeroCompteFormatted = numeroCompteVal.length < 11 ? numeroCompteVal.padEnd(11, '_') : numeroCompteVal.substring(0, 11);
         const ribFormatted = ribVal.length < 2 ? ribVal.padEnd(2, '_') : ribVal.substring(0, 2);
-        
+
         numeroComplet.textContent = `${codeBanqueVal} - ${codeGuichetFormatted} - ${numeroCompteFormatted} - ${ribFormatted}`;
     }
 
     // ==================== INITIALISATION DES ÉCOUTEURS ====================
-    
+
     const selectBanque = document.getElementById('banque');
     if (selectBanque) {
         selectBanque.addEventListener('change', handleBanqueChange);
-        
+
         if (typeof jQuery !== 'undefined') {
             jQuery(selectBanque).on('select2:select', handleBanqueChange);
         }
@@ -743,7 +807,7 @@
     const selectAgence = document.getElementById('agence');
     if (selectAgence) {
         selectAgence.addEventListener('change', handleAgenceChange);
-        
+
         if (typeof jQuery !== 'undefined') {
             jQuery(selectAgence).on('select2:select', handleAgenceChange);
         }

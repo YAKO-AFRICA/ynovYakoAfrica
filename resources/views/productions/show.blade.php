@@ -351,7 +351,7 @@
                                     <label class="form-label">Date de naissance :</label>
                                 </strong>
 
-                                <span>{{ $contrat->adherent->datenaissance ?? 'Non renseigné' }}</span>
+                                <span>{{ Carbon\Carbon::parse($contrat->adherent->datedenaissance)->locale('fr')->translatedFormat('d F Y') ?? 'Non renseigné' }}</span>
 
                             </div>
 
@@ -620,7 +620,7 @@
                     @if ($contrat->codeproduit == "yke_2008" || $contrat->codeproduit == "yke_2012")
                         <span>Questionnaire yako</span>
                     @else
-                    
+
                     <fieldset class="border rounded p-3">
                         <legend class="float-none w-auto px-2 text-primary fw-bold">
                             <small><i class="bi bi-heart-pulse"></i> Questionnaire Médical</small>
@@ -724,7 +724,7 @@
                                         @foreach ($contrat->beneficiaires as $beneficiaire)
                                             <tr>
                                                 <td>{{ $beneficiaire->nom ?? '--' }} {{ $beneficiaire->prenom ?? '--' }}</td>
-                                                <td>{{ $beneficiaire->datenaissance ?? '--' }}</td>
+                                                <td>{{ Carbon\Carbon::parse($beneficiaire->datedenaissance)->locale('fr')->translatedFormat('d F Y') ?? 'Non renseigné' }}</td>
                                                 <td>{{ $beneficiaire->lieunaissance ?? '--' }}</td>
                                                 <td>{{ $beneficiaire->lieuresidence ?? '--' }}</td>
                                                 <td>{{ $beneficiaire->filiation ?? '--' }}</td>
@@ -759,7 +759,7 @@
                                             <div class="row g-2 mb-2">
                                                 <div class="col-6">
                                                     <small class="text-muted">Né(e) le</small>
-                                                    <div>{{ $beneficiaire->datenaissance ?? '--' }}</div>
+                                                    <div>{{ Carbon\Carbon::parse($beneficiaire->datedenaissance)->locale('fr')->translatedFormat('d F Y') ?? 'Non renseigné' }}</div>
                                                 </div>
                                                 <div class="col-6">
                                                     <small class="text-muted">Taux</small>

@@ -29,7 +29,7 @@ class ValidationController extends Controller
     public function index()
     {
 
-        
+
         $contrats = Contrat::where(['etape'=> '2', 'estMigre' => '0'])->get();
         // dd($contrats);
         $partners = Partner::where('code' ,'!=' , '092')->get();
@@ -64,7 +64,7 @@ class ValidationController extends Controller
         set_time_limit(300);
 
         $partners = Partner::where('code', $code)->first();
-        
+
         // Récupération des contrats du partenaire
         $allPropositions = Contrat::where('partenaire', $code)->with('user')->get();
         // dd($allPropositions);
@@ -160,17 +160,19 @@ class ValidationController extends Controller
                 if (!$contrat->prime) {
                     $champsManquants[] = 'prime';
                 }
-                if (!$contrat->numerocompte) {
-                    $champsManquants[] = 'numéro de compte';
-                }
-                if (!$contrat->codebanque) {
-                    $champsManquants[] = 'code banque';
-                }
-                if (!$contrat->codeguichet) {
-                    $champsManquants[] = 'code guichet';
-                }
-                if (!$contrat->rib) {
-                    $champsManquants[] = 'RIB';
+                if($contrat->modepaiement == 'VIR' || $contrat->modepaiement == 'SOURCE' || $contrat->modepaiement == 'CHK'){
+                    if (!$contrat->numerocompte) {
+                            $champsManquants[] = 'numéro de compte';
+                        }
+                        if (!$contrat->codebanque) {
+                            $champsManquants[] = 'code banque';
+                        }
+                        if (!$contrat->codeguichet) {
+                            $champsManquants[] = 'code guichet';
+                        }
+                        if (!$contrat->rib) {
+                            $champsManquants[] = 'RIB';
+                        }
                 }
 
                 if (!empty($champsManquants)) {
@@ -203,7 +205,7 @@ class ValidationController extends Controller
                     ]);
                 }
 
-    
+
                 if ($contrat) {
                     $contrat->update(
                         [
@@ -222,12 +224,12 @@ class ValidationController extends Controller
                         'title' => "Acceptation de la proposition ID $id ",
                         'action' => "Voir",
                     ];
-        
+
                     $usersToNotify = User::where('idmembre', $contrat->saisiepar)->get();
                     Notification::send($usersToNotify, new SystemeNotify($details_log));
 
                     DB::commit();
-                
+
                     return response()->json([
                         'type' => 'success',
                         'urlback' => \route('prod.validation.prodByPartner', $contrat->partenaire),
@@ -235,7 +237,7 @@ class ValidationController extends Controller
                         'code' => 200,
                     ]);
 
-                
+
                 } else {
                     return response()->json([
                         'type' => 'error',
@@ -244,7 +246,7 @@ class ValidationController extends Controller
                         'code' => 200,
                     ]);
                 }
-       
+
             } catch (\Throwable $th) {
                 DB::rollBack();
                 return response()->json([
@@ -277,7 +279,7 @@ class ValidationController extends Controller
     public function rejetContrat(Request $request, string $id)
     {
         $contrat = Contrat::select(['id', 'partenaire'])->find($id);
-        
+
         if (!$contrat) {
             return response()->json([
                 'type' => 'error',
@@ -286,7 +288,7 @@ class ValidationController extends Controller
                 'code' => 404,
             ]);
         }
-        
+
 
         DB::beginTransaction();
         try {
@@ -310,18 +312,18 @@ class ValidationController extends Controller
             Notification::send($usersToNotify, new SystemeNotify($details_log));
 
             DB::commit();
-        
+
             return response()->json([
                 'type' => 'success',
                 'urlback' => route('prod.validation.prodByPartner', $contrat->partenaire),
                 'message' => "Proposition N° $id rejetée avec succès!",
                 'code' => 200,
             ]);
-        
+
         } catch (\Throwable $th) {
             DB::rollBack();
             // Log::error("Erreur rejet contrat $id", ['error' => $th]);
-            
+
             return response()->json([
                 'type' => 'error',
                 'urlback' => '',
@@ -341,8 +343,8 @@ class ValidationController extends Controller
         // dd($contrat);
 
         $contrat = Contrat::where('id', $id)->with('adherent','produit')->first();
-        $productGarantie = ProduitGarantie::where('CodeProduit',$contrat->codeproduit)->get(); 
-        $product = Product::where('CodeProduit',$contrat->codeproduit)->first(); 
+        $productGarantie = ProduitGarantie::where('CodeProduit',$contrat->codeproduit)->get();
+        $product = Product::where('CodeProduit',$contrat->codeproduit)->first();
         $villes =  TblVille::get();
         $professions =  TblProfession::select('MonLibelle')->get();
         $secteurActivites =  TblSecteurActivite::select('MonLibelle')->get();
@@ -406,7 +408,7 @@ class ValidationController extends Controller
     //     }
     // }
 
-   
+
 
     /**
      * Update the specified resource in storage.

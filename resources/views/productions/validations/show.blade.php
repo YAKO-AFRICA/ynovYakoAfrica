@@ -24,7 +24,7 @@
             <button type="submit" class="btn btn-success py-1 px-2 border-1 text-center"><i class='bx bx-check fs-4'></i>Valider</button>
         </form>
         @endcan
-        
+
         @can('Rejeter une proposition')
             <button type="button" class="btn btn-danger py-1 px-2 border-1 text-center" data-bs-toggle="modal" data-bs-target="#rejectModal"><i class='bx bx-x' ></i>Rejeter</button>
         @endcan
@@ -119,7 +119,7 @@
                                 {{ Carbon\Carbon::parse($doc->saisiele ?? '')->format('d/m/Y') }}
                             </p>
                         </div>
-                        <button class="btn btn-sm btn-light view-doc-btn" 
+                        <button class="btn btn-sm btn-light view-doc-btn"
                                 data-doc-url="{{ url('storage/documents/' . $doc->filename) }}"
                                 data-doc-title="{{ $doc->libelle ?? '' }}"
                                 title="Voir le document">
@@ -160,14 +160,14 @@
                         <!-- Section Info Contrat -->
                         <section id="info-contrat" class="section-content">
                             <h6 class="border-bottom pb-2 mb-3"><i class='bx bx-folder me-2'></i>Détails du Contrat</h6>
-                            
+
                             <div class="row g-3">
                                 <!-- Colonne 1 -->
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <dl class="mb-4">
                                         <dt>ID du contrat</dt>
                                         <dd>{{ $contrat->id ?? '--' }}</dd>
-                        
+
                                         <dt>Mode de paiement</dt>
                                         <dd>
                                             @switch($contrat->modepaiement)
@@ -175,23 +175,26 @@
                                                 @case('ESP') Espèce @break
                                                 @case('CHK') Chèque @break
                                                 @case('Mobile_money') Mobile money @break
+                                                @case('EBANK') Paiement Elèctronique @break
                                                 @case('SOURCE') Prélèvement à la source @break
+                                                @case('SOLDE') SOLDE @break
+                                                @case('SOCIETE') Prélèvement sur salaire @break
                                                 @default --
                                             @endswitch
                                         </dd>
-                        
+
                                         @if ($contrat->modepaiement === 'VIR' || $contrat->modepaiement === 'SOURCE')
                                             <dt>Banque / Organisme</dt>
                                             <dd>{{ $contrat->organisme ?? '--' }}</dd>
-                        
+
                                             <dt>Agence</dt>
                                             <dd>{{ $contrat->agence ?? '--' }}</dd>
-                        
+
                                             <dt>N° de compte (Matricule)</dt>
                                             <dd>{{ $contrat->numerocompte ?? '--' }}</dd>
                                         @endif
-                        
-                                        @if ($contrat->modepaiement === 'Mobile_money')
+
+                                        @if ($contrat->modepaiement === 'Mobile_money' || $contrat->modepaiement === 'EBANK')
                                             <dt>N° Mobile</dt>
                                             <dd>{{ $contrat->numerocompte ?? '--' }}</dd>
                                         @endif
@@ -200,7 +203,7 @@
                                         <dd>{{ $contrat->codebanque ?? '--' }}</dd>
                                     </dl>
                                 </div>
-                        
+
                                 <!-- Colonne 2 -->
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <dl class="mb-4">
@@ -215,43 +218,43 @@
                                                 @default --
                                             @endswitch
                                         </dd>
-                        
+
                                         <dt>Date d'effet</dt>
                                         <dd>{{ $contrat->dateeffet ?? '--' }}</dd>
-                        
+
                                         <dt>Capital</dt>
                                         <dd>{{ number_format($contrat->capital ?? 0, 0, ',', ' ') }} FCFA</dd>
-                        
+
                                         <dt>Rente</dt>
                                         <dd>{{ number_format($contrat->montantrente ?? 0, 0, ',', ' ') }} Fcfa</dd>
 
                                         <dt>Code Guichet</dt>
                                         <dd>{{ $contrat->codeguichet ?? '--' }}</dd>
-                        
+
                                         <dt>Conseiller client</dt>
                                         <dd>{{ $contrat->nomagent ?? ""}}</dd>
 
-                                        
+
                                     </dl>
                                 </div>
-                        
+
                                 <!-- Colonne 3 -->
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <dl class="mb-4">
                                         <dt>Surprime</dt>
                                         <dd>{{ number_format($contrat->surprime ?? 0, 0, ',', ' ') }} FCFA</dd>
-                        
+
                                         <dt>Prime</dt>
                                         <dd>{{ number_format($contrat->prime ?? 0, 0, ',', ' ') }} FCFA</dd>
-                        
+
                                         <dt>Prime principale</dt>
                                         <dd>{{ number_format($contrat->primepricipale ?? 0, 0, ',', ' ') }} FCFA</dd>
 
                                         <dt>Frais d'adhésion</dt>
                                         <dd>{{ number_format($contrat->fraisadhesion ?? 0, 0, ',', ' ') }} FCFA</dd>
-                        
-                                        
-                        
+
+
+
                                         <dt>Clé RIB</dt>
                                         <dd>{{ $contrat->rib ?? '--' }}</dd>
                                         <dt>Code conseiller</dt>
@@ -264,14 +267,14 @@
                         <!-- Section Adhérent -->
                         <section id="edit-adherent" class="section-content d-none">
                             <h6 class="border-bottom pb-2 mb-3"><i class='bx bx-user me-2'></i>Adhérent</h6>
-                            
+
                             <div class=" g-3">
                                 <fieldset class="border p-3">
 
                                     <legend class="float-none w-auto px-2"><small>Adhérent</small></legend>
                                     <div class="my-3">
                                         <strong class=""><label class="form-label">Civilité :</label></strong>
-                                        <span class="">{{ $contrat->adherent->civilite ?? 'Non renseigné' }}</span>      
+                                        <span class="">{{ $contrat->adherent->civilite ?? 'Non renseigné' }}</span>
                                     </div>
 
                                     <!---end row-->
@@ -306,7 +309,7 @@
                                                 <label class="form-label">Date de naissance :</label>
                                             </strong>
 
-                                            <span>{{ $contrat->adherent->datenaissance ?? 'Non renseigné' }}</span>
+                                            <span>{{ Carbon\Carbon::parse($contrat->adherent->datedenaissance)->locale('fr')->translatedFormat('d F Y') ?? 'Non renseigné' }}</span>
 
                                         </div>
 
@@ -332,7 +335,7 @@
 
                                             <span>{{ $contrat->adherent->naturepiece ?? 'Non renseigné' }}</span>
 
-                                        </div>        
+                                        </div>
 
                                         <div class="col-12 col-lg-4">
 
@@ -486,7 +489,7 @@
                         <!-- Section Assurés -->
                         <section id="edit-assurer" class="section-content d-none">
                             <h6 class="border-bottom pb-2 mb-3"><i class='bx bx-group me-2'></i>Assurés</h6>
-                            
+
                             <div class="table-responsive">
                                 <table class="table table-sm table-hover mb-0">
                                     <thead class="table-light">
@@ -594,7 +597,7 @@
                         <!-- Section Bénéficiaire -->
                         <section id="edit-beneficiaire" class="section-content d-none">
                             <h6 class="border-bottom pb-2 mb-3"><i class='bx bx-heart me-2'></i>Bénéficiaires</h6>
-                            
+
                             @if ($contrat->codeproduit === "INV_2020")
                             <div class="alert alert-info py-2 mb-3">
                                 <div class="row g-2">
@@ -609,7 +612,7 @@
                                 </div>
                             </div>
                             @endif
-                            
+
                             <div class="table-responsive">
                                 <table class="table table-sm table-hover mb-0">
                                     <thead class="table-light">
@@ -648,7 +651,7 @@
                         <!-- Section Informations complémentaires -->
                         <section id="edit-Info-complementaire" class="section-content d-none">
                             <h6 class="border-bottom pb-2 mb-3"><i class='bx bx-info-circle me-2'></i>Informations complémentaires</h6>
-                            
+
                             <div class="row g-3">
                                 @php
                                     $infoItems = [
@@ -666,7 +669,7 @@
                                         ['icon' => 'bx-transfer', 'label' => 'Est migré', 'value' => $contrat->estMigre ? '<span class="badge bg-success">Oui</span>' : '<span class="badge bg-secondary">Non</span>'],
                                     ];
                                 @endphp
-                                
+
                                 @foreach ($infoItems as $item)
                                 <div class="col-6 col-md-4 col-lg-3">
                                     <div class="bg-light p-2 rounded h-100">
@@ -730,7 +733,7 @@
     #mainContainer .card {
         min-height: 70vh;
     }
-    
+
     #mainContainer .card-body {
         max-height: 68vh;
         overflow-y: auto;
@@ -742,54 +745,54 @@
             flex: 0 0 100%;
             max-width: 100%;
         }
-        
+
         #documentViewer.col-lg-6 {
             flex: 0 0 100%;
             max-width: 100%;
             margin-bottom: 1rem;
         }
-        
+
         #mainContainer .card {
             min-height: 60vh;
         }
     }
-    
+
     @media (max-width: 768px) {
         .col-lg-2 {
             flex: 0 0 100%;
             max-width: 100%;
             margin-bottom: 1rem;
         }
-        
+
         .col-lg-10 {
             flex: 0 0 100%;
             max-width: 100%;
         }
-        
+
         .list-group-item span.d-none.d-md-inline {
             display: inline !important;
         }
-        
+
         .card-header h6 .d-none.d-md-inline {
             display: inline !important;
         }
     }
-    
+
     /* Scrollbar personnalisée */
     .card-body::-webkit-scrollbar {
         width: 6px;
     }
-    
+
     .card-body::-webkit-scrollbar-track {
         background: #f1f1f1;
         border-radius: 10px;
     }
-    
+
     .card-body::-webkit-scrollbar-thumb {
         background: #c1c1c1;
         border-radius: 10px;
     }
-    
+
     .card-body::-webkit-scrollbar-thumb:hover {
         background: #a8a8a8;
     }
@@ -814,7 +817,7 @@
 
                 // Retirer la classe active de tous les liens
                 links.forEach(l => l.classList.remove('active'));
-                
+
                 // Ajouter la classe active au lien cliqué
                 link.classList.add('active');
 
@@ -825,7 +828,7 @@
                 const targetSection = document.getElementById(targetId);
                 if (targetSection) {
                     targetSection.classList.remove('d-none');
-                    
+
                     // Scroll vers le haut de la section des détails
                     const detailsCard = targetSection.closest('.card-body');
                     if (detailsCard) {
@@ -845,7 +848,7 @@
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                
+
                 const docUrl = btn.getAttribute('data-doc-url');
                 const docTitleText = btn.getAttribute('data-doc-title');
 
@@ -869,7 +872,7 @@
         closeDocViewer.addEventListener('click', () => {
             documentViewer.classList.add('d-none');
             docFrame.src = '';
-            
+
             // Restaurer la largeur d'origine
             contentCard.classList.remove('col-lg-6');
             contentCard.classList.add('col-lg-10');

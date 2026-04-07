@@ -924,6 +924,43 @@ class ProductionController extends Controller
                 throw new \Exception("Erreur lors de la génération du bulletin : " . $bulletinData['message']);
             }
 
+             try {
+                $to = $request->email;
+                $emailSubject = 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉';
+
+                $mailData = [
+                    'title' => 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉',
+                    'btnLink' => $bulletinData['file_url'],
+                    'btnText' => 'Télécharger mon bulletin',
+                    'documents' => $bulletinData['file_url'],
+                ];
+
+                Mail::to($to)->send(new CustomerMail($mailData, $emailSubject));
+
+                Log::info("Email envoyé avec succès", [
+                    'email' => $to,
+                    'contrat' => $idContrat
+                ]);
+
+            } catch (TransportExceptionInterface $e) {
+
+                // Erreurs SMTP (550, 554, etc.)
+                Log::warning("Erreur SMTP lors de l'envoi de mail", [
+                    'email' => $to,
+                    'message' => $e->getMessage(),
+                    'contrat' => $idContrat
+                ]);
+
+            } catch (Throwable $e) {
+
+                // Toute autre erreur système
+                Log::error("Erreur système mail", [
+                    'email' => $to,
+                    'message' => $e->getMessage(),
+                    'contrat' => $idContrat
+                ]);
+            }
+
 
 
 

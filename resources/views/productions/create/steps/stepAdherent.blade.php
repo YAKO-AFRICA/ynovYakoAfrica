@@ -120,42 +120,61 @@
     </div>
 
     <!---end row-->
-    <div class="row g-3 mb-3">
-        <div class="col-12 col-lg-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 my-4">
+        <div class="col">
             <label for="" class="form-label">Nature de la pièce <span class="text-danger">*</span></label>
             <br>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="naturepiece" id="CNI" value="CNI" autocomplete="on" required>
-                <label class="form-check-label" for="CNI">CNI</label>
+                <label class="form-check-label text-uppercase" for="CNI">CNI</label>
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="naturepiece" id="Atestation" value="AT" autocomplete="on" required>
-                <label class="form-check-label" for="Atestation">Attestation </label>
+                <label class="form-check-label text-uppercase" for="Atestation">Attestation </label>
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="naturepiece" id="Passport" value="Passport" autocomplete="on" required>
-                <label class="form-check-label" for="Passport">Passeport</label>
+                <label class="form-check-label text-uppercase" for="Passport">Passeport</label>
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="naturepiece" id="CarteConsulaire" value="CarteConsulaire" autocomplete="on" required>
-                <label class="form-check-label" for="CarteConsulaire">Carte Consulaire</label>
+                <label class="form-check-label text-uppercase" for="CarteConsulaire">Carte Consulaire</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="naturepiece" id="CMU" value="CMU" autocomplete="on" required>
+                <label class="form-check-label text-uppercase" for="CMU">CMU</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="naturepiece" id="Autre" value="AUTRE" autocomplete="on" required>
+                <label class="form-check-label text-uppercase" for="Autre">Autre</label>
             </div>
 
             @error('naturepiece')
                 <span class="text-danger"> Veuillez cocher la nature de la pièce </span>
             @enderror
         </div>
-        <div class="col-12 col-lg-4">
-            <label for="numeropiece" class="form-label">Numéro de la pièce<span class="text-danger">*</span></label>
+        <div class="col">
+            <label for="numeropiece" class="form-label">Numéro de la pièce <span class="text-danger">*</span></label>
             <input type="text" name="numeropiece" class="form-control" id="numeropiece"
-                placeholder="Nature de la pièce d'identité" autocomplete="on" required>
+                placeholder="Nature de la pièce d'identité" autocomplete="on" maxlength="20" required>
 
             @error('numeropiece')
                 <span class="text-danger"> Veuillez remplir le numéro de la pièce </span>
 
             @enderror
         </div>
-        <div class="col-12 col-lg-4">
+        <div class="col cni_mode " style="display: none">
+            <label for="nni" class="form-label">N° NNI<span class="text-danger">*</span></label>
+            <input type="text" name="nni" class="form-control" id="nni"
+                placeholder="Numero de NNI" autocomplete="on" maxlength="20">
+
+            @error('numeropiece')
+                <span class="text-danger"> Veuillez remplir le numéro de la pièce </span>
+            @enderror
+        </div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-3">
+        <div class="col">
             <label for="lieuresidence" class="form-label">Lieu de résidence <span class="text-danger">*</span></label>
             <select class="form-select selection" name="lieuresidence" id="lieuresidence" autocomplete="on" required>
                 <option value="" disabled selected>Sélectionner le lieu</option>
@@ -165,10 +184,17 @@
                 @endforeach --}}
             </select>
         </div>
+        <div class="col">
+            <label for="email" class="form-label">Email </label>
+            <input type="email" name="email" class="form-control" id="email" placeholder="Email" autocomplete="on" >
+            @error('email')
+                <span class="text-danger"> Veuillez remplir votre email </span>
+            @enderror
+        </div>
     </div>
     <!---end row-->
-    <div class="row g-3 mb-3">
-        <div class="col-12 col-lg-6">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-3 my-3">
+        <div class="col">
             <label for="profession" class="form-label">Profession</label>
             <select class="form-select selection" name="profession" id="profession" autocomplete="on">
                 <option value="" disabled selected>Sélectionner la profession</option>
@@ -178,7 +204,7 @@
                 @endforeach --}}
             </select>
         </div>
-        <div class="col-12 col-lg-6">
+        <div class="col">
             <label for="employeur" class="form-label">Secteur d’activité</label>
             <select class="form-select selection" name="employeur" id="employeur" autocomplete="on">
                 <option value="" disabled selected>Sélectionner le secteur d’activité</option>
@@ -188,27 +214,19 @@
                 @endforeach
             </select>
         </div>
+    </div>
 
-    </div>
-    <div class="row g-3 mb-3">
-        <div class="col-12">
-            <label for="email" class="form-label">Email </label>
-            <input type="email" name="email" class="form-control" id="email" placeholder="Email" autocomplete="on" >
-            @error('email')
-                <span class="text-danger"> Veuillez remplir votre email </span>
-            @enderror
-        </div>
-    </div>
     <fieldset class="border p-3">
         <legend class="float-none w-auto px-2"><small>Contact</small></legend>
+
         <div class="row my-3">
             <div class="col-6">
-                <label for="">Mobile <span class="text-danger">*</span></label>
-                <input type="tel" name="mobile" class="form-control" pattern="[0-9]{10}" id="contactprincipal" placeholder="+225 00 00 00 00" minlength="10" maxlength="14" autocomplete="on" required>
+                <label for="">Telephone <span class="text-danger">*</span></label>
+                <input type="tel" name="telephone" class="form-control" id="contactprincipal" placeholder="00 00 00 00" required minlength="10" maxlength="14" autocomplete="on" required>
             </div>
             <div class="col-6">
-                <label for="">Telephone </label>
-                <input type="tel" name="telephone" class="form-control" id="contactsecondaire" placeholder="+225 00 00 00 00" minlength="10" maxlength="14" autocomplete="on" pattern="[0-9]{10}">
+                <label for="">Mobile</label>
+                <input type="tel" name="mobile" class="form-control" id="contactsecondaire" placeholder="00 00 00 00" minlength="10" maxlength="14" autocomplete="on">
             </div>
         </div>
 
@@ -249,7 +267,7 @@
             <div class="col-12 col-lg-4">
                 <label class="form-label">Contact </label><br>
                 <div class="input-group mb-3">
-                    <input type="text" name="contactpersonneressource2" class="form-control" aria-label="Text input with select" maxlength="10">
+                    <input type="text" name="contactpersonneressource2" class="form-control" aria-label="Text input with select" minlength="10" maxlength="14">
                 </div>
             </div>
         </div>
@@ -362,10 +380,27 @@
                 })
                 .catch(error => console.error('Erreur chargement professions:', error));
         });
+    </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
 
+            const radios = document.querySelectorAll('input[name="naturepiece"]');
+            const nniField = document.querySelector('.cni_mode');
 
+            radios.forEach(radio => {
+                radio.addEventListener('change', function () {
 
+                    if (this.value === "CNI") {
+                        nniField.style.display = "block";
+                    } else {
+                        nniField.style.display = "none";
+                    }
+
+                });
+            });
+
+        });
     </script>
 
 
