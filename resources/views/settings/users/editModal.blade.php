@@ -298,57 +298,37 @@
         const formData = new FormData(form);
         const url = form.getAttribute('action');
 
-            Swal.fire({
-                title: 'Confirmer la modification ?',
-                text: "Voulez-vous enregistrer les changements ?",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#076633',
-                confirmButtonText: 'Oui, enregistrer',
-                cancelButtonText: 'Annuler'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                // Affichage du loader
-                Swal.fire({
-                    title: 'Traitement en cours...',
-                    allowOutsideClick: false,
-                    didOpen: () => { Swal.showLoading(); }
-                });
-
-                // Envoi des données via AJAX (fetch)
-                        fetch(url, {
-                            method: 'POST',
-                            body: formData,
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.type === 'success') {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Succès !',
-                                    text: data.message,
-                                    confirmButtonColor: '#076633'
-                                }).then(() => {
-                                    // Optionnel : recharger la page ou rediriger
-                                    if(data.urlback === 'back') {
-                                        window.location.reload();
-                                    } else if(data.urlback) {
-                                        window.location.href = data.urlback;
-                                    }
-                                });
-                            } else {
-                                Swal.fire('Erreur', data.message, 'error');
-                            }
-                        })
-                        .catch(error => {
-                            Swal.fire('Erreur', 'Une erreur système est survenue.', 'error');
-                            console.error(error);
-                        });
+            fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
                     }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.type === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Succès !',
+                            text: data.message,
+                            confirmButtonColor: '#076633'
+                        }).then(() => {
+                            // Optionnel : recharger la page ou rediriger
+                            if(data.urlback === 'back') {
+                                window.location.reload();
+                            } else if(data.urlback) {
+                                window.location.href = data.urlback;
+                            }
+                        });
+                    } else {
+                        Swal.fire('Erreur', data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    Swal.fire('Erreur', 'Une erreur système est survenue.', 'error');
+                    console.error(error);
                 });
             });
         });

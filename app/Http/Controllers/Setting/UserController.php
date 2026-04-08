@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Setting;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendUserMailJob;
 use App\Models\Equipe;
 use App\Models\Membre;
 use App\Models\Partner;
@@ -127,10 +128,7 @@ class UserController extends Controller
         $partenaire = $request->codePart == "092" ? "BNI" : $request->codePart;
         $type = $request->codePart == "092" ? null : 2;
 
-        $id = Membre::max('idmembre') + 1;
-        do {
-            $id++;
-        } while (Membre::where('idmembre', $id)->exists());
+        $id = DB::table('membre')->max('idmembre') + 1;
 
         Log::info($request->all());
 
@@ -184,6 +182,8 @@ class UserController extends Controller
                 'created_by' => Auth::user()->membre->nom . ' ' . Auth::user()->membre->prenom,
             ]);
 
+            Log::info('after membre create');
+
             $user = User::create([
                 'idmembre' => $id,
                 'email' => $request->email,
@@ -194,13 +194,21 @@ class UserController extends Controller
                 'branche' => $request->branche
             ]);
 
+            Log::info('after user create');
+
             $roleModel = Role::find($request->role_id);
             $user->assignRole($roleModel);
 
             DB::commit();
 
+            Log::info('after commit');
+
             // 👉 envoyer mail après succès
+            // SendUserMailJob::dispatch($request->email, $request->pass);
+
             $this->sendMail($request->email, $request->pass);
+
+            Log::info('after dispatch');
 
             return response()->json([
                 'type' => 'success',
