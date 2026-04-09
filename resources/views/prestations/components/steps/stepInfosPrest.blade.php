@@ -212,7 +212,7 @@
                                     <small class="text-center"><span class="form-label star"><i>Veuillez saisir le RIB de votre compte
                                                 courant </i></span></small>
                                 </div>
-                                <input type="text" name="TelOtp" value="" id="TelOtp">
+                                <input type="hidden" name="TelOtp" value="" id="TelOtp">
                                 <div class="row g-3 mb-3" id="TelephonePaiement">
                                     <div class="col-12 col-lg-6">
                                         
