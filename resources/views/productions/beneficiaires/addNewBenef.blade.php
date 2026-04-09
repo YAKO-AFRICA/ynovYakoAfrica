@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Ajouter un nouveau bénéficiaire</h5>
-                
+
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -29,8 +29,8 @@
                             <select name="lieunaissanceBenef" class="form-select">
                                 <option selected value="">Sélectionner le lieu</option>
                                 @foreach($villes as $ville)
-                                    <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option> 
-                                @endforeach 
+                                    <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -40,13 +40,13 @@
                             <select name="lieuresidenceBenef" class="form-select">
                                 <option selected value="">Sélectionner le lieu</option>
                                 @foreach($villes as $ville)
-                                    <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option> 
-                                @endforeach 
+                                    <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-12 col-lg-6">
-                            <label for="lienParente" class="form-label">Lien de Parenté</label>
-                            <select name="lienParente" class="form-select">
+                            <label for="lienParente" class="form-label">Lien de Parenté <span>*</span></label>
+                            <select name="lienParente" class="form-select" required>
                                 <option selected value="">Sélectionner le lien de Parenté</option>
                                  @foreach ($filliations  as $item)
                                     <option value="{{ $item->CodeFiliation }}">{{ $item->MonLibelle }}</option>
@@ -54,7 +54,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="row g-3 mb-3">
                         <div class="col-12 col-lg-6">
                             <label class="form-label">Téléphone <span class="text-danger">*</span></label>
@@ -78,7 +78,7 @@
                         <button type="button" class="btn border-btn" data-bs-dismiss="modal">Annuler</button>
                         <button type="submit" class="btn btn-two">Ajouter</button>
                     </div>
-                </form> 
+                </form>
             </div>
         </div>
     </div>

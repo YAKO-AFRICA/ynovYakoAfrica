@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Setting;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendUserMailJob;
 use App\Models\Equipe;
 use App\Models\Membre;
 use App\Models\Partner;
@@ -127,10 +128,7 @@ class UserController extends Controller
         $partenaire = $request->codePart == "092" ? "BNI" : $request->codePart;
         $type = $request->codePart == "092" ? null : 2;
 
-        $id = Membre::max('idmembre') + 1;
-        do {
-            $id++;
-        } while (Membre::where('idmembre', $id)->exists());
+        $id = DB::table('membre')->max('idmembre') + 1;
 
         Log::info($request->all());
 
@@ -184,6 +182,8 @@ class UserController extends Controller
                 'created_by' => Auth::user()->membre->nom . ' ' . Auth::user()->membre->prenom,
             ]);
 
+            Log::info('after membre create');
+
             $user = User::create([
                 'idmembre' => $id,
                 'email' => $request->email,
@@ -194,13 +194,21 @@ class UserController extends Controller
                 'branche' => $request->branche
             ]);
 
+            Log::info('after user create');
+
             $roleModel = Role::find($request->role_id);
             $user->assignRole($roleModel);
 
             DB::commit();
 
+            Log::info('after commit');
+
             // 👉 envoyer mail après succès
+            // SendUserMailJob::dispatch($request->email, $request->pass);
+
             $this->sendMail($request->email, $request->pass);
+
+            Log::info('after dispatch');
 
             return response()->json([
                 'type' => 'success',
@@ -543,77 +551,65 @@ class UserController extends Controller
 
     public function updateMp(Request $request)
     {
-
-        // dd($request->password);
-
         DB::beginTransaction();
         try {
+            // Validation côté serveur
+            $request->validate([
+                'password' => [
+                    'required',
+                    'confirmed', // Vérifie que password et password_confirmation correspondent
+                    'min:8',
+                    'regex:/[A-Z]/',      // Au moins 1 majuscule
+                    'regex:/[0-9]/',      // Au moins 1 chiffre
+                    'regex:/[\W]/',       // Au moins 1 caractère spécial
+                ],
+            ], [
+                'password.required' => 'Le mot de passe ne doit pas être vide.',
+                'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
+                'password.regex' => 'Le mot de passe doit contenir au moins 1 majuscule, 1 chiffre et 1 caractère spécial.',
+                'password.confirmed' => 'Les mots de passe ne correspondent pas.',
+            ]);
 
-            if ($request->password) {
-                if ($request->password !== $request->confirm_password) {
-                    DB::rollback();
-                    $dataResponse = [
-                        'type' => 'error',
-                        'urlback' => '',
-                        'message' => "Les mots de passe ne correspondent pas",
-                        'code' => 400,
-                    ];
-                    return response()->json($dataResponse);
-                }
-                else{
-                    $mp = auth()->user()->update([
-                        'password' => bcrypt($request->password)
-                    ]);
+            $user = auth()->user();
+            $user->password = bcrypt($request->password);
+            $user->save();
 
-                    $id = auth()->user()->idmembre;
-                    $membre = Membre::where('idmembre', $id)->firstOrFail();
-                    if(!$membre){
-                        $membre->update(['pass' => bcrypt($request->password)]);
-                    }
-
-                    if ($mp) {
-                        // Déconnexion de l'utilisateur
-                        auth()->logout();
-
-                        $dataResponse = [
-                            'type' => 'success',
-                            'urlback' => "back",
-                            'message' => "Modifié avec succès! Veuillez vous reconnecter avec votre nouveau mot de passe.",
-                            'code' => 200,
-                        ];
-                        DB::commit();
-                    } else {
-                        DB::rollback();
-                        $dataResponse = [
-                            'type' => 'error',
-                            'urlback' => '',
-                            'message' => "Erreur lors de la modification",
-                            'code' => 500,
-                        ];
-                    }
-
-
-                }
-
-            } else {
-                $dataResponse = [
-                    'type' => 'error',
-                    'urlback' => 'back',
-                    'message' => "Le mot de passe ne doit pas être vide",
-                    'code' => 400,
-                ];
+            $membre = Membre::where('idmembre', $user->idmembre)->first();
+            if ($membre) {
+                $membre->pass = $request->password;
+                $membre->save();
             }
 
+            DB::commit();
+
+            // Déconnexion
+            auth()->logout();
+
+            return response()->json([
+                'type' => 'success',
+                'urlback' => 'back',
+                'message' => "Mot de passe modifié avec succès ! Veuillez vous reconnecter.",
+                'code' => 200,
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'type' => 'error',
+                'urlback' => '',
+                'errors' => $e->errors(),
+                'message' => 'Erreur de validation',
+                'code' => 422,
+            ]);
         } catch (\Throwable $th) {
             DB::rollBack();
-            $dataResponse =[
-                'type'=>'error',
-                'urlback'=>'',
-                'message'=>"Erreur systeme! $th",
-                'code'=>500,
-            ];
+            return response()->json([
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur système ! $th",
+                'code' => 500,
+            ]);
         }
-        return response()->json($dataResponse);
     }
 
     public function userDataApi()

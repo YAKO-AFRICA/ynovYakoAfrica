@@ -22,7 +22,7 @@
         </div>
     </div>
     <!--end breadcrumb-->
-  
+
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
@@ -100,7 +100,7 @@
                             @endforeach
 
                             <th>Actions</th>
-                            
+
                         </tr>
                     </thead>
                     <tbody>
@@ -142,9 +142,9 @@
                         </tr>
                         @endforelse
 
-                        @foreach ($collaborateurs as $item)
+                        {{-- @foreach ($collaborateurs as $item)
                             @include('settings.users.editModal', ['item' => $item])
-                        @endforeach
+                        @endforeach --}}
                     </tbody>
                 </table>
 
@@ -162,7 +162,7 @@
                                     @foreach ($additionalColumns as $label => $key)
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" name="columns[]" value="{{ $key }}"
-                                                id="col-{{ $key }}" 
+                                                id="col-{{ $key }}"
                                                 {{ in_array($key, $activeColumns) ? 'checked' : '' }}>
                                             <label class="form-check-label" for="col-{{ $key }}">{{ $label }}</label>
                                         </div>
@@ -174,17 +174,17 @@
                                 </div>
                             </form>
                         </div>
-                        
+
 
                     </div>
                 </div>
-            
+
             </div>
         </div>
     </div>
     @include('settings.users.addModal')
 
-    
+
 
 </div>
 @endsection

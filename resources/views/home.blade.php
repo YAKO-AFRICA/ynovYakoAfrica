@@ -35,7 +35,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col">
         <div class="card radius-10 border-start border-4 border-warning">
             <div class="card-body">
@@ -102,7 +102,7 @@
                                 class='bx bx-dots-horizontal-rounded font-22 text-option'></i>
                         </a>
                         <ul class="dropdown-menu">
-                           
+
                         </ul>
                     </div>
                 </div>
@@ -117,7 +117,7 @@
                 <div class="chart-container-1">
                     <canvas id="chartDash"></canvas>
                 </div>
-                
+
             </div>
 
             <div class="row row-cols-1 row-cols-md-3 row-cols-xl-3 g-0 row-group text-center border-top">
@@ -308,8 +308,8 @@
                         'rgba(153, 102, 255, 0.2)',
                         'rgba(255, 159, 64, 0.2)',
                         'rgba(201, 203, 207, 0.2)',
-                        'rgba(255, 99, 132, 0.4)', 
-                        'rgba(54, 162, 235, 0.4)', 
+                        'rgba(255, 99, 132, 0.4)',
+                        'rgba(54, 162, 235, 0.4)',
                         'rgba(153, 102, 255, 0.4)',
                     ],
                     borderColor: [
@@ -319,10 +319,10 @@
                         'rgba(75, 192, 192, 1)',
                         'rgba(153, 102, 255, 1)',
                         'rgba(255, 159, 64, 1)',
-                        'rgba(201, 203, 207, 1)', 
-                        'rgba(255, 99, 132, 1)',  
-                        'rgba(54, 162, 235, 1)',  
-                        'rgba(153, 102, 255, 1)'  
+                        'rgba(201, 203, 207, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(153, 102, 255, 1)'
                     ],
                     borderWidth: 1
                 }]

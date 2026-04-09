@@ -5,7 +5,8 @@
 
     <div class="row g-3">
 
-        @if ($product->CodeProduit == 'YKE_2018')
+
+        @if ($product->CodeProduit == 'YKE_2018' || $product->CodeProduit == 'YKE_2008')
             <div class="col-12 col-lg-6" @disabled(true)>
                 <label for="" class="form-label">Au terme du contrat</label>
                 <div class="card" style="width: 80%">
@@ -16,34 +17,43 @@
                     </div>
                 </div>
             </div>
-
-        @else
-            <div class="col-12 col-lg-6">
+        @elseif ($product->CodeProduit == 'DOIHOO')
+             <div class="col-12 col-lg-6">
                 <label for="" class="form-label">Au terme du contrat</label>
                 <div class="card" style="width: 80%">
                     <div class="card-body">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="addBeneficiary" value="adherent" name="addBeneficiary" required 
-                            @if ($product->CodeProduit == 'DOIHOO') checked readonly @endif>
+                            <input class="form-check-input" type="checkbox" id="addBeneficiary" value="adherent" name="addBeneficiary" checked readonly>
                             <label class="form-check-label" for="addBeneficiary" >Adhérent</label>
                         </div>
+
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <label class="form-label">Au terme du contrat</label>
+
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="Conjoint" id="conjoint1" name="benefAuTerme">
-                            <label class="form-check-label" for="conjoint1">
-                                Le conjoint non divorcé, ni séparé de corps
-                            </label>
+                            <input type="radio" name="benef_terme" value="adherent" class="form-check-input">
+                            <label class="form-check-label">Adhérent</label>
                         </div>
+
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="Enfants nés et à naitre" id="enfants" name="benefAuTerme">
-                            <label class="form-check-label" for="enfants1">
-                                Les enfants nés et à naître
-                            </label>
+                            <input type="radio" name="benef_terme" value="conjoint" class="form-check-input">
+                            <label class="form-check-label">Conjoint</label>
                         </div>
-                        <div class="form-check" data-bs-toggle="modal" data-bs-target="#addBenefModal">
-                            <input class="form-check-input" type="checkbox" value="autre" id="Autres1" data-situation="terme-contrat">
-                            <label class="form-check-label" for="Autres1">
-                                Autres, à présiser
-                            </label>
+
+                        <div class="form-check">
+                            <input type="radio" name="benef_terme" value="enfants" class="form-check-input">
+                            <label class="form-check-label">Enfants</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="radio" name="benef_terme" value="autre" class="form-check-input">
+                            <label class="form-check-label">Autre</label>
                         </div>
                     </div>
                 </div>
@@ -56,20 +66,20 @@
             <div class="card" style="width: 80%">
                 <div class="card-body">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="conjoint" id="conjoint2" name="audecesContrat">
+                        <input type="radio" name="benef_deces" value="conjoint">
                         <label class="form-check-label" for="conjoint2">
                             Le conjoint non divorcé, ni séparé de corps
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="enfant" id="enfants2" name="audecesContrat">
+                        <input type="radio" name="benef_deces" value="enfants">
                         <label class="form-check-label" for="enfants2">
                             Les enfants nés et à naître
                         </label>
                     </div>
                     <div class="form-check" data-bs-toggle="modal" data-bs-target="#addBenefModal">
-                        <input class="form-check-input" type="checkbox" value="autre" id="Autres2" name="audecesContrat">
-                        <label class="form-check-label" for="Autres2"> 
+                        <input type="radio" name="benef_deces" value="autre">
+                        <label class="form-check-label" for="Autres2">
                             Autres, à préiser
                         </label>
                     </div>
@@ -98,13 +108,13 @@
                         <!-- Beneficiary rows will be appended here -->
                     </tbody>
                     <tfoot>
-                        
+
                     </tfoot>
                 </table>
             </div>
         </div>
     </div>
-    
+
     <div class="row g-3">
         {{-- <div class="col-12"> --}}
             <div class="d-flex align-items-center justify-content-between gap-3">
@@ -119,8 +129,8 @@
     </div>
 
 
-    <script>
-         // beneficiaire 
+    {{-- <script>
+         // beneficiaire
          const beneficiaryRowId = "beneficiary-row";
 
         // Temporary storage for beneficiaries
@@ -184,7 +194,7 @@
             }
         });
 
-  
+
 
         function removeBeneficiaryRow() {
             const row = document.getElementById(beneficiaryRowId);
@@ -194,7 +204,7 @@
         }
 
 
-        
+
 
         function validateField(element, value) {
             if (!value) {
@@ -221,7 +231,7 @@
             const lienParenteSelect = document.getElementById('lienParenteBenef');
             const lienParenteValue = lienParenteSelect.value;
             console.log("Lien de parenté sélectionné:", lienParenteValue);
-            
+
             // Vérification supplémentaire
             if (!lienParenteValue || lienParenteValue === "") {
                 alert("Veuillez sélectionner un lien de parenté");
@@ -229,7 +239,7 @@
                 lienParenteSelect.style.borderColor = "red";
                 return;
             }
-    
+
             const beneficiary = {
                 nom: document.getElementById('nomBenef').value,
                 prenom: document.getElementById('prenomBenef').value,
@@ -241,7 +251,7 @@
                 email: document.getElementById('emailBenef').value,
                 part: document.getElementById('partBenef').value
             };
-    
+
             console.log("Beneficiary object complete:", beneficiary);
 
 
@@ -290,6 +300,236 @@
             console.log("Beneficiaries input :", beneficiariesInput);
             document.getElementById('beneficiariesTable').getElementsByTagName('tbody')[0].deleteRow(index);
         }
+    </script> --}}
+
+    <script>
+        // ===============================
+// STATE GLOBAL
+// ===============================
+let beneficiaries = [];
+
+// ===============================
+// UTILS
+// ===============================
+function getAdherentInfos() {
+    return {
+        nom: document.getElementById('FisrtName')?.value || '',
+        prenom: document.getElementById('LastName')?.value || '',
+        dateNaissance: document.getElementById('Date_naissance')?.value || '',
+        lieuNaissance: document.getElementById('lieunaissance')?.value || '',
+        lieuResidence: document.getElementById('lieuresidence')?.value || '',
+        telephone: document.querySelector('input[name="mobile"]')?.value || '',
+        email: document.getElementById('email')?.value || ''
+    };
+}
+
+function resetContexte(contexte) {
+    beneficiaries = beneficiaries.filter(b => b.contexte !== contexte);
+}
+
+function updateHiddenInput() {
+    document.getElementById('beneficiariesInput').value = JSON.stringify(beneficiaries);
+}
+
+// ===============================
+// RENDER TABLE
+// ===============================
+function renderTable() {
+    const tbody = document.querySelector('#beneficiariesTable tbody');
+    tbody.innerHTML = '';
+
+    beneficiaries.forEach((b, index) => {
+        const badge = b.contexte === 'terme'
+            ? '<span class="badge bg-success">Terme</span>'
+            : '<span class="badge bg-danger">Décès</span>';
+
+        const row = `
+            <tr>
+                <td>${b.nom} ${b.prenom}</td>
+                <td>${b.dateNaissance || ''}</td>
+                <td>${b.lieuNaissance || ''}</td>
+                <td>${b.lieuResidence || ''}</td>
+                <td>${b.lien}</td>
+                <td>${b.telephone || ''}</td>
+                <td>${b.email || ''}</td>
+                <td>${b.part}%</td>
+                <td>${badge}</td>
+                <td>
+                    <a href="#" class="text-danger" onclick="removeBeneficiary(${index})">
+                        <i class="bx bx-x fs-4"></i>
+                    </a>
+                </td>
+            </tr>
+        `;
+
+        tbody.insertAdjacentHTML('beforeend', row);
+    });
+
+    updateHiddenInput();
+}
+
+// ===============================
+// AUTO BENEFICIAIRE
+// ===============================
+function setAutoBeneficiary(type, contexte) {
+    let benef = {};
+
+    if (type === 'adherent') {
+        const a = getAdherentInfos();
+
+        if (!a.nom || !a.prenom) {
+            alert("Veuillez renseigner l'adhérent avant");
+            return;
+        }
+
+        benef = {
+            ...a,
+            lien: 'Adhérent',
+            part: 100,
+            contexte
+        };
+    }
+
+    if (type === 'conjoint') {
+        benef = {
+            nom: 'Conjoint',
+            prenom: 'Non séparé de corps',
+            lien: 'Conjoint',
+            part: 100,
+            contexte
+        };
+    }
+
+    if (type === 'enfants') {
+        benef = {
+            nom: 'Enfants',
+            prenom: 'Nés et à naître',
+            lien: 'Enfants',
+            part: 100,
+            contexte
+        };
+    }
+
+    resetContexte(contexte);
+    beneficiaries.push(benef);
+
+    renderTable();
+}
+
+// ===============================
+// SUPPRESSION
+// ===============================
+function removeBeneficiary(index) {
+    beneficiaries.splice(index, 1);
+    renderTable();
+}
+
+// ===============================
+// MODAL - AJOUT MANUEL
+// ===============================
+function openModal(contexte) {
+    document.getElementById('benefContexte').value = contexte;
+    new bootstrap.Modal(document.getElementById('addBenefModal')).show();
+}
+
+function validateField(el) {
+    if (!el.value.trim()) {
+        el.classList.add('is-invalid');
+        return false;
+    }
+    el.classList.remove('is-invalid');
+    el.classList.add('is-valid');
+    return true;
+}
+
+function addBeneficiary() {
+    const contexte = document.getElementById('benefContexte').value;
+
+    const nom = document.getElementById('nomBenef');
+    const prenom = document.getElementById('prenomBenef');
+    const tel = document.getElementById('mobileBenef');
+
+    if (!validateField(nom) | !validateField(prenom) | !validateField(tel)) {
+        return;
+    }
+
+    const benef = {
+        nom: nom.value,
+        prenom: prenom.value,
+        dateNaissance: document.getElementById('datenaissanceBenef').value,
+        lieuNaissance: document.getElementById('lieunaissanceBenef').value,
+        lieuResidence: document.getElementById('lieuresidenceBenef').value,
+        lien: document.getElementById('lienParenteBenef').selectedOptions[0]?.text || 'Autre',
+        telephone: tel.value,
+        email: document.getElementById('emailBenef').value,
+        part: document.getElementById('partBenef').value || 100,
+        contexte
+    };
+
+    resetContexte(contexte);
+    beneficiaries.push(benef);
+
+    renderTable();
+
+    // reset form
+    document.getElementById('beneficiaryForm').reset();
+
+    bootstrap.Modal.getInstance(document.getElementById('addBenefModal')).hide();
+}
+
+// ===============================
+// EVENTS RADIO
+// ===============================
+function initEvents() {
+
+    // TERME
+    document.querySelectorAll('input[name="benef_terme"]').forEach(el => {
+        el.addEventListener('change', function () {
+
+            if (this.value === 'autre') {
+                openModal('terme');
+                return;
+            }
+
+            setAutoBeneficiary(this.value, 'terme');
+        });
+    });
+
+    // DECES
+    document.querySelectorAll('input[name="benef_deces"]').forEach(el => {
+        el.addEventListener('change', function () {
+
+            if (this.value === 'autre') {
+                openModal('deces');
+                return;
+            }
+
+            setAutoBeneficiary(this.value, 'deces');
+        });
+    });
+
+    // AUTO UPDATE ADHERENT
+    ['FisrtName','LastName','Date_naissance','lieunaissance','lieuresidence','email']
+    .forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', () => {
+                const benefTerme = beneficiaries.find(b => b.contexte === 'terme' && b.lien === 'Adhérent');
+
+                if (benefTerme) {
+                    setAutoBeneficiary('adherent', 'terme');
+                }
+            });
+        }
+    });
+}
+
+// ===============================
+// INIT
+// ===============================
+document.addEventListener('DOMContentLoaded', function () {
+    initEvents();
+});
     </script>
 
 </div>

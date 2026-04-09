@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\PaiementController;
 use App\Http\Controllers\Admin\PrestationController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Setting\SiteWebController;
 use App\Http\Controllers\Setting\UserController;
 use App\Http\Controllers\Sites\SitePropositionController;
@@ -34,6 +35,24 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:sanctum')->group(function () {
 
 // });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Route::post('/rechercher-prospert', function (Request $request) {
     $prospert = AdherentProspert::where('code', $request->codeProspert)->first();
