@@ -489,13 +489,15 @@ class ProductionController extends Controller
         Log::info("Champs garanties trouvées fin : ");
         Log::info($periodicite);
 
-        Log::info("Champs garanties is assure : ");
-        $isAssure = $request->estAssure ?? 'oui';
-        Log::info($isAssure);
+
 
         if (!empty($data['inputSessionData'])) {
             $simulationData = $inputSessionData['infoSimulation'];
         }
+
+        Log::info("Champs garanties is assure : ");
+        $isAssure = $inputSessionData['infoSimulation']['isAssure'] ?? null;
+        Log::info($isAssure);
 
         $contactsBrut = $data['contacts'] ?? [];
         $contacts = json_decode($contactsBrut, true);
@@ -608,7 +610,7 @@ class ProductionController extends Controller
             }
             // creation de l'assuré souscripteur
 
-            if ($request->estAssure === "Oui" || $isAssure === "oui") {
+            if ($isAssure === "oui") {
 
                 $Assurer = Assurer::create([
                     'id' => $idAssure,
@@ -766,9 +768,10 @@ class ProductionController extends Controller
 
             // Récupérer et enregistrer les bénéficiaires
             $beneficiaires = json_decode($request->input('beneficiaires'), true);
+            Log::info("beneficiaires", $beneficiaires);
 
 
-            if ($request->addBeneficiary === "adherent") {
+            if ($request->benef_terme === "adherent") {
                 $benefauterm = "adherent";
 
                 Beneficiaire::create([
@@ -792,26 +795,32 @@ class ProductionController extends Controller
                 ])->save();
             }
 
-            if ($beneficiaires) {
+            // $beneficiaires = json_decode($request->input('beneficiaires'), true);
 
+            if ($beneficiaires) {
                 foreach ($beneficiaires as $beneficiaire) {
-                    $datenaissanceBeneficiaire = isset($beneficiaire['dateNaissance']) ? Carbon::parse($beneficiaire['dateNaissance'])->format('Y-m-d H:i:s') : null;
+
+                    $datenaissanceBeneficiaire = isset($beneficiaire['dateNaissance'])
+                        ? Carbon::parse($beneficiaire['dateNaissance'])->format('Y-m-d H:i:s')
+                        : null;
+
                     $idBenefInsert = Beneficiaire::max('id') + 1;
+
                     Beneficiaire::create([
                         'id' => $idBenefInsert,
                         'civilite' => $beneficiaire['civilite'] ?? null,
-                        'nom' => $beneficiaire['nom'],
-                        'prenom' => $beneficiaire['prenom'],
+                        'nom' => $beneficiaire['nom'] ?? null,
+                        'prenom' => $beneficiaire['prenom'] ?? null,
                         'datenaissance' => $datenaissanceBeneficiaire,
                         'codecontrat' => $idContrat,
                         'codeadherent' => $idAdherent,
-                        'lieunaissance' => $beneficiaire['lieuNaissance'],
-                        'numeropiece' => $beneficiaire['numeropiece'] ?? null,
-                        'naturepiece' => $beneficiaire['naturepiece'] ?? null,
-                        'lieuresidence' => $beneficiaire['lieuResidence'],
-                        'filiation' => $beneficiaire['lienParente'],
-                        'mobile' => $beneficiaire['telephone'],
-                        'email' => $beneficiaire['email'],
+                        'lieunaissance' => $beneficiaire['lieuNaissance'] ?? null,
+                        'numeropiece' => $beneficiaire['numeropieceAssur'] ?? null,
+                        'naturepiece' => $beneficiaire['naturepieceAssur'] ?? null,
+                        'lieuresidence' => $beneficiaire['lieuresidenceAssur'] ?? null,
+                        'filiation' => $beneficiaire['lienParente'] ?? null,
+                        'mobile' => $beneficiaire['mobileAssur'] ?? null,
+                        'email' => $beneficiaire['emailAssur'] ?? null,
                         'saisieLe' => now(),
                         'cleintegration' => $keyUniq,
                         'saisiepar' => Auth::user()->membre->idmembre,
@@ -821,17 +830,20 @@ class ProductionController extends Controller
 
             // ajout du contrat  numMobile
 
-            if ($request->modepaiement === "Mobile_money") {
+            if ($request->modepaiement === "Mobile_money" || $request->modepaiement === "EBANK") {
                 $numerocompte = $request->numMobile;
             } else {
                 $numerocompte = $request->numerocompte;
             }
 
-            if ($request->addBeneficiary === "adherent") {
+            if ($request->benef_terme === "adherent") {
                 $benefAuterm = "adherent";
             } else {
-                $benefAuterm = $request->benefAuTerme;
+                $benefAuterm = $request->benef_terme;
             }
+
+
+
 
 
             $product = Product::where('CodeProduit', $request->codeproduit)->first();
@@ -879,8 +891,8 @@ class ProductionController extends Controller
 
                 'personneressource' => $request->personneressource,
                 'contactpersonneressource' => $request->contactpersonneressource,
-                'beneficiaireauterme' => $request->benefAuterm,
-                'beneficiaireaudeces' => $request->audecesContrat,
+                'beneficiaireauterme' => $request->benef_terme,
+                'beneficiaireaudeces' => $request->benef_deces,
 
                 'personneressource2' => $request->personneressource2,
                 'contactpersonneressource2' => $request->contactpersonneressource2,

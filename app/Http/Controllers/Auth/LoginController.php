@@ -36,11 +36,11 @@ class LoginController extends Controller
             'password' => [
                 'required',
                 'string',
-                'min:8',
-                'regex:/[a-z]/',
-                'regex:/[A-Z]/',
-                'regex:/[0-9]/',
-                'regex:/[@$!%*#?&.]/'
+                'min:6'
+                // 'regex:/[a-z]/',
+                // 'regex:/[A-Z]/',
+                // 'regex:/[0-9]/',
+                // 'regex:/[@$!%*#?&.]/'
             ]
         ]);
 

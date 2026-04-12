@@ -142,9 +142,9 @@
                         </tr>
                         @endforelse
 
-                        {{-- @foreach ($collaborateurs as $item)
+                        @foreach ($collaborateurs as $item)
                             @include('settings.users.editModal', ['item' => $item])
-                        @endforeach --}}
+                        @endforeach
                     </tbody>
                 </table>
 
