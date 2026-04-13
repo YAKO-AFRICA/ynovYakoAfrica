@@ -231,6 +231,13 @@
                     const typePrestation = formulaire.querySelector('[name="typeprestation"]')?.value || '';
                     const idContrat = formulaire.querySelector('[name="idcontrat"]')?.value || '';
                     const montantSouhaite = formulaire.querySelector('[name="montantSouhaite"]')?.value || '';
+                    
+                    const modalOtp_1 = document.querySelector('#modalOtp_1')?.value || '';
+                    const modalOtp_2 = document.querySelector('#modalOtp_2')?.value || '';
+                    const modalOtp_3 = document.querySelector('#modalOtp_3')?.value || '';
+                    const modalOtp_4 = document.querySelector('#modalOtp_4')?.value || '';
+                    const modalOtp_5 = document.querySelector('#modalOtp_5')?.value || '';
+                    const modalOtp_6 = document.querySelector('#modalOtp_6')?.value || '';
 
                     // Récupération des boutons radio sélectionnés
                     const moyenPaiement = formulaire.querySelector('[name="moyenPaiement"]:checked')?.value || '';
@@ -260,6 +267,28 @@
                     const moyenPaiementText = moyenPaiement === 'Virement_Bancaire' ? 'Virement Bancaire' :
                         'Mobile Money';
                     document.getElementById('moyenPmt').textContent = moyenPaiementText;
+
+                    console.log('modalOtp_1 :', modalOtp_1);
+                    console.log('modalOtp_2 :', modalOtp_2);
+                    console.log('modalOtp_3 :', modalOtp_3);
+                    console.log('modalOtp_4 :', modalOtp_4);
+                    console.log('modalOtp_5 :', modalOtp_5);
+                    console.log('modalOtp_6 :', modalOtp_6);
+
+                    formulaire.querySelector('[name="otp_1"]').value = modalOtp_1;
+                    formulaire.querySelector('[name="otp_2"]').value = modalOtp_2;
+                    formulaire.querySelector('[name="otp_3"]').value = modalOtp_3;
+                    formulaire.querySelector('[name="otp_4"]').value = modalOtp_4;
+                    formulaire.querySelector('[name="otp_5"]').value = modalOtp_5;
+                    formulaire.querySelector('[name="otp_6"]').value = modalOtp_6;
+
+                    console.log('otp_1 :', formulaire.querySelector('[name="otp_1"]').value);
+                    console.log('otp_2 :', formulaire.querySelector('[name="otp_2"]').value);
+                    console.log('otp_3 :', formulaire.querySelector('[name="otp_3"]').value);
+                    console.log('otp_4 :', formulaire.querySelector('[name="otp_4"]').value);
+                    console.log('otp_5 :', formulaire.querySelector('[name="otp_5"]').value);
+                    console.log('otp_6 :', formulaire.querySelector('[name="otp_6"]').value);
+
 
                     // Mise à jour du résumé pour le moyen de paiement Mobile Money
                     const telPaiementSection = document.getElementById('TelephonePaiement');

@@ -54,7 +54,7 @@ class ValidationController extends Controller
         // dd($PartContrat);
         return view('productions.validations.index', compact('PartContrat', 'PartBNIContrat', 'prets'));
     }
-
+    
     /**
      * Show the form for creating a new resource.
      */
@@ -138,8 +138,6 @@ class ValidationController extends Controller
             'additionalColumns' => $additionalColumns
         ]);
     }
-
-
     /**
      * Store a newly created resource in storage.
      */
@@ -353,62 +351,6 @@ class ValidationController extends Controller
         return view('productions.validations.edit', compact('contrat', 'product', 'villes', 'secteurActivites', 'professions','productGarantie','societes','agences'));
 
     }
-
-
-    // public function register(Request $request)
-    // {
-    //     $saving = TblCreationCompte::create([
-    //         'nom' => $request->nom,
-    //         'prenom' => $request->prenom,
-    //         'email' => $request->email,
-    //         'cel' => $request->cel,
-    //         'login' => $request->login,
-    //         'password' => $request->password,
-    //         'estClient' => 0,
-    //         'estnotifie' => 0,
-    //         'estnotifieLe' => null,
-    //         'idCustomer' => null,
-    //     ]);
-
-    //     $savingMembre = Membre::create([
-    //         'login' => $customer->login,
-    //         'pass' => $customer->password,
-    //         'nom' => $customer->nom,
-    //         'prenom' => $customer->prenom,
-    //         'email' => $customer->email,
-    //         'cel' => $customer->cel,
-    //         'typ_membre' => 3,
-    //         'activer' => 1,
-    //         'estajour' => 1,
-    //         'memberok' => 1,
-    //         'datenaissance' => $request->datenaissance,
-    //     ]);
-    //     MembreContrat::create([
-    //         'codemembre' => $savingMembre->idmembre,
-    //         'idcontrat' => $idcontrat,
-    //     ]);
-    //     $password = Hash::make($customer->password);
-    //     $savingCustomer = TblCustomer::create([
-    //         'login' => $customer->login,
-    //         'password' => $password,
-    //         'activer' => 1,
-    //         'estajour' => 0,
-    //         'memberok' => 1,
-    //         'idmembre' => $savingMembre->idmembre,
-    //         'isFirstLog' => 0,
-    //     ]);
-
-    //     if ($savingCustomer) {
-    //         // mettre à jour TblCreationCompte
-    //         TblCreationCompte::where('id', $customer->id)->update([
-    //             'idCustomer' => $savingCustomer->id,
-    //             'password' => $password,
-    //             'estClient' => 1,
-    //         ]);
-    //     }
-    // }
-
-
 
     /**
      * Update the specified resource in storage.

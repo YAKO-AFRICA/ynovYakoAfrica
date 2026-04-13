@@ -53,12 +53,12 @@
                                 rentrer ci-dessous</span>
                             <div class="col-12 d-flex justify-content-center align-items-center">
                                 <div class="otp-container">
-                                    <input type="text" class="otp-input" maxlength="1">
-                                    <input type="text" class="otp-input" maxlength="1">
-                                    <input type="text" class="otp-input" maxlength="1">
-                                    <input type="text" class="otp-input" maxlength="1">
-                                    <input type="text" class="otp-input" maxlength="1">
-                                    <input type="text" class="otp-input" maxlength="1">
+                                    <input type="text" class="otp-input" id="modalOtp_1" maxlength="1">
+                                    <input type="text" class="otp-input" id="modalOtp_2" maxlength="1">
+                                    <input type="text" class="otp-input" id="modalOtp_3" maxlength="1">
+                                    <input type="text" class="otp-input" id="modalOtp_4" maxlength="1">
+                                    <input type="text" class="otp-input" id="modalOtp_5" maxlength="1">
+                                    <input type="text" class="otp-input" id="modalOtp_6" maxlength="1">
                                 </div>
                             </div>
                             <div class="otp-expi-time" id="otp-expi-time">
