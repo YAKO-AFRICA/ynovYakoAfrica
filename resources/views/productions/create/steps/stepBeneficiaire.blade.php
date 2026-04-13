@@ -23,7 +23,7 @@
                 <div class="card" style="width: 80%">
                     <div class="card-body">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="addBeneficiary" value="adherent" name="addBeneficiary" checked readonly>
+                            <input class="form-check-input" type="checkbox" id="addBeneficiary" value="adherent" name="benef_terme" checked readonly>
                             <label class="form-check-label" for="addBeneficiary" >Adhérent</label>
                         </div>
 
