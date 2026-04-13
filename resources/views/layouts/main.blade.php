@@ -18,6 +18,12 @@
 	<!-- loader-->
     <link href="{{ asset('assets/plugins/bs-stepper/css/bs-stepper.css')}}" rel="stylesheet" />
 
+    <meta name="theme-color" content="#076633">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/images/icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
     {{-- <!-- loader-->
 	<link href="assets/css/pace.min.css" rel="stylesheet" />
 	<script src="assets/js/pace.min.js"></script> --}}
