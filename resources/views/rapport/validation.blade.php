@@ -194,6 +194,7 @@
                     <tr class="">
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->libelleproduit ?? "" }}</td>
+                        <td>{{ $item->adherent->nom ?? "" }} {{ $item->adherent->prenom ?? "" }}</td>
                         <td>{{ $item->dateeffet ?? "" }}</td>
                         <td>{{ $item->prime ?? "" }}</td>
                         <td>{{ $item->capital ?? "" }}</td>

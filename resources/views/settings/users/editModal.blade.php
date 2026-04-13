@@ -291,46 +291,102 @@
     });
 
     // 2. Gestion de la soumission avec SweetAlert2
-    $(document).on('submit', '.submitForm', function(e) {
-        e.preventDefault();
+    // $(document).on('submit', '.submitForm', function(e) {
+    //     e.preventDefault();
 
-        const form = this;
-        const formData = new FormData(form);
-        const url = form.getAttribute('action');
+    //     const form = this;
+    //     const formData = new FormData(form);
+    //     const url = form.getAttribute('action');
 
-            fetch(url, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.type === 'success') {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Succès !',
-                            text: data.message,
-                            confirmButtonColor: '#076633'
-                        }).then(() => {
-                            // Optionnel : recharger la page ou rediriger
-                            if(data.urlback === 'back') {
-                                window.location.reload();
-                            } else if(data.urlback) {
-                                window.location.href = data.urlback;
-                            }
-                        });
-                    } else {
-                        Swal.fire('Erreur', data.message, 'error');
-                    }
-                })
-                .catch(error => {
-                    Swal.fire('Erreur', 'Une erreur système est survenue.', 'error');
-                    console.error(error);
-                });
+    //         fetch(url, {
+    //                 method: 'POST',
+    //                 body: formData,
+    //                 headers: {
+    //                     'X-Requested-With': 'XMLHttpRequest',
+    //                     'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+    //                 }
+    //             })
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 if (data.type === 'success') {
+    //                     Swal.fire({
+    //                         icon: 'success',
+    //                         title: 'Succès !',
+    //                         text: data.message,
+    //                         confirmButtonColor: '#076633'
+    //                     }).then(() => {
+    //                         // Optionnel : recharger la page ou rediriger
+    //                         if(data.urlback === 'back') {
+    //                             window.location.reload();
+    //                         } else if(data.urlback) {
+    //                             window.location.href = data.urlback;
+    //                         }
+    //                     });
+    //                 } else {
+    //                     Swal.fire('Erreur', data.message, 'error');
+    //                 }
+    //             })
+    //             .catch(error => {
+    //                 Swal.fire('Erreur', 'Une erreur système est survenue.', 'error');
+    //                 console.error(error);
+    //             });
+    //         });
+
+        $(document).off('submit', '.submitForm').on('submit', '.submitForm', function(e) {
+    e.preventDefault();
+
+    const form = this;
+
+    if (form.dataset.submitted === "true") return;
+    form.dataset.submitted = "true";
+
+    const submitBtn = form.querySelector('.finish-step');
+    submitBtn.disabled = true;
+    submitBtn.innerText = "En cours...";
+
+    const formData = new FormData(form);
+    const url = form.getAttribute('action');
+
+    fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.type === 'success') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Succès !',
+                text: data.message,
+                confirmButtonColor: '#076633'
+            }).then(() => {
+                if(data.urlback === 'back') {
+                    window.location.reload();
+                } else if(data.urlback) {
+                    window.location.href = data.urlback;
+                }
             });
+        } else {
+            form.dataset.submitted = "false";
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Terminer";
+
+            Swal.fire('Erreur', data.message, 'error');
+        }
+    })
+    .catch(error => {
+        form.dataset.submitted = "false";
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Terminer";
+
+        Swal.fire('Erreur', 'Une erreur système est survenue.', 'error');
+        console.error(error);
+    });
+});
         });
     </script>
 

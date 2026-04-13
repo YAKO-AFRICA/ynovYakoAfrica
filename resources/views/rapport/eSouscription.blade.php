@@ -200,6 +200,7 @@
                     <tr class="">
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->numBullettin ?? "" }}</td>
+                        <td>{{ $item->adherent->nom ?? "" }} {{ $item->adherent->prenom ?? "" }}</td>
                         <td>{{ $item->libelleproduit ?? "" }}</td>
                         <td>{{ $item->dateeffet ?? "" }}</td>
                         <td>{{ $item->prime ?? "" }}</td>

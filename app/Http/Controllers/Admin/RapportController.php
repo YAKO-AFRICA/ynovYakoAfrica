@@ -157,7 +157,7 @@ public function eSouscription(Request $request)
     // Exécuter la requête
     $contrats = $query->get();
 
-    $defaultColumns = ['#','N° Bulletin', 'Produit', 'Date Effet', 'Prime', 'Capital', 'Saisir Par', 'Status'];
+    $defaultColumns = ['#','N° Bulletin','Souscripteur', 'Produit', 'Date Effet', 'Prime', 'Capital', 'Saisir Par', 'Status'];
 
     $additionalColumns = [
         'Mode de Paiement' => 'modepaiement',
@@ -395,7 +395,7 @@ public function eSouscription(Request $request)
         $contrats = $query->get();
 
 
-        $defaultColumns = ['#', 'Produit', 'Date Effet', 'Prime', 'Capital', 'Saisir Par', 'Status'];
+        $defaultColumns = ['#', 'Produit','Souscripteur', 'Date Effet', 'Prime', 'Capital', 'Saisir Par', 'Status'];
 
         $additionalColumns = [
             'Mode de Paiement' => 'modepaiement',

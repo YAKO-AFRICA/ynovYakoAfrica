@@ -130,7 +130,7 @@ class UserController extends Controller
 
         $id = DB::table('membre')->max('idmembre') + 1;
 
-        Log::info($request->all());
+        // Log::info($request->all());
 
         $rolesMap = [
             5 => 'Conseiller',

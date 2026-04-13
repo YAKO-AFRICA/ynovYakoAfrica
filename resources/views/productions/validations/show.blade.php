@@ -267,34 +267,22 @@
                         <!-- Section Adhérent -->
                         <section id="edit-adherent" class="section-content d-none">
                             <h6 class="border-bottom pb-2 mb-3"><i class='bx bx-user me-2'></i>Adhérent</h6>
-
                             <div class=" g-3">
                                 <fieldset class="border p-3">
-
                                     <legend class="float-none w-auto px-2"><small>Adhérent</small></legend>
                                     <div class="my-3">
                                         <strong class=""><label class="form-label">Civilité :</label></strong>
                                         <span class="">{{ $contrat->adherent->civilite ?? 'Non renseigné' }}</span>
                                     </div>
-
                                     <!---end row-->
-
                                     <div class="row g-3 mb-3">
-
                                         <div class="col-12 col-lg-6">
-
                                             <strong><label class="form-label">Nom :</label></strong>
-
                                             <span>{{ $contrat->adherent->nom ?? 'Non renseigné' }}</span>
-
                                         </div>
-
                                         <div class="col-12 col-lg-6">
-
                                             <strong><label class="form-label">Prénoms :</label></strong>
-
                                             <span>{{ $contrat->adherent->prenom ?? 'Non renseigné' }}</span>
-
                                         </div>
 
                                     </div>
@@ -309,7 +297,7 @@
                                                 <label class="form-label">Date de naissance :</label>
                                             </strong>
 
-                                            <span>{{ Carbon\Carbon::parse($contrat->adherent->datedenaissance)->locale('fr')->translatedFormat('d F Y') ?? 'Non renseigné' }}</span>
+                                            <span>{{ Carbon\Carbon::parse($contrat->adherent->datenaissance)->locale('fr')->translatedFormat('d F Y') ?? 'Non renseigné' }}</span>
 
                                         </div>
 
