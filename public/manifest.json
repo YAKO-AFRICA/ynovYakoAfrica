@@ -1,0 +1,109 @@
+{
+  "id": "/",
+  "name": "YNOV - Gestion Digitale",
+  "short_name": "YNOV",
+  "description": "Application digitale YNOV pour la gestion des contrats, utilisateurs et services d’assurance.",
+
+  "lang": "fr",
+  "dir": "ltr",
+
+  "start_url": "/?source=pwa",
+  "scope": "/",
+
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+
+  "orientation": "portrait-primary",
+
+  "background_color": "#FFFFFF",
+  "theme_color": "#076633",
+
+  "categories": ["business", "finance", "productivity"],
+
+  "icons": [
+    {
+      "src": "/mobile/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "/mobile/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/mobile/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/mobile/icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/mobile/icons/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "/mobile/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/mobile/icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/mobile/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+
+  "screenshots": [
+    {
+      "src": "/mobile/icons/screen-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/mobile/icons/screen-mobile.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+
+  "shortcuts": [
+    {
+      "name": "Nouveau contrat",
+      "short_name": "Contrat",
+      "description": "Créer un nouveau contrat",
+      "url": "/contrats/create",
+      "icons": [
+        {
+          "src": "/images/icon-shortcut-contract.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Liste des contrats",
+      "short_name": "Contrats",
+      "description": "Voir les contrats",
+      "url": "/contrats",
+      "icons": [
+        {
+          "src": "/images/icon-shortcut-list.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

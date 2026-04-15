@@ -18,9 +18,11 @@
 	<!-- loader-->
     <link href="{{ asset('assets/plugins/bs-stepper/css/bs-stepper.css')}}" rel="stylesheet" />
 
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
     <meta name="theme-color" content="#076633">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="apple-touch-icon" href="/images/icon-192.png">
+
+    <!-- iOS support -->
+    <link rel="apple-touch-icon" href="{{ asset('images/icon-192.png') }}">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
@@ -647,6 +649,18 @@
 
         <script>
             const API_BASE_URL = "{{ config('services.base_url_api') }}";
+        </script>
+
+        <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('{{ asset("mobile/js/service-worker.js") }}')
+                .then(function(registration) {
+                    console.log('Service Worker enregistré avec succès:', registration);
+                })
+                .catch(function(error) {
+                    console.log('Erreur lors de l\'enregistrement du Service Worker:', error);
+                });
+        }
         </script>
 
 

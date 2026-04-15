@@ -26,7 +26,6 @@
                             <input class="form-check-input" type="checkbox" id="addBeneficiary" value="adherent" name="benef_terme" checked readonly>
                             <label class="form-check-label" for="addBeneficiary" >Adhérent</label>
                         </div>
-
                     </div>
                 </div>
             </div>
