@@ -489,8 +489,8 @@
                         Se connecter
                     </button>
 
-                    <button class="mt-3 w-100 px-3 py-2 btn btn-outline-primary" id="installBtn" style="display:none;">
-                       <i class="fas fa-download"></i> Installer notre application l'application
+                    <button type="button" class="mt-3 w-100 px-3 py-2 btn btn-outline-primary" id="installBtn" style="display:none;">
+                       <i class="fas fa-download"></i> Installer l'application
                     </button>
                 </form>
             </div>
