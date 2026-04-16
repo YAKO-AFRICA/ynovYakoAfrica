@@ -3,13 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#076633">
 
     <!-- iOS support -->
     <link rel="apple-touch-icon" href="{{ asset('images/icon-192.png') }}">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
     <link rel="icon" href="{{ asset('root/images/logo-icon.png')}}" type="image/png"/>
     <link href="{{ asset('assets/plugins/simplebar/css/simplebar.css')}}" rel="stylesheet" />
     <link href="{{ asset('assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css')}}" rel="stylesheet" />
@@ -576,5 +578,6 @@
 
     });
     </script>
+    {{-- <script src="/service-worker.js"></script> --}}
 </body>
 </html>

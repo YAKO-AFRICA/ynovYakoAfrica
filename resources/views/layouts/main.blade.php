@@ -651,17 +651,9 @@
             const API_BASE_URL = "{{ config('services.base_url_api') }}";
         </script>
 
-        <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('{{ asset("mobile/js/service-worker.js") }}')
-                .then(function(registration) {
-                    console.log('Service Worker enregistré avec succès:', registration);
-                })
-                .catch(function(error) {
-                    console.log('Erreur lors de l\'enregistrement du Service Worker:', error);
-                });
-        }
-        </script>
+        {{-- <script src="/service-worker.js"></script> --}}
+
+       
 
 
 
