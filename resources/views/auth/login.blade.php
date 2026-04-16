@@ -395,6 +395,7 @@
 </head>
 <body>
     <div class="login-container">
+        
         <!-- Animated particles -->
         <div class="particles">
             <div class="particle"></div>
@@ -487,6 +488,10 @@
                     <button type="submit" class="btn-login" id="bntLogin">
                         Se connecter
                     </button>
+
+                    <button class="mt-3 w-100 px-3 py-2 btn btn-outline-primary" id="installBtn" style="display:none;">
+                       <i class="fas fa-download"></i> Installer notre application l'application
+                    </button>
                 </form>
             </div>
         </div>
@@ -577,6 +582,22 @@
         @endif
 
     });
+    </script>
+
+    <script>
+        let deferredPrompt;
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                document.getElementById('installBtn').style.display = 'block';
+            });
+
+            document.getElementById('installBtn').addEventListener('click', async () => {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(outcome);
+            });
     </script>
     {{-- <script src="/service-worker.js"></script> --}}
 </body>
