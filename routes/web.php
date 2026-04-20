@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AssurerController;
 use App\Http\Controllers\Admin\BeneficiairesController;
 use App\Http\Controllers\Admin\BulletinController;
 use App\Http\Controllers\Admin\CotationController;
+use App\Http\Controllers\Admin\DdcController;
 use App\Http\Controllers\Admin\DocumentController;
 use App\Http\Controllers\Admin\EpretController;
 use App\Http\Controllers\Admin\FileManageController;
@@ -509,6 +510,29 @@ Route::prefix('prospect')->name('prospect.')->group(function(){
     });
 
 });
+
+Route::prefix('ddc')->name('ddc.')->group(function(){
+    Route::middleware('guest','PreventBackHistory')->group(function(){
+        // Route::get('/calculDataDDC', [DdcController::class, 'calculDataDDC'])->name('calculDataDDC');
+    });
+
+    Route::middleware(['auth','PreventBackHistory'])->group(function () {
+        Route::get('/index', [DdcController::class, 'index'])->name('index');
+        Route::get('/partners-index', [DdcController::class, 'partenaires'])->name('partners.index');
+        Route::get('/partners/{code}', [DdcController::class, 'showPartenaire'])->name('partners.show');
+        // Dans votre groupe de routes existant pour DDC
+        Route::get('/suivieRejet', [DdcController::class, 'suivieRejet'])->name('suivieRejet');
+        Route::get('/rejets/list', [DdcController::class, 'getRejetsList'])->name('rejets.list');
+        Route::post('/rejets/{id}/traiter', [DdcController::class, 'traiterRejet'])->name('rejets.traiter');
+        Route::get('/rejets/export', [DdcController::class, 'exportRejets'])->name('rejets.export');
+        
+        
+    });
+    
+});
+Route::get('ddc/calculDataDDC', [DdcController::class, 'calculDataDDC'])->name('calculDataDDC');
+
+
 
 
 

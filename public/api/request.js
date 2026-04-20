@@ -1,4 +1,4 @@
-import { getPropositions, getDashbordData } from './reduce.js';
+import { getPropositions, getDashbordData, getDdcData } from './reduce.js';
 
 function formatMoney(value){
     return Number(value ?? 0).toLocaleString('fr-FR') + ' FCFA';
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', async function() {
        LOAD DASHBOARD PRIORITY
     ==========================*/
     const data = await getDashbordData();
-
+    
     console.log(data.produits);
 
     /* =========================
@@ -199,6 +199,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     });
 
+
     /* =========================
        LOAD TABLE ASYNC (non bloquant)
     ==========================*/
@@ -226,6 +227,16 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     }, 50); // charge après dashboard
 
+});
+
+
+// donnée pour dashboard DDC
+
+document.addEventListener('DOMContentLoaded', async function() {
+    const getDcData = await getDdcData();
+    console.log('Données DDC:');
+    console.log(getDcData);
+    
 });
 
 

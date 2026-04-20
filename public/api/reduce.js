@@ -32,3 +32,31 @@ export function getDashbordData() {
         return null;
     });
 }
+
+export function getDdcData() {
+    return fetch('/ddc/calculDataDDC')
+        .then(async response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const text = await response.text();
+
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                console.error('Réponse non JSON:', text);
+                throw e;
+            }
+        })
+        .then(data => {
+            console.log('Données DDC:', data);
+            return data;
+        })
+        .catch(error => {
+            console.error('Erreur API DDC:', error);
+            return null;
+        });
+}
+
+
