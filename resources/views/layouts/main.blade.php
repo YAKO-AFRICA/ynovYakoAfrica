@@ -161,12 +161,12 @@
             --border-radius: 12px;
         }
         .badge {
-        display: inline-block;
-        padding: 0.2rem 0.5rem;
-        color: #fff;
-        border-radius: 0.25rem;
-        font-size: 12px;
-    }
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            color: #fff;
+            border-radius: 0.25rem;
+            font-size: 12px;
+        }
             .select2-container--default .select2-selection--single {
                 height: 38px !important;
                 display: flex;
@@ -237,7 +237,7 @@
 	<title>YNOV - Plateforme de souscription en ligne</title>
 </head>
 
-<body >
+<body>
     <div id="preloader">
         <div id="loader" class="loader">
             <div class="loader-container">

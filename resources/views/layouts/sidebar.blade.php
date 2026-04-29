@@ -123,7 +123,7 @@
                 
             @endcan
 
-            {{-- @can('Voir d-commerciale') --}}
+            @can('Voir suivie-commerciale')
                 <li class="menu-label">Direction Commerciale</li>
                 <li>
                     <a href="{{ route('ddc.index') }}">
@@ -143,7 +143,7 @@
                         <div class="menu-title">Suivi des rejets</div>
                     </a>
                 </li>
-            {{-- @endcan --}}
+            @endcan
 
             
 

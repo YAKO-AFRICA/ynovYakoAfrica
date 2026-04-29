@@ -599,6 +599,5 @@
                 console.log(outcome);
             });
     </script>
-    {{-- <script src="/service-worker.js"></script> --}}
 </body>
 </html>

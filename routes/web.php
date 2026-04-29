@@ -119,9 +119,6 @@ Route::prefix('file')->name('file.')->group(function(){
         Route::post('/store/folder', [FileManageController::class, 'storeFolder'])->name('storeFolder');
         Route::post('/store/files', [FileManageController::class, 'storeFile'])->name('storeFile');
         Route::get('/file-manager/files/{folder_id}', [FileManageController::class, 'getFilesByFolder']);
-
-
-
     });
 });
 
