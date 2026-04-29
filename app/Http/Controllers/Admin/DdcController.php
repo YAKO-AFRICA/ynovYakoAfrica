@@ -378,10 +378,17 @@ class DdcController extends Controller
     public function suivieRejet(Request $request)
     {
         // Récupérer les partenaires pour le filtre
-        $partenaires = Reseau::orderBy('libelle')->get();
+        $partenaires = Reseau::where('codebranche','BANKASS')->orderBy('libelle')->get();
+
+        $partenairesPluck = Reseau::whereIn('codebranche', ['BANKASS'])
+            ->pluck('codepartenaire')
+            ->unique()
+            ->values();
+
         
         // Récupérer les motifs de rejet uniques
         $motifsRejet = Contrat::where('etape', 4)
+            ->whereIn('partenaire', $partenairesPluck)
             ->whereNotNull('motifrejet')
             ->select('motifrejet')
             ->distinct()
@@ -470,6 +477,14 @@ class DdcController extends Controller
      */
     private function getRejetsListQuery($request)
     {
+
+        $partenaires = Reseau::where('codebranche','BANKASS')->orderBy('libelle')->get();
+
+        $partenairesPluck = Reseau::whereIn('codebranche', ['BANKASS'])
+            ->pluck('codepartenaire')
+            ->unique()
+            ->values();
+
         $query = Contrat::where('etape', 4)
             ->with(['adherent'])
             ->orderBy('annulerle', 'desc');
@@ -478,6 +493,8 @@ class DdcController extends Controller
         if ($request->filled('partenaire')) {
             $valuecode = ($request->partenaire === '092') ? 'BNI' : $request->partenaire;
             $query->where('partenaire', $valuecode);
+        }else{
+            $query->whereIn('partenaire', $partenairesPluck);
         }
 
         
