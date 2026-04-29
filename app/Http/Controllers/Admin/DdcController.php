@@ -408,12 +408,22 @@ class DdcController extends Controller
      */
     private function calculateRejetKpis($request)
     {
+
+        $partenaires = Reseau::where('codebranche','BANKASS')->orderBy('libelle')->get();
+
+        $partenairesPluck = Reseau::whereIn('codebranche', ['BANKASS'])
+            ->pluck('codepartenaire')
+            ->unique()
+            ->values();
+
         $query = Contrat::where('etape', 4);
         
         // Appliquer les filtres si présents
         if ($request->filled('partenaire')) {
             $valuecode = ($request->partenaire === '092') ? 'BNI' : $request->partenaire;
             $query->where('partenaire', $valuecode);
+        }else{
+            $query->whereIn('partenaire', $partenairesPluck);
         }
         
         if ($request->filled('motif')) {
