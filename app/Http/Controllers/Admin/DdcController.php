@@ -408,53 +408,110 @@ class DdcController extends Controller
      */
     private function calculateRejetKpis($request)
     {
-
-        $partenaires = Reseau::where('codebranche','BANKASS')->orderBy('libelle')->get();
-
-        $partenairesPluck = Reseau::whereIn('codebranche', ['BANKASS'])
+        // Récupération des partenaires BANKASS
+        $partenairesPluck = Reseau::where('codebranche', 'BANKASS')
             ->pluck('codepartenaire')
             ->unique()
-            ->values();
+            ->toArray();
 
+        // 🔥 Forcer inclusion BNI
+        $partenairesPluck = array_unique(array_merge($partenairesPluck, ['BNI']));
+
+        // Query de base
         $query = Contrat::where('etape', 4);
-        
-        // Appliquer les filtres si présents
+
+        /**
+         * ============================
+         * FILTRE PARTENAIRE
+         * ============================
+         */
         if ($request->filled('partenaire')) {
-            $valuecode = ($request->partenaire === '092') ? 'BNI' : $request->partenaire;
-            $query->where('partenaire', $valuecode);
-        }else{
+
+            $codes = [$request->partenaire];
+
+            // Cas spécial BNI / 092
+            if (in_array($request->partenaire, ['092', 'BNI'])) {
+                $codes = ['092', 'BNI'];
+            }
+
+            $query->whereIn('partenaire', $codes);
+
+        } else {
+
             $query->whereIn('partenaire', $partenairesPluck);
         }
-        
+
+        /**
+         * ============================
+         * FILTRE MOTIF
+         * ============================
+         */
         if ($request->filled('motif')) {
             $query->where('motifrejet', $request->motif);
         }
-        
+
+        /**
+         * ============================
+         * FILTRE DATES
+         * ============================
+         */
         if ($request->filled('start_date') && $request->filled('end_date')) {
+
             $query->whereBetween('annulerle', [
                 $request->start_date . ' 00:00:00',
                 $request->end_date . ' 23:59:59'
             ]);
+
+        } elseif ($request->filled('start_date')) {
+
+            $query->whereDate('annulerle', '>=', $request->start_date);
+
+        } elseif ($request->filled('end_date')) {
+
+            $query->whereDate('annulerle', '<=', $request->end_date);
         }
-        
+
+        /**
+         * ============================
+         * KPI CALCULS
+         * ============================
+         */
+
         $totalRejets = (clone $query)->count();
-        $rejetsAujourdhui = (clone $query)->whereDate('annulerle', today())->count();
-        
-        // Évolution (comparaison avec mois dernier)
-        $moisActuel = (clone $query)->whereMonth('annulerle', now()->month)->count();
-        $moisPrecedent = (clone $query)->whereMonth('annulerle', now()->subMonth()->month)->count();
-        
-        $evolution = $moisPrecedent > 0 
+
+        $rejetsAujourdhui = (clone $query)
+            ->whereDate('annulerle', today())
+            ->count();
+
+        // ⚠️ Correction mois (évite bug Carbon mutable)
+        $now = now();
+        $moisActuel = (clone $query)
+            ->whereYear('annulerle', $now->year)
+            ->whereMonth('annulerle', $now->month)
+            ->count();
+
+        $moisPrecedent = (clone $query)
+            ->whereYear('annulerle', $now->copy()->subMonth()->year)
+            ->whereMonth('annulerle', $now->copy()->subMonth()->month)
+            ->count();
+
+        $evolution = $moisPrecedent > 0
             ? round((($moisActuel - $moisPrecedent) / $moisPrecedent) * 100, 1)
             : ($moisActuel > 0 ? 100 : 0);
-        
-        // Taux de rejet global
+
+        // ⚠️ (Optionnel mais recommandé) appliquer les mêmes filtres ici aussi
         $totalContrats = Contrat::count();
-        $tauxRejetGlobal = $totalContrats > 0 
+
+        $tauxRejetGlobal = $totalContrats > 0
             ? round(($totalRejets / $totalContrats) * 100, 2)
             : 0;
-        
-        // Top motifs de rejet
+
+        /**
+         * ============================
+         * TOPS
+         * ============================
+         */
+
         $topMotifs = (clone $query)
             ->select('motifrejet', DB::raw('COUNT(*) as total'))
             ->whereNotNull('motifrejet')
@@ -462,15 +519,14 @@ class DdcController extends Controller
             ->orderByDesc('total')
             ->limit(5)
             ->get();
-        
-        // Rejets par partenaire (top 5)
+
         $topPartenaires = (clone $query)
             ->select('partenaire', DB::raw('COUNT(*) as total'))
             ->groupBy('partenaire')
             ->orderByDesc('total')
             ->limit(5)
             ->get();
-        
+
         return [
             'total_rejets' => $totalRejets,
             'rejets_aujourdhui' => $rejetsAujourdhui,
@@ -487,44 +543,72 @@ class DdcController extends Controller
      */
     private function getRejetsListQuery($request)
     {
-
-        $partenaires = Reseau::where('codebranche','BANKASS')->orderBy('libelle')->get();
-
-        $partenairesPluck = Reseau::whereIn('codebranche', ['BANKASS'])
+        // Liste des partenaires BANKASS
+        $partenairesPluck = Reseau::where('codebranche', 'BANKASS')
             ->pluck('codepartenaire')
             ->unique()
-            ->values();
+            ->toArray();
 
+        // 🔥 Forcer l’inclusion de BNI
+        $partenairesPluck = array_unique(array_merge($partenairesPluck, ['BNI']));
+
+        // Query de base
         $query = Contrat::where('etape', 4)
             ->with(['adherent'])
             ->orderBy('annulerle', 'desc');
-        
-        // Filtre par partenaire
+
+        /**
+         * ============================
+         * FILTRE PARTENAIRE
+         * ============================
+         */
         if ($request->filled('partenaire')) {
-            $valuecode = ($request->partenaire === '092') ? 'BNI' : $request->partenaire;
-            $query->where('partenaire', $valuecode);
-        }else{
+
+            $codes = [$request->partenaire];
+
+            // Cas spécial BNI / 092
+            if (in_array($request->partenaire, ['092', 'BNI'])) {
+                $codes = ['092', 'BNI'];
+            }
+
+            $query->whereIn('partenaire', $codes);
+
+        } else {
+
+            // Tous les partenaires BANKASS + BNI
             $query->whereIn('partenaire', $partenairesPluck);
         }
 
-        
-        // Filtre par motif
+        /**
+         * ============================
+         * FILTRE MOTIF
+         * ============================
+         */
         if ($request->filled('motif')) {
             $query->where('motifrejet', $request->motif);
         }
-        
-        // Filtre par plage de dates
+
+        /**
+         * ============================
+         * FILTRE DATES
+         * ============================
+         */
         if ($request->filled('start_date') && $request->filled('end_date')) {
+
             $query->whereBetween('annulerle', [
                 $request->start_date . ' 00:00:00',
                 $request->end_date . ' 23:59:59'
             ]);
+
         } elseif ($request->filled('start_date')) {
+
             $query->whereDate('annulerle', '>=', $request->start_date);
+
         } elseif ($request->filled('end_date')) {
+
             $query->whereDate('annulerle', '<=', $request->end_date);
         }
-        
+
         return $query;
     }
 
