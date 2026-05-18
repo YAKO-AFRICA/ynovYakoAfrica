@@ -167,6 +167,8 @@
                                     <dl class="mb-4">
                                         <dt>ID du contrat</dt>
                                         <dd>{{ $contrat->id ?? '--' }}</dd>
+                                        <dt>Durée</dt>
+                                        <dd>{{ $contrat->duree ?? '--' }}</dd>
 
                                         <dt>Mode de paiement</dt>
                                         <dd>

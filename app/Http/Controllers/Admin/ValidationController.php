@@ -144,214 +144,220 @@ class ValidationController extends Controller
     public function acceptContrat(Request $request, string $id)
     {
         DB::beginTransaction();
+
         try {
-                $contrat = Contrat::find($id);
 
-                if(!$contrat && $contrat->organisme == 'BNI') {
-                    $contrat->update([
-                        'codebanque' => 'CI092'
-                    ]);
-                }
+            $contrat = Contrat::find($id);
 
-                if (!$contrat) {
-                    $benefDeces = strtolower($contrat->beneficiaireaudeces ?? '');
-                    $benefTerme = strtolower($contrat->beneficiaireauterme ?? '');
+            // Vérification existence contrat
+            if (!$contrat) {
 
-                    /*
-                    |--------------------------------------------------------------------------
-                    | BENEFICIAIRES AU DECES
-                    |--------------------------------------------------------------------------
-                    */
-
-                    // 🔹 ENFANTS AU DECES
-                    if (
-                        str_contains($benefDeces, 'enfant') ||
-                        str_contains($benefDeces, 'enfants')
-                    ) {
-
-                        DB::table('tblbeneficiaire')->updateOrInsert(
-                            [
-                                'codecontrat' => $contrat->id,
-                                'nom' => 'Enfant',
-                                'type' => 'audeces'
-                            ],
-                            [
-                                'prenom' => 'Né et à naître',
-                                'cleintegration' => $key
-                            ]
-                        );
-                    }
-
-                    // 🔹 CONJOINT AU DECES
-                    if (
-                        str_contains($benefDeces, 'conjoint') ||
-                        str_contains($benefDeces, 'conjointe')
-                    ) {
-                        DB::table('tblbeneficiaire')->updateOrInsert(
-                            [
-                                'codecontrat' => $contrat->id,
-                                'nom' => 'Conjoint',
-                                'type' => 'audeces'
-                            ],
-                            [
-                                'prenom' => 'Conjointe',
-                                'cleintegration' => $key
-                            ]
-                        );
-                    }
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | BENEFICIAIRES AU TERME
-                    |--------------------------------------------------------------------------
-                    */
-
-                    // 🔹 ENFANTS AU TERME
-                    if (
-                        str_contains($benefTerme, 'enfant') ||
-                        str_contains($benefTerme, 'enfants')
-                    ) {
-
-                        DB::table('tblbeneficiaire')->updateOrInsert(
-                            [
-                                'codecontrat' => $contrat->id,
-                                'nom' => 'Enfant',
-                                'type' => 'auterme'
-                            ],
-                            [
-                                'prenom' => 'Né et à naître',
-                                'cleintegration' => $key
-                            ]
-                        );
-                    }
-
-                    // 🔹 CONJOINT AU TERME
-                    if (
-                        str_contains($benefTerme, 'conjoint') ||
-                        str_contains($benefTerme, 'conjointe')
-                    ) {
-
-                        DB::table('tblbeneficiaire')->updateOrInsert(
-                            [
-                                'codecontrat' => $contrat->id,
-                                'nom' => 'Conjoint',
-                                'type' => 'auterme'
-                            ],
-                            [
-                                'prenom' => 'Conjointe',
-                                'cleintegration' => $key
-                            ]
-                        );
-                    }
-                }
-
-                $champsManquants = [];
-
-                if (!$contrat->duree) {
-                    $champsManquants[] = 'duree';
-                }
-                if (!$contrat->periodicite) {
-                    $champsManquants[] = 'periodicite';
-                }
-                if (!$contrat->prime) {
-                    $champsManquants[] = 'prime';
-                }
-                if($contrat->modepaiement == 'VIR'){
-                    if (!$contrat->numerocompte) {
-                            $champsManquants[] = 'numéro de compte';
-                        }
-                        if (!$contrat->codebanque) {
-                            $champsManquants[] = 'code banque';
-                        }
-                        if (!$contrat->codeguichet) {
-                            $champsManquants[] = 'code guichet';
-                        }
-                        if (!$contrat->rib) {
-                            $champsManquants[] = 'RIB';
-                        }
-                }
-
-                if (!empty($champsManquants)) {
-                    return response()->json([
-                        'type' => 'error',
-                        'urlback' => 'back',
-                        'message' => "Impossible de valider cette proposition ! Champs manquants : " . implode(', ', $champsManquants),
-                        'code' => 422,
-                    ]);
-                }
-
-                // $nbBenef = count($contrat->beneficiaires);
-                $nbAssure = count($contrat->assures);
-
-                // if ($nbBenef == 0) {
-                //     return response()->json([
-                //         'type' => 'error',
-                //         'urlback' => 'back',
-                //         'message' => "Impossible aucun beneficiaire trouver pour ce contrat !",
-                //         'code' => 422,
-                //     ]);
-                // }
-
-                if ($nbAssure == 0) {
-                    return response()->json([
-                        'type' => 'error',
-                        'urlback' => 'back',
-                        'message' => "Impossible aucun assure trouver pour ce contrat !",
-                        'code' => 422,
-                    ]);
-                }
-
-
-                if ($contrat) {
-                    $contrat->update(
-                        [
-                            'accepterle' => now(),
-                            'accepterpar' => Auth::user()->membre->idmembre,
-                            'etape' => 3,
-                            'estMigre' => 1,
-                            // 'cleintegration' => now()->format('YmdHis'),
-                        ]
-                    );
-
-                    $details_log = [
-                        'url' => route('prod.show', $id),
-                        'user' => \auth()->user()->membre->nom . ' ' . \auth()->user()->membre->prenom,
-                        'date' => now(),
-                        'title' => "Acceptation de la proposition ID $id ",
-                        'action' => "Voir",
-                    ];
-
-                    $usersToNotify = User::where('idmembre', $contrat->saisiepar)->get();
-                    Notification::send($usersToNotify, new SystemeNotify($details_log));
-
-                    DB::commit();
-
-                    return response()->json([
-                        'type' => 'success',
-                        'urlback' => \route('prod.validation.prodByPartner', $contrat->partenaire),
-                        'message' => "Proposition NÂ° " . $id . " validÃ©e avec succÃ¨s!",
-                        'code' => 200,
-                    ]);
-
-
-                } else {
-                    return response()->json([
-                        'type' => 'error',
-                        'urlback' => 'back',
-                        'message' => "Erreur lors du rejet de la proposition NÂ° " . $id . "!",
-                        'code' => 200,
-                    ]);
-                }
-
-            } catch (\Throwable $th) {
-                DB::rollBack();
                 return response()->json([
                     'type' => 'error',
-                    'urlback' => '',
-                    'message' => "Erreur systÃ¨me! $th",
-                    'code' => 500,
+                    'urlback' => 'back',
+                    'message' => "Contrat introuvable !",
+                    'code' => 404,
                 ]);
             }
+
+            // Mise à jour code banque BNI
+            if ($contrat->organisme == 'BNI') {
+
+                $contrat->update([
+                    'codebanque' => 'CI092'
+                ]);
+            }
+
+            $key = now()->format('YmdHis');
+
+            $benefDeces = strtolower($contrat->beneficiaireaudeces ?? '');
+            $benefTerme = strtolower($contrat->beneficiaireauterme ?? '');
+
+            /*
+            |--------------------------------------------------------------------------
+            | BENEFICIAIRES AU DECES
+            |--------------------------------------------------------------------------
+            */
+
+            // ENFANTS AU DECES
+            if (
+                str_contains($benefDeces, 'enfant') ||
+                str_contains($benefDeces, 'enfants')
+            ) {
+
+                DB::table('tblbeneficiaire')->updateOrInsert(
+                    [
+                        'codecontrat' => $contrat->id,
+                        'nom' => 'Enfant',
+                        'type' => 'audeces'
+                    ],
+                    [
+                        'prenom' => 'Né et à naître',
+                        'cleintegration' => $key
+                    ]
+                );
+            }
+
+            // CONJOINT AU DECES
+            if (
+                str_contains($benefDeces, 'conjoint') ||
+                str_contains($benefDeces, 'conjointe')
+            ) {
+
+                DB::table('tblbeneficiaire')->updateOrInsert(
+                    [
+                        'codecontrat' => $contrat->id,
+                        'nom' => 'Conjoint',
+                        'type' => 'audeces'
+                    ],
+                    [
+                        'prenom' => 'Conjointe',
+                        'cleintegration' => $key
+                    ]
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | BENEFICIAIRES AU TERME
+            |--------------------------------------------------------------------------
+            */
+
+            // ENFANTS AU TERME
+            if (
+                str_contains($benefTerme, 'enfant') ||
+                str_contains($benefTerme, 'enfants')
+            ) {
+
+                DB::table('tblbeneficiaire')->updateOrInsert(
+                    [
+                        'codecontrat' => $contrat->id,
+                        'nom' => 'Enfant',
+                        'type' => 'auterme'
+                    ],
+                    [
+                        'prenom' => 'Né et à naître',
+                        'cleintegration' => $key
+                    ]
+                );
+            }
+
+            // CONJOINT AU TERME
+            if (
+                str_contains($benefTerme, 'conjoint') ||
+                str_contains($benefTerme, 'conjointe')
+            ) {
+
+                DB::table('tblbeneficiaire')->updateOrInsert(
+                    [
+                        'codecontrat' => $contrat->id,
+                        'nom' => 'Conjoint',
+                        'type' => 'auterme'
+                    ],
+                    [
+                        'prenom' => 'Conjointe',
+                        'cleintegration' => $key
+                    ]
+                );
+            }
+
+            $champsManquants = [];
+
+            if (!$contrat->duree) {
+                $champsManquants[] = 'duree';
+            }
+
+            if (!$contrat->periodicite) {
+                $champsManquants[] = 'periodicite';
+            }
+
+            if (!$contrat->prime) {
+                $champsManquants[] = 'prime';
+            }
+
+            if ($contrat->modepaiement == 'VIR') {
+
+                if (!$contrat->numerocompte) {
+                    $champsManquants[] = 'numéro de compte';
+                }
+
+                if (!$contrat->codebanque) {
+                    $champsManquants[] = 'code banque';
+                }
+
+                if (!$contrat->codeguichet) {
+                    $champsManquants[] = 'code guichet';
+                }
+
+                if (!$contrat->rib) {
+                    $champsManquants[] = 'RIB';
+                }
+            }
+
+            if (!empty($champsManquants)) {
+
+                return response()->json([
+                    'type' => 'error',
+                    'urlback' => 'back',
+                    'message' => "Impossible de valider cette proposition ! Champs manquants : " . implode(', ', $champsManquants),
+                    'code' => 422,
+                ]);
+            }
+
+            $nbAssure = count($contrat->assures);
+
+            if ($nbAssure == 0) {
+
+                return response()->json([
+                    'type' => 'error',
+                    'urlback' => 'back',
+                    'message' => "Impossible aucun assuré trouvé pour ce contrat !",
+                    'code' => 422,
+                ]);
+            }
+
+            $contrat->update([
+                'accepterle' => now(),
+                'accepterpar' => Auth::user()->membre->idmembre,
+                'etape' => 3,
+                'estMigre' => 1,
+            ]);
+
+            $details_log = [
+                'url' => route('prod.show', $id),
+                'user' => auth()->user()->membre->nom . ' ' . auth()->user()->membre->prenom,
+                'date' => now(),
+                'title' => "Acceptation de la proposition ID $id",
+                'action' => "Voir",
+            ];
+
+            $usersToNotify = User::where('idmembre', $contrat->saisiepar)->get();
+
+            Notification::send(
+                $usersToNotify,
+                new SystemeNotify($details_log)
+            );
+
+            DB::commit();
+
+            return response()->json([
+                'type' => 'success',
+                'urlback' => route('prod.validation.prodByPartner', $contrat->partenaire),
+                'message' => "Proposition N° $id validée avec succès !",
+                'code' => 200,
+            ]);
+
+        } catch (\Throwable $th) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur système ! " . $th->getMessage(),
+                'code' => 500,
+            ]);
+        }
     }
 
     /**
