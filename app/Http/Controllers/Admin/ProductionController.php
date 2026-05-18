@@ -1038,7 +1038,7 @@ class ProductionController extends Controller
                     'tauxinteret'         => $request->tauxinteret,
                     'codeassure'          => $idAssure,
                     'codecontrat'         => $idContrat,
-                    'refcontratsource'    => 'qarty',
+                    'refcontratsource'    => $idContrat,
                     'estmigre'            => 0,
                 ]);
             } else {
@@ -1417,7 +1417,7 @@ class ProductionController extends Controller
         DB::beginTransaction();
         try {
 
-            if ($request->modepaiement === "Mobile_money") {
+            if ($request->modepaiement === "Mobile_money" || $request->modepaiement === "EBANK") {
                 $numerocompte = $request->numMobile;
             } else {
                 $numerocompte = $request->numerocompte;

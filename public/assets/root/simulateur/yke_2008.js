@@ -251,7 +251,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
             const data = await response.json();
             
+            
             if (Array.isArray(data)) {
+                console.log(`Données reçues pour ${garantie.codeproduitgarantie}:`, data);
                 data.forEach(item => {
                     if (item.Prime > 0) {
                         const prime = Number(item.Prime || 0);

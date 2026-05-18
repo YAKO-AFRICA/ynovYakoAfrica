@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let newFormData = new FormData();
             formData.forEach((value, key) => newFormData.append(key, value));
             newFormData.set("codeGarantie", garantie.codeproduitgarantie);
-            newFormData.set("CodeProduitFormule", "YKE_2018_V1");
+            // newFormData.set("CodeProduitFormule", "YKE_2018_V1");
 
             console.log(newFormData);
 

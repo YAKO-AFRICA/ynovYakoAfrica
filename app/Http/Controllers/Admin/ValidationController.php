@@ -65,7 +65,7 @@ class ValidationController extends Controller
 
         $partners = Partner::where('code', $code)->first();
 
-        // Récupération des contrats du partenaire
+        // RÃ©cupÃ©ration des contrats du partenaire
         $allPropositions = Contrat::where('partenaire', $code)->with('user')->get();
         // dd($allPropositions);
         $acceptedPropositions = Contrat::where(['partenaire' => $code, 'estMigre' => 1, 'etape' => 3])->get();
@@ -82,7 +82,7 @@ class ValidationController extends Controller
             'Capital' => 'capital',
             'Surprime' => 'surprime',
             'Date Effet' => 'dateeffet',
-            'N° Compte' => 'numerocompte',
+            'NÂ° Compte' => 'numerocompte',
             'Agence' => 'agence',
             'Saisie Le' => 'saisiele',
             'Code Conseiller' => 'codeConseiller',
@@ -117,7 +117,7 @@ class ValidationController extends Controller
             'Ref Contrat Source' => 'refcontratsource',
             'Cle Integration' => 'cleintegration',
             'Code Operation' => 'codeoperation',
-            'N° Police' => 'numeropolice',
+            'NÂ° Police' => 'numeropolice',
             'Frais Adhesion' => 'fraisadhesion',
             'Est Paye' => 'estpaye',
             'Pret Connexe' => 'pretconnexe',
@@ -147,18 +147,116 @@ class ValidationController extends Controller
         try {
                 $contrat = Contrat::find($id);
 
+                if(!$contrat && $contrat->organisme == 'BNI') {
+                    $contrat->update([
+                        'codebanque' => 'CI092'
+                    ]);
+                }
+
+                if (!$contrat) {
+                    $benefDeces = strtolower($contrat->beneficiaireaudeces ?? '');
+                    $benefTerme = strtolower($contrat->beneficiaireauterme ?? '');
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | BENEFICIAIRES AU DECES
+                    |--------------------------------------------------------------------------
+                    */
+
+                    // 🔹 ENFANTS AU DECES
+                    if (
+                        str_contains($benefDeces, 'enfant') ||
+                        str_contains($benefDeces, 'enfants')
+                    ) {
+
+                        DB::table('tblbeneficiaire')->updateOrInsert(
+                            [
+                                'codecontrat' => $contrat->id,
+                                'nom' => 'Enfant',
+                                'type' => 'audeces'
+                            ],
+                            [
+                                'prenom' => 'Né et à naître',
+                                'cleintegration' => $key
+                            ]
+                        );
+                    }
+
+                    // 🔹 CONJOINT AU DECES
+                    if (
+                        str_contains($benefDeces, 'conjoint') ||
+                        str_contains($benefDeces, 'conjointe')
+                    ) {
+                        DB::table('tblbeneficiaire')->updateOrInsert(
+                            [
+                                'codecontrat' => $contrat->id,
+                                'nom' => 'Conjoint',
+                                'type' => 'audeces'
+                            ],
+                            [
+                                'prenom' => 'Conjointe',
+                                'cleintegration' => $key
+                            ]
+                        );
+                    }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | BENEFICIAIRES AU TERME
+                    |--------------------------------------------------------------------------
+                    */
+
+                    // 🔹 ENFANTS AU TERME
+                    if (
+                        str_contains($benefTerme, 'enfant') ||
+                        str_contains($benefTerme, 'enfants')
+                    ) {
+
+                        DB::table('tblbeneficiaire')->updateOrInsert(
+                            [
+                                'codecontrat' => $contrat->id,
+                                'nom' => 'Enfant',
+                                'type' => 'auterme'
+                            ],
+                            [
+                                'prenom' => 'Né et à naître',
+                                'cleintegration' => $key
+                            ]
+                        );
+                    }
+
+                    // 🔹 CONJOINT AU TERME
+                    if (
+                        str_contains($benefTerme, 'conjoint') ||
+                        str_contains($benefTerme, 'conjointe')
+                    ) {
+
+                        DB::table('tblbeneficiaire')->updateOrInsert(
+                            [
+                                'codecontrat' => $contrat->id,
+                                'nom' => 'Conjoint',
+                                'type' => 'auterme'
+                            ],
+                            [
+                                'prenom' => 'Conjointe',
+                                'cleintegration' => $key
+                            ]
+                        );
+                    }
+                }
+
                 $champsManquants = [];
 
                 if (!$contrat->duree) {
-                    $champsManquants[] = 'durée';
+                    $champsManquants[] = 'duree';
                 }
                 if (!$contrat->periodicite) {
-                    $champsManquants[] = 'périodicité';
+                    $champsManquants[] = 'periodicite';
                 }
                 if (!$contrat->prime) {
                     $champsManquants[] = 'prime';
                 }
-                if($contrat->modepaiement == 'VIR' || $contrat->modepaiement == 'SOURCE' || $contrat->modepaiement == 'CHK'){
+                if($contrat->modepaiement == 'VIR'){
                     if (!$contrat->numerocompte) {
                             $champsManquants[] = 'numéro de compte';
                         }
@@ -182,17 +280,17 @@ class ValidationController extends Controller
                     ]);
                 }
 
-                $nbBenef = count($contrat->beneficiaires);
+                // $nbBenef = count($contrat->beneficiaires);
                 $nbAssure = count($contrat->assures);
 
-                if ($nbBenef == 0) {
-                    return response()->json([
-                        'type' => 'error',
-                        'urlback' => 'back',
-                        'message' => "Impossible aucun beneficiaire trouver pour ce contrat !",
-                        'code' => 422,
-                    ]);
-                }
+                // if ($nbBenef == 0) {
+                //     return response()->json([
+                //         'type' => 'error',
+                //         'urlback' => 'back',
+                //         'message' => "Impossible aucun beneficiaire trouver pour ce contrat !",
+                //         'code' => 422,
+                //     ]);
+                // }
 
                 if ($nbAssure == 0) {
                     return response()->json([
@@ -231,7 +329,7 @@ class ValidationController extends Controller
                     return response()->json([
                         'type' => 'success',
                         'urlback' => \route('prod.validation.prodByPartner', $contrat->partenaire),
-                        'message' => "Proposition N° " . $id . " validée avec succès!",
+                        'message' => "Proposition NÂ° " . $id . " validÃ©e avec succÃ¨s!",
                         'code' => 200,
                     ]);
 
@@ -240,7 +338,7 @@ class ValidationController extends Controller
                     return response()->json([
                         'type' => 'error',
                         'urlback' => 'back',
-                        'message' => "Erreur lors du rejet de la proposition N° " . $id . "!",
+                        'message' => "Erreur lors du rejet de la proposition NÂ° " . $id . "!",
                         'code' => 200,
                     ]);
                 }
@@ -250,7 +348,7 @@ class ValidationController extends Controller
                 return response()->json([
                     'type' => 'error',
                     'urlback' => '',
-                    'message' => "Erreur système! $th",
+                    'message' => "Erreur systÃ¨me! $th",
                     'code' => 500,
                 ]);
             }
@@ -282,7 +380,7 @@ class ValidationController extends Controller
             return response()->json([
                 'type' => 'error',
                 'urlback' => 'back',
-                'message' => "Proposition N° $id introuvable!",
+                'message' => "Proposition NÂ° $id introuvable!",
                 'code' => 404,
             ]);
         }
@@ -297,7 +395,7 @@ class ValidationController extends Controller
                 'rejeterpar' => Auth::id()
             ]);
 
-            // Notifier seulement les utilisateurs concernés
+            // Notifier seulement les utilisateurs concernÃ©s
             $details_log = [
                 'url' => '/production/show/' . $id,
                 'user' => \auth()->user()->membre->nom . ' ' . \auth()->user()->membre->prenom,
@@ -314,7 +412,7 @@ class ValidationController extends Controller
             return response()->json([
                 'type' => 'success',
                 'urlback' => route('prod.validation.prodByPartner', $contrat->partenaire),
-                'message' => "Proposition N° $id rejetée avec succès!",
+                'message' => "Proposition NÂ° $id rejetÃ©e avec succÃ¨s!",
                 'code' => 200,
             ]);
 
@@ -325,7 +423,7 @@ class ValidationController extends Controller
             return response()->json([
                 'type' => 'error',
                 'urlback' => '',
-                'message' => "Erreur système! Veuillez réessayer." . $th,
+                'message' => "Erreur systÃ¨me! Veuillez rÃ©essayer." . $th,
                 'code' => 500,
             ]);
         }
