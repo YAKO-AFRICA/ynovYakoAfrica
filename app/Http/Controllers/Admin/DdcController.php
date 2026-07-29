@@ -387,7 +387,7 @@ class DdcController extends Controller
 
         
         // Récupérer les motifs de rejet uniques
-        $motifsRejet = Contrat::where('etape', 4)
+        $motifsRejet = Contrat::where('etape', 4) // Rejet bni
             ->whereIn('partenaire', $partenairesPluck)
             ->whereNotNull('motifrejet')
             ->select('motifrejet')
@@ -569,6 +569,7 @@ class DdcController extends Controller
             // Cas spécial BNI / 092
             if (in_array($request->partenaire, ['092', 'BNI'])) {
                 $codes = ['092', 'BNI'];
+
             }
 
             $query->whereIn('partenaire', $codes);

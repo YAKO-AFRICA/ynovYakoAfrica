@@ -178,7 +178,6 @@ class ValidationController extends Controller
             | BENEFICIAIRES AU DECES
             |--------------------------------------------------------------------------
             */
-
             // ENFANTS AU DECES
             if (
                 str_contains($benefDeces, 'enfant') ||
@@ -275,7 +274,7 @@ class ValidationController extends Controller
                 $champsManquants[] = 'prime';
             }
 
-            if ($contrat->modepaiement == 'VIR') {
+            if ($contrat->organisme != 'BNI' && $contrat->modepaiement == 'VIR') {
 
                 if (!$contrat->numerocompte) {
                     $champsManquants[] = 'numéro de compte';
@@ -394,9 +393,15 @@ class ValidationController extends Controller
 
         DB::beginTransaction();
         try {
+            if($contrat->organisme == 'BNI' && $contrat->partenaire == 'BNI'){ 
+                $etape = 10; // Etape spécifique pour BNI
+            }else{
+                $etape = 4; // Etape de rejet standard pour les autres partenaires
+            }
+            
             $contrat->update([
                 'annulerle' => now(),
-                'etape' => 4,
+                'etape' => $etape,
                 'motifrejet' => $request->motifrejet,
                 'rejeterpar' => Auth::id()
             ]);
@@ -418,7 +423,7 @@ class ValidationController extends Controller
             return response()->json([
                 'type' => 'success',
                 'urlback' => route('prod.validation.prodByPartner', $contrat->partenaire),
-                'message' => "Proposition NÂ° $id rejetÃ©e avec succÃ¨s!",
+                'message' => "Proposition N° $id rejetée avec succès!",
                 'code' => 200,
             ]);
 

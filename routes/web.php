@@ -705,11 +705,11 @@ Route::prefix('site')->name('site.')->group(function(){
 
 
 Route::get('/payment/success', function () {
-    return "Paiement réussi ✅";
+    return view('payment.success');
 })->name('payment.success');
 
 Route::get('/payment/failed', function () {
-    return "Paiement échoué ❌";
+    return view('payment.failed');
 })->name('payment.failed');
 
 
@@ -768,3 +768,4 @@ Route::get('/notifications/check', function () {
 })->name('notifications.check');
 
 Route::get('/email-send', [UserController::class, 'sendMail'])->name('email.send');
+
