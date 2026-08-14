@@ -285,30 +285,30 @@ Route::prefix('prestation')->name('prestation.')->group(function(){
         Route::post('/destroyDoc/{id}',[PrestationController::class, 'destroyDoc'])->name('destroyDoc');
     });
     Route::middleware(['auth','PreventBackHistory'])->group(function () {
-        // Route::get('reprise-demande',[PrestationController::class, 'repriseDemande'])->name('repriseDemande');
-        // Route::post('verif-code-demande',[PrestationController::class, 'verifCodeDemande'])->name('verifCodeDemande');
+        Route::get('reprise-demande',[PrestationController::class, 'repriseDemande'])->name('repriseDemande');
+        Route::post('verif-code-demande',[PrestationController::class, 'verifCodeDemande'])->name('verifCodeDemande');
 
-        // // customer prestation routes
-        // Route::get('/index',[PrestationController::class, 'index'])->name('index');
-        // Route::post('/fetch-Customer-details', [PrestationController::class, 'fetchCustomerDetails'])->name('fetchCustomerDetails');
-        // Route::get('/selectPrestation',[PrestationController::class, 'selectPrestation'])->name('selectPrestation');
-        // Route::get('/mesPrestations', [PrestationController::class, 'mesPrestations'])->name('mesPrestations');
-        // Route::get('/print-fiche-prestation', [PrestationController::class, 'printFichePrestation'])->name('printFichePrestation');
+        // customer prestation routes
+        Route::get('/index',[PrestationController::class, 'index'])->name('index');
+        Route::post('/fetch-Customer-details', [PrestationController::class, 'fetchCustomerDetails'])->name('fetchCustomerDetails');
+        Route::get('/selectPrestation',[PrestationController::class, 'selectPrestation'])->name('selectPrestation');
+        Route::get('/mesPrestations', [PrestationController::class, 'mesPrestations'])->name('mesPrestations');
+        Route::get('/print-fiche-prestation', [PrestationController::class, 'printFichePrestation'])->name('printFichePrestation');
 
-        // // Route::post('prestation/getPrestations', [DemandePrestationController::class, 'getPrestations'])->name('getPrestations');
-        // // Route::get('prestation/mesPrestations', [PrestationController::class, 'mesPrestations'])->name('mesPrestations');
-        // Route::get('/create/{id}',[PrestationController::class, 'create'])->name('create');
-        // Route::get('/autre/{id}',[PrestationController::class, 'createAutre'])->name('autre');
-        // Route::post('/autre/add',[PrestationController::class, 'storePrestAutre'])->name('storePrestAutre');
-        // Route::get('show/{code}',[PrestationController::class, 'show'])->name('show');
-        // Route::post('/add',[PrestationController::class, 'store'])->name('store');
-        // Route::get('/edit/{code}',[PrestationController::class, 'edit'])->name('edit');
-        // Route::get('/modifier-apres-rejet/{code}',[PrestationController::class, 'editAfterRejet'])->name('editAfterRejet');
-        // Route::post('/transmettrePrest/{code}',[PrestationController::class, 'transmettrePrest'])->name('transmettrePrest');
-        // Route::post('/update/{code}',[PrestationController::class, 'update'])->name('update');
-        // Route::post('/destroy/{code}',[PrestationController::class, 'destroy'])->name('destroy');
-        // Route::post('/addDocPrest',[PrestationController::class, 'addDocPrest'])->name('add.docPrest');
-        // Route::post('/destroyDoc/{id}',[PrestationController::class, 'destroyDoc'])->name('destroyDoc');
+        // Route::post('prestation/getPrestations', [DemandePrestationController::class, 'getPrestations'])->name('getPrestations');
+        // Route::get('prestation/mesPrestations', [PrestationController::class, 'mesPrestations'])->name('mesPrestations');
+        Route::get('/create/{id}',[PrestationController::class, 'create'])->name('create');
+        Route::get('/autre/{id}',[PrestationController::class, 'createAutre'])->name('autre');
+        Route::post('/autre/add',[PrestationController::class, 'storePrestAutre'])->name('storePrestAutre');
+        Route::get('show/{code}',[PrestationController::class, 'show'])->name('show');
+        Route::post('/add',[PrestationController::class, 'store'])->name('store');
+        Route::get('/edit/{code}',[PrestationController::class, 'edit'])->name('edit');
+        Route::get('/modifier-apres-rejet/{code}',[PrestationController::class, 'editAfterRejet'])->name('editAfterRejet');
+        Route::post('/transmettrePrest/{code}',[PrestationController::class, 'transmettrePrest'])->name('transmettrePrest');
+        Route::post('/update/{code}',[PrestationController::class, 'update'])->name('update');
+        Route::post('/destroy/{code}',[PrestationController::class, 'destroy'])->name('destroy');
+        Route::post('/addDocPrest',[PrestationController::class, 'addDocPrest'])->name('add.docPrest');
+        Route::post('/destroyDoc/{id}',[PrestationController::class, 'destroyDoc'])->name('destroyDoc');
 
     });
 
