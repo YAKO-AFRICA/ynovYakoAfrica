@@ -172,7 +172,7 @@
                                     <option value="BANKASS">BANKASS</option>
                                     <option value="COURTAGE">COURTAGE</option>
                                     <option value="COM">COM</option>
-
+                                    <option value="CANAL_IFC">CANAL IFC</option>
                                 </select>
                             </div>
                             <div class="row">

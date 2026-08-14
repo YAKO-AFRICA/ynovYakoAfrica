@@ -200,9 +200,9 @@
 
                     <h5>Modifier les Détails du Contrat</h5>
 
-                    <center>Vous n'êtes pas autorisé à modifier ce contrat</center>
+                    {{-- <center>Vous n'êtes pas autorisé à modifier ce contrat</center> --}}
 
-                    {{-- @include('productions.components.editContrat') --}}
+                    @include('productions.components.editContrat')
 
                 </section>
 

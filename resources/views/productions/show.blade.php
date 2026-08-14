@@ -981,10 +981,12 @@
         const secure_code = "hLVznZ60EQgSUq^Q-#6lzpn^YIpXW4w_LL%B!To#?f@gPnFsT%";
 
         const domain_name = 'yakoafricassur.com';
+        const baseUrlPay = window.location.origin;
 
-        const url_redirection_success = window.location.href + '/payment/success';
-        const url_redirection_failed = window.location.href + '/payment/failed';
-        const amount = contratInfo.prime;
+        const url_redirection_success = baseUrlPay + '/payment/success';
+        const url_redirection_failed = baseUrlPay + '/payment/failed';
+        // const amount = contratInfo.prime;
+        const amount = 05;
         const city = "";
         const email = contratInfo.adherent.email || "";
         const clientFirstname = contratInfo.adherent.prenom || "";

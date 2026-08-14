@@ -123,6 +123,28 @@
                 
             @endcan
 
+            @can('Voir suivie-commerciale')
+                <li class="menu-label">Direction Commerciale</li>
+                <li>
+                    <a href="{{ route('ddc.index') }}">
+                        <div class="parent-icon"><i class="bx bx-tachometer"></i></div>
+                        <div class="menu-title">Dashboard</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('ddc.partners.index') }}">
+                        <div class="parent-icon"><i class="bx bx-building"></i></div>
+                        <div class="menu-title">Partenaires</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('ddc.suivieRejet') }}">
+                        <div class="parent-icon"><i class="bx bx-block"></i></div>
+                        <div class="menu-title">Suivi des rejets</div>
+                    </a>
+                </li>
+            @endcan
+
             
 
             @can('Voir le rapport des activites')

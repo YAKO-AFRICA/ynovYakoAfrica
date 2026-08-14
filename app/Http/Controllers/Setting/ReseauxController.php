@@ -9,6 +9,7 @@ use App\Models\Reseau;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ReseauxController extends Controller
 {
@@ -157,40 +158,57 @@ class ReseauxController extends Controller
      */
     public function destroy(string $id)
     {
+        Log::info("Suppression du reseau avec id: $id");
 
         DB::beginTransaction();
+
         try {
 
-            $saving= Reseau::where(['id'=>$id])->delete();
+            // supprimer les zones liées
+            DB::table('tblzone')
+                ->where('codereseau', $id)
+                ->delete();
+
+            // supprimer le réseau
+            $saving = Reseau::where('id', $id)->delete();
 
             if ($saving) {
 
-                $dataResponse =[
-                    'type'=>'success',
-                    'urlback'=>"back",
-                    'message'=>"Supprimé avec succes!",
-                    'code'=>200,
-                ];
                 DB::commit();
+
+                $dataResponse = [
+                    'type' => 'success',
+                    'urlback' => "back",
+                    'message' => "Supprimé avec succes!",
+                    'code' => 200,
+                ];
+
             } else {
-                DB::rollback();
-                $dataResponse =[
-                    'type'=>'error',
-                    'urlback'=>'',
-                    'message'=>"Erreur lors de la suppression!",
-                    'code'=>500,
+
+                DB::rollBack();
+
+                $dataResponse = [
+                    'type' => 'error',
+                    'urlback' => '',
+                    'message' => "Erreur lors de la suppression!",
+                    'code' => 500,
                 ];
             }
 
         } catch (\Throwable $th) {
+
+            Log::error("Erreur lors de la suppression du reseau avec id: $id - " . $th->getMessage());
+
             DB::rollBack();
-            $dataResponse =[
-                'type'=>'error',
-                'urlback'=>'',
-                'message'=>"Erreur systeme! $th",
-                'code'=>500,
+
+            $dataResponse = [
+                'type' => 'error',
+                'urlback' => '',
+                'message' => "Erreur systeme! " . $th->getMessage(),
+                'code' => 500,
             ];
         }
+
         return response()->json($dataResponse);
     }
 }

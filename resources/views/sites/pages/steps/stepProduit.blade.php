@@ -322,6 +322,7 @@
 
     <script>
         const products = @json($products);
+        console.log('Products:', products);
         const user = @json($user);
 
         console.log('User:', user['codepartenaire']);
@@ -354,7 +355,7 @@
 
 
                 productCard.innerHTML = `
-                    <h3>${LibProduit}</h3>
+                    <h3>${product.MonLibelle}</h3>
                 `;
                 
                 
@@ -392,7 +393,7 @@
             
             detailsContainer.innerHTML = `
                 <div class="detail-header">
-                    <h2>${LibProduit}</h2>
+                    <h2>${product.MonLibelle}</h2>
                     <div class="product-meta">
                         <span class="meta-item">Code: ${product.CodeProduit}</span>
                         <span class="meta-item">Âge Minimum: ${product.AgeMiniAdh}</span>
@@ -406,7 +407,7 @@
                         <label>Informations sur le produit</label>
                         <span>
                             Les funérailles peuvent représenter un lourd fardeau financier, vous laissant démunis face à cette épreuve. 
-                            Avec <strong>${LibProduit}</strong>, vous bénéficiez de l’accompagnement et du soutien de <strong>YAKO AFRICA Assurances Vie</strong> 
+                            Avec <strong>${product.MonLibelle}</strong>, vous bénéficiez de l’accompagnement et du soutien de <strong>YAKO AFRICA Assurances Vie</strong> 
                             pour organiser sereinement les obsèques de vos proches disparus.  
                             <br><br>
                             Vous n’êtes plus seuls : nous sommes à vos côtés pour vous apporter assistance, réconfort et sérénité dans ces moments difficiles.

@@ -361,7 +361,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Initialize the row state based on initial selection
         toggleResumeRow();
 
-        const termeContrat = document.querySelector('input[name="addBeneficiary"]:checked');
+        const termeContrat = document.querySelector('input[name="benef_terme"]:checked');
         const resumeTermeContrat = document.getElementById('display-beneficiaire-terme');
 
         if (termeContrat) {
@@ -371,7 +371,7 @@ document.addEventListener("DOMContentLoaded", function() {
             resumeTermeContrat.textContent = valeurterme;
         }
 
-        const audecesContrat = document.querySelector('input[name="audecesContrat"]:checked');
+        const audecesContrat = document.querySelector('input[name="benef_deces"]:checked');
         const resumeAudecesContrat = document.getElementById('display-beneficiaire-deces');
 
         if (audecesContrat) {
