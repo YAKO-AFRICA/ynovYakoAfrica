@@ -279,7 +279,7 @@ class PrestationController extends Controller
                         return response()->json([
                             'type' => 'error',
                             'urlback' => '', // URL du PDF
-                            'message' => 'Ce contrat est arreté ou en veille.',
+                            'message' => 'Ce contrat est arreté.',
                             'code' => 400,
                         ]);
                     } else {
@@ -352,7 +352,7 @@ class PrestationController extends Controller
             if ($response->successful()) {
                 $data = $response->json();
                 $data['membre'] = $contractMembre->membre ?? [];
-                if (!empty($data['details']) && !empty($data['enc']['confirmer'])) {
+                if (!empty($data['details'])) {
                     // Stocker les informations dans la session pour l'utiliser après redirection
                     session(['contractDetails' => $data]);
                     session(['details' => $data['details'][0]]);
@@ -418,7 +418,7 @@ class PrestationController extends Controller
                         return response()->json([
                             'type' => 'error',
                             'urlback' => '', // URL du PDF
-                            'message' => 'Ce contrat est arreté ou en veille.',
+                            'message' => 'Ce contrat est arreté.',
                             'code' => 400,
                         ]);
                     } else {
