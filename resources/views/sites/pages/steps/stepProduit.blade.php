@@ -294,7 +294,9 @@
     <section class="banner">
         <div class="banner-content">
             <h1>Nos Produits d'Assurance</h1>
-            <p>Découvrez notre gamme complète de produits d'assurance conçus pour vous protéger et sécuriser votre avenir</p>
+            <p>
+                Découvrez notre gamme complète de produits d'assurance conçus pour vous protéger 
+                et sécuriser votre avenir </p>
         </div>
     </section>
 
@@ -325,7 +327,9 @@
         console.log('Products:', products);
         const user = @json($user);
 
-        console.log('User:', user['codepartenaire']);
+        console.log('User all data:', user); 
+
+        // console.log('User:', user['codepartenaire']);
 
         let selectedProduct = null;
         let privacyAccepted = false;
@@ -469,9 +473,9 @@
             if(!userData && userCode === "DIASPORA")
             {
                 window.location.href = '/site/simulateurPrimeDia/'+selectedProduct.CodeProduit + '/' + user.idmembre;
-            } else if(userCode === "DIRECTENTREPRISE")
-            
-            {
+            } else if(userData && userData['meta'] && userData['meta']['partner'] === "INPHB"){
+                window.location.href = '/site/simulateurPrimeInphb/'+selectedProduct.CodeProduit + '/' + user.idmembre;
+            } else if(userCode === "DIRECTENTREPRISE"){
                 window.location.href = '/site/simulateurPrimeDirectE/'+selectedProduct.CodeProduit + '/' + user.idmembre;
             } else {
                 window.location.href = '/site/simulateurPrimeDia/'+selectedProduct.CodeProduit + '/' + user.idmembre;

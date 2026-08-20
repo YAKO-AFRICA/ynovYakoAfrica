@@ -150,14 +150,14 @@
 
 </div>
 
-<div class="row g-3-mb-3">
-        {{-- <div class="col-12 col-lg-6">
+    {{-- <div class="row g-3-mb-3">
+        <div class="col-12 col-lg-6">
             <label for="paysDeNaissance" class="form-label ">Pays de naissance</label>
             <select   class="form-select apiCountry selection" name="paysDeNaissance" id="paysDeNaissance"
                 data-codeproduit="{{ $product->CodeProduit }}" data-placeholder="Sélectionner un Pays" autocomplete="on">
                 <option value="" disabled selected>Sélectionner un Pays</option>
             </select>
-        </div> --}}
+        </div>
         <div class="col-12 col-lg-6">
             <label for="paysDeNaissance" class="form-label">Pays de naissance</label>
             <select class="form-select apiCountry selection" name="paysDeNaissance" id="paysDeNaissance"
@@ -169,23 +169,27 @@
             <label for="lieunaissance" class="form-label">Lieu de naissance</label>
             <input type="text" name="lieunaissance" class="form-control" id="lieunaissance">
         </div>
-    </div>
+    </div> --}}
 
     <!---end row-->
     <div class="row g-3 my-3">
-        <div class="col-12 col-lg-4">
+        {{-- <div class="col-12 col-lg-4">
             <label for="paysDeResidence" class="form-label ">Pays de residence</label>
             <select class="form-select apiCountry selection" name="paysDeResidence" id="paysDeResidence"
                 data-codeproduit="{{ $product->CodeProduit }}" data-placeholder="Sélectionner un Pays" autocomplete="on">
                 <option value="" disabled selected>Sélectionner un Pays</option>
             </select>
+        </div> --}}
+        <div class="col-12 col-lg-4">
+            <label for="lieunaissance" class="form-label">Lieu de naissance</label>
+            <input type="text" name="lieunaissance" class="form-control" id="lieunaissance">
         </div>
         <div class="col-12 col-lg-4">
             <label for="lieuresidence" class="form-label">Lieu de résidence <span class="text-danger">*</span></label>
             <input type="text" name="lieuresidence" class="form-control" id="lieuresidence" required>
         </div>
 
-        @if ($codePartner == "DIRECTENTREPRISE")
+        @if (in_array($codePartner, ["DIRECTENTREPRISE", "INPHB"]))
             <div class="col-12 col-lg-4">
                 <label for="justifResidenceAdh" class="form-label">Justificatif de résidence </label>
                 <input type="file" name="justifResidenceAdh" class="form-control" id="justifResidenceAdh" accept="application/pdf,image/jpeg,image/jpg,image/png">

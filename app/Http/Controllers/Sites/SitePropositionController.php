@@ -44,11 +44,24 @@ class SitePropositionController extends Controller
     {
         $user = User::where('idmembre', $codeMembre)->first();
 
-        $productByReseau = ReseauProduct::select('CodeProduit')
-            ->where('codereseau', $user->membre->codereseau)->get();
+        if($user->membre->idmembre == '211840035'){
+            $codeProduits = ['LFFUN'];
 
+            // Convert Eloquent model to array, then add meta
+            $userArray = $user->toArray();
+            $userArray['meta'] = [
+                'formule' => 'LFFUN_V60',
+                'partner' => 'INPHB',
+            ];
+            
+            $user = $userArray; // Now $user is an array
+        } else {
+            $productByReseau = ReseauProduct::select('CodeProduit')
+                ->where('codereseau', $user->membre->codereseau)
+                ->get();
 
-        $codeProduits = $productByReseau->pluck('CodeProduit')->toArray();
+            $codeProduits = $productByReseau->pluck('CodeProduit')->toArray();
+        }
 
         $products = Product::whereIn('CodeProduit', $codeProduits)->get();
 
@@ -70,6 +83,15 @@ class SitePropositionController extends Controller
 
         $product = Product::where('CodeProduit', $codeProduit)->first();
         return view('sites.pages.steps.stepSimulateur', compact('product', 'user'));
+    }
+    public function simulateurPrimeInphb($codeProduit, $userId)
+    {
+        
+
+        $user = User::where('idmembre', $userId)->with('membre')->first();
+
+        $product = Product::where('CodeProduit', $codeProduit)->first();
+        return view('sites.pages.steps.inphb.stepSimulateur', compact('product', 'user'));
     }
 
     public function saveSiteSimulateurData(Request $request)
@@ -175,9 +197,9 @@ class SitePropositionController extends Controller
         }
     }
 
-    public function create($codeProduit, $codePartner)
+    public function create(Request $request, $codeProduit, $codePartner)
     {
-
+        $formule = $request->query('formule');
 
         $productGarantie = ProduitGarantie::where('CodeProduit',$codeProduit)->get(); 
         $product = Product::where('CodeProduit',$codeProduit)->first(); 
@@ -186,7 +208,6 @@ class SitePropositionController extends Controller
         $secteurActivites =  TblSecteurActivite::select('MonLibelle')->orderBy('MonLibelle')->get();
         $societes =  TblSociete::select('MonLibelle')->get();
         $agences =  AgenceByParter::where('codePartner',$codePartner )->get();
-
 
         $filliations =  Filliation::select('MonLibelle')->get();
 
@@ -200,28 +221,28 @@ class SitePropositionController extends Controller
         $operationType = $token['operation_type'];
 
 
-        try {
+        // try {
 
-            $response = Http::withOptions(['timeout' => 60])->get(env('API_GET_COUNTRIES'));
+        //     $response = Http::withOptions(['timeout' => 60])->get(env('API_GET_COUNTRIES'));
 
-            if ($response->successful()) {
-                $data = $response->json();
+        //     if ($response->successful()) {
+        //         $data = $response->json();
 
-                // Vérifie si la clé "countries" existe
-                if (isset($data['countries'])) {
-                    $detailCountries = $data['countries'];
-                } else {
-                    Log::info('La clé "countries" est absente de la réponse API.');
-                }
-            } else {
-                Log::error('Échec de la récupération des pays depuis l\'API.');
-            }
-        } catch (\Exception $e) {
-            Log::error('Exception lors de l\'appel à l\'API des pays : ' . $e->getMessage());
-        }
+        //         // Vérifie si la clé "countries" existe
+        //         if (isset($data['countries'])) {
+        //             $detailCountries = $data['countries'];
+        //         } else {
+        //             Log::info('La clé "countries" est absente de la réponse API.');
+        //         }
+        //     } else {
+        //         Log::error('Échec de la récupération des pays depuis l\'API.');
+        //     }
+        // } catch (\Exception $e) {
+        //     Log::error('Exception lors de l\'appel à l\'API des pays : ' . $e->getMessage());
+        // }
         
 
-        return view('sites.pages.create', compact('product', 'villes', 'secteurActivites', 'professions','productGarantie','societes','agences','detailCountries','keyUuid','operationType','token','tok','codePartner','filliations'));
+        return view('sites.pages.create', compact('product', 'villes', 'secteurActivites', 'professions','productGarantie','societes','agences','keyUuid','operationType','token','tok','codePartner','filliations','formule'));
     }
 
     public function storeSessionContratData(Request $request)

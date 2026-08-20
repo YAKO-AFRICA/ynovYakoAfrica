@@ -134,7 +134,8 @@
                     <div class="step active step-block" data-step="1">
                         <h4 class="text-success">Étape 1 : Informations du Souscripteur</h4>
                         <div>
-                            @include('sites.pages.steps.stepAdherent')
+                            <H1>TEST</H1>
+                            {{-- @include('sites.pages.steps.stepAdherent') --}}
                         </div>
                     </div>
 
@@ -144,6 +145,8 @@
                         <div class="mb-3">
                             @if ($codePartner === "DIRECTENTREPRISE")
                                 @include('sites.pages.steps.directEnt.assureDirect')
+                            @elseif ($codePartner === "INPHB")
+                            <h1>INPDdddddddddddddddddddddd</h1>
                             @else
                                 @include('sites.pages.steps.stepAssurer')
                             @endif
@@ -663,7 +666,7 @@
     </script>
 
 
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             const countries = @json($detailCountries);
             const phoneInput = document.getElementById('phoneInput');
@@ -708,7 +711,7 @@
 
             
         });
-    </script>
+    </script> --}}
 
 
 
@@ -1182,7 +1185,7 @@
 </script>
 
 
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             const countries = @json($detailCountries);
 
@@ -1287,7 +1290,7 @@
                 }
             });
         });
-    </script>
+    </script> --}}
 
 
 

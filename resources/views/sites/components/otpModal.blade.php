@@ -17,13 +17,13 @@
                                 <div class="input-group-text">
                                     <select class="form-select form-select-sm country-select" id="countryPrefix"
                                         aria-label="Indicatif Pays" required>
-                                        <option selected value="">🌍 Pays</option>
-                                        @foreach ($detailCountries as $item)
+                                        <option selected value="225">+225</option>
+                                        {{-- @foreach ($detailCountries as $item)
                                             <option value="{{ $item['phone_international_prefix'] }}" @if ($item['phone_international_prefix'] == '225') selected @endif>
                                                 +{{ $item['phone_international_prefix'] }}
                                                 {{ $item['flag'] }}
                                             </option>
-                                        @endforeach
+                                        @endforeach --}}
     
                                     </select>
                                 </div>

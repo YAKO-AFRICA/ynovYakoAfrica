@@ -679,6 +679,7 @@ Route::prefix('site')->name('site.')->group(function(){
     Route::get('/souscription/{codeMembre}', [SitePropositionController::class, 'stepProduct'])->name('stepProduct');
     Route::get('/simulateurPrimeDia/{codeProduit}/{userId}', [SitePropositionController::class, 'simulateurPrimeDia'])->name('simulateurPrimeDia');
     Route::get('/simulateurPrimeDirectE/{codeProduit}/{userId}', [SitePropositionController::class, 'simulateurPrimeDirectE'])->name('simulateurPrimeDirectE');
+    Route::get('/simulateurPrimeInphb/{codeProduit}/{userId}', [SitePropositionController::class, 'simulateurPrimeInphb'])->name('simulateurPrimeInphb');
     Route::get('/create/{codeProduit}/{codePartner}', [SitePropositionController::class, 'create'])->name('create');
 
     Route::post('/update-adherent/{id}', [SitePropositionController::class, 'updateAdherent'])->name('update.adherent');
