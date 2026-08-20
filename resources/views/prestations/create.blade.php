@@ -224,6 +224,13 @@
 
             formulaire.addEventListener('input', mettreAJourResume);
             formulaire.addEventListener('change', mettreAJourResume);
+            const otpModalElement = document.getElementById('otpModal');
+            const myModal = new bootstrap.Modal(otpModalElement);
+
+            // Lorsque la modal est complètement fermée
+            otpModalElement.addEventListener('hidden.bs.modal', function () {
+                mettreAJourResume();
+            });
 
             function mettreAJourResume() {
                 try {
