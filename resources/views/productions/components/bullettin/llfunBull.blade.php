@@ -25,7 +25,7 @@
                 </div>
 
                 <!-- Bloc centre -->
-                <div style="width: 56%; float: left; text-align: center;">
+                <div style="width: 75%; float: left; text-align: center;">
                     <div style="width: 100%; font-size: 10px; font-weight: bold; text-align: center; background: #747171; color: #fff; height: 50px; display: flex; justify-content: center; align-items: center;">
                         <h1 style="margin: 0;">FORMULAIRE DE SOUSCRIPTION YAKO OBSEQUE DIASPORA</h1>
                     </div>
@@ -38,10 +38,10 @@
                 </div>
 
                 <!-- Bloc droite -->
-                <div style="width: 22%; float: left; text-align: center;">
+                {{-- <div style="width: 22%; float: left; text-align: center;">
                     <img src="data:image/jpg;base64,{{ base64_encode(file_get_contents(public_path('logos/DIASPORA.jpg'))) }}" alt="Logo" style="width: 100px;">
-                    
-                </div>
+
+                </div> --}}
 
                 <div style="clear: both;"></div>
             </div>
@@ -54,40 +54,40 @@
 
                 <div class="content-item" style="width: 49%; float: left; border: 1px solid #000; padding: 5px; font-size: 12px; box-sizing: border-box; min-height: 100px">
                     <div class="infoSouscripteur2" style="margin: 0; width: 100%; box-sizing: border-box; font-size: 12px">
-                
+
                         <p style="margin: 5px;">
                             <strong>Nom et prénoms :</strong> <span>{{ $contrat->adherent->nom ?? ''}} {{ $contrat->adherent->prenom ?? ''}}</span>
                         </p>
-                    
+
                         <p style="margin: 5px">
-                            <strong>Date de naissance :</strong> {{ $contrat->adherent->datenaissance ?? ''}}     
+                            <strong>Date de naissance :</strong> {{ $contrat->adherent->datenaissance ?? ''}}
                             <strong>Lieu :</strong> {{ $contrat->adherent->lieunaissance ?? ''}}
                         </p>
-                    
+
                         <p style="margin: 5px">
-                            <strong>Nationalité :</strong> ........................................ 
+                            <strong>Nationalité :</strong> ........................................
                         </p>
                         <p style="margin: 5px">
                             <strong>Sexe :</strong>  {{ $contrat->adherent->sexe ?? ''}}
                         </p>
-                
+
                     </div>
                 </div>
 
                 <div class="content-item" style="width: 48%; float: left; border: 1px solid #000; padding: 5px; font-size: 12px; box-sizing: border-box; float: right; min-height: 100px">
                     <div class="infoSouscripteur2" style="margin: 0; width: 100%; box-sizing: border-box;">
-                        
+
                         <p style="margin: 5px; display: flex; justify-content: space-between;">
                             <span><strong>Mobile :</strong> {{ $contrat->adherent->mobile ?? ''}}</span>
                             <span><strong>Téléphone2 :</strong> {{ $contrat->adherent->mobile1 ?? ''}}</span>
                         </p>
                          <p style="margin: 5px; display: flex; justify-content: space-between;">
                             <strong>N° Whasapp :</strong> {{ $contrat->adherent->telephone ?? '......................'}}
-                            
+
                         </p>
                          <p style="margin: 5px; display: flex; justify-content: space-between;">
                             <strong>Email :</strong>{{ $contrat->adherent->email ?? ''}}
-                            
+
                         </p>
                         <p style="margin: 5px; display: flex; justify-content: space-between;">
                             <strong>Adresse complète:</strong> <span class="">{{ $contrat->adherent->lieuresidence ?? ''}}</span>
@@ -122,7 +122,7 @@
                         </tr>
                         @endforeach
                     </tbody>
-                    
+
                 </table>
             </div>
         </section>
@@ -151,7 +151,7 @@
                         </tr>
                         @endforeach
                     </tbody>
-                    
+
                 </table>
             </div>
         </section>
@@ -167,7 +167,7 @@
                             <td style=" border: 1px solid #000;">Surprime</td>
                             <td style=" border: 1px solid #000; font-weight: bold; text-align: right;">Total</td>
                         </tr>
-                        
+
                     </thead>
                     <tbody>
                         <tr>
@@ -177,34 +177,34 @@
                             <td style="width: 50%; border: 1px solid #000;">{{ $contrat->primepricipale ?? '' }}</td>
                         </tr>
                     </tbody>
-                    
+
                 </table>
-                
+
 
                 <div style="width: 100%;font-size: 12px; padding: 2px; margin-top: 10px; height: 20px">
                     <div style ="width: 30%; float: left;  margin-top: -10px"><strong>Durée de la couverture</strong> <span>{{ $contrat->duree ?? '' }}</span></div>
                     <div style ="width: 30%;float: center; margin-left: 200px; margin-top: -10px">
-                        <strong>Date de debut du contrat</strong> 
+                        <strong>Date de debut du contrat</strong>
                         <span>{{ Carbon\Carbon::parse($contrat->dateeffet)->format('d/m/Y') ?? '' }}</span>
                     </div>
                     <div style ="width: 30%; float: right; margin-top: -10px"><strong>Durée du contrat :</strong> <span>Annuel</span></div>
-            
+
                 </div>
             </div>
         </section>
 
-        
+
 
         <section style="font-size: 12px !important">
 
             <h4 style="background: #747171; color: #fff; width: 100%; height: 25px; margin-top: 40px; font-size: 14px">5. Paiement des primes :</h4>
-            
+
             <div class="content" style="width: 100%; margin-top: -15px">
 
                 <div class="content-item" style="width: 48%; height: 15px; float: left; border: 1px solid #000; padding: 5px; font-size: 12px; box-sizing: border-box;">
-                <div class="infoSouscripteur2" style="margin: 0; width: 100%; box-sizing: border-box;"> 
+                <div class="infoSouscripteur2" style="margin: 0; width: 100%; box-sizing: border-box;">
                     <strong style="box-sizing: border-box; margin-top:-10px; font-size: 12px">
-                        Mode de paiement : 
+                        Mode de paiement :
                         @if(isset($contrat->modepaiement))
                             @if($contrat->modepaiement == 'VIR')
                                 Virement bancaire
@@ -230,9 +230,9 @@
                         <p style="box-sizing: border-box;">
                             <strong>conseiller : </strong> <span>{{ Auth::user()->membre->nom ?? $contrat->nomagent ?? '' }} {{ Auth::user()->membre->prenom ?? ''}}<span> <strong>Code :</strong> <span>{{ Auth::user()->membre->codeagent ?? $contrat->codeConseiller ?? ''}}</span>
                         </p>
-                    
+
                         {{-- <p style="box-sizing: border-box;">
-                            
+
                         </p> --}}
                     </div>
                 </div>
@@ -253,10 +253,10 @@
                 padding: 1rem;
                 box-sizing: border-box;
                 width: 100%;
-                gap: 1rem; 
+                gap: 1rem;
                 font-size: 12px;">
 
-                <div style="width: 33%; float: left; min-height: 160px ; border: 1px solid #000; padding: 2px">
+                <div style="width: 50%; float: left; min-height: 160px ; border: 1px solid #000; padding: 2px">
                     <strong>
                         Signature du souscripteur
                     </strong> <br>
@@ -264,24 +264,24 @@
                         Je soussigné(e),................................................., <br> certifie que les informations fournies sont exactes. <br> Je consens au traitement de mes données personnelles par YAKO AFRICA ASSURANCE VIE dans le cadre de cette souscription.
                     </span>
                     <div style="disply: flex; justify-content: space-between; margin-top: 10px;">
-                        <div style="width: 48%; float: left">
+                        {{-- <div style="width: 48%; float: left">
                             <img src="{{ $qrCodeBase64 }}" alt="QR Code de vérification" style="width: 60px; height: 60px;">
-                        </div>
-                        <div style="width: 48%; float: right">
+                        </div> --}}
+                        <div style="width: 100%; float: right">
                             @if (!empty($imageSrc))
-                                <img src="{{ $imageSrc }}" alt="Signature" style="width: 55px; height: 55px;">
+                                <img src="{{ $imageSrc }}" alt="Signature" style="width: 100%; height: 100%;">
                             @endif
                         </div>
                     </div>
                 </div>
-                <div style="width: 30%; margin-left: 240px ; min-height: 160px; border: 1px solid #000; padding: 2px">
+                {{-- <div style="width: 30%; margin-left: 240px ; min-height: 160px; border: 1px solid #000; padding: 2px">
                     <strong>
                         Signature de l'assuré
                     </strong>
 
                     <muted>(Précedée de la mention LU et APPROUVE)</muted>
-                </div>
-                <div style="width: 33%; float: right; margin-top: -165px; min-height: 160px; border: 1px solid #000; padding: 2px">
+                </div> --}}
+                <div style="width: 45%; float: right; margin-top: -165px; min-height: 160px; border: 1px solid #000; padding: 2px">
                     <div class="sign-yako" style="margin: 0; box-sizing: border-box ">
                         <span>Reservé à YAKO AFRICA Assurances Vie</span>
 
@@ -293,12 +293,12 @@
                 </div>
             </div>
 
-            
-        </section> 
+
+        </section>
 
 
     </div>
-  
+
 </body>
 
 </html>
