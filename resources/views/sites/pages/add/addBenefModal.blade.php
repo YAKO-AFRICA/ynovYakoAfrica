@@ -29,7 +29,7 @@
                                 <option selected value="">Sélectionner le lieu</option>
 
                                 {{-- @foreach($villes as $ville)
-                                    <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option> 
+                                    <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option>
                                 @endforeach  --}}
 
                             </select>
@@ -42,22 +42,25 @@
                                 <option selected value="">Sélectionner le lieu</option>
 
                                 {{-- @foreach($villes as $ville)
-                                    <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option> 
+                                    <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option>
                                 @endforeach  --}}
-                                
+
                             </select>
                         </div>
                         <div class="col-12 col-lg-6">
                             <label for="lienParente" class="form-label">Lien de Parenté</label>
                             <select id="lienParente" class="form-select">
-                                <option selected value="">Sélectionner le lien de Parenté</option>
-                                <option value="Conjoint">Conjoint</option>
+                                <option selected disabled value="">Sélectionner le lien de Parenté</option>
+                                @foreach ($filliations as $item)
+                                    <option value="{{$item->CodeFiliation}}">{{$item->MonLibelle ?? ''}}</option>
+                                @endforeach
+                                {{-- <option value="Conjoint">Conjoint</option>
                                 <option value="Enfant">Enfant</option>
-                                <option value="Autre">Autre</option>
+                                <option value="Autre">Autre</option> --}}
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="row g-3 mb-3">
                         <div class="col-12 col-lg-6">
                             <label class="form-label">Téléphone <span class="text-danger">*</span></label>
@@ -82,7 +85,7 @@
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
                         <button type="button" class="btn btn-outline-success" onclick="addBeneficiary()">Ajouter</button>
                     </div>
-                </form> 
+                </form>
             </div>
         </div>
     </div>

@@ -329,7 +329,7 @@
 
         console.log('User all data:', user); 
 
-        // console.log('User:', user['codepartenaire']);
+        // console.log('User:', user['meta']['partner']);
 
         let selectedProduct = null;
         let privacyAccepted = false;
@@ -344,7 +344,7 @@
             LibProduit = "YAKO SOUTIEN FIDEL";
         }
         else{
-            ageMax = 64;
+            ageMax = 65;
             LibProduit = "YAKO FRAIE FUNERAIRE";
         }
 

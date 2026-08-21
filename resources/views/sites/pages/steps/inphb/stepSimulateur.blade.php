@@ -742,6 +742,23 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+                const user = @json($user);
+
+                let data = JSON.parse(sessionStorage.getItem('souscriptionData') || '{}');
+
+                // Met à jour uniquement si l'utilisateur n'est pas encore sauvegardé
+                if (!data.utilisateur) {
+                    data.utilisateur = user;
+                    sessionStorage.setItem('souscriptionData', JSON.stringify(data));
+                    console.log('✅ Utilisateur sauvegardé dans la session :', data.utilisateur);
+                } else {
+                    console.log('ℹ️ Utilisateur déjà présent dans la session :', data.utilisateur);
+                }
+            });
+    </script>
+
+    <script>
         /**
          * Bascule l'accordéon des détails
          */
@@ -765,6 +782,8 @@
             const card = button.closest('.card');
             if (!card) return;
 
+            const user = @json($user);
+
             // Lecture des attributs data-
             const formule = card.dataset.formule || 'unknown';
             const prime = parseInt(card.dataset.prime, 10) || 0;
@@ -772,11 +791,15 @@
 
             // Construction de l'objet de souscription
             const souscriptionData = {
-                formule: formule,
-                productCode: 'LFFUN',
-                prime: prime,
-                capital: capital,
-                dateSelection: new Date().toISOString()
+                simulationData: {
+                    formule: formule,
+                    productCode: 'LFFUN',
+                    prime: prime,
+                    capital: capital,
+                    dateSelection: new Date().toISOString()
+                },
+                utilisateur:user
+
             };
 
             // Enregistrement en sessionStorage
@@ -791,7 +814,7 @@
                 setTimeout(() => {
                     button.textContent = originalText;
                     button.style.opacity = '1';
-                }, 1200);
+                }, 2400);
 
                 // Option : redirection vers la page suivante
                 window.location.href = '/site/create/LFFUN/INPHB?formule=' + encodeURIComponent(formule);

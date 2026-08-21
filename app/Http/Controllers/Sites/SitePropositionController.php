@@ -53,7 +53,7 @@ class SitePropositionController extends Controller
                 'formule' => 'LFFUN_V60',
                 'partner' => 'INPHB',
             ];
-            
+
             $user = $userArray; // Now $user is an array
         } else {
             $productByReseau = ReseauProduct::select('CodeProduit')
@@ -86,9 +86,12 @@ class SitePropositionController extends Controller
     }
     public function simulateurPrimeInphb($codeProduit, $userId)
     {
-        
+
 
         $user = User::where('idmembre', $userId)->with('membre')->first();
+
+        Log::info('$user loginngggggggggggggg');
+        Log::info($user);
 
         $product = Product::where('CodeProduit', $codeProduit)->first();
         return view('sites.pages.steps.inphb.stepSimulateur', compact('product', 'user'));
@@ -103,7 +106,7 @@ class SitePropositionController extends Controller
 
         Log::info("user". $user);
 
-        
+
         DB::beginTransaction();
         try {
 
@@ -117,9 +120,9 @@ class SitePropositionController extends Controller
                 $numExist = Contrat::where('numBullettin', $numBullettin)->exists();
                 $increment++;
             } while ($numExist);
-            
+
             $product = Product::where('CodeProduit', $productCode)->first();
-            // creation id 
+            // creation id
             $idAdherent = Adherent::max('id') + 1;
             $idContrat = Contrat::max('id') + 1;
 
@@ -134,7 +137,7 @@ class SitePropositionController extends Controller
                 'codemembre' => 0,
                 'saisieLe' => now(),
                 'saisiepar' => $membre->idmembre,
-                
+
             ]);
             if($Adherent)
             {
@@ -182,7 +185,7 @@ class SitePropositionController extends Controller
                     400
                 );
             }
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(
@@ -201,15 +204,16 @@ class SitePropositionController extends Controller
     {
         $formule = $request->query('formule');
 
-        $productGarantie = ProduitGarantie::where('CodeProduit',$codeProduit)->get(); 
-        $product = Product::where('CodeProduit',$codeProduit)->first(); 
+        $productGarantie = ProduitGarantie::where('CodeProduit',$codeProduit)->get();
+        $product = Product::where('CodeProduit',$codeProduit)->first();
         $villes =  TblVille::get();
         $professions =  TblProfession::select('MonLibelle')->get();
         $secteurActivites =  TblSecteurActivite::select('MonLibelle')->orderBy('MonLibelle')->get();
         $societes =  TblSociete::select('MonLibelle')->get();
         $agences =  AgenceByParter::where('codePartner',$codePartner )->get();
 
-        $filliations =  Filliation::select('MonLibelle')->get();
+        $filliations =  Filliation::all();
+        // dd($filliations);
 
         $tok = Str::random(80);
         $token = [
@@ -240,7 +244,7 @@ class SitePropositionController extends Controller
         // } catch (\Exception $e) {
         //     Log::error('Exception lors de l\'appel à l\'API des pays : ' . $e->getMessage());
         // }
-        
+
 
         return view('sites.pages.create', compact('product', 'villes', 'secteurActivites', 'professions','productGarantie','societes','agences','keyUuid','operationType','token','tok','codePartner','filliations','formule'));
     }
@@ -251,7 +255,7 @@ class SitePropositionController extends Controller
 
         return response()->json([
             'type' => 'success',
-            'success' => true, 
+            'success' => true,
             'message' => 'Proposition enregistrée avec succès',
             'code' => 200,
             'data' => $request->all()
@@ -261,7 +265,7 @@ class SitePropositionController extends Controller
 
     public function storeContrat(Request $request)
     {
-        try{  
+        try{
 
             DB::beginTransaction();
 
@@ -293,7 +297,7 @@ class SitePropositionController extends Controller
             $simulationData = $data['simulationData'];
             $benefData = $data['benefData'];
 
-            Log::info("ContratData serialized: ".$contratData['periodicite']);
+            // Log::info("ContratData serialized: ".$contratData);
 
             $datenaissanceAdherent = Carbon::parse($adherentData['datenaissance'])->format('Y-m-d H:i:s');
 
@@ -441,7 +445,7 @@ class SitePropositionController extends Controller
                     //     }
 
                     // }
-                    
+
                 }
             }
 
@@ -549,17 +553,17 @@ class SitePropositionController extends Controller
                 'Formule' => $simulationData['type'] ?? null,
             ]);
 
-           
-                
 
-            
+
+
+
 
             Log::info("Contrat created: ");
 
             $sign = Signature::where('key_uuid', $contratData['tokGenerate'])->first();
 
             if ($sign) {
-                $sign->update(['reference_key' => $idContrat]); 
+                $sign->update(['reference_key' => $idContrat]);
             }
 
             $bulletinData = $this->generateBulletin($idContrat, $utilisateur);
@@ -643,7 +647,7 @@ class SitePropositionController extends Controller
             $imageUrl = env('SIGN_API') . "api/get-signature/" . $idContrat . "/E-SOUSCRIPTION";
 
             Log::info("Image URL: $imageUrl");
-            
+
             $imageData = file_get_contents($imageUrl);
             $base64Image = base64_encode($imageData);
             $imageSrc = 'data:image/png;base64,'.$base64Image;
@@ -654,13 +658,13 @@ class SitePropositionController extends Controller
             // $qrContent .= "Réf. Contrat: " . $contrat->id;
             $qrContent = url("site/showContratSite/" . $contrat->id);
 
-            
+
             $writer = new Writer($renderer);
-        
+
             // Génération en base64 (sans fichier temporaire)
             $qrCodeImage = $writer->writeString($qrContent);
             $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($qrCodeImage);
-            
+
             // Passez $qrCodeBase64 à votre vue
 
 
@@ -676,7 +680,7 @@ class SitePropositionController extends Controller
                     'imageSrc' => $imageSrc,
                 ]);
                 $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
-            
+
 
             $bulletinDir = public_path('documents/bulletin/');
             if (!is_dir($bulletinDir)) {
@@ -689,7 +693,7 @@ class SitePropositionController extends Controller
             // Chemin vers le fichier CGU
             $cguFilePath = public_path('root/cgu/cg_yke.pdf');
 
-       
+
 
             // Initialiser FPDI pour fusionner les fichiers
             $finalPdf = new Fpdi();
@@ -701,7 +705,7 @@ class SitePropositionController extends Controller
                 $tplIdx = $finalPdf->importPage($pageNo);
                 $finalPdf->useTemplate($tplIdx);
             }
-        
+
             // Ajouter toutes les pages du fichier CGU
             $cguPageCount = $finalPdf->setSourceFile($cguFile);
             for ($pageNo = 1; $pageNo <= $cguPageCount; $pageNo++) {
@@ -714,7 +718,7 @@ class SitePropositionController extends Controller
             $finalBulletinPath = $bulletinDir . 'bulletin_' . $contrat->id . '.pdf';
             $finalPdf->Output($finalBulletinPath, 'F');
 
-            // new code 
+            // new code
             $destinationPath = base_path(env('UPLOADS_PATH'));
             $fileName = $idContrat . '-' . now()->timestamp.'-' .'Bulletin_de_souscription' . '.pdf';
             $finalPdf->Output($destinationPath . $fileName, 'F');
@@ -786,7 +790,7 @@ class SitePropositionController extends Controller
                 Log::warning("Recto/Verso manquants pour le contrat {$contrat->id}");
             }
 
-            
+
 
             // enregistrer le bulletin dans la base de données
             foreach ($allFiles as $file) {
@@ -829,7 +833,7 @@ class SitePropositionController extends Controller
         $contrat = Contrat::where('id', $request->contrat_id)->update([
             'beneficiaireaudeces' => $request->beneficiaireaudeces,
         ]);
-            
+
         return response()->json(['success' => true, 'message' => 'Bénéficiaire mis à jour avec succès']);
     }
 
@@ -839,7 +843,7 @@ class SitePropositionController extends Controller
         $contrat = Contrat::where('id', $request->contrat_id)->update([
             'beneficiaireauterme' => $request->beneficiaireauterme,
         ]);
-            
+
         return response()->json(['success' => true, 'message' => 'Bénéficiaire mis à jour avec succès']);
     }
 
@@ -850,7 +854,7 @@ class SitePropositionController extends Controller
 
         DB::beginTransaction();
         try {
-                
+
             $idBenef = Beneficiaire::max('id') + 1;
 
             Beneficiaire::create([
@@ -874,7 +878,7 @@ class SitePropositionController extends Controller
             ])->save();
 
             DB::commit();
-        
+
             return response()->json([
                 'type' => 'success',
                 'urlback' => "back",
@@ -889,7 +893,7 @@ class SitePropositionController extends Controller
                 'message' => "Erreur système! $th",
                 'code' => 500,
             ]);
-            } 
+            }
     }
 
     public function storeDocuments(Request $request)
@@ -900,7 +904,7 @@ class SitePropositionController extends Controller
         $membre = Membre::where('codeagent', 'AG-DIA-007')->first();
         $libelles = $request->input('libelles');
         $files = $request->file('files');
-         
+
         foreach ($files as $key => $file) {
             $imageName = $idContrat . '-' . now()->timestamp . '.' . $libelles[$key] . '.' . $file->getClientOriginalExtension();
 
@@ -919,7 +923,7 @@ class SitePropositionController extends Controller
         }
 
         DB::commit();
-    
+
         return response()->json([
             'type' => 'success',
             'urlback' => 'back',
@@ -951,7 +955,7 @@ class SitePropositionController extends Controller
 
         $document->delete();
         DB::commit();
-    
+
         return response()->json([
             'type' => 'success',
             'urlback' => 'back',
@@ -968,5 +972,5 @@ class SitePropositionController extends Controller
             ]);
         }
     }
-    
+
 }

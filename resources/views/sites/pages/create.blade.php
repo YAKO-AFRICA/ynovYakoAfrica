@@ -12,7 +12,7 @@
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-        
+
 	<!--favicon-->
 	<link rel="icon" href="{{ asset('root/images/logo-icon.png')}}" type="image/png"/>
 	<!--plugins-->
@@ -28,7 +28,7 @@
 
 
 
-    
+
     <style>
         body {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -134,8 +134,8 @@
                     <div class="step active step-block" data-step="1">
                         <h4 class="text-success">Étape 1 : Informations du Souscripteur</h4>
                         <div>
-                            <H1>TEST</H1>
-                            {{-- @include('sites.pages.steps.stepAdherent') --}}
+                            {{-- <H1>TEST</H1> --}}
+                            @include('sites.pages.steps.stepAdherent')
                         </div>
                     </div>
 
@@ -146,7 +146,7 @@
                             @if ($codePartner === "DIRECTENTREPRISE")
                                 @include('sites.pages.steps.directEnt.assureDirect')
                             @elseif ($codePartner === "INPHB")
-                            <h1>INPDdddddddddddddddddddddd</h1>
+                                @include('sites.pages.steps.inphb.stepAssurer')
                             @else
                                 @include('sites.pages.steps.stepAssurer')
                             @endif
@@ -167,11 +167,13 @@
                         <h4 class="text-success">Étape 4 : Paiement</h4>
                         <div class="mb-3">
                             @if ($codePartner === "DIRECTENTREPRISE")
-                                
+
                                 @include('sites.pages.steps.directEnt.stepPaiementDirect')
+                            @elseif ($codePartner === "INPHB")
+                                @include('sites.pages.steps.inphb.stepPaiement')
                             @else
                                 @include('sites.pages.steps.stepPaiement')
-                                
+
                             @endif
                         </div>
                     </div>
@@ -187,10 +189,10 @@
                         </div>
                     </div>
 
-                    
+
                     <input type="hidden" id="otpGenerate" name="otpGenerate" value="">
 
-                    
+
                     <!-- Navigation -->
                     <div class="d-flex justify-content-between mt-4">
                         <button type="button" class="btn btn-outline-secondary" id="prevBtn" onclick="changeStep(-1)"
@@ -199,7 +201,7 @@
                         <button type="button" class="btn btn-outline-info" id="nextBtn" onclick="changeStep(1)">Suivant
                             →</button>
 
-                        <button type="button" class="btn btn-outline-warning  border-1 text-center rounded-1" 
+                        <button type="button" class="btn btn-outline-warning  border-1 text-center rounded-1"
                         data-bs-toggle="modal" data-bs-target="#otpModal" id="btn-signature">Signer</button>
 
                         <button type="button" class="btn btn-outline-success d-none" id="FinalFormSubmit">Valider</button>
@@ -228,18 +230,18 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 
-        
+
         <!--plugins-->
         <script src="{{ asset('assets/js/jquery.min.js')}}"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 	    <script src="{{ asset('assets/plugins/select2/js/select2-custom.js')}}"></script>
 
-        
+
 
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    
+
     <script>
         let currentStep = 1;
         const totalSteps = 5;
@@ -318,7 +320,7 @@
 
                 // Vérification des champs requis visibles
                 const requiredFields = Array.from(currentStepElement.querySelectorAll("[required]"))
-                    .filter(field => field.offsetParent !== null); 
+                    .filter(field => field.offsetParent !== null);
 
                 let allValid = true;
 
@@ -379,7 +381,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             // Pour chaque champ type="tel"
             document.querySelectorAll('input[type="tel"]').forEach(function(input) {
-                
+
                 // Empêche la saisie de lettres ou symboles autres que chiffres et +
                 input.addEventListener('keypress', function(e) {
                     const char = String.fromCharCode(e.which);
@@ -402,7 +404,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             // Pour chaque champ type="tel"
             document.querySelectorAll('input[type="tel"]').forEach(function(input) {
-                
+
                 // Autoriser uniquement chiffres et +
                 input.addEventListener('keypress', function(e) {
                     const char = String.fromCharCode(e.which);
@@ -434,10 +436,10 @@
                     if (field.type === "checkbox" || field.type === "radio") {
                         const groupChecked = currentStepElement.querySelectorAll(`[name="${field.name}"]:checked`).length > 0;
                         if (!groupChecked) isValid = false;
-                    } 
+                    }
                     else if (!field.value.trim()) {
                         isValid = false;
-                    } 
+                    }
                     else if (field.type === "tel") {
                         // Vérif spécifique pour les téléphones (ex. min 8 chiffres)
                         const cleanValue = field.value.replace(/\D/g, "");
@@ -481,66 +483,6 @@
         }
     </script>
 
-
-
-    {{-- <script>
-        let currentStep = 1;
-        let totalSteps = document.querySelectorAll(".step").length;
-
-        function changeStep(direction) {
-            // Si on va en avant, vérifier les champs obligatoires
-            if (direction === 1) {
-                const currentStepElement = document.querySelector(`.step[data-step="${currentStep}"]`);
-                const requiredFields = currentStepElement.querySelectorAll("[required]");
-
-                let allValid = true;
-
-                requiredFields.forEach(field => {
-                    // Si le champ est vide ou non coché
-                    if ((field.type === "checkbox" || field.type === "radio")) {
-                        const groupChecked = currentStepElement.querySelectorAll(`[name="${field.name}"]:checked`).length > 0;
-                        if (!groupChecked) {
-                            allValid = false;
-                            field.classList.add("is-invalid");
-                        } else {
-                            field.classList.remove("is-invalid");
-                        }
-                    } else if (!field.value.trim()) {
-                        allValid = false;
-                        field.classList.add("is-invalid");
-                    } else {
-                        field.classList.remove("is-invalid");
-                    }
-                });
-
-                // Si au moins un champ est vide → bloquer
-                if (!allValid) {
-                    alert("Veuillez remplir tous les champs obligatoires avant de continuer.");
-                    return;
-                }
-            }
-
-            // Si tout est ok → changer d'étape
-            const newStep = currentStep + direction;
-            if (newStep >= 1 && newStep <= totalSteps) {
-                currentStep = newStep;
-                showStep(currentStep);
-            }
-        }
-
-        function showStep(step) {
-            document.querySelectorAll(".step").forEach((el) => {
-                el.classList.remove("active");
-                if (parseInt(el.dataset.step) === step) {
-                    el.classList.add("active");
-                }
-            });
-
-            // Gérer les boutons
-            document.getElementById("prevBtn").disabled = (step === 1);
-            document.getElementById("nextBtn").textContent = (step === totalSteps) ? "Valider" : "Suivant →";
-        }
-    </script> --}}
 
     <script>
         const FinalFormSubmit = document.getElementById('FinalFormSubmit');
@@ -598,7 +540,7 @@
 
     </script>
 
-    <script>
+    {{-- <script>
         class DataFetcher {
             constructor(apiVilles, apiProfessions) {
                 this.apiVilles = apiVilles;
@@ -663,7 +605,7 @@
             'https://api.yakoafricassur.com/enov/professions'
         );
         dataFetcher.init();
-    </script>
+    </script> --}}
 
 
     {{-- <script>
@@ -709,7 +651,7 @@
                 detectCountryFromPhone(phoneInput.value);
             });
 
-            
+
         });
     </script> --}}
 
@@ -896,7 +838,7 @@
                                 input.classList.remove("is-invalid");
                                 input.classList.add("is-valid");
                             });
-                            
+
                             // Masquer btnSignature, afficher btnTransmettre et ouvrir la modale qrCodeModal avec un delay de 5 secondes
                             setTimeout(() => {
                                 btnSignature.classList.add('d-none');
@@ -1128,60 +1070,60 @@
     </script>
 
 <script>
-    async function loadCountries() {
-        const baseUrl = "https://apiotp.yakoafricassur.com/api/getAllCountries";
-        const response = await fetch(baseUrl);
-        const json = await response.json();
-        const countries = json.countries;
+    // async function loadCountries() {
+    //     const baseUrl = "https://apiotp.yakoafricassur.com/api/getAllCountries";
+    //     const response = await fetch(baseUrl);
+    //     const json = await response.json();
+    //     const countries = json.countries;
 
-        // Récupération de la session
-        const sessionData = sessionStorage.getItem('souscriptionData');
-        const souscription = sessionData ? JSON.parse(sessionData) : {};
+    //     // Récupération de la session
+    //     const sessionData = sessionStorage.getItem('souscriptionData');
+    //     const souscription = sessionData ? JSON.parse(sessionData) : {};
 
-        let listToShow;
+    //     let listToShow;
 
-        if (souscription?.utilisateur?.codepartenaire === "DIASPORA") {
-            // On filtre uniquement les pays de la liste fixe
-            const diasporaList = ["France", "Italy", "Netherlands", "Belgium", "Côte d'Ivoire"];
-            listToShow = countries.filter(c => diasporaList.includes(c.name));
-        } else {
-            // Tous les pays triés alphabétiquement
-            listToShow = countries.sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
-        }
+    //     if (souscription?.utilisateur?.codepartenaire === "DIASPORA") {
+    //         // On filtre uniquement les pays de la liste fixe
+    //         const diasporaList = ["France", "Italy", "Netherlands", "Belgium", "Côte d'Ivoire"];
+    //         listToShow = countries.filter(c => diasporaList.includes(c.name));
+    //     } else {
+    //         // Tous les pays triés alphabétiquement
+    //         listToShow = countries.sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
+    //     }
 
-        const $select = $(".apiCountry");
+    //     const $select = $(".apiCountry");
 
-        // On injecte les pays
-        listToShow.forEach(c => {
-            let option = new Option(c.name, c.country_code, false, false);
-            option.dataset.flag = c.flag;
-            option.dataset.prefix = c.phone_international_prefix ? "+" + c.phone_international_prefix : "";
-            $select.append(option);
-        });
+    //     // On injecte les pays
+    //     listToShow.forEach(c => {
+    //         let option = new Option(c.name, c.country_code, false, false);
+    //         option.dataset.flag = c.flag;
+    //         option.dataset.prefix = c.phone_international_prefix ? "+" + c.phone_international_prefix : "";
+    //         $select.append(option);
+    //     });
 
-        // Initialisation Select2 avec drapeau + indicatif
-        $select.select2({
-            templateResult: formatCountry,
-            templateSelection: formatCountry,
-            placeholder: "Sélectionner un pays",
-            allowClear: true
-        });
-    }
+    //     // Initialisation Select2 avec drapeau + indicatif
+    //     $select.select2({
+    //         templateResult: formatCountry,
+    //         templateSelection: formatCountry,
+    //         placeholder: "Sélectionner un pays",
+    //         allowClear: true
+    //     });
+    // }
 
     // Template d’affichage : flag + nom + indicatif
-    function formatCountry(option) {
-        if (!option.id) return option.text;
-        let flag = $(option.element).data("flag") || "";
-        let prefix = $(option.element).data("prefix") || "";
-        return $(
-            `<span style="display:flex;align-items:center;gap:8px;">
-                <span>${flag}</span>
-                <span>${option.text} ${prefix ? "(" + prefix + ")" : ""}</span>
-            </span>`
-        );
-    }
+    // function formatCountry(option) {
+    //     if (!option.id) return option.text;
+    //     let flag = $(option.element).data("flag") || "";
+    //     let prefix = $(option.element).data("prefix") || "";
+    //     return $(
+    //         `<span style="display:flex;align-items:center;gap:8px;">
+    //             <span>${flag}</span>
+    //             <span>${option.text} ${prefix ? "(" + prefix + ")" : ""}</span>
+    //         </span>`
+    //     );
+    // }
 
-    document.addEventListener("DOMContentLoaded", loadCountries);
+    // document.addEventListener("DOMContentLoaded", loadCountries);
 </script>
 
 
