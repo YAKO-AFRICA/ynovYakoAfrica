@@ -256,20 +256,20 @@
                 gap: 1rem;
                 font-size: 12px;">
 
-                <div style="width: 50%; float: left; min-height: 160px ; border: 1px solid #000; padding: 2px">
+                <div style="width: 60%; float: left; min-height: 160px ; border: 1px solid #000; padding: 2px">
                     <strong>
                         Signature du souscripteur
                     </strong> <br>
                     <span style="font-size: 10px">
                         Je soussigné(e),................................................., <br> certifie que les informations fournies sont exactes. <br> Je consens au traitement de mes données personnelles par YAKO AFRICA ASSURANCE VIE dans le cadre de cette souscription.
                     </span>
-                    <div style="disply: flex; justify-content: space-between; margin-top: 10px;">
+                    <div style="disply: flex; justify-content: center; margin-top: 10px;">
                         {{-- <div style="width: 48%; float: left">
                             <img src="{{ $qrCodeBase64 }}" alt="QR Code de vérification" style="width: 60px; height: 60px;">
                         </div> --}}
-                        <div style="width: 100%; float: right">
+                        <div style="width: 100%;">
                             @if (!empty($imageSrc))
-                                <img src="{{ $imageSrc }}" alt="Signature" style="width: 100%; height: 100%;">
+                                <img src="{{ $imageSrc }}" alt="Signature" style="width: 100px; height: 90px;">
                             @endif
                         </div>
                     </div>
@@ -281,7 +281,7 @@
 
                     <muted>(Précedée de la mention LU et APPROUVE)</muted>
                 </div> --}}
-                <div style="width: 45%; float: right; margin-top: -165px; min-height: 160px; border: 1px solid #000; padding: 2px">
+                <div style="width: 35%; float: right; min-height: 160px; border: 1px solid #000; padding: 2px">
                     <div class="sign-yako" style="margin: 0; box-sizing: border-box ">
                         <span>Reservé à YAKO AFRICA Assurances Vie</span>
 

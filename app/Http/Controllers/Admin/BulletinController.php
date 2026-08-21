@@ -100,7 +100,7 @@ class BulletinController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-   
+
 
 
     // public function generate(Request $request, $id)
@@ -119,9 +119,9 @@ class BulletinController extends Controller
     //         // $qrContent .= "Réf. Contrat: " . $contrat->id;
 
     //         $qrContent = url("production/showQrCode/" . $contrat->id);
-            
+
     //         $writer = new Writer($renderer);
-        
+
     //         $qrCodeImage = $writer->writeString($qrContent);
     //         $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($qrCodeImage);
 
@@ -138,8 +138,8 @@ class BulletinController extends Controller
     //                 if (isset($data['error']) && $data['error'] === true) {
     //                     Log::info('Signature non trouvée pour le contrat ID: ' . $contrat->id);
     //                 } else {
-                    
-    //                     $imageData = $response->body(); 
+
+    //                     $imageData = $response->body();
     //                     $base64Image = base64_encode($imageData);
     //                     $imageSrc = 'data:image/png;base64,' . $base64Image;
     //                 }
@@ -150,7 +150,7 @@ class BulletinController extends Controller
     //             Log::error('Exception lors de la récupération de la signature : ' . $e->getMessage());
     //         }
 
-            
+
 
 
     //         if($contrat)
@@ -158,7 +158,7 @@ class BulletinController extends Controller
     //             // Options pour Dompdf
     //             $options = new Options();
     //             $options->set('isRemoteEnabled', true);
-            
+
     //             // Générer le bulletin PDF avec Dompdf
     //             if($contrat->codeproduit == "YKE_2018"){
     //                 $pdf = PDF::loadView('productions.components.bullettin.ykeBulletin', [
@@ -184,7 +184,7 @@ class BulletinController extends Controller
     //                     'imageSrc' => $imageSrc
     //                 ]);
     //                 $cguFile = public_path('root/cgu/cadenceCgu.pdf');
-                    
+
     //             }else if($contrat->codeproduit == "PFA_IND"){
     //                 $pdf = PDF::loadView('productions.components.bullettin.pfaINDbulletin', [
     //                     'contrat' => $contrat,
@@ -206,7 +206,7 @@ class BulletinController extends Controller
     //                     'imageSrc' => $imageSrc,
     //                 ]);
     //                 $cguFile = public_path('root/cgu/CADENCEpLUS.pdf');
-                    
+
     //             }else{
 
     //                 $pdf = PDF::loadView('productions.components.bullettin.basicBulletin', [
@@ -216,19 +216,19 @@ class BulletinController extends Controller
     //                 ]);
     //                 $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
     //             }
-            
+
     //             // Répertoire pour enregistrer les fichiers temporaires
     //             $bulletinDir = public_path('documents/bulletin/');
     //             if (!is_dir($bulletinDir)) {
     //                 mkdir($bulletinDir, 0777, true);
     //             }
-            
+
     //             $bulletinFileName = $bulletinDir . 'temp_bulletin_' . $contrat->id . '.pdf';
     //             $pdf->save($bulletinFileName);
-            
+
     //             // Fusionner les PDF avec FPDI
     //             $finalPdf = new Fpdi();
-            
+
     //             // Ajouter toutes les pages du bulletin
     //             $bulletinPageCount = $finalPdf->setSourceFile($bulletinFileName);
     //             for ($pageNo = 1; $pageNo <= $bulletinPageCount; $pageNo++) {
@@ -236,7 +236,7 @@ class BulletinController extends Controller
     //                 $tplIdx = $finalPdf->importPage($pageNo);
     //                 $finalPdf->useTemplate($tplIdx);
     //             }
-            
+
     //             // Ajouter toutes les pages du fichier CGU
     //             $cguPageCount = $finalPdf->setSourceFile($cguFile);
     //             for ($pageNo = 1; $pageNo <= $cguPageCount; $pageNo++) {
@@ -244,18 +244,18 @@ class BulletinController extends Controller
     //                 $tplIdx = $finalPdf->importPage($pageNo);
     //                 $finalPdf->useTemplate($tplIdx);
     //             }
-            
+
     //             // Nom final du fichier
     //             $finalFileName = $bulletinDir . $contrat->codeproduit .'_bulletin_'. $contrat->id . '.pdf';
-            
+
     //             // Enregistrer le PDF final
     //             $finalPdf->Output($finalFileName, 'F');
-            
+
     //             // Supprimer le fichier temporaire du bulletin
     //             unlink($bulletinFileName);
 
     //             DB::commit();
-            
+
     //             // Retourner le PDF final en tant que réponse
     //             return response()->file($finalFileName, [
     //                 'Content-Type' => 'application/pdf',
@@ -448,6 +448,15 @@ class BulletinController extends Controller
 
             $cguFile = public_path('root/cgu/CGLPREVO.pdf');
 
+
+        } elseif ($contrat->codeproduit == "LFFUN") {
+
+            $pdf = PDF::loadView('productions.components.bullettin.llfunBull', [
+                'contrat' => $contrat,
+                'qrCodeBase64' => $qrCodeBase64,
+                'imageSrc' => $imageSrc,
+            ]);
+            $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
         } else {
 
             $pdf = PDF::loadView('productions.components.bullettin.basicBulletin', [
@@ -553,9 +562,9 @@ class BulletinController extends Controller
         ]);
     }
 }
-    
 
- 
+
+
 
 
     /**
