@@ -20,7 +20,7 @@
 
         /* Banner Section */
         .banner {
-            background: linear-gradient(135deg, rgba(7, 102, 51, 0.9), rgba(237, 180, 64, 0.8)), 
+            background: linear-gradient(135deg, rgba(7, 102, 51, 0.9), rgba(237, 180, 64, 0.8)),
                         url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80');
             background-size: cover;
             background-position: center;
@@ -270,19 +270,19 @@
             .products-section {
                 grid-template-columns: 1fr;
             }
-            
+
             .banner-content h1 {
                 font-size: 2.5rem;
             }
-            
+
             .banner-content p {
                 font-size: 1.1rem;
             }
-            
+
             .product-details {
                 padding: 20px;
             }
-            
+
             .detail-grid {
                 grid-template-columns: 1fr;
             }
@@ -295,7 +295,7 @@
         <div class="banner-content">
             <h1>Nos Produits d'Assurance</h1>
             <p>
-                Découvrez notre gamme complète de produits d'assurance conçus pour vous protéger 
+                Découvrez notre gamme complète de produits d'assurance conçus pour vous protéger
                 et sécuriser votre avenir </p>
         </div>
     </section>
@@ -320,6 +320,8 @@
         </div>
     </div>
 
+    
+
 
 
     <script>
@@ -327,7 +329,7 @@
         console.log('Products:', products);
         const user = @json($user);
 
-        console.log('User all data:', user); 
+        console.log('User all data:', user);
 
         // console.log('User:', user['meta']['partner']);
 
@@ -361,8 +363,8 @@
                 productCard.innerHTML = `
                     <h3>${product.MonLibelle}</h3>
                 `;
-                
-                
+
+
                 container.appendChild(productCard);
             });
 
@@ -394,7 +396,7 @@
         function renderProductDetails(product) {
             const detailsContainer = document.getElementById('product-details');
             detailsContainer.className = 'product-details';
-            
+
             detailsContainer.innerHTML = `
                 <div class="detail-header">
                     <h2>${product.MonLibelle}</h2>
@@ -405,29 +407,29 @@
                         <span class="meta-item">Âge Maximum: ${ageMax}</span>
                     </div>
                 </div>
-                
+
                 <div class="detail-grid">
                     <div class="detail-item">
                         <label>Informations sur le produit</label>
                         <span>
-                            Les funérailles peuvent représenter un lourd fardeau financier, vous laissant démunis face à cette épreuve. 
-                            Avec <strong>${product.MonLibelle}</strong>, vous bénéficiez de l’accompagnement et du soutien de <strong>YAKO AFRICA Assurances Vie</strong> 
-                            pour organiser sereinement les obsèques de vos proches disparus.  
+                            Les funérailles peuvent représenter un lourd fardeau financier, vous laissant démunis face à cette épreuve.
+                            Avec <strong>${product.MonLibelle}</strong>, vous bénéficiez de l’accompagnement et du soutien de <strong>YAKO AFRICA Assurances Vie</strong>
+                            pour organiser sereinement les obsèques de vos proches disparus.
                             <br><br>
                             Vous n’êtes plus seuls : nous sommes à vos côtés pour vous apporter assistance, réconfort et sérénité dans ces moments difficiles.
                         </span>
                     </div>
                 </div>
 
-                
+
                 <div class="subscribe-section">
                     <h3>Souscription au Produit</h3>
                     <p>Protégez-vous dès maintenant avec ce produit d'assurance adapté à vos besoins.</p>
-                    
+
                     <div class="privacy-check">
                         <input type="checkbox" id="cgu-checkbox" onchange="togglePrivacy()">
                         <label for="cgu-checkbox">
-                            J’ai lu et compris les 
+                            J’ai lu et compris les
                             <a href="" onclick="window.open('{{ asset('root/cgu/CGsoutienFidel.pdf') }}')" style="color: #edb440;">conditions générales</a>
                         </label>
                     </div>
@@ -435,11 +437,11 @@
                     <div class="privacy-check">
                         <input type="checkbox" id="confidentialite-checkbox" onchange="togglePrivacy()">
                         <label for="confidentialite-checkbox">
-                            J’accepte la 
+                            J’accepte la
                             <a href="https://yakoafricassur.com/politique/confident.html" target="_blank" style="color: #edb440;">politique de confidentialité</a>
                         </label>
                     </div>
-                    
+
                     <button class="subscribe-btn" id="subscribe-btn" onclick="subscribe()" disabled>
                         Souscrire au Produit
                     </button>
@@ -487,7 +489,7 @@
             renderProducts();
         });
 
-    
+
      </script>
 </body>
 

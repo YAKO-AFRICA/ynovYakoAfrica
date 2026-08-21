@@ -28,9 +28,9 @@
                             <select id="lieunaissance" class="form-select lieunaissance">
                                 <option selected value="">Sélectionner le lieu</option>
 
-                                {{-- @foreach($villes as $ville)
+                                @foreach($villes as $ville)
                                     <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option>
-                                @endforeach  --}}
+                                @endforeach
 
                             </select>
                         </div>
@@ -41,9 +41,9 @@
                             <select id="lieuresidence" class="form-select lieuresidence" required>
                                 <option selected value="">Sélectionner le lieu</option>
 
-                                {{-- @foreach($villes as $ville)
+                                @foreach($villes as $ville)
                                     <option value="{{ $ville->libelleVillle }}">{{ $ville->libelleVillle }}</option>
-                                @endforeach  --}}
+                                @endforeach
 
                             </select>
                         </div>

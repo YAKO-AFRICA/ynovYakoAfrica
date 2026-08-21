@@ -200,8 +200,8 @@
                 <input type="file" name="justifResidenceAdh" class="form-control" id="justifResidenceAdh" accept="application/pdf,image/jpeg,image/jpg,image/png"  required>
             </div>
         @endif
-        
-        
+
+
     </div>
     <!---end row-->
     <div class="row g-3 mb-3">
@@ -210,9 +210,9 @@
             <select class="form-select selection" name="profession" id="profession" autocomplete="on">
                 <option value="" disabled selected>Sélectionner la profession</option>
 
-                {{-- @foreach ($professions as $profession)
+                @foreach ($professions as $profession)
                         <option value="{{ $profession->MonLibelle }}">{{ $profession->MonLibelle }}</option>
-                    @endforeach --}}
+                    @endforeach
             </select>
         </div>
         <div class="col-12 col-lg-6">
@@ -286,11 +286,11 @@
                         aria-label="Text input with select" required minlength="10" maxlength="15">
                 </div>
             </div>
-            
+
 
         </div>
 
-        
+
 
         <div class="row g-3 mb-3">
             <div class="col-12 col-lg-8">
@@ -347,50 +347,121 @@
         });
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const apiUrl = 'https://api.yakoafricassur.com/enov/villes';
-            const apiProfessions = 'https://api.yakoafricassur.com/enov/professions';
+    {{-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
 
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    const villeSelect = document.getElementById('lieuresidence');
-                    const lieuSelect = document.getElementById('lieunaissance');
+        const apiUrl = 'https://api.yakoafricassur.com/enov/villes';
+        const apiProfessions = 'https://api.yakoafricassur.com/enov/professions';
 
-                    data.sort((a, b) => a.MonLibelle.localeCompare(b.MonLibelle, 'fr', { sensitivity: 'base' }));
+        const villeSelect = document.getElementById('lieuresidence');
+        const lieuSelect = document.getElementById('lieunaissance');
+        const professionSelect = document.getElementById('profession');
 
-                    data.forEach(ville => {
-                        const optionVille = document.createElement('option');
-                        optionVille.value = ville.MonLibelle;
-                        optionVille.textContent = ville.MonLibelle;
-                        villeSelect.appendChild(optionVille);
+        // Désactiver uniquement les champs concernés
+        villeSelect.disabled = true;
+        lieuSelect.disabled = true;
+        professionSelect.disabled = true;
 
-                        const optionLieu = document.createElement('option');
-                        optionLieu.value = ville.MonLibelle;
-                        optionLieu.textContent = ville.MonLibelle;
-                        lieuSelect.appendChild(optionLieu);
-                    });
+        // =========================
+        // Chargement des villes
+        // =========================
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur lors du chargement des villes');
+                }
+
+                return response.json();
+            })
+            .then(data => {
+
+                data.sort((a, b) =>
+                    a.MonLibelle.localeCompare(
+                        b.MonLibelle,
+                        'fr',
+                        { sensitivity: 'base' }
+                    )
+                );
+
+                data.forEach(ville => {
+
+                    const optionVille = document.createElement('option');
+                    optionVille.value = ville.MonLibelle;
+                    optionVille.textContent = ville.MonLibelle;
+
+                    villeSelect.appendChild(optionVille);
+
+
+                    const optionLieu = document.createElement('option');
+                    optionLieu.value = ville.MonLibelle;
+                    optionLieu.textContent = ville.MonLibelle;
+
+                    lieuSelect.appendChild(optionLieu);
                 });
 
+                // Réactiver les champs
+                villeSelect.disabled = false;
+                lieuSelect.disabled = false;
+
+            })
+            .catch(error => {
+
+                console.error(error);
+
+                villeSelect.innerHTML =
+                    '<option value="">Impossible de charger les villes</option>';
+
+                lieuSelect.innerHTML =
+                    '<option value="">Impossible de charger les villes</option>';
+            });
 
 
-            fetch(apiProfessions)
-                .then(response => response.json())
-                .then(data => {
-                    const professionSelect = document.getElementById('profession');
+        // =========================
+        // Chargement des professions
+        // =========================
+        fetch(apiProfessions)
+            .then(response => {
 
-                    data.sort((a, b) => a.MonLibelle.localeCompare(b.MonLibelle, 'fr', { sensitivity: 'base' }));
+                if (!response.ok) {
+                    throw new Error('Erreur lors du chargement des professions');
+                }
 
-                    data.forEach(profession => {
-                        const optionProfession = document.createElement('option');
-                        optionProfession.value = profession.MonLibelle;
-                        optionProfession.textContent = profession.MonLibelle;
-                        professionSelect.appendChild(optionProfession);
-                    });
+                return response.json();
+            })
+            .then(data => {
+
+                data.sort((a, b) =>
+                    a.MonLibelle.localeCompare(
+                        b.MonLibelle,
+                        'fr',
+                        { sensitivity: 'base' }
+                    )
+                );
+
+                data.forEach(profession => {
+
+                    const optionProfession = document.createElement('option');
+
+                    optionProfession.value = profession.MonLibelle;
+                    optionProfession.textContent = profession.MonLibelle;
+
+                    professionSelect.appendChild(optionProfession);
                 });
-        });
-    </script>
+
+                // Réactiver le select
+                professionSelect.disabled = false;
+
+            })
+            .catch(error => {
+
+                console.error(error);
+
+                professionSelect.innerHTML =
+                    '<option value="">Impossible de charger les professions</option>';
+            });
+
+    });
+    </script> --}}
 
 
     <script>
@@ -454,7 +525,7 @@
                                 updateSessionField(this.name, this.value);
                             }
                         });
-                    } 
+                    }
                     else if (type === 'text' || type === 'email' || type === 'tel' || type === 'date') {
                         element.addEventListener('input', function() {
                             updateSessionField(this.name, this.value);

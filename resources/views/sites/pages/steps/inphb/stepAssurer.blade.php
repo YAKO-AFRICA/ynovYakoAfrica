@@ -10,13 +10,13 @@
             <label class="form-check-label" for="estAssureNon">Non</label>
         </div>
     </div>
-    <div class="col-12 col-lg-6 text-end" id="modalAssurerOpen">
+    {{-- <div class="col-12 col-lg-6 text-end" id="modalAssurerOpen">
         <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#createAssurerModal">
             <i class="fadeIn animated bx bx-plus"></i> Ajouter un(e) autre assuré(e)
         </button>
-    </div>
+    </div> --}}
 </div>
-@include('sites.pages.add.addAssurerModal')
+{{-- @include('sites.pages.add.addAssurerModal') --}}
 
 
 <div class="overflow-auto">
