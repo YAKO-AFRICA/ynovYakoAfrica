@@ -490,11 +490,14 @@
             e.preventDefault();
             const form = document.getElementById('contratFormFinal');
 
+            FinalFormSubmit.disabled = true;
+            FinalFormSubmit.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Traitement En cours...';
+
             // Assurez-vous que la valeur est mise AVANT de construire FormData
             const sessionData = sessionStorage.getItem('souscriptionData');
             document.getElementById('inputStorageSession').value = sessionData;
 
-            console.log("Contenu de inputStorageSession:", sessionData);
+            // console.log("Contenu de inputStorageSession:", sessionData);
 
             const formData = new FormData(form);
 
@@ -528,6 +531,8 @@
                     }, 1000);
 
                 } else {
+                    FinalFormSubmit.disabled = false;
+                    FinalFormSubmit.innerHTML = 'Valider';
                     alert('Erreur : ' + (response.data.message || 'Une erreur est survenue.'));
                 }
             })

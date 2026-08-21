@@ -421,30 +421,6 @@ class SitePropositionController extends Controller
                         }
 
                     }
-                    // if ($request->file('justifResidence')) {
-
-                    //     $files = $request->file('justifResidence');
-
-                    //     if ($files) {
-                    //         $imageName = $idContrat . '_' . now()->timestamp . '.' . $files->getClientOriginalExtension();
-
-                    //         Log::info("imageName". $imageName);
-
-                    //         $destinationPath = base_path(env('UPLOADS_PATH'));
-
-                    //         $files->move($destinationPath, $imageName);
-
-                    //         TblDocument::create([
-                    //             'codecontrat' => $idContrat,
-                    //             'filename' => $imageName,
-                    //             'libelle' => "justif de residence",
-                    //             'saisiele' => now(),
-                    //             'saisiepar' => $utilisateur['idmembre'] ?? null,
-                    //             'source' => "ES",
-                    //         ]);
-                    //     }
-
-                    // }
 
                 }
             }
@@ -573,6 +549,8 @@ class SitePropositionController extends Controller
                 throw new \Exception("Erreur lors de la génération du bulletin : " . $bulletinData['message']);
             }
 
+            DB::commit();
+
             $mailData = [
                 'title' => 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉',
                 'btnLink' => $bulletinData['file_url'],
@@ -584,7 +562,22 @@ class SitePropositionController extends Controller
 
             $emailSubject = 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉';
 
-            Mail::to($to)->send(new CustomerMail($mailData, $emailSubject));
+            try {
+
+                Mail::to($to)->send(
+                    new CustomerMail($mailData, $emailSubject)
+                );
+
+            } catch (\Throwable $e) {
+
+
+                Log::error('Erreur lors de l\'envoi du mail du contrat', [
+                    'contrat_id' => $idContrat,
+                    'email' => $to,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+
 
             $details_log = [
                 'url' => route('prod.show', $idContrat),
@@ -594,19 +587,17 @@ class SitePropositionController extends Controller
                 'action' => "Voir",
             ];
 
-            DB::commit();
+
 
             if ($contratCreate) {
 
                 $dataResponse =[
                     'type'=>'success',
-                    // 'urlback'=> route('site.showContratSite', $idContrat),
                     'urlback' => route('site.showContratSite', [$idContrat, 'success' => 1]),
                     'url' => $bulletinData['file_url'],
                     'message'=>"Enregistré avec succès!",
                     'code'=>200,
                 ];
-                DB::commit();
 
            } else {
                 DB::rollback();

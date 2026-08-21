@@ -229,9 +229,9 @@
     </div>
     <div class="row g-3 mb-3">
         <div class="col-12">
-            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+            <label for="email" class="form-label">Email </label>
             <input type="email" name="email" class="form-control" id="email" placeholder="Email"
-                autocomplete="on" required>
+                autocomplete="on">
 
             @error('email')
                 <span class="text-danger"> Veuillez remplir votre email </span>
