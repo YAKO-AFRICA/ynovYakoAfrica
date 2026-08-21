@@ -558,11 +558,12 @@ class SitePropositionController extends Controller
                 'documents' => $bulletinData['file_url'],
             ];
 
-            $to = $adherentData['email'];
 
-            $emailSubject = 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉';
 
             try {
+                $to = $adherentData['email'] ?? "example@gmail.com";
+
+                $emailSubject = 'Félicitations et bienvenue chez YAKO AFRICA Assurances Vie ! 🎉';
 
                 Mail::to($to)->send(
                     new CustomerMail($mailData, $emailSubject)
