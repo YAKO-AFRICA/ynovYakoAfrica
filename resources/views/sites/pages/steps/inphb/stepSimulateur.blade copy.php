@@ -56,7 +56,7 @@
         /* ===== GRILLE ===== */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 18px;
             margin-top: 16px;
         }
@@ -248,80 +248,6 @@
             color: #888;
             font-style: italic;
             padding-top: 2px;
-        }
-
-        /* ===== GARANTIE OPTIONNELLE ===== */
-        .optional-guarantee {
-            padding: 8px 14px 12px;
-            border-top: 1px dashed #ddd;
-            margin-top: 4px;
-        }
-
-        .optional-guarantee .toggle-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #333;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .optional-guarantee .toggle-wrapper input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            accent-color: #1a2a6c;
-            cursor: pointer;
-        }
-
-        .optional-guarantee .prime-input-wrapper {
-            display: none;
-            margin-top: 8px;
-            padding: 6px 10px;
-            background: #f8fafc;
-            border-radius: 6px;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .optional-guarantee .prime-input-wrapper.visible {
-            display: flex;
-        }
-
-        .optional-guarantee .prime-input-wrapper label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #444;
-        }
-
-        .optional-guarantee .prime-input-wrapper input[type="number"] {
-            flex: 1;
-            min-width: 100px;
-            padding: 6px 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            outline: none;
-            transition: border 0.2s;
-        }
-
-        .optional-guarantee .prime-input-wrapper input[type="number"]:focus {
-            border-color: #1a2a6c;
-            box-shadow: 0 0 0 2px rgba(26, 42, 108, 0.15);
-        }
-
-        .optional-guarantee .prime-input-wrapper .range-hint {
-            font-size: 0.65rem;
-            color: #888;
-            width: 100%;
-        }
-
-        .optional-guarantee .prime-input-wrapper .range-hint span {
-            font-weight: 600;
-            color: #333;
         }
 
         /* ===== DÉTAIL (accordéon) ===== */
@@ -550,11 +476,6 @@
                 width: 100%;
                 text-align: center;
             }
-
-            .optional-guarantee .prime-input-wrapper {
-                flex-direction: column;
-                align-items: stretch;
-            }
         }
 
         @media (max-width: 480px) {
@@ -645,20 +566,6 @@
                         <tr class="note-row"><td colspan="2">+680 CFA/mois par enfant dès le 5ᵉ</td></tr>
                     </table>
                 </div>
-
-                <!-- GARANTIE OPTIONNELLE -->
-                <div class="optional-guarantee">
-                    <label class="toggle-wrapper">
-                        <input type="checkbox" class="optional-checkbox" data-card="complete">
-                        <span><i class="fas fa-plus-circle" style="color:#1a2a6c;"></i> Ajouter une garantie optionnelle</span>
-                    </label>
-                    <div class="prime-input-wrapper" data-card="complete">
-                        <label for="prime_complete">Prime mensuelle :</label>
-                        <input type="number" id="prime_complete" class="prime-input" min="10000" max="100000" placeholder="10 000 – 100 000" value="25000">
-                        <span class="range-hint">⚠️ Montant compris entre <span>10 000</span> et <span>100 000 CFA</span></span>
-                    </div>
-                </div>
-
                 <div class="card-detail">
                     <button class="card-detail-trigger" onclick="toggleDetail(this)">
                         <i class="fas fa-chevron-down"></i> Voir les détails
@@ -708,20 +615,6 @@
                         <tr class="note-row"><td colspan="2">+680 CFA/mois par enfant dès le 5ᵉ</td></tr>
                     </table>
                 </div>
-
-                <!-- GARANTIE OPTIONNELLE -->
-                <div class="optional-guarantee">
-                    <label class="toggle-wrapper">
-                        <input type="checkbox" class="optional-checkbox" data-card="premium">
-                        <span><i class="fas fa-plus-circle" style="color:#f68615;"></i> Ajouter une garantie optionnelle</span>
-                    </label>
-                    <div class="prime-input-wrapper" data-card="premium">
-                        <label for="prime_premium">Prime mensuelle :</label>
-                        <input type="number" id="prime_premium" class="prime-input" min="10000" max="100000" placeholder="10 000 – 100 000" value="25000">
-                        <span class="range-hint">⚠️ Montant compris entre <span>10 000</span> et <span>100 000 CFA</span></span>
-                    </div>
-                </div>
-
                 <div class="card-detail">
                     <button class="card-detail-trigger" onclick="toggleDetail(this)">
                         <i class="fas fa-chevron-down"></i> Voir les détails
@@ -745,6 +638,55 @@
                     <button class="btn-select" onclick="selectOption(this)">Choisir</button>
                 </div>
             </div>
+
+            <!-- OPTION 3 - ÉCONOMIQUE -->
+            {{-- <div class="card card-economique" data-formule="economique" data-prime="4400" data-capital="5000000">
+                <div class="card-header">
+                    <div class="option-badge">FORMULE ÉCONOMIQUE</div>
+                    <h3>OPTION 3</h3>
+                    <div class="price">
+                        <div class="price-item">
+                            <div class="amount">4 400 CFA</div>
+                            <span class="label">/ Mois</span>
+                        </div>
+                        <div class="price-item">
+                            <div class="amount">52 800 CFA</div>
+                            <span class="label">/ An</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="guarantees-table">
+                        <tr><td class="category">👤 Adhérent</td><td class="value highlight">2 000 000 CFA</td></tr>
+                        <tr><td class="category">👩 Conjoint(e)</td><td class="value highlight">2 000 000 CFA</td></tr>
+                        <tr><td class="category">👶 Enfants (jusqu'à 5)</td><td class="value">1 000 000 CFA</td></tr>
+                        <tr><td class="category">👴 Ascendant(s)</td><td class="value" style="color:#999;">Non inclus</td></tr>
+                        <tr class="note-row"><td colspan="2">+500 CFA/mois par enfant dès le 6ᵉ</td></tr>
+                    </table>
+                </div>
+                <div class="card-detail">
+                    <button class="card-detail-trigger" onclick="toggleDetail(this)">
+                        <i class="fas fa-chevron-down"></i> Voir les détails
+                    </button>
+                    <div class="card-detail-content">
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> <strong>Couverture totale :</strong> 5 000 000 CFA</li>
+                            <li><i class="fas fa-check-circle"></i> <strong>Bénéficiaires :</strong> Adhérent + Conjoint + Enfants (5 max)</li>
+                            <li><i class="fas fa-check-circle"></i> <strong>6ᵉ enfant :</strong> +500 CFA/mois par enfant supplémentaire</li>
+                            <li><i class="fas fa-check-circle"></i> <strong>Délai de carence :</strong> 6 mois</li>
+                            <li><i class="fas fa-check-circle"></i> <strong>Validité :</strong> 12 mois renouvelable</li>
+                            <li><i class="fas fa-check-circle"></i> <strong>Assistance :</strong> Standard (8h-18h)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-total">
+                    <div>
+                        <span class="total-label">Total garanti</span>
+                        <div class="total-amount">5 000 000 CFA <span>(hors ascendants)</span></div>
+                    </div>
+                    <button class="btn-select outline" onclick="selectOption(this)">Choisir</button>
+                </div>
+            </div> --}}
         </div>
 
         <!-- BANDEAU INFO -->
@@ -761,37 +703,38 @@
                     <tr>
                         <th>Critères</th>
                         <th style="color:#1a2a6c;">Option 1 (Complète)</th>
-                        <th style="color:#f68615;">Option 2 (Premium)</th>
+                        <th style="color:#6a1b9a;">Option 2 (Premium)</th>
+                        {{-- <th style="color:#1a5a3c;">Option 3 (Économique)</th> --}}
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>Prime mensuelle</td>
                         <td style="font-weight:700;color:#1a2a6c;">9 672 CFA</td>
-                        <td style="color:#f68615;">7 652 CFA</td>
+                        <td style="color:#6a1b9a;">7 652 CFA</td>
+                        {{-- <td style="color:#1a5a3c;">4 400 CFA</td> --}}
                     </tr>
                     <tr>
                         <td>Ascendants couverts</td>
                         <td>✅ 2 x 1 000 000 CFA</td>
                         <td>✅ 1 x 1 000 000 CFA</td>
+                        {{-- <td>❌ Non inclus</td> --}}
                     </tr>
                     <tr>
                         <td>Enfants pris en charge</td>
-                        <td colspan="2">4 enfants inclus, +680 CFA/mois dès le 5ᵉ</td>
+                        <td colspan="3">4 enfants inclus, +680 CFA/mois dès le 5ᵉ</td>
                     </tr>
                     <tr>
                         <td>Délai de carence</td>
                         <td>3 mois</td>
                         <td>3 mois</td>
+                        {{-- <td>6 mois</td> --}}
                     </tr>
                     <tr>
                         <td>Assistance</td>
                         <td>24h/24</td>
                         <td>24h/24</td>
-                    </tr>
-                    <tr>
-                        <td>Garantie optionnelle</td>
-                        <td colspan="2">✅ Disponible (10 000 – 100 000 CFA/mois)</td>
+                        {{-- <td>Standard</td> --}}
                     </tr>
                 </tbody>
             </table>
@@ -799,48 +742,26 @@
     </div>
 
     <script>
-        // ===== GESTION DE LA GARANTIE OPTIONNELLE =====
         document.addEventListener('DOMContentLoaded', function () {
-            // Afficher/masquer le champ de prime au clic sur la checkbox
-            document.querySelectorAll('.optional-checkbox').forEach(function (checkbox) {
-                checkbox.addEventListener('change', function () {
-                    const cardType = this.dataset.card;
-                    const wrapper = document.querySelector(`.prime-input-wrapper[data-card="${cardType}"]`);
-                    if (wrapper) {
-                        wrapper.classList.toggle('visible', this.checked);
-                    }
-                });
+                const user = @json($user);
+
+                let data = JSON.parse(sessionStorage.getItem('souscriptionData') || '{}');
+
+                // Met à jour uniquement si l'utilisateur n'est pas encore sauvegardé
+                if (!data.utilisateur) {
+                    data.utilisateur = user;
+                    sessionStorage.setItem('souscriptionData', JSON.stringify(data));
+                    console.log('✅ Utilisateur sauvegardé dans la session :', data.utilisateur);
+                } else {
+                    console.log('ℹ️ Utilisateur déjà présent dans la session :', data.utilisateur);
+                }
             });
+    </script>
 
-            // Validation du champ prime (min/max)
-            document.querySelectorAll('.prime-input').forEach(function (input) {
-                input.addEventListener('input', function () {
-                    const val = parseInt(this.value, 10);
-                    if (val < 10000) {
-                        this.setCustomValidity('La prime pour la garantie optionnelle doit être d\'au moins 10 000 CFA.');
-                    } else if (val > 100000) {
-                        this.setCustomValidity('La prime pur la garantie optionnelle ne peut pas dépasser 100 000 CFA.');
-                    } else {
-                        this.setCustomValidity('');
-                    }
-                });
-            });
-
-            // Utilisateur depuis Blade
-            const user = @json($user);
-
-            let data = JSON.parse(sessionStorage.getItem('souscriptionData') || '{}');
-
-            if (!data.utilisateur) {
-                data.utilisateur = user;
-                sessionStorage.setItem('souscriptionData', JSON.stringify(data));
-                console.log('✅ Utilisateur sauvegardé dans la session :', data.utilisateur);
-            } else {
-                console.log('ℹ️ Utilisateur déjà présent dans la session :', data.utilisateur);
-            }
-        });
-
-        // ===== ACCORDÉON DÉTAILS =====
+    <script>
+        /**
+         * Bascule l'accordéon des détails
+         */
         function toggleDetail(button) {
             const content = button.nextElementSibling;
             content.classList.toggle('open');
@@ -853,53 +774,40 @@
             }
         }
 
-        // ===== SÉLECTION DE LA FORMULE =====
+        /**
+         * Sélectionne une formule et enregistre les données en sessionStorage
+         */
         function selectOption(button) {
+            // Récupère la carte parente
             const card = button.closest('.card');
             if (!card) return;
 
             const user = @json($user);
 
+            // Lecture des attributs data-
             const formule = card.dataset.formule || 'unknown';
-            const primeBase = parseInt(card.dataset.prime, 10) || 0;
+            const prime = parseInt(card.dataset.prime, 10) || 0;
             const capital = parseInt(card.dataset.capital, 10) || 0;
 
-            // Récupération de la garantie optionnelle
-            const checkbox = card.querySelector('.optional-checkbox');
-            const primeInput = card.querySelector('.prime-input');
-            let optionPrime = 0;
-            let optionActive = false;
-
-            if (checkbox && checkbox.checked) {
-                optionActive = true;
-                const val = parseInt(primeInput.value, 10);
-                if (!isNaN(val) && val >= 10000 && val <= 100000) {
-                    optionPrime = val;
-                } else {
-                    alert('Veuillez saisir une prime pour la garantie optionnelle valide entre 10 000 et 100 000 CFA.');
-                    return;
-                }
-            }
-
+            // Construction de l'objet de souscription
             const souscriptionData = {
                 simulationData: {
                     formule: formule,
                     productCode: 'LFFUN',
-                    prime: primeBase,
+                    prime: prime,
                     capital: capital,
-                    dateSelection: new Date().toISOString(),
-                    garantieOptionnelle: {
-                        active: optionActive,
-                        prime: optionPrime
-                    }
+                    dateSelection: new Date().toISOString()
                 },
-                utilisateur: user
+                utilisateur:user
+
             };
 
+            // Enregistrement en sessionStorage
             try {
                 sessionStorage.setItem('souscriptionData', JSON.stringify(souscriptionData));
                 console.log('✅ Données enregistrées :', souscriptionData);
 
+                // Feedback visuel
                 const originalText = button.textContent;
                 button.textContent = '✓ Sélectionné';
                 button.style.opacity = '0.8';
@@ -908,18 +816,19 @@
                     button.style.opacity = '1';
                 }, 2400);
 
-                window.location.href = '/site/create/LFFUN/INPHB?formule=' + encodeURIComponent(formule) +
-                    '&optionPrime=' + optionPrime +
-                    '&optionActive=' + optionActive;
+                // Option : redirection vers la page suivante
+                window.location.href = '/site/create/LFFUN/INPHB?formule=' + encodeURIComponent(formule);
 
             } catch (e) {
-                console.error('❌ Erreur :', e);
+                console.error('❌ Erreur lors de l\'enregistrement :', e);
                 alert('Une erreur est survenue lors de l\'enregistrement de votre choix.');
             }
         }
 
-        // Ouverture auto des détails pour la carte recommandée
-        document.addEventListener('DOMContentLoaded', function () {
+        /**
+         * Au chargement : ouvre automatiquement les détails de la carte recommandée
+         */
+        document.addEventListener('DOMContentLoaded', function() {
             const recommendedCard = document.querySelector('.card.recommended');
             if (recommendedCard) {
                 const trigger = recommendedCard.querySelector('.card-detail-trigger');
@@ -927,6 +836,16 @@
                     setTimeout(() => {
                         toggleDetail(trigger);
                     }, 400);
+                }
+            }
+
+            // Vérification du contenu de la session (debug)
+            const stored = sessionStorage.getItem('souscriptionData');
+            if (stored) {
+                try {
+                    console.log('📦 Données existantes en session :', JSON.parse(stored));
+                } catch (e) {
+                    // ignoré
                 }
             }
         });
