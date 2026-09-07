@@ -117,14 +117,14 @@
                     <div class="mb-3">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" name="periodicite" type="radio" value="M"
-                                    id="Mois" required readonly>
+                                    id="Mois" checked required readonly>
                                 <label class="form-check-label" for="Mois">
                                     Mois
                                 </label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" name="periodicite" type="radio" value="A"
-                                    id="Annee" checked readonly>
+                                    id="Annee" readonly>
                                 <label class="form-check-label" for="Annee">
                                     Année
                                 </label>
@@ -140,8 +140,13 @@
                             <div class="col-12 mb-3">
                                 <label for="primepricipale" class="form-label">Je souhaite payer une prime de
                                     :</label>
-                                <input type="number" class="form-control" id="primepricipale" value="111" name="primepricipale"
+                                <input type="number" class="form-control" id="primepricipale" value="0" name="primepricipale"
                                     min="0" required readonly>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="surprime" class="form-label">Surprime :</label>
+                                <input type="number" class="form-control" value="" id="surprime" name="surprime"
+                                    min="0" readonly>
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="fraisAdhesion" class="form-label">Frais d'adhesion :</label>
@@ -233,19 +238,21 @@
         document.addEventListener('DOMContentLoaded', () => {
             const data = JSON.parse(sessionStorage.getItem('souscriptionData') || '{}');
             const sim = data.simulationData || {};
-            console.log("donner de simulation " )
+            const contratData = data.contratData || {};
+        
+            console.log("donner de simulationvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv " )
             console.log(sim)
+            console.log(contratData)
 
             // if (!sim.type) return;
 
             // Remplissage automatique
             // document.querySelector('input[name="periodicite"][value="A"]').checked = true;
             document.getElementById('DateEffet').value = new Date().toISOString().split('T')[0];
-            document.getElementById('primepricipale').value = sim.prime;
+            document.getElementById('primepricipale').value = contratData.primeTotal || '';
             document.getElementById('capital').value = sim.capital || '';
             document.getElementById('duree').value = '1';
 
-            // alert('eeRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR');
 
             // Frais d'adhésion
             document.getElementById('fraisAdhesion').value = '0';
@@ -265,7 +272,7 @@
             Object.assign(data.contratData, {
                 periodicite: periodicite ?? 'M',
                 dateEffet: document.getElementById('DateEffet').value,
-                primepricipale: sim.prime,
+                primepricipale: contratData.primeTotal,
                 capital: sim.capital,
                 fraisAdhesion: '0',
                 duree: '1',
@@ -296,5 +303,78 @@
 
             }
         });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const step4 = document.querySelector('.step[data-step="4"]');
+
+        if (!step4) {
+            console.warn("⚠️ Étape 4 introuvable");
+            return;
+        }
+
+        const observer = new MutationObserver(function () {
+
+            if (step4.classList.contains('active')) {
+
+                let s = getSouscriptionData();
+
+                console.log(
+                    "📌 Données de la souscription depuis étape 4:",
+                    s
+                );
+
+                // Vérifier que contratData existe
+                if (!s.contratData) {
+                    s.contratData = {};
+                }
+
+                // Récupération des valeurs
+                const prime = s.contratData.primeTotal || '';
+                const surprime = s.contratData.surprimeEnfants || '';
+
+                // Affichage dans les champs
+                const primeInput = document.getElementById('primepricipale');
+                const surprimeInput = document.getElementById('surprime');
+
+                if (primeInput) {
+                    primeInput.value = prime;
+                }
+
+                if (surprimeInput) {
+                    surprimeInput.value = surprime;
+                }
+
+                // Ajouter les informations dans contratData
+                s.contratData.prime = prime;
+                // s.contratData.primepricipale = prime;
+                s.contratData.surprime = surprime;
+
+                // Sauvegarder dans sessionStorage
+                sessionStorage.setItem(
+                    'souscriptionData',
+                    JSON.stringify(s)
+                );
+
+                console.log(
+                    "💾 contratData après modification :",
+                    s.contratData
+                );
+
+                console.log(
+                    "🚀🚀🚀 ÉTAPE 4 ACTIVÉE 🚀🚀🚀"
+                );
+            }
+
+        });
+
+        observer.observe(step4, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+
+    });
 </script>
 

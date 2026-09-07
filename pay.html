@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌳 Architecture Arborescente - Système de Synchronisation des Paiements</title>
+    <style>
+        /* ============================================
+                   STYLES GÉNÉRAUX
+                ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            color: #1a202c;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            padding: 50px 60px;
+            position: relative;
+        }
+
+        /* ============================================
+                   BOUTON D'IMPRESSION
+                ============================================ */
+        .print-btn-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .print-btn {
+            background: #2b6cb0;
+            color: #fff;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 16px rgba(43, 108, 176, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .print-btn:hover {
+            background: #1a365d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(43, 108, 176, 0.4);
+        }
+
+        .print-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ============================================
+                   EN-TÊTE
+                ============================================ */
+        .header {
+            text-align: center;
+            padding-bottom: 40px;
+            border-bottom: 3px solid #e2e8f0;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2b6cb0;
+            letter-spacing: -0.5px;
+        }
+
+        .header .subtitle {
+            font-size: 18px;
+            color: #4a5568;
+            margin-top: 8px;
+            font-weight: 300;
+        }
+
+        .header .badge {
+            display: inline-block;
+            background: #2b6cb0;
+            color: #fff;
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .header .badge-important {
+            display: inline-block;
+            background: #e53e3e;
+            color: #fff;
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 16px;
+            font-size: 14px;
+            color: #718096;
+            flex-wrap: wrap;
+        }
+
+        .meta-info span strong {
+            color: #2d3748;
+        }
+
+        /* ============================================
+                   SOMMAIRE RAPIDE
+                ============================================ */
+        .quick-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+            background: #f7fafc;
+            padding: 24px 28px;
+            border-radius: 12px;
+            border-left: 6px solid #2b6cb0;
+        }
+
+        .quick-item {
+            text-align: center;
+        }
+
+        .quick-item .num {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2b6cb0;
+            display: block;
+        }
+
+        .quick-item .label {
+            font-size: 13px;
+            color: #4a5568;
+        }
+
+        .quick-item .highlight {
+            color: #e53e3e;
+            font-weight: 700;
+        }
+
+        /* ============================================
+                   ARBRE DE DÉCISION - STYLES
+                ============================================ */
+        .tree-container {
+            margin: 30px 0 40px 0;
+        }
+
+        .tree-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2b6cb0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tree-title .icon {
+            font-size: 28px;
+        }
+
+        /* Nœud racine */
+        .root-node {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .root-node .box {
+            display: inline-block;
+            background: #2b6cb0;
+            color: #fff;
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(43, 108, 176, 0.3);
+        }
+
+        /* Ligne verticale */
+        .line-down {
+            width: 2px;
+            height: 30px;
+            background: #a0aec0;
+            margin: 0 auto;
+        }
+
+        .line-down-long {
+            width: 2px;
+            height: 50px;
+            background: #a0aec0;
+            margin: 0 auto;
+        }
+
+        /* Branche */
+        .branch {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+
+        .branch-item {
+            flex: 1;
+            min-width: 280px;
+            max-width: 500px;
+        }
+
+        /* Nœud condition */
+        .condition-node {
+            background: #edf2f7;
+            border-radius: 10px;
+            padding: 16px 20px;
+            text-align: center;
+            border: 2px solid #a0aec0;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .condition-node .label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #2d3748;
+        }
+
+        .condition-node .value {
+            font-weight: 700;
+            font-size: 15px;
+            color: #2b6cb0;
+        }
+
+        .condition-node .mandatory {
+            background: #fed7d7;
+            color: #742a2a;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 6px;
+        }
+
+        /* Ligne de bifurcation */
+        .bifurcation {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin: 6px 0 12px 0;
+            position: relative;
+        }
+
+        .bifurcation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background: #a0aec0;
+        }
+
+        .bifurcation .side {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding-top: 16px;
+        }
+
+        .bifurcation .side::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 2px;
+            background: #a0aec0;
+        }
+
+        .bifurcation .side.left::before {
+            left: 50%;
+        }
+
+        .bifurcation .side.right::before {
+            right: 50%;
+        }
+
+        .bifurcation .side-label {
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .side-label.green {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .side-label.red {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .side-label.orange {
+            background: #fefcbf;
+            color: #744210;
+        }
+
+        .side-label.purple {
+            background: #e9d8fd;
+            color: #553c9a;
+        }
+
+        .side-label.blue {
+            background: #bee3f8;
+            color: #2b6cb0;
+        }
+
+        /* Nœud action */
+        .action-node {
+            background: #fff;
+            border-radius: 10px;
+            padding: 16px 20px;
+            border: 2px solid #38a169;
+            margin: 10px 0;
+            box-shadow: 0 2px 8px rgba(56, 161, 105, 0.1);
+        }
+
+        .action-node .title {
+            font-weight: 700;
+            font-size: 15px;
+            color: #22543d;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-node .details {
+            font-size: 13px;
+            color: #4a5568;
+            margin-top: 6px;
+            padding-left: 24px;
+        }
+
+        .action-node .details li {
+            padding: 2px 0;
+            list-style: none;
+        }
+
+        .action-node .tag {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .tag-green {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        .tag-blue {
+            background: #bee3f8;
+            color: #2b6cb0;
+        }
+        .tag-yellow {
+            background: #fefcbf;
+            color: #744210;
+        }
+        .tag-red {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        .tag-purple {
+            background: #e9d8fd;
+            color: #553c9a;
+        }
+        .tag-orange {
+            background: #feebc8;
+            color: #7b341e;
+        }
+
+        /* Nœud règlement obligatoire */
+        .reglement-node {
+            background: #fff5f5;
+            border-radius: 10px;
+            padding: 16px 20px;
+            border: 3px solid #e53e3e;
+            margin: 10px 0;
+            box-shadow: 0 2px 12px rgba(229, 62, 62, 0.15);
+        }
+
+        .reglement-node .title {
+            font-weight: 700;
+            font-size: 15px;
+            color: #742a2a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reglement-node .details {
+            font-size: 13px;
+            color: #4a5568;
+            margin-top: 6px;
+            padding-left: 24px;
+        }
+
+        .reglement-node .details li {
+            padding: 2px 0;
+            list-style: none;
+        }
+
+        .reglement-node .mandatory-badge {
+            background: #e53e3e;
+            color: #fff;
+            padding: 2px 12px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-block;
+            margin-left: 8px;
+        }
+
+        /* Action reliquat - grille */
+        .reliquat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .reliquat-step {
+            background: #f7fafc;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .reliquat-step .step-num {
+            font-weight: 700;
+            color: #2b6cb0;
+            font-size: 14px;
+        }
+
+        .reliquat-step .step-desc {
+            font-size: 12px;
+            color: #4a5568;
+            margin-top: 4px;
+        }
+
+        .reliquat-step .step-code {
+            font-family: monospace;
+            font-size: 12px;
+            background: #edf2f7;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 4px;
+            color: #2d3748;
+        }
+
+        /* Nœud résultat */
+        .result-node {
+            text-align: center;
+            margin: 12px 0;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .result-node.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 2px solid #38a169;
+        }
+
+        .result-node.error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 2px solid #e53e3e;
+        }
+
+        /* ============================================
+                   TABLEAU RÉCAPITULATIF
+                ============================================ */
+        .recap-table {
+            margin: 30px 0;
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .recap-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .recap-table th {
+            background: #edf2f7;
+            color: #2d3748;
+            font-weight: 600;
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .recap-table td {
+            padding: 12px 18px;
+            border-bottom: 1px solid #edf2f7;
+            color: #4a5568;
+        }
+
+        .recap-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .recap-table .highlight {
+            background: #ebf8ff;
+        }
+
+        .recap-table .check-yes {
+            color: #38a169;
+            font-weight: 700;
+        }
+
+        .recap-table .check-no {
+            color: #e53e3e;
+            font-weight: 700;
+        }
+
+        /* ============================================
+                   CORRESPONDANCE DES TABLES
+                ============================================ */
+        .mapping {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            background: #f7fafc;
+            padding: 24px 28px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .mapping-col h4 {
+            color: #2b6cb0;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .mapping-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mapping-col ul li {
+            padding: 4px 0;
+            font-size: 14px;
+            color: #2d3748;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .mapping-col ul li:last-child {
+            border-bottom: none;
+        }
+
+        .mapping-col ul li .arrow {
+            color: #2b6cb0;
+            font-weight: 700;
+        }
+
+        /* ============================================
+                   RAPPEL OBLIGATOIRE
+                ============================================ */
+        .reminder {
+            background: #fff5f5;
+            border: 3px solid #e53e3e;
+            border-radius: 12px;
+            padding: 20px 28px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .reminder .icon {
+            font-size: 36px;
+            display: block;
+        }
+
+        .reminder .text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #742a2a;
+            margin-top: 8px;
+        }
+
+        .reminder .sub {
+            font-size: 14px;
+            color: #4a5568;
+            margin-top: 4px;
+        }
+
+        /* ============================================
+                   FOOTER
+                ============================================ */
+        .footer {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+            text-align: center;
+            font-size: 14px;
+            color: #718096;
+        }
+
+        .footer strong {
+            color: #2b6cb0;
+        }
+
+        /* ============================================
+                   RESPONSIVE
+                ============================================ */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .branch {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .branch-item {
+                min-width: unset;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .bifurcation {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .bifurcation::before {
+                display: none;
+            }
+
+            .bifurcation .side::before {
+                display: none;
+            }
+
+            .reliquat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mapping {
+                grid-template-columns: 1fr;
+            }
+
+            .meta-info {
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .quick-summary {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .print-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ============================================
+                   STYLES D'IMPRESSION
+                ============================================ */
+        @media print {
+            body {
+                background: #fff;
+                padding: 10px;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 20px;
+                border-radius: 0;
+            }
+
+            .action-node {
+                break-inside: avoid;
+            }
+
+            .branch-item {
+                break-inside: avoid;
+            }
+
+            .reglement-node {
+                break-inside: avoid;
+            }
+
+            .print-btn-container {
+                display: none !important;
+            }
+
+            .quick-summary {
+                border: 1px solid #e2e8f0;
+            }
+
+            .mapping {
+                border: 1px solid #e2e8f0;
+            }
+
+            .reminder {
+                border: 2px solid #e53e3e;
+            }
+
+            .recap-table {
+                border: 1px solid #e2e8f0;
+            }
+
+            .header {
+                border-bottom: 2px solid #e2e8f0;
+            }
+
+            .footer {
+                border-top: 2px solid #e2e8f0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ==========================================
+        BOUTON D'IMPRESSION / PDF
+        ========================================== -->
+        <div class="print-btn-container">
+            <button class="print-btn" onclick="window.print()">
+                📥 Télécharger en PDF
+            </button>
+            <p style="font-size:13px; color:#718096; margin-top:8px;">
+                Cliquez sur le bouton, puis choisissez "Enregistrer en PDF"
+            </p>
+        </div>
+
+        <!-- ==========================================
+        EN-TÊTE
+        ========================================== -->
+        <div class="header">
+            <h1>🌳 Architecture Arborescente</h1>
+            <p class="subtitle">Système de Synchronisation des Paiements — Plateforme Web → NSIL</p>
+            <span class="badge">Version 2.0 — Table tblHistoriqueReglement</span><br>
+            <span class="badge-important">⚠️ Création du règlement OBLIGATOIRE dans TOUS LES CAS</span>
+            <div class="meta-info">
+                <span><strong>📅 Date :</strong> 2 Septembre 2026</span>
+                <span><strong>👤 Auteur :</strong> Équipe Technique</span>
+                <span><strong>🏷️ Statut :</strong> <span style="color:#38a169;">Validé</span></span>
+                <span><strong>📋 Type :</strong> Arbre de décision</span>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        SOMMAIRE RAPIDE
+        ========================================== -->
+        <div class="quick-summary">
+            <div class="quick-item">
+                <span class="num">4</span>
+                <span class="label">Cas de traitement</span>
+            </div>
+            <div class="quick-item">
+                <span class="num">3</span>
+                <span class="label">Types d'action</span>
+            </div>
+            <div class="quick-item">
+                <span class="num">1</span>
+                <span class="label">Table d'historique</span>
+            </div>
+            <div class="quick-item">
+                <span class="num">🔒</span>
+                <span class="label">Transaction atomique</span>
+            </div>
+            <div class="quick-item">
+                <span class="num">🔴</span>
+                <span class="label"><span class="highlight">OBLIGATOIRE</span><br>Création règlement</span>
+            </div>
+            <div class="quick-item">
+                <span class="num">🔄</span>
+                <span class="label">Rollback si erreur</span>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        RAPPEL OBLIGATOIRE
+        ========================================== -->
+        <div class="reminder">
+            <span class="icon">🔴</span>
+            <div class="text">⚠️ CRÉATION DU RÈGLEMENT OBLIGATOIRE</div>
+            <div class="sub">
+                Dans <strong>TOUS LES CAS</strong> (COMPLET, PARTIEL, RELIQUAT), une ligne est créée dans
+                <strong>TblPresentationReglement</strong> avant toute mise à jour des factures.
+            </div>
+        </div>
+
+        <!-- ==========================================
+        ARBRE DE DÉCISION GLOBAL
+        ========================================== -->
+        <div class="tree-container">
+            <div class="tree-title">
+                <span class="icon">🌳</span> Arbre de décision global
+            </div>
+
+            <!-- RACINE -->
+            <div class="root-node">
+                <div class="box">📦 Paiement Web Reçu</div>
+            </div>
+
+            <div class="line-down"></div>
+
+            <!-- VALIDATION -->
+            <div class="condition-node">
+                <div class="label">🔍 ÉTAPE 1 : Validation du paiement</div>
+                <div class="value">Vérifier intégrité, doublons, existence des factures</div>
+            </div>
+
+            <div class="line-down"></div>
+
+            <!-- BIFURCATION VALIDATION -->
+            <div class="bifurcation">
+                <div class="side left">
+                    <span class="side-label red">❌ VALIDATION KO</span>
+                    <div style="margin-top:8px;">
+                        <div class="action-node" style="border-color:#e53e3e;">
+                            <div class="title" style="color:#742a2a;">🛑 Traitement arrêté</div>
+                            <ul class="details">
+                                <li>• Log erreur détaillé</li>
+                                <li>• estMigre = 2</li>
+                                <li>• Rollback transaction</li>
+                            </ul>
+                            <div class="result-node error">❌ Paiement en erreur</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="side right">
+                    <span class="side-label green">✅ VALIDATION OK</span>
+                    <div style="margin-top:8px;">
+                        <div class="action-node" style="border-color:#38a169;">
+                            <div class="title" style="color:#22543d;">✅ Validation réussie</div>
+                            <ul class="details">
+                                <li>• Intégrité vérifiée</li>
+                                <li>• Pas de doublon</li>
+                                <li>• Factures existent dans NSIL</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="line-down"></div>
+
+            <!-- CLASSIFICATION -->
+            <div class="condition-node">
+                <div class="label">🔍 ÉTAPE 2 : Classification du paiement</div>
+                <div class="value">Comparer paid_sum avec Σ(prime des factures)</div>
+            </div>
+
+            <div class="line-down"></div>
+
+            <!-- BIFURCATION CLASSIFICATION -->
+            <div class="bifurcation">
+                <div class="side left">
+                    <span class="side-label green">📗 CAS A : COMPLET</span>
+                    <div style="font-size:13px; color:#4a5568; margin-top:4px;">
+                        paid_sum = Σ(prime)
+                    </div>
+                </div>
+                <div class="side right">
+                    <span class="side-label orange">📙 CAS B : PARTIEL</span>
+                    <div style="font-size:13px; color:#4a5568; margin-top:4px;">
+                        paid_sum &lt; Σ(prime)
+                    </div>
+                </div>
+            </div>
+
+            <div class="line-down-long"></div>
+
+            <!-- ==========================================
+            ÉTAPE 3 : CRÉATION DU RÈGLEMENT - OBLIGATOIRE
+            ========================================== -->
+            <div class="reglement-node">
+                <div class="title">
+                    🔄 ÉTAPE 3 : CRÉATION DU RÈGLEMENT PRINCIPAL
+                    <span class="mandatory-badge">OBLIGATOIRE</span>
+                </div>
+                <div style="font-size:14px; color:#742a2a; font-weight:600; margin-top:4px;">
+                    ⚠️ Dans TOUS LES CAS (COMPLET, PARTIEL, RELIQUAT)
+                </div>
+                <ul class="details">
+                    <li>• <strong>Table :</strong> TblPresentationReglement</li>
+                    <li>• <strong>Action :</strong> INSERT INTO TblPresentationReglement</li>
+                    <li>• <strong>IDRèglement :</strong> Généré automatiquement (lockForUpdate)</li>
+                    <li>• <strong>CodeReglement :</strong> date('YmdHi') . 'INTOUCH' . random(4)</li>
+                    <li>• <strong>RefComptable :</strong> codePaiement (lien vers le paiement web)</li>
+                    <li>• <strong>Montant :</strong> paid_sum</li>
+                    <li>• <strong>TotalLigne :</strong> Nombre de factures associées</li>
+                </ul>
+                <div style="margin-top:8px; background:#fed7d7; padding:8px 14px; border-radius:6px; font-size:13px; border:1px solid #e53e3e;">
+                    🔴 <strong>Cette étape est EXÉCUTÉE AVANT le traitement des factures</strong>
+                </div>
+            </div>
+
+            <div class="line-down-long"></div>
+
+            <!-- ==========================================
+            TRAITEMENT DES FACTURES
+            ========================================== -->
+            <div class="condition-node" style="border-color:#2b6cb0;">
+                <div class="label">🔄 ÉTAPE 4 : Traitement des factures</div>
+                <div class="value">Pour chaque facture, déterminer le type de mise à jour</div>
+            </div>
+
+            <div class="line-down"></div>
+
+            <!-- BRANCHE A : COMPLET -->
+            <div class="branch">
+                <div class="branch-item">
+                    <div style="text-align:center; margin-bottom:8px;">
+                        <span class="side-label green">📗 CAS A : COMPLET</span>
+                    </div>
+                    <div class="condition-node" style="border-color:#38a169;">
+                        <div class="label">✅ Condition</div>
+                        <div class="value">paid_sum = Σ(prime) → Toutes les factures</div>
+                    </div>
+
+                    <!-- RAPPEL RÈGLEMENT -->
+                    <div style="background:#fff5f5; padding:8px 14px; border-radius:6px; border-left:4px solid #e53e3e; margin:6px 0; font-size:12px; color:#742a2a;">
+                        🔴 Règlement déjà créé à l'ÉTAPE 3
+                    </div>
+
+                    <div class="action-node">
+                        <div class="title">📗 Mise à jour COMPLÈTE</div>
+                        <ul class="details">
+                            <li>• <strong>UPDATE TblPresentation</strong></li>
+                            <li>• RegltMontant = <span class="tag tag-green">MontantNet</span></li>
+                            <li>• ResteAPayer = <span class="tag tag-green">0</span></li>
+                            <li>• RegltRef = <span class="tag tag-blue">CodeReglement (du règlement)</span></li>
+                            <li>• RegltDate = <span class="tag tag-blue">date du paiement</span></li>
+                            <li>• Statut = '00', Etat = '2'</li>
+                        </ul>
+                        <div style="margin-top:8px; background:#ebf8ff; padding:8px 12px; border-radius:6px; font-size:13px;">
+                            📝 <strong>Historique :</strong> typeAction = <span class="tag tag-green">'COMPLET'</span>
+                        </div>
+                        <div class="result-node success">✅ Facture soldée</div>
+                    </div>
+                </div>
+
+                <!-- BRANCHE B : PARTIEL -->
+                <div class="branch-item">
+                    <div style="text-align:center; margin-bottom:8px;">
+                        <span class="side-label orange">📙 CAS B : PARTIEL</span>
+                    </div>
+                    <div class="condition-node" style="border-color:#d69e2e;">
+                        <div class="label">🔍 Analyser chaque facture</div>
+                        <div class="value">Vérifier ResteAPayer vs MontantNet</div>
+                    </div>
+
+                    <!-- RAPPEL RÈGLEMENT -->
+                    <div style="background:#fff5f5; padding:8px 14px; border-radius:6px; border-left:4px solid #e53e3e; margin:6px 0; font-size:12px; color:#742a2a;">
+                        🔴 Règlement déjà créé à l'ÉTAPE 3
+                    </div>
+
+                    <!-- SOUS-BRANCHE B1 -->
+                    <div style="margin-top:12px; border-left:4px solid #38a169; padding-left:16px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                            <span class="side-label green">📗 SOUS-CAS B1</span>
+                            <span style="font-size:13px; color:#4a5568;">ResteAPayer = MontantNet</span>
+                        </div>
+                        <div class="action-node" style="border-color:#38a169;">
+                            <div class="title" style="color:#22543d;">📗 Mise à jour COMPLÈTE</div>
+                            <ul class="details">
+                                <li>• <strong>UPDATE TblPresentation</strong></li>
+                                <li>• RegltMontant = <span class="tag tag-green">MontantNet</span></li>
+                                <li>• ResteAPayer = <span class="tag tag-green">0</span></li>
+                                <li>• RegltRef = <span class="tag tag-blue">CodeReglement (du règlement)</span></li>
+                                <li>• RegltDate = <span class="tag tag-blue">date du paiement</span></li>
+                            </ul>
+                            <div style="margin-top:6px; background:#ebf8ff; padding:6px 12px; border-radius:6px; font-size:13px;">
+                                📝 Historique : <span class="tag tag-green">'COMPLET'</span>
+                            </div>
+                            <div class="result-node success">✅ Facture soldée</div>
+                        </div>
+                    </div>
+
+                    <!-- SOUS-BRANCHE B2 -->
+                    <div style="margin-top:16px; border-left:4px solid #805ad5; padding-left:16px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                            <span class="side-label purple">📘 SOUS-CAS B2</span>
+                            <span style="font-size:13px; color:#4a5568;">ResteAPayer &lt; MontantNet</span>
+                        </div>
+                        <div class="action-node" style="border-color:#805ad5;">
+                            <div class="title" style="color:#553c9a;">📘 Mise à jour RELIQUAT</div>
+
+                            <!-- 3 étapes du reliquat -->
+                            <div class="reliquat-grid">
+                                <div class="reliquat-step">
+                                    <div class="step-num">1️⃣ Archiver</div>
+                                    <div class="step-desc">Ancien règlement dans <strong>tblHistoriqueReglement</strong></div>
+                                    <div class="step-code">typeAction = 'ARCHIVE_REGLT'</div>
+                                    <div style="font-size:11px; color:#4a5568; margin-top:4px;">
+                                        MontantReglé = ancien RegltMontant<br>
+                                        CodeReglt = ancien CodeReglt
+                                    </div>
+                                </div>
+                                <div class="reliquat-step">
+                                    <div class="step-num">2️⃣ Ajouter reliquat</div>
+                                    <div class="step-desc">Nouveau règlement dans <strong>tblHistoriqueReglement</strong></div>
+                                    <div class="step-code">typeAction = 'RELIQUAT'</div>
+                                    <div style="font-size:11px; color:#4a5568; margin-top:4px;">
+                                        MontantReglé = ResteAPayer<br>
+                                        CodeReglt = <span class="tag tag-blue">CodeReglement (du règlement)</span><br>
+                                        ModeReglt = 'EBANK'
+                                    </div>
+                                </div>
+                                <div class="reliquat-step">
+                                    <div class="step-num">3️⃣ Mettre à jour</div>
+                                    <div class="step-desc">UPDATE <strong>TblPresentation</strong></div>
+                                    <div style="font-size:11px; color:#4a5568; margin-top:4px;">
+                                        RegltMontant = MontantNet<br>
+                                        ResteAPayer = 0<br>
+                                        RegltRef = <span class="tag tag-blue">CodeReglement (du règlement)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top:8px; background:#f0f0ff; padding:6px 12px; border-radius:6px; font-size:13px; border:1px dashed #805ad5;">
+                                📝 <strong>Historique :</strong> 2 lignes créées (ARCHIVE_REGLT + RELIQUAT)
+                            </div>
+                            <div class="result-node success">✅ Facture soldée avec historique</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="line-down-long"></div>
+
+            <!-- ==========================================
+            ÉTAPE 5 : HISTORIQUE
+            ========================================== -->
+            <div class="condition-node" style="border-color:#805ad5;">
+                <div class="label">📝 ÉTAPE 5 : Enregistrement de l'historique</div>
+                <div class="value">Table : tblHistoriqueReglement</div>
+            </div>
+
+            <div class="line-down"></div>
+
+            <!-- ==========================================
+            ÉTAPE 6 : FINALISATION
+            ========================================== -->
+            <div class="condition-node" style="border-color:#2b6cb0;">
+                <div class="label">💾 ÉTAPE 6 : Finalisation</div>
+                <div class="value">Persister dans la base métier et marquer comme synchronisé</div>
+            </div>
+
+            <div class="line-down"></div>
+
+            <!-- FINALISATION DÉTAILS -->
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin:10px 0;">
+                <div style="background:#f7fafc; padding:16px 20px; border-radius:10px; border:1px solid #e2e8f0; text-align:center;">
+                    <div style="font-size:28px;">📋</div>
+                    <div style="font-weight:600;">Règlement créé</div>
+                    <div style="font-size:13px; color:#4a5568;">TblPresentationReglement</div>
+                </div>
+                <div style="background:#f7fafc; padding:16px 20px; border-radius:10px; border:1px solid #e2e8f0; text-align:center;">
+                    <div style="font-size:28px;">🔄</div>
+                    <div style="font-weight:600;">Factures mises à jour</div>
+                    <div style="font-size:13px; color:#4a5568;">TblPresentation</div>
+                </div>
+                <div style="background:#f7fafc; padding:16px 20px; border-radius:10px; border:1px solid #e2e8f0; text-align:center;">
+                    <div style="font-size:28px;">✅</div>
+                    <div style="font-weight:600;">Marquer synced</div>
+                    <div style="font-size:13px; color:#4a5568;">estMigre = 1</div>
+                </div>
+            </div>
+
+            <div style="text-align:center; margin:12px 0;">
+                <span class="side-label green">🔒 COMMIT</span>
+                <span style="margin:0 16px; color:#a0aec0;">—</span>
+                <span class="side-label red">↩️ ROLLBACK</span>
+            </div>
+
+            <div class="result-node success" style="max-width:400px; margin:10px auto;">
+                ✅ Paiement synchronisé avec succès
+            </div>
+
+        </div>
+
+        <!-- ==========================================
+        TABLEAU RÉCAPITULATIF DES CAS
+        ========================================== -->
+        <h2 style="font-size:22px; color:#2b6cb0; margin-top:40px; margin-bottom:16px;">📊 Tableau récapitulatif des cas</h2>
+
+        <div class="recap-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:10%;">Cas</th>
+                        <th style="width:22%;">Condition</th>
+                        <th style="width:15%;">Création Règlement</th>
+                        <th style="width:28%;">Action sur Facture</th>
+                        <th style="width:25%;">Historique (typeAction)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="tag tag-green">A</span></td>
+                        <td><strong>paid_sum = Σ(prime)</strong></td>
+                        <td class="check-yes">✅ OUI</td>
+                        <td>Mise à jour <span class="tag tag-green">COMPLÈTE</span></td>
+                        <td><span class="tag tag-green">COMPLET</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag tag-green">B1</span></td>
+                        <td><strong>paid_sum &lt; Σ(prime)</strong><br>ET <strong>ResteAPayer = MontantNet</strong></td>
+                        <td class="check-yes">✅ OUI</td>
+                        <td>Mise à jour <span class="tag tag-green">COMPLÈTE</span></td>
+                        <td><span class="tag tag-green">COMPLET</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag tag-purple">B2</span></td>
+                        <td><strong>paid_sum &lt; Σ(prime)</strong><br>ET <strong>ResteAPayer &lt; MontantNet</strong></td>
+                        <td class="check-yes">✅ OUI</td>
+                        <td>Mise à jour <span class="tag tag-purple">RELIQUAT</span></td>
+                        <td>
+                            <span class="tag tag-yellow">ARCHIVE_REGLT</span><br>
+                            <span class="tag tag-purple">RELIQUAT</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag tag-red">C</span></td>
+                        <td><strong>Validation KO</strong><br>(écart, doublon, facture manquante)</td>
+                        <td class="check-no">❌ NON</td>
+                        <td><span style="color:#e53e3e;">Aucune</span></td>
+                        <td><span style="color:#e53e3e;">Aucun</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ==========================================
+        TABLE DE CORRESPONDANCE
+        ========================================== -->
+        <h2 style="font-size:22px; color:#2b6cb0; margin-top:40px; margin-bottom:16px;">🔗 Table de correspondance</h2>
+
+        <div class="mapping">
+            <div class="mapping-col">
+                <h4>🖥️ Plateforme Web (MySQL)</h4>
+                <ul>
+                    <li><strong>tblpaiement</strong></li>
+                    <li style="padding-left:16px;">codePaiement <span class="arrow">→</span> RefComptable</li>
+                    <li style="padding-left:16px;">paid_sum <span class="arrow">→</span> Montant (règlement)</li>
+                    <li style="padding-left:16px;">estMigre <span class="arrow">→</span> Statut sync</li>
+                    <li style="margin-top:6px;"><strong>tblfacture</strong></li>
+                    <li style="padding-left:16px;">idProposition <span class="arrow">→</span> IdPresentation</li>
+                    <li style="padding-left:16px;">codePaiement <span class="arrow">→</span> RegltCodePaiement</li>
+                    <li style="padding-left:16px;">prime <span class="arrow">→</span> MontantNet</li>
+                </ul>
+            </div>
+            <div class="mapping-col">
+                <h4>🏢 Base Métier (SQL Server)</h4>
+                <ul>
+                    <li><strong>TblPresentationReglement</strong> 🔴 <span style="color:#e53e3e;">OBLIGATOIRE</span></li>
+                    <li style="padding-left:16px;">RefComptable <span class="arrow">←</span> codePaiement</li>
+                    <li style="padding-left:16px;">CodeReglement <span class="arrow">→</span> RegltRef</li>
+                    <li style="margin-top:6px;"><strong>TblPresentation</strong></li>
+                    <li style="padding-left:16px;">IdPresentation <span class="arrow">←</span> idProposition</li>
+                    <li style="padding-left:16px;">ResteAPayer <span class="arrow">→</span> Suivi solde</li>
+                    <li style="margin-top:6px;"><strong>tblHistoriqueReglement</strong></li>
+                    <li style="padding-left:16px;">idPresentation <span class="arrow">←</span> IdPresentation</li>
+                    <li style="padding-left:16px;">CodeReglt <span class="arrow">←</span> CodeReglement</li>
+                    <li style="padding-left:16px;">typeAction <span class="arrow">→</span> COMPLET/PARTIEL/RELIQUAT</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        GESTION DES ERREURS
+        ========================================== -->
+        <h2 style="font-size:22px; color:#2b6cb0; margin-top:40px; margin-bottom:16px;">🛡️ Gestion des erreurs</h2>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+            <div style="background:#fff5f5; padding:20px 24px; border-radius:12px; border-left:6px solid #e53e3e;">
+                <strong style="color:#742a2a;">❌ Types d'erreurs</strong>
+                <ul style="list-style:none; padding:0; margin-top:8px;">
+                    <li style="padding:4px 0;">• Écart de montant (paid_sum ≠ Σprime)</li>
+                    <li style="padding:4px 0;">• Facture manquante dans NSIL</li>
+                    <li style="padding:4px 0;">• Doublon (RefComptable existant)</li>
+                    <li style="padding:4px 0;">• Exception SQL / Timeout</li>
+                </ul>
+            </div>
+            <div style="background:#f0f4ff; padding:20px 24px; border-radius:12px; border-left:6px solid #2b6cb0;">
+                <strong style="color:#2b6cb0;">🔄 Actions en cas d'erreur</strong>
+                <ul style="list-style:none; padding:0; margin-top:8px;">
+                    <li style="padding:4px 0;">• <strong>Rollback</strong> → Annulation transaction</li>
+                    <li style="padding:4px 0;">• <strong>estMigre = 2</strong> → Paiement en erreur</li>
+                    <li style="padding:4px 0;">• <strong>Log</strong> → Détail + stack trace</li>
+                    <li style="padding:4px 0;">• <strong>Reprise</strong> → Prochain batch</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="margin-top:16px; background:#fefcbf; padding:14px 20px; border-radius:10px; border:1px solid #d69e2e; text-align:center; font-size:14px;">
+            ⚠️ <strong>Principe :</strong> En cas d'erreur, AUCUNE modification n'est persistée.
+            Le paiement reste en attente ou passe en erreur pour reprise.
+        </div>
+
+        <!-- ==========================================
+        TRANSACTIONS
+        ========================================== -->
+        <h2 style="font-size:22px; color:#2b6cb0; margin-top:40px; margin-bottom:16px;">🔒 Transaction atomique</h2>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;">
+            <div style="background:#edf2f7; padding:20px; border-radius:10px; text-align:center; border:2px solid #a0aec0;">
+                <div style="font-size:32px;">🔐</div>
+                <div style="font-weight:700; font-size:18px; color:#2d3748;">BEGIN</div>
+                <div style="font-size:13px; color:#4a5568;">Début de transaction</div>
+            </div>
+            <div style="background:#c6f6d5; padding:20px; border-radius:10px; text-align:center; border:2px solid #38a169;">
+                <div style="font-size:32px;">✅</div>
+                <div style="font-weight:700; font-size:18px; color:#22543d;">COMMIT</div>
+                <div style="font-size:13px; color:#22543d;">Validation si tout OK</div>
+            </div>
+            <div style="background:#fed7d7; padding:20px; border-radius:10px; text-align:center; border:2px solid #e53e3e;">
+                <div style="font-size:32px;">↩️</div>
+                <div style="font-weight:700; font-size:18px; color:#742a2a;">ROLLBACK</div>
+                <div style="font-size:13px; color:#742a2a;">Annulation si erreur</div>
+            </div>
+        </div>
+
+        <div style="margin-top:16px; text-align:center; font-size:14px; color:#4a5568; background:#f7fafc; padding:12px 20px; border-radius:8px;">
+            🔄 Toutes les opérations (règlement + historique + mise à jour NSIL) sont atomiques : <strong>tout ou rien</strong>
+        </div>
+
+        <!-- ==========================================
+        FOOTER
+        ========================================== -->
+        <div class="footer">
+            <p>
+                <strong>🌳 Architecture Arborescente — Système de Synchronisation des Paiements</strong><br>
+                Plateforme Web → Base Métier NSIL — Version 2.0<br>
+                Table d'historique : <strong>tblHistoriqueReglement</strong><br>
+                <span style="color:#e53e3e; font-weight:700;">🔴 Création du règlement OBLIGATOIRE dans TOUS LES CAS</span><br>
+                © 2026 — Équipe Technique
+            </p>
+            <p style="margin-top:8px; font-size:12px; color:#a0aec0;">
+                Document généré le 2 Septembre 2026 — Tous droits réservés
+            </p>
+        </div>
+
+    </div>
+
+
+
+    
+
+</body>
+</html>
+
+
+

@@ -110,7 +110,7 @@
                                 <input type="text" name="assurerLieuresidence" id="assurerLieuresidence" class="form-control" required>
 
                             </div>
-                            @if ($codePartner == "DIRECTENTREPRISE")
+                            @if ($user->codepartenaire == "DIRECTENTREPRISE")
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <label for="justifResidence" class="form-label">Justificatif de résidence </label>
                                     <input type="file" name="justifResidence" class="form-control" id="justifResidence" accept="application/pdf,image/jpeg,image/jpg,image/png">
@@ -121,7 +121,6 @@
                                     <input type="file" name="justifResidence" class="form-control" id="justifResidence" required accept="application/pdf,image/jpeg,image/jpg,image/png">
                                 </div>
                             @endif
-
                         </div>
 
                         <!-- Profession et Employeur -->

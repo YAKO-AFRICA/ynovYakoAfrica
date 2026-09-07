@@ -110,11 +110,12 @@
                 </div>
             </div>
         </div>
+        {{-- @dd($product) --}}
         <div class="col-12 col-lg-4">
             <div class="card mx-0">
                 <div class="card-body">
                     <label for="" class="form-label">Je souhaite payer mes primes chaque : <span class="text-danger">*</span></label>
-                    @if ($codePartner === "DIRECTENTREPRISE")
+                    @if ($product->CodeProduit === "LFFUN" && $user->codepartenaire === "DIRECTENTREPRISE")
                         <div class="mb-3">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" name="periodicite" type="radio" value="M"
@@ -153,18 +154,18 @@
                                 </label>
                             </div> --}}
                         </div>
-                    @elseif ($codePartner === "INPHB")
+                    @elseif ($user->codepartenaire === "INPHB")
                         <div class="mb-3">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" name="periodicite" type="radio" value="M"
-                                    id="Mois" required readonly>
+                                    id="Mois" required checked readonly>
                                 <label class="form-check-label" for="Mois">
                                     Mois
                                 </label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" name="periodicite" type="radio" value="A"
-                                    id="Annee" checked readonly>
+                                    id="Annee"  readonly>
                                 <label class="form-check-label" for="Annee">
                                     Année
                                 </label>
@@ -172,14 +173,14 @@
                         </div>
                     @else
                         <div class="mb-3">
-                            {{-- <div class="form-check form-check-inline">
+                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" name="periodicite" type="radio" value="M"
-                                    id="Mois" required readonly disabled>
+                                    id="Mois" required >
                                 <label class="form-check-label" for="Mois">
                                     Mois
                                 </label>
                             </div>
-                            <div class="form-check form-check-inline">
+                           {{-- <div class="form-check form-check-inline">
                                 <input class="form-check-input" name="periodicite" type="radio" value="T"
                                     id="Trimestre" readonly disabled>
                                 <label class="form-check-label" for="Trimestre">
@@ -211,8 +212,37 @@
                         </div>
                     @endif
 
+                    @if ($product->CodeProduit === "LPENSION") 
+                        <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label for="DateEffet" class="form-label">Mon contrat prendra effet le : <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="DateEffet" name="dateEffet"  required>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="primepricipale" class="form-label">Je souhaite payer une prime de
+                                        : <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="primepricipale" value="" name="primepricipale"
+                                        min="10000" max="100000" required>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="fraisAdhesion" class="form-label">Frais d'adhesion :</label>
+                                    <input type="number" class="form-control" value="7500" id="fraisAdhesion" name="fraisAdhesion"
+                                        min="7500" readonly>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="capital" class="form-label">Capital souscrit :</label>
+                                    <input type="text" class="form-control" id="capital" value="0" name="capital" readonly>
 
-                    <div class="row">
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label for="duree" class="form-label">Durée de mes cotisations :</label>
+                                    <input type="number" class="form-control" id="duree" value="" name="duree" min="0">
+                                </div>
+                                <input type="hidden" id="tokGenerate" name="tokGenerate" value="{{ $tok }}">
+
+                        </div>
+                    @else
+                        <div class="row">
                             <div class="col-12 mb-3">
                                 <label for="DateEffet" class="form-label">Mon contrat prendra effet le :</label>
                                 <input type="date" class="form-control" id="DateEffet" name="dateEffet">
@@ -239,7 +269,8 @@
                             </div>
                             <input type="hidden" id="tokGenerate" name="tokGenerate" value="{{ $tok }}">
 
-                    </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -313,6 +344,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const data = JSON.parse(sessionStorage.getItem('souscriptionData') || '{}');
             const sim = data.simulationData || {};
+           
             console.log("donner de simulation " )
             console.log(sim.prime)
 
@@ -329,7 +361,7 @@
             document.getElementById('fraisAdhesion').value = '10';
 
 
-            const modePaiement = document.querySelectorAll('input[name="modepaiement"]').value;
+            const modePaiement = document.querySelector('input[name="modepaiement"]:checked')?.value;
             const codeBanque = document.getElementById('codebanque').value;
             const codeGuichet = document.getElementById('codeguichet').value;
             const numeroCompte = document.getElementById('numerocompte').value;
@@ -339,7 +371,6 @@
             // Sauvegarder automatiquement dans souscriptionData.contratData
             if (!data.contratData) data.contratData = {};
             Object.assign(data.contratData, {
-                periodicite: 'A',
                 dateEffet: document.getElementById('DateEffet').value,
                 primepricipale: sim.prime?.replace(/\s/g, ''),
                 capital: sim.capital?.replace(/\s/g, ''),
@@ -351,7 +382,7 @@
                 numerocompte: numeroCompte,
                 rib: cleRib,
                 numMobile: numMobile,
-                tokGenerate: document.getElementById('tokGenerate').value
+                tokGenerate: document.getElementById('tokGenerate').value,
             });
             sessionStorage.setItem('souscriptionData', JSON.stringify(data));
         });
@@ -373,4 +404,96 @@
             }
         });
 </script>
+
+{{-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const step4 = document.querySelector('.step[data-step="4"]');
+
+
+
+        if (!step4) {
+            console.warn("⚠️ Étape 4 introuvable");
+            return;
+        }
+
+        const observer = new MutationObserver(function () {
+
+            if (step4.classList.contains('active')) {
+
+                alert("🚀 Étape 4 activée !");
+
+                let dataCOntrat = JSON.parse(sessionStorage.getItem('souscriptionData') || '{}');
+
+
+                console.log("🚀🚀🚀 ÉTAPE 4 ACTIVÉE get session storage  ======= 🚀🚀🚀");
+                console.log(dataCOntrat.contratData);
+
+                 const productFormule = @json($productFormule);
+                console.table(productFormule);
+
+                console.log(
+                    "📌 Données de la souscription depuis étape 4:",
+                    dataCOntrat
+                );
+
+                // Vérifier que contratData existe
+                if (!dataCOntrat.contratData) {
+                    dataCOntrat.contratData = {};
+                }
+
+                console.log(
+                    "📌 Données de la souscription après vérification de contratData:",
+                    dataCOntrat
+                );
+
+                // Récupération des valeurs
+                const primepricipale = document.getElementById('primepricipale').value || '';
+
+                console.log(
+                    "📌 Données de la souscription après vérification de prime" , primepricipale
+                );
+                const fraisAdhesion = document.getElementById('fraisAdhesion').value || '';
+                const surprime = document.getElementById('surprime').value || '';
+
+
+                // Ajouter les informations dans contratData
+                dataCOntrat.contratData.prime = primepricipale + fraisAdhesion + surprime;
+                // dataCOntrat.contratData.primepricipale = prime;
+                dataCOntrat.contratData.surprime = surprime;
+
+                console.log(
+                    "💾 contratData après ajout des primes :",
+                    dataCOntrat.contratData
+                );
+
+
+                dataCOntrat.contratData.formuleProduit = productFormule.codeproduitformule;
+
+                // Sauvegarder dans sessionStorage
+                sessionStorage.setItem(
+                    'souscriptionData',
+                    JSON.stringify(dataCOntrat)
+                );
+
+                console.log(
+                    "💾 contratData après modification :",
+                    dataCOntrat.contratData
+                );
+
+                console.log(
+                    "🚀🚀🚀 ÉTAPE 4 ACTIVÉE 🚀🚀🚀"
+                );
+            }
+
+        });
+
+        observer.observe(step4, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+
+    });
+</script> --}}
+
 

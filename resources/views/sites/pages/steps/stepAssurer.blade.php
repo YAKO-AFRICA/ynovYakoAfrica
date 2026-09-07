@@ -46,6 +46,7 @@
         const storeAssurerBtn = document.getElementById('storeAssurerBtn');
         const assurerForm = document.getElementById('assurerForm');
         const modalAssurerOpen = document.getElementById('modalAssurerOpen');
+        const productSelected = @json($product);
 
         // Fonction pour récupérer les données de la session
         function getSouscriptionData() {
@@ -67,7 +68,10 @@
         function verifierPremierAssure(dateNaissance) {
             console.log('🔎 Vérification de la date de naissance du premier assuré :', dateNaissance);
             const souscriptionData = getSouscriptionData();
-            if (!souscriptionData.assureData || souscriptionData.assureData.length === 0) {
+
+            if(productSelected.CodeProduit === 'LPENSION') {
+                return true;
+            }else if (!souscriptionData.assureData || souscriptionData.assureData.length === 0) {
                 // C'est le premier assuré, on vérifie la date
                 if (dateNaissance !== souscriptionData.simulationData?.birthDate) {
                     swal.fire({
@@ -94,6 +98,10 @@
                     modalAssurerOpen.style.pointerEvents = "auto";
                     modalAssurerOpen.style.opacity = "1";
                 }
+            }else{
+                modalAssurerOpen.classList.remove("disabled");
+                modalAssurerOpen.style.pointerEvents = "auto";
+                modalAssurerOpen.style.opacity = "1";
             }
         }
 
@@ -146,6 +154,7 @@
         radioOui.addEventListener('change', function() {
             if (this.checked) {
                 const souscriptionData = getSouscriptionData();
+                
                 const adherentData = souscriptionData.adherentData;
 
                 if (!adherentData) {

@@ -23,7 +23,7 @@
     <title>Détails de souscription</title>
     <style>
         .detail-card {
-            border-left: 4px solid #5a8dee;
+            border-left: 4px solid #076633;
             transition: all 0.3s;
         }
         .detail-card:hover {
@@ -42,7 +42,7 @@
             transform: translateY(-50%);
             height: 70%;
             width: 4px;
-            background-color: #5a8dee;
+            background-color: #076633;
             border-radius: 2px;
         }
         .nav-menu-item {
@@ -116,7 +116,7 @@
         }
 
         .success-icon-wrapper {
-            background: linear-gradient(145deg, #22c55e, #16a34a);
+            background: linear-gradient(145deg, #076633, #08381A);
             border-radius: 50%;
             width: 60px;
             height: 60px;
@@ -124,7 +124,7 @@
             align-items: center;
             justify-content: center;
             box-shadow: 
-                0 8px 16px rgba(34, 197, 94, 0.3),
+                0 8px 16px rgba(7, 102, 51, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
             animation: pulse 2s infinite;
         }
@@ -200,7 +200,7 @@
         }
 
         .success-highlight {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
+            background: linear-gradient(135deg, #076633, #08381A);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -219,13 +219,13 @@
             display: flex;
             align-items: center;
             padding: 0.75rem;
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.05), rgba(22, 163, 74, 0.05));
+            background: linear-gradient(135deg, rgba(7, 102, 51, 0.05), rgba(8, 56, 26, 0.05));
             border-radius: 12px;
-            border-left: 3px solid #22c55e;
+            border-left: 3px solid #076633;
         }
 
         .step-icon {
-            color: #22c55e;
+            color: #076633;
             margin-right: 0.75rem;
             font-size: 1rem;
         }
@@ -240,14 +240,14 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
+            background: linear-gradient(135deg, #076633, #08381A);
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 25px;
             font-weight: 600;
             font-size: 0.9rem;
             margin-top: 1rem;
-            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+            box-shadow: 0 4px 12px rgba(7, 102, 51, 0.3);
         }
 
         .company-icon {
@@ -415,13 +415,13 @@
             </div>
 
              <!-- Action Buttons -->
-            <div class="d-flex justify-content-end my-4">
+            {{-- <div class="d-flex justify-content-end my-4">
                 <div class="btn-group gap-2">
                    <button onclick="startPayment()" class="btn btn-success btn-lg">
                         <i class="fas fa-credit-card me-2"></i>Payer ma premieère prime
                     </button>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Main Content -->
             <div class="row">
@@ -584,12 +584,12 @@
                                             
                                             <div class="mb-3">
                                                 <span class="info-label d-block">Capital</span>
-                                                <span class="info-value">{{ number_format($contrat->capital ?? 0, 0, ',', ' ') }} €</span>
+                                                <span class="info-value">{{ number_format($contrat->capital ?? 0, 0, ',', ' ') }} {{$devise}}</span>
                                             </div>
                                             
                                             <div class="mb-3">
                                                 <span class="info-label d-block">Rente</span>
-                                                <span class="info-value">{{ number_format($contrat->montantrente ?? 0, 0, ',', ' ') }} €</span>
+                                                <span class="info-value">{{ number_format($contrat->montantrente ?? 0, 0, ',', ' ') }} {{$devise}}</span>
                                             </div>
                                             
                                             <div class="mb-3">
@@ -604,22 +604,22 @@
                                         <div class="detail-card p-3 h-100">
                                             <div class="mb-3">
                                                 <span class="info-label d-block">Surprime</span>
-                                                <span class="info-value">{{ number_format($contrat->surprime ?? 0, 0, ',', ' ') }} €</span>
+                                                <span class="info-value">{{ number_format($contrat->surprime ?? 0, 0, ',', ' ') }} {{$devise}}</span>
                                             </div>
                                             
                                             <div class="mb-3">
                                                 <span class="info-label d-block">Prime</span>
-                                                <span class="info-value">{{ number_format($contrat->prime ?? 0, 0, ',', ' ') }} €</span>
+                                                <span class="info-value">{{ number_format($contrat->prime ?? 0, 0, ',', ' ') }} {{$devise}}</span>
                                             </div>
                                             
                                             <div class="mb-3">
                                                 <span class="info-label d-block">Prime Principale</span>
-                                                <span class="info-value">{{ number_format($contrat->primepricipale ?? 0, 0, ',', ' ') }} €</span>
+                                                <span class="info-value">{{ number_format($contrat->primepricipale ?? 0, 0, ',', ' ') }} {{$devise}}</span>
                                             </div>
                                             
                                             <div class="mb-3">
                                                 <span class="info-label d-block">Frais d'adhésion</span>
-                                                <span class="info-value">{{ number_format($contrat->fraisadhesion ?? 0, 0, ',', ' ') }} €</span>
+                                                <span class="info-value">{{ number_format($contrat->fraisadhesion ?? 0, 0, ',', ' ') }} {{$devise}}</span>
                                             </div>
                                             
                                             <div class="mb-3">
@@ -938,109 +938,6 @@
                             </div>
                         </div>
                     </section>
-
-                    <!-- Additional Info Section -->
-                    {{-- <section id="edit-Info-complementaire" class="section-content d-none mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="section-title mb-4">
-                                    <i class='bx bx-info-circle me-2'></i> Informations complémentaires
-                                </h5>
-                                
-                                <div class="row g-3">
-                                    <div class="col-md-6 col-lg-4">
-                                        <div class="detail-card p-3 h-100">
-                                            <h6 class="mb-3 d-flex align-items-center">
-                                                <i class='bx bx-calendar me-2'></i> Dates clés
-                                            </h6>
-                                            
-                                            <div class="mb-3">
-                                                <span class="info-label d-block">Saisie le</span>
-                                                <span class="info-value">{{ $contrat->saisiele ?? '--' }}</span>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <span class="info-label d-block">Modifiée le</span>
-                                                <span class="info-value">{{ $contrat->modifierle ?? '--' }}</span>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <span class="info-label d-block">Transmise le</span>
-                                                <span class="info-value">{{ $contrat->transmisle ?? '--' }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-md-6 col-lg-4">
-                                        <div class="detail-card p-3 h-100">
-                                            <h6 class="mb-3 d-flex align-items-center">
-                                                <i class='bx bx-user me-2'></i> Par
-                                            </h6>
-                                            
-                                            <div class="mb-3">
-                                                <span class="info-label d-block">Saisie par</span>
-                                                <span class="info-value">{{ $contrat->nomagent ?? '--' }}</span>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <span class="info-label d-block">Modifiée par</span>
-                                                <span class="info-value">{{ $contrat->modifierpar ?? '--' }}</span>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <span class="info-label d-block">Transmise par</span>
-                                                <span class="info-value">{{ $contrat->transmispar ?? '--' }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-md-6 col-lg-4">
-                                        <div class="detail-card p-3 h-100">
-                                            <h6 class="mb-3 d-flex align-items-center">
-                                                <i class='bx bx-check-circle me-2'></i> Statut
-                                            </h6>
-                                            
-                                            <div class="mb-3">
-                                                <span class="info-label d-block">Acceptée le</span>
-                                                <span class="info-value">{{ $contrat->accepterle ?? '--' }}</span>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <span class="info-label d-block">Acceptée par</span>
-                                                <span class="info-value">{{ $contrat->accepterpar ?? '--' }}</span>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <span class="info-label d-block">Rejetée le</span>
-                                                <span class="info-value">{{ $contrat->annulerle ?? '--' }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-12">
-                                        <div class="detail-card p-3">
-                                            <div class="mb-3">
-                                                <span class="info-label d-block">Est migré</span>
-                                                <span class="info-value">{{ $contrat->estMigre ? 'Oui' : 'Non' }}</span>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <span class="info-label d-block">Code Conseiller</span>
-                                                <span class="info-value">{{ $contrat->codeConseiller ?? '--' }}</span>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <label class="form-label info-label">Observations</label>
-                                                <div class="p-3 bg-light rounded">
-                                                    {{ $contrat->motifrejet ?? 'Aucune observation' }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section> --}}
                 </div>
             </div>
         </div>

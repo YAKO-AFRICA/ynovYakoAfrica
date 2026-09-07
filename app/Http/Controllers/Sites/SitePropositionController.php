@@ -40,32 +40,31 @@ use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 
 class SitePropositionController extends Controller
 {
+
+    public function generateLink()
+    {
+
+        $commercial = auth()->user()->membre;
+        
+
+        return view('sites.pages.generateLink', compact('commercial'));
+    }
     public function stepProduct($codeMembre)
     {
         $user = User::where('idmembre', $codeMembre)->first();
 
-        if($user->membre->idmembre == '211840035'){
-            $codeProduits = ['LFFUN'];
+        // dd($user);
 
-            // Convert Eloquent model to array, then add meta
-            $userArray = $user->toArray();
-            $userArray['meta'] = [
-                'formule' => 'LFFUN_V60',
-                'partner' => 'INPHB',
-            ];
-
-            $user = $userArray; // Now $user is an array
-        } else {
-            $productByReseau = ReseauProduct::select('CodeProduit')
+        $productByReseaux = ReseauProduct::select('*')
                 ->where('codereseau', $user->membre->codereseau)
                 ->get();
 
-            $codeProduits = $productByReseau->pluck('CodeProduit')->toArray();
-        }
+            $codeProduits = $productByReseaux->pluck('CodeProduit')->toArray();
 
-        $products = Product::whereIn('CodeProduit', $codeProduits)->get();
+        // dd($productByReseaux);
+        // Log::info($productByReseaux);
 
-        return view('sites.pages.steps.stepProduit', compact('products', 'user'));
+        return view('sites.pages.steps.stepProduit', compact('user', 'productByReseaux'));
     }
 
     public function simulateurPrimeDirectE($codeProduit, $userId)
@@ -200,9 +199,11 @@ class SitePropositionController extends Controller
         }
     }
 
-    public function create(Request $request, $codeProduit, $codePartner)
+    public function create(Request $request, $codeProduit, $idmembre)
     {
-        $formule = $request->query('formule');
+        $user = membre::where('idmembre', $idmembre)->first();
+
+        $codePartner = $user->codepartenaire;
 
         $productGarantie = ProduitGarantie::where('CodeProduit',$codeProduit)->get();
         $product = Product::where('CodeProduit',$codeProduit)->first();
@@ -211,6 +212,13 @@ class SitePropositionController extends Controller
         $secteurActivites =  TblSecteurActivite::select('MonLibelle')->orderBy('MonLibelle')->get();
         $societes =  TblSociete::select('MonLibelle')->get();
         $agences =  AgenceByParter::where('codePartner',$codePartner )->get();
+        
+       
+        // dd($codePartner);
+
+        $productFormule = ReseauProduct::select('*')->where('codereseau', $user->codereseau)->where('codeproduit', $codeProduit)->first();
+
+        // dd($productFormule);
 
         $filliations =  Filliation::all();
         // dd($filliations);
@@ -225,33 +233,16 @@ class SitePropositionController extends Controller
         $operationType = $token['operation_type'];
 
 
-        // try {
 
-        //     $response = Http::withOptions(['timeout' => 60])->get(env('API_GET_COUNTRIES'));
-
-        //     if ($response->successful()) {
-        //         $data = $response->json();
-
-        //         // Vérifie si la clé "countries" existe
-        //         if (isset($data['countries'])) {
-        //             $detailCountries = $data['countries'];
-        //         } else {
-        //             Log::info('La clé "countries" est absente de la réponse API.');
-        //         }
-        //     } else {
-        //         Log::error('Échec de la récupération des pays depuis l\'API.');
-        //     }
-        // } catch (\Exception $e) {
-        //     Log::error('Exception lors de l\'appel à l\'API des pays : ' . $e->getMessage());
-        // }
-
-
-        return view('sites.pages.create', compact('product', 'villes', 'secteurActivites', 'professions','productGarantie','societes','agences','keyUuid','operationType','token','tok','codePartner','filliations','formule'));
+        return view('sites.pages.create', 
+        compact('product', 'villes', 'secteurActivites', 'professions','productGarantie','societes','agences','keyUuid','operationType','token','tok','filliations','user','productFormule','codePartner'));
     }
 
     public function storeSessionContratData(Request $request)
     {
         Session::put('allSessionData', $request->all());
+
+        Log::info("Session data stored  vvvvvvvvvvvvvvvvvv: ".json_encode($request->all()));
 
         return response()->json([
             'type' => 'success',
@@ -265,16 +256,22 @@ class SitePropositionController extends Controller
 
     public function storeContrat(Request $request)
     {
+
+        Log::info($request->all());
         try{
 
             DB::beginTransaction();
 
+            $productData = json_decode($request->input('productData'), true);
+
+            
+            $product = Product::where('CodeProduit', $productData['CodeProduit'])->first();
 
             $prefix = '67104860101001170';
 
             // On récupère le nombre de contrats existants avec ce préfixe et ce produit
             $increment = Contrat::where('numBullettin', 'like', $prefix . '%')
-                ->where('codeproduit', 'LFFUN')
+                ->where('codeproduit', $productData['CodeProduit'])
                 ->count() + 1;
 
             do {
@@ -285,19 +282,21 @@ class SitePropositionController extends Controller
 
 
 
-            log::info($request->all());
+            // log::info($request->all());
             $data = Session::get('allSessionData');
 
-            Log::info("data serialized: ".json_encode($data));
+            Log::info("data serialized ffffffffffffffffff: ".json_encode($data));
 
             $adherentData = $data['adherentData'];
             $assureData = $data['assureData'];
             $contratData = $data['contratData'];
             $utilisateur = $data['utilisateur'];
-            $simulationData = $data['simulationData'];
+            $simulationData = $data['simulationData'] ?? [];
             $benefData = $data['benefData'];
 
-            // Log::info("ContratData serialized: ".$contratData);
+            $contratFormule = $contratData['formuleProduit'] ?? null;
+
+            Log::info("ContratData serialized ddddddddddddduuuuuuuuuuuuuuud: ",$contratData);
 
             $datenaissanceAdherent = Carbon::parse($adherentData['datenaissance'])->format('Y-m-d H:i:s');
 
@@ -335,13 +334,137 @@ class SitePropositionController extends Controller
 
             Log::info("Adherent created: ".json_encode($Adherent));
 
+            // if ($assureData) {
+            //     foreach ($assureData as $assure) {
+            //         Log::info("assureeeeeeeeeeeeee: ".json_encode($assure));
+            //         $datenaissanceAssur = isset($assure['datenaissance']) ? Carbon::parse($assure['datenaissance'])->format('Y-m-d H:i:s') : null;
+            //         $idAssureInsert = Assurer::max('id') + 1;
+
+            //         $sexeassurAdd = $assure['civilite'] === "Monsieur" ? "M" : "F";
+            //         Assurer::create([
+            //             'id' => $idAssureInsert,
+            //             'civilite' => $assure['civilite'] ?? null,
+            //             'nom' => $assure['nom'] ?? null,
+            //             'prenom' => $assure['prenom'] ?? null,
+            //             'datenaissance' => $datenaissanceAssur ?? null,
+            //             'codecontrat' => $idContrat,
+            //             'codeadherent' => $idAdherent,
+            //             'lieunaissance' => $assure['lieunaissance'] ?? null,
+            //             'numeropiece' => $assure['numeropiece'] ?? null,
+            //             'naturepiece' => $assure['naturepiece'] ?? null,
+            //             'lieuresidence' => $assure['lieuresidence'] ?? null,
+            //             'filiation' => $assure['filiation'] ?? "MOI-MEME",
+            //             'mobile' => $assure['mobile'] ?? null,
+            //             'telephone' => $assure['telephone'] ?? null,
+            //             'estmigre' => 0,
+            //             'email' => $assure['email'] ?? null,
+            //             'sexe' => $sexeassurAdd,
+            //             'saisieLe' => now(),
+            //             'saisiepar' => $utilisateur['idmembre'] ?? null,
+            //             'mobile1' => $assure['mobile1'] ?? $assure['telephone1'] ?? null,
+            //             'telephone1' => $assure['telephone1'] ?? $assure['mobile1'] ?? null,
+            //         ]);
+
+            //         Log::info("Assurer created: ");
+
+            //         $garantie = ProduitGarantie::where('codeproduitgarantie', "ASSFUN_ADH")->first();
+
+            //         Log::info("garantie: ".json_encode($garantie));
+
+            //         AssureGarantie::create([
+            //             'codeproduitgarantie' => $garantie->codeproduitgarantie,
+            //             'idproduitparantie' => $garantie->id ?? null,
+            //             'monlibelle' => $garantie->libelle,
+            //             'prime' => $contratData['prime'],
+            //             'primetotal' => $contratData['primepricipale'],
+            //             'primeaccesoire' => 0,
+            //             'type' => "Mixte",
+            //             'capitalgarantie' => $contratData['capital'],
+            //             'codeassure' => $idAssureInsert,
+            //             'codecontrat' => $idContrat,
+            //             'refcontratsource' => $idContrat,
+            //             'estmigre' => 0,
+            //         ])->save();
+
+            //         $certifResidence = null;
+
+            //         if($request->estAssure === "Oui"){
+            //             $certifResidence = $request->file('justifResidenceAdh');
+            //         } else {
+            //             $certifResidence = $request->file('justifResidence');
+            //         }
+
+            //         Log::info("certifResidence: ".json_encode($certifResidence));
+
+            //         if ($certifResidence !== null) {
+
+            //             $files = $certifResidence;
+
+            //             if ($files) {
+            //                 $imageName = $idContrat . '_' . now()->timestamp . '.' . $files->getClientOriginalExtension();
+
+            //                 Log::info("imageName". $imageName);
+
+            //                 $destinationPath = base_path(env('UPLOADS_PATH'));
+
+            //                 $files->move($destinationPath, $imageName);
+
+            //                 TblDocument::create([
+            //                     'codecontrat' => $idContrat,
+            //                     'filename' => $imageName,
+            //                     'libelle' => "justif de residence",
+            //                     'saisiele' => now(),
+            //                     'saisiepar' => $utilisateur['idmembre'] ?? null,
+            //                     'source' => "ES",
+            //                 ]);
+            //             }
+
+            //         }
+
+            //     }
+            // }
+
             if ($assureData) {
+                // Définir le mapping des filiations vers les codes de produit garantie
+                $filiationMapping = [
+                    'ENFT' => 'ASSFUN_ENFT',
+                    'LUIMM' => 'ASSFUN_ADH',
+                    'CONJT' => 'ASSFUN_CONJT',
+                    'MERE' => 'ASSFUN_ASCDT',
+                    'PERE' => 'ASSFUN_ASCDT',
+                    'MOI-MEME' => 'ASSFUN_ADH',
+                    'ENFANT' => 'ASSFUN_ENFT',
+                    'CONJOINT' => 'ASSFUN_CONJT',
+                    'ASCENDANT' => 'ASSFUN_ASCDT'
+                ];
+                
+                // Récupérer TOUTES les garanties disponibles pour chaque type
+                $garantiesParType = [];
+                $codesGarantieUniques = array_unique(array_values($filiationMapping));
+                
+                foreach ($codesGarantieUniques as $code) {
+                    $garanties = ProduitGarantie::where('codeproduitgarantie', $code)->get();
+                    if ($garanties->isNotEmpty()) {
+                        $garantiesParType[$code] = $garanties;
+                    }
+                }
+                
+                // Garantie par défaut (fallback)
+                $defaultGaranties = ProduitGarantie::where('codeproduitgarantie', 'ASSFUN_ADH')->get();
+                
+                // Compter le nombre d'enfants pour la condition de dépassement
+                $enfantCount = 0;
+                
                 foreach ($assureData as $assure) {
                     Log::info("assureeeeeeeeeeeeee: ".json_encode($assure));
                     $datenaissanceAssur = isset($assure['datenaissance']) ? Carbon::parse($assure['datenaissance'])->format('Y-m-d H:i:s') : null;
                     $idAssureInsert = Assurer::max('id') + 1;
 
                     $sexeassurAdd = $assure['civilite'] === "Monsieur" ? "M" : "F";
+                    
+                    // Déterminer la filiation avec valeur par défaut
+                    $filiation = $assure['filiation'] ?? "MOI-MEME";
+                    
                     Assurer::create([
                         'id' => $idAssureInsert,
                         'civilite' => $assure['civilite'] ?? null,
@@ -354,7 +477,7 @@ class SitePropositionController extends Controller
                         'numeropiece' => $assure['numeropiece'] ?? null,
                         'naturepiece' => $assure['naturepiece'] ?? null,
                         'lieuresidence' => $assure['lieuresidence'] ?? null,
-                        'filiation' => $assure['filiation'] ?? "MOI-MEME",
+                        'filiation' => $filiation,
                         'mobile' => $assure['mobile'] ?? null,
                         'telephone' => $assure['telephone'] ?? null,
                         'estmigre' => 0,
@@ -368,25 +491,84 @@ class SitePropositionController extends Controller
 
                     Log::info("Assurer created: ");
 
-                    $garantie = ProduitGarantie::where('codeproduitgarantie', "ASSFUN_ADH")->first();
+                    // ===== DYNAMISATION DE LA GARANTIE SELON LA FILIATION =====
+                    $filiationKey = strtoupper($filiation);
+                    $codeGarantie = $filiationMapping[$filiationKey] ?? 'ASSFUN_ADH';
+                    
+                    // Récupérer les garanties correspondantes à ce type
+                    $garanties = $garantiesParType[$codeGarantie] ?? $defaultGaranties;
+                    
+                    // Si pas de garanties trouvées, utiliser celles par défaut
+                    if ($garanties->isEmpty()) {
+                        $garanties = $defaultGaranties;
+                    }
 
-                    Log::info("garantie: ".json_encode($garantie));
+                    Log::info("Nombre de garanties pour le code $codeGarantie : " . $garanties->count());
 
-                    AssureGarantie::create([
-                        'codeproduitgarantie' => $garantie->codeproduitgarantie,
-                        'idproduitparantie' => $garantie->id ?? null,
-                        'monlibelle' => $garantie->libelle,
-                        'prime' => $contratData['primepricipale'],
-                        'primetotal' => $contratData['primepricipale'],
-                        'primeaccesoire' => 0,
-                        'type' => "Mixte",
-                        'capitalgarantie' => $contratData['capital'],
-                        'codeassure' => $idAssureInsert,
-                        'codecontrat' => $idContrat,
-                        'refcontratsource' => $idContrat,
-                        'estmigre' => 0,
-                    ])->save();
+                    // ===== GESTION DES PRIMES ET CAPITAUX SELON LA FILIATION =====
+                    $prime = $contratData['prime'];
+                    $primeTotal = $contratData['primepricipale'];
+                    $capital = $contratData['capital'] ?? 0;
+                    
+                    // Définir les paramètres selon la filiation
+                    switch ($filiationKey) {
+                        case 'ENFT':
+                        case 'ENFANT':
+                            // Compter les enfants
+                            $enfantCount++;
+                            
+                            // Si plus de 4 enfants, prime et capital spécifiques
+                            if ($enfantCount > 4) {
+                                $prime = 680; // Prime fixe pour le 5ème enfant et plus
+                                $capital = 1000000;
+                            } else {
+                                $capital = 1000000; // Capital fixe pour les 4 premiers enfants
+                                // Prime reste celle du contrat
+                            }
+                            break;
+                            
+                        case 'LUIMM':
+                        case 'MOI-MEME':
+                            $capital = 2000000;
+                            break;
+                            
+                        case 'CONJT':
+                        case 'CONJOINT':
+                            $capital = 2000000;
+                            break;
+                            
+                        case 'MERE':
+                        case 'PERE':
+                        case 'ASCENDANT':
+                            $capital = 2000000;
+                            break;
+                            
+                        default:
+                            // Garder les valeurs par défaut
+                            break;
+                    }
 
+                    // ===== BOUCLE SUR TOUTES LES GARANTIES RÉCUPÉRÉES =====
+                    foreach ($garanties as $garantie) {
+                        Log::info("Création de la garantie: " . $garantie->codeproduitgarantie . " - " . $garantie->libelle);
+                        
+                        AssureGarantie::create([
+                            'codeproduitgarantie' => $garantie->codeproduitgarantie,
+                            'idproduitparantie' => $garantie->id ?? null,
+                            'monlibelle' => $garantie->libelle,
+                            'prime' => $prime,
+                            'primetotal' => $primeTotal,
+                            'primeaccesoire' => 0,
+                            'type' => "Mixte",
+                            'capitalgarantie' => $capital,
+                            'codeassure' => $idAssureInsert,
+                            'codecontrat' => $idContrat,
+                            'refcontratsource' => $idContrat,
+                            'estmigre' => 0,
+                        ]);
+                    }
+
+                    // Gestion du certificat de résidence
                     $certifResidence = null;
 
                     if($request->estAssure === "Oui"){
@@ -398,7 +580,6 @@ class SitePropositionController extends Controller
                     Log::info("certifResidence: ".json_encode($certifResidence));
 
                     if ($certifResidence !== null) {
-
                         $files = $certifResidence;
 
                         if ($files) {
@@ -419,9 +600,7 @@ class SitePropositionController extends Controller
                                 'source' => "ES",
                             ]);
                         }
-
                     }
-
                 }
             }
 
@@ -458,14 +637,14 @@ class SitePropositionController extends Controller
             Log::info("Beneficiaire created: ");
 
             if ($contratData['modepaiement'] === "Mobile_money") {
-                $numerocompte = $contratData['numMobile'];
+                $numerocompte = $contratData['numMobile'] ?? 0;
             } else {
-                $numerocompte = $contratData['numerocompte'];
+                $numerocompte = $contratData['numerocompte'] ?? 0;
             }
 
             Log::info("numerocompte". $numerocompte);
 
-            $product = Product::where('CodeProduit', $simulationData['productCode'])->first();
+            // $product = Product::where('CodeProduit', $simulationData['productCode'])->first();
 
             Log::info("product". $product);
 
@@ -485,11 +664,11 @@ class SitePropositionController extends Controller
                 'nomagent' => $utilisateur['membre']['nom'] . ' ' . $utilisateur['membre']['prenom'],
 
                 'primepricipale' => number_format($contratData['primepricipale'], 2, ".", ""),
-                'prime' => $contratData['primepricipale'] ?? null,
-                'fraisadhesion' => $contratData['fraisAdhesion'],
+                'prime' => $contratData['primepricipale'] ?? 0,
+                'fraisadhesion' => $contratData['fraisAdhesion'] ?? 0,
 
                 'surprime' => 0,
-                'capital' => number_format($contratData['capital'], 2, ".", ""),
+                'capital' => number_format($contratData['capital'], 2, ".", "") ?? 0,
                 'etape' => 1,
 
                 'saisiele' => now(),
@@ -499,7 +678,8 @@ class SitePropositionController extends Controller
 
                 'codeadherent' => $idAdherent,
                 'estMigre' => 0,
-                'codeproduit' => $simulationData['productCode'] ?? null,
+                // 'codeproduit' => $simulationData['productCode'] ?? null,
+                'codeproduit' => $product->CodeProduit ?? null,
 
                 'libelleproduit' => $product->MonLibelle,
 
@@ -530,19 +710,16 @@ class SitePropositionController extends Controller
             ]);
 
 
-
-
-
-
             Log::info("Contrat created: ");
+            Log::info("Contrat created tokekkkkkkkkkkkkkkkkk: ".json_encode($request->tokGenerate));
 
-            $sign = Signature::where('key_uuid', $contratData['tokGenerate'])->first();
+            $sign = Signature::where('key_uuid', $request->tokGenerate)->first();
 
             if ($sign) {
                 $sign->update(['reference_key' => $idContrat]);
             }
 
-            $bulletinData = $this->generateBulletin($idContrat, $utilisateur);
+            $bulletinData = $this->generateBulletin($idContrat, $utilisateur, $contratFormule);
 
             // Si la génération du bulletin a échoué, lever une exception
             if (!$bulletinData['success']) {
@@ -622,9 +799,12 @@ class SitePropositionController extends Controller
 
     }
 
-    private function generateBulletin($idContrat, $utilisateur)
+    private function generateBulletin($idContrat, $utilisateur, $contratFormule)
     {
         try {
+
+            Log::info("Generating bulletin for contrat ID: $idContrat");
+
             $piece_recto = '';
             $piece_verso = '';
             $allFiles = [];
@@ -666,12 +846,32 @@ class SitePropositionController extends Controller
 
             // Génération du bulletin PDF temporaire
 
-            $pdf = PDF::loadView('productions.components.bullettin.llfunBull', [
+
+            if($contratFormule == 'LFFUN_V60'){
+                $pdf = PDF::loadView('productions.components.bullettin.llfunBullInphb', [
                     'contrat' => $contrat,
                     'qrCodeBase64' => $qrCodeBase64,
                     'imageSrc' => $imageSrc,
                 ]);
                 $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
+            }elseif($contrat->codeproduit == 'LPENSION'){
+                $pdf = PDF::loadView('productions.components.bullettin.lpension', [
+                    'contrat' => $contrat,
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc,
+                ]);
+                $cguFile = public_path('root/cgu/cguPension.pdf');
+        
+            }else{
+                $pdf = PDF::loadView('productions.components.bullettin.llfunBull', [
+                    'contrat' => $contrat,
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc,
+                ]);
+                $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
+            }
+
+            
 
 
             $bulletinDir = public_path('documents/bulletin/');
@@ -814,8 +1014,17 @@ class SitePropositionController extends Controller
     public function showContratSite($idContrat)
     {
 
+
+
         $contrat = Contrat::where('id', $idContrat)->first();
-        return view('sites.pages.show.showContrat', compact('contrat'));
+
+        if($contrat->partenaire == "DIASPORA"){
+            $devise = "€";
+        } else {
+            $devise = "FCFA";
+        }
+
+        return view('sites.pages.show.showContrat', compact('contrat', 'devise'));
     }
 
 

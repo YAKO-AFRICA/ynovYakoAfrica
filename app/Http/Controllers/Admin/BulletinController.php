@@ -34,7 +34,7 @@ class BulletinController extends Controller
      {
         try {
 
-            $contrat = Contrat::where('id', 89)->first();
+            $contrat = Contrat::where('id', 1458)->first();
 
             // Chargement de la vue avec les données
             $pdf = Pdf::loadView('productions.components.bullettin.ykeBulletin', [
@@ -457,6 +457,14 @@ class BulletinController extends Controller
                 'imageSrc' => $imageSrc,
             ]);
             $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
+        }elseif ($contrat->codeproduit == "LPENSION") {
+
+            $pdf = PDF::loadView('productions.components.bullettin.lpension', [
+                'contrat' => $contrat,
+                'qrCodeBase64' => $qrCodeBase64,
+                'imageSrc' => $imageSrc,
+            ]);
+            $cguFile = public_path('root/cgu/cguPension.pdf');
         } else {
 
             $pdf = PDF::loadView('productions.components.bullettin.basicBulletin', [

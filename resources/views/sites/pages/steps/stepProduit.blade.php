@@ -320,48 +320,74 @@
         </div>
     </div>
 
-    
+    <script>
+        function getAgeLimit(codeproduit) {
+            if (codeproduit === "LFFUN") {
+                return [
+                    { ageMin: 18, ageMax: 75 },
+                ];
+            } else if (codeproduit === "LPENSION") {
+                return [
+                    { ageMin: 18, ageMax: 60 },
+                ]
+            } else {
+                return [
+                    { ageMin: 12, ageMax: 65 },
+                ]
+            }
+        }
+    </script>
 
 
 
     <script>
-        const products = @json($products);
-        console.log('Products:', products);
+        sessionStorage.clear();
+
+        const productByReseaux = @json($productByReseaux);
+        console.log('productByReseaux:', productByReseaux);
+
         const user = @json($user);
+
+        // Créer souscriptionData avec l'utilisateur
+        const souscriptionData = {
+            utilisateur: user
+        };
+
+        // Enregistrer souscriptionData dans le sessionStorage
+        sessionStorage.setItem(
+            'souscriptionData',
+            JSON.stringify(souscriptionData)
+        );
+
+        // Si tu veux également conserver utilisateur séparément
+        sessionStorage.setItem(
+            'utilisateur',
+            JSON.stringify(user)
+        );
+
+        console.log('Session Storage cleared and souscriptionData recreated.');
+        console.log(
+            'souscriptionData:',
+            JSON.parse(sessionStorage.getItem('souscriptionData'))
+        );
 
         console.log('User all data:', user);
 
-        // console.log('User:', user['meta']['partner']);
-
         let selectedProduct = null;
         let privacyAccepted = false;
-
-        let ageMax = 0;
-        let LibProduit = "";
-        if (user['codepartenaire'] === "DIASPORA") {
-            ageMax = 80;
-            LibProduit = "YAKO OBSEQUE DIASPORA";
-        }else if (user['codepartenaire'] === "DIRECTENTREPRISE") {
-            ageMax = 50;
-            LibProduit = "YAKO SOUTIEN FIDEL";
-        }
-        else{
-            ageMax = 65;
-            LibProduit = "YAKO FRAIE FUNERAIRE";
-        }
 
         function renderProducts() {
             const container = document.getElementById('products-container');
             container.innerHTML = '';
 
-            products.forEach(product => {
+            productByReseaux.forEach(productByReseau => {
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
-                productCard.onclick = (event) => selectProduct(product, event);
+                productCard.onclick = (event) => selectProduct(productByReseau, event);
 
 
                 productCard.innerHTML = `
-                    <h3>${product.MonLibelle}</h3>
+                    <h3>${productByReseau.libelleproduit}</h3>
                 `;
 
 
@@ -369,13 +395,15 @@
             });
 
             // Sélectionner par défaut le premier produit
-            if (products.length > 0) {
-                selectProduct(products[0], container.firstChild);
+            if (productByReseaux.length > 0) {
+                selectProduct(productByReseaux[0], container.firstChild);
             }
         }
 
         function selectProduct(product, elementOrEvent) {
             selectedProduct = product;
+
+            // console.table(selectedProduct);
 
             // Mise à jour de l'état actif
             document.querySelectorAll('.product-card').forEach(card => {
@@ -392,19 +420,47 @@
             renderProductDetails(product);
         }
 
+        function getProductDescription(product) {
+
+            // console.log('codeproduct getProductDescription:', product);
+
+            if (product.codeproduit === 'LPENSION') {
+                return `<span>
+                        Préparez votre avenir dès aujourd’hui et assurez-vous une retraite plus sereine. Avec <strong>${product.libelleproduit}</strong>, vous constituez progressivement un complément de revenu pour maintenir votre niveau de vie et profiter pleinement de votre retraite.
+
+                    </span>`;
+                
+            }else if (product.codeproduit === 'LFFUN') {
+                return `<span>
+                            Les funérailles peuvent représenter un lourd fardeau financier, vous laissant démunis face à cette épreuve.
+                            Avec <strong>${product.libelleproduit}</strong>, vous bénéficiez de l’accompagnement et du soutien de <strong>YAKO AFRICA Assurances Vie</strong>
+                            pour organiser sereinement les obsèques de vos proches disparus.
+                            <br><br>
+                            Vous n’êtes plus seuls : nous sommes à vos côtés pour vous apporter assistance, réconfort et sérénité dans ces moments difficiles.
+                        </span>`;
+            } else {
+                return `<span>
+                            Vous n’êtes plus seuls : nous sommes à vos côtés pour vous apporter
+                            assistance, réconfort et sérénité dans ces moments difficiles.
+                        </span>`;
+            }
+        }
+
 
         function renderProductDetails(product) {
+
+            // console.log("product:", product);
             const detailsContainer = document.getElementById('product-details');
             detailsContainer.className = 'product-details';
 
             detailsContainer.innerHTML = `
                 <div class="detail-header">
-                    <h2>${product.MonLibelle}</h2>
+                    <h2>${product.libelleproduit}</h2>
                     <div class="product-meta">
-                        <span class="meta-item">Code: ${product.CodeProduit}</span>
-                        <span class="meta-item">Âge Minimum: ${product.AgeMiniAdh}</span>
+                        <span class="meta-item">Code: ${product.codeproduit}</span>
+                        <span class="meta-item">Âge Minimum: ${getAgeLimit(product.codeproduit)[0].ageMin}</span>
 
-                        <span class="meta-item">Âge Maximum: ${ageMax}</span>
+                        <span class="meta-item">Âge Maximum: ${getAgeLimit(product.codeproduit)[0].ageMax}</span>
                     </div>
                 </div>
 
@@ -412,11 +468,7 @@
                     <div class="detail-item">
                         <label>Informations sur le produit</label>
                         <span>
-                            Les funérailles peuvent représenter un lourd fardeau financier, vous laissant démunis face à cette épreuve.
-                            Avec <strong>${product.MonLibelle}</strong>, vous bénéficiez de l’accompagnement et du soutien de <strong>YAKO AFRICA Assurances Vie</strong>
-                            pour organiser sereinement les obsèques de vos proches disparus.
-                            <br><br>
-                            Vous n’êtes plus seuls : nous sommes à vos côtés pour vous apporter assistance, réconfort et sérénité dans ces moments difficiles.
+                            ${getProductDescription(product)}
                         </span>
                     </div>
                 </div>
@@ -463,6 +515,7 @@
 
 
         function subscribe() {
+            // console.table(selectedProduct);
             if (!selectedProduct || !privacyAccepted || !cguAccepted) {
                 swal.fire({
                     icon: 'warning',
@@ -472,16 +525,17 @@
                 return;
             }
 
-            if(!userData && userCode === "DIASPORA")
+            if(selectedProduct.codeproduit === 'LFFUN' && userCode === 'DIRECTENTREPRISE')
             {
-                window.location.href = '/site/simulateurPrimeDia/'+selectedProduct.CodeProduit + '/' + user.idmembre;
-            } else if(userData && userData['meta'] && userData['meta']['partner'] === "INPHB"){
-                window.location.href = '/site/simulateurPrimeInphb/'+selectedProduct.CodeProduit + '/' + user.idmembre;
-            } else if(userCode === "DIRECTENTREPRISE"){
-                window.location.href = '/site/simulateurPrimeDirectE/'+selectedProduct.CodeProduit + '/' + user.idmembre;
+                window.location.href = '/site/simulateurPrimeDirectE/'+selectedProduct.codeproduit + '/' + user.idmembre;
+            } else if(selectedProduct.codeproduit === 'LFFUN' && userCode === "INPHB"){
+                window.location.href = '/site/simulateurPrimeInphb/'+selectedProduct.codeproduit + '/' + user.idmembre;
+            } else if(selectedProduct.codeproduit === 'LFFUN' && userCode === 'DIASPORA'){
+                window.location.href = '/site/simulateurPrimeDia/'+selectedProduct.codeproduit + '/' + user.idmembre;
             } else {
-                window.location.href = '/site/simulateurPrimeDia/'+selectedProduct.CodeProduit + '/' + user.idmembre;
+                window.location.href = '/site/create/' + selectedProduct.codeproduit + '/' + user.idmembre;
             }
+
         }
 
         // Initialize the page

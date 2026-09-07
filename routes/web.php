@@ -676,6 +676,7 @@ Route::get('/sending/user', [UserController::class, 'sendMail']);
 
 
 Route::prefix('site')->name('site.')->group(function(){
+    Route::get('/generateLink', [SitePropositionController::class, 'generateLink'])->name('generateLink');
     Route::get('/souscription/{codeMembre}', [SitePropositionController::class, 'stepProduct'])->name('stepProduct');
     Route::get('/simulateurPrimeDia/{codeProduit}/{userId}', [SitePropositionController::class, 'simulateurPrimeDia'])->name('simulateurPrimeDia');
     Route::get('/simulateurPrimeDirectE/{codeProduit}/{userId}', [SitePropositionController::class, 'simulateurPrimeDirectE'])->name('simulateurPrimeDirectE');

@@ -149,8 +149,8 @@ Route::post('/save-site-simulateur-data', [SitePropositionController::class, 'sa
 // Route::get('/get-user-data', [UserController::class, 'userDataApi']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/get-user-data', [App\Http\Controllers\UserController::class, 'userDataApi']);
-    Route::delete('/setting/destroy/user/{id}', [App\Http\Controllers\UserController::class, 'destroyApi']);
+    Route::get('/get-user-data', [UserController::class, 'userDataApi']);
+    Route::delete('/setting/destroy/user/{id}', [UserController::class, 'destroyApi']);
     // Ajoutez d'autres routes API selon vos besoins
 });
 

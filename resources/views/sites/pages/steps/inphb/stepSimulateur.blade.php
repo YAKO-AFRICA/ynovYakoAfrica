@@ -136,27 +136,6 @@
             color: #f68615;
         }
 
-        .card-economique .card-header {
-            background: linear-gradient(135deg, #1a5a3c, #2d7a5a);
-        }
-        .card-economique .btn-select {
-            background: linear-gradient(135deg, #1a5a3c, #2d7a5a);
-        }
-        .card-economique .total-amount,
-        .card-economique .guarantees-table .value.highlight {
-            color: #1a5a3c;
-        }
-        .card-economique .card-total {
-            border-top-color: #bfe0cd;
-        }
-        .card-economique .card-detail-trigger {
-            color: #1a5a3c;
-        }
-        .card-economique .card-detail-content ul li i,
-        .card-economique .card-detail-content ul li strong {
-            color: #1a5a3c;
-        }
-
         /* ===== HEADER DE LA CARTE ===== */
         .card-header {
             padding: 14px 16px 12px;
@@ -248,80 +227,6 @@
             color: #888;
             font-style: italic;
             padding-top: 2px;
-        }
-
-        /* ===== GARANTIE OPTIONNELLE ===== */
-        .optional-guarantee {
-            padding: 8px 14px 12px;
-            border-top: 1px dashed #ddd;
-            margin-top: 4px;
-        }
-
-        .optional-guarantee .toggle-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #333;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .optional-guarantee .toggle-wrapper input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            accent-color: #1a2a6c;
-            cursor: pointer;
-        }
-
-        .optional-guarantee .prime-input-wrapper {
-            display: none;
-            margin-top: 8px;
-            padding: 6px 10px;
-            background: #f8fafc;
-            border-radius: 6px;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .optional-guarantee .prime-input-wrapper.visible {
-            display: flex;
-        }
-
-        .optional-guarantee .prime-input-wrapper label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #444;
-        }
-
-        .optional-guarantee .prime-input-wrapper input[type="number"] {
-            flex: 1;
-            min-width: 100px;
-            padding: 6px 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            outline: none;
-            transition: border 0.2s;
-        }
-
-        .optional-guarantee .prime-input-wrapper input[type="number"]:focus {
-            border-color: #1a2a6c;
-            box-shadow: 0 0 0 2px rgba(26, 42, 108, 0.15);
-        }
-
-        .optional-guarantee .prime-input-wrapper .range-hint {
-            font-size: 0.65rem;
-            color: #888;
-            width: 100%;
-        }
-
-        .optional-guarantee .prime-input-wrapper .range-hint span {
-            font-weight: 600;
-            color: #333;
         }
 
         /* ===== DÉTAIL (accordéon) ===== */
@@ -446,17 +351,6 @@
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
         }
 
-        .btn-select.outline {
-            background: transparent !important;
-            color: #1a5a3c;
-            border: 2px solid #1a5a3c;
-        }
-
-        .btn-select.outline:hover {
-            background: #1a5a3c !important;
-            color: white;
-        }
-
         /* ===== BANDEAU INFO ===== */
         .info-banner {
             margin-top: 20px;
@@ -550,11 +444,6 @@
                 width: 100%;
                 text-align: center;
             }
-
-            .optional-guarantee .prime-input-wrapper {
-                flex-direction: column;
-                align-items: stretch;
-            }
         }
 
         @media (max-width: 480px) {
@@ -646,19 +535,6 @@
                     </table>
                 </div>
 
-                <!-- GARANTIE OPTIONNELLE -->
-                <div class="optional-guarantee">
-                    <label class="toggle-wrapper">
-                        <input type="checkbox" class="optional-checkbox" data-card="complete">
-                        <span><i class="fas fa-plus-circle" style="color:#1a2a6c;"></i> Ajouter une garantie optionnelle</span>
-                    </label>
-                    <div class="prime-input-wrapper" data-card="complete">
-                        <label for="prime_complete">Prime mensuelle :</label>
-                        <input type="number" id="prime_complete" class="prime-input" min="10000" max="100000" placeholder="10 000 – 100 000" value="25000">
-                        <span class="range-hint">⚠️ Montant compris entre <span>10 000</span> et <span>100 000 CFA</span></span>
-                    </div>
-                </div>
-
                 <div class="card-detail">
                     <button class="card-detail-trigger" onclick="toggleDetail(this)">
                         <i class="fas fa-chevron-down"></i> Voir les détails
@@ -707,19 +583,6 @@
                         <tr><td class="category">👴 Ascendant (x1)</td><td class="value">1 000 000 CFA</td></tr>
                         <tr class="note-row"><td colspan="2">+680 CFA/mois par enfant dès le 5ᵉ</td></tr>
                     </table>
-                </div>
-
-                <!-- GARANTIE OPTIONNELLE -->
-                <div class="optional-guarantee">
-                    <label class="toggle-wrapper">
-                        <input type="checkbox" class="optional-checkbox" data-card="premium">
-                        <span><i class="fas fa-plus-circle" style="color:#f68615;"></i> Ajouter une garantie optionnelle</span>
-                    </label>
-                    <div class="prime-input-wrapper" data-card="premium">
-                        <label for="prime_premium">Prime mensuelle :</label>
-                        <input type="number" id="prime_premium" class="prime-input" min="10000" max="100000" placeholder="10 000 – 100 000" value="25000">
-                        <span class="range-hint">⚠️ Montant compris entre <span>10 000</span> et <span>100 000 CFA</span></span>
-                    </div>
                 </div>
 
                 <div class="card-detail">
@@ -789,57 +652,12 @@
                         <td>24h/24</td>
                         <td>24h/24</td>
                     </tr>
-                    <tr>
-                        <td>Garantie optionnelle</td>
-                        <td colspan="2">✅ Disponible (10 000 – 100 000 CFA/mois)</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <script>
-        // ===== GESTION DE LA GARANTIE OPTIONNELLE =====
-        document.addEventListener('DOMContentLoaded', function () {
-            // Afficher/masquer le champ de prime au clic sur la checkbox
-            document.querySelectorAll('.optional-checkbox').forEach(function (checkbox) {
-                checkbox.addEventListener('change', function () {
-                    const cardType = this.dataset.card;
-                    const wrapper = document.querySelector(`.prime-input-wrapper[data-card="${cardType}"]`);
-                    if (wrapper) {
-                        wrapper.classList.toggle('visible', this.checked);
-                    }
-                });
-            });
-
-            // Validation du champ prime (min/max)
-            document.querySelectorAll('.prime-input').forEach(function (input) {
-                input.addEventListener('input', function () {
-                    const val = parseInt(this.value, 10);
-                    if (val < 10000) {
-                        this.setCustomValidity('La prime pour la garantie optionnelle doit être d\'au moins 10 000 CFA.');
-                    } else if (val > 100000) {
-                        this.setCustomValidity('La prime pur la garantie optionnelle ne peut pas dépasser 100 000 CFA.');
-                    } else {
-                        this.setCustomValidity('');
-                    }
-                });
-            });
-
-            // Utilisateur depuis Blade
-            const user = @json($user);
-
-            let data = JSON.parse(sessionStorage.getItem('souscriptionData') || '{}');
-
-            if (!data.utilisateur) {
-                data.utilisateur = user;
-                sessionStorage.setItem('souscriptionData', JSON.stringify(data));
-                console.log('✅ Utilisateur sauvegardé dans la session :', data.utilisateur);
-            } else {
-                console.log('ℹ️ Utilisateur déjà présent dans la session :', data.utilisateur);
-            }
-        });
-
         // ===== ACCORDÉON DÉTAILS =====
         function toggleDetail(button) {
             const content = button.nextElementSibling;
@@ -864,34 +682,15 @@
             const primeBase = parseInt(card.dataset.prime, 10) || 0;
             const capital = parseInt(card.dataset.capital, 10) || 0;
 
-            // Récupération de la garantie optionnelle
-            const checkbox = card.querySelector('.optional-checkbox');
-            const primeInput = card.querySelector('.prime-input');
-            let optionPrime = 0;
-            let optionActive = false;
-
-            if (checkbox && checkbox.checked) {
-                optionActive = true;
-                const val = parseInt(primeInput.value, 10);
-                if (!isNaN(val) && val >= 10000 && val <= 100000) {
-                    optionPrime = val;
-                } else {
-                    alert('Veuillez saisir une prime pour la garantie optionnelle valide entre 10 000 et 100 000 CFA.');
-                    return;
-                }
-            }
-
             const souscriptionData = {
                 simulationData: {
                     formule: formule,
+                    type: formule,
                     productCode: 'LFFUN',
+                    primepricipale: primeBase,
                     prime: primeBase,
                     capital: capital,
-                    dateSelection: new Date().toISOString(),
-                    garantieOptionnelle: {
-                        active: optionActive,
-                        prime: optionPrime
-                    }
+                    dateSelection: new Date().toISOString()
                 },
                 utilisateur: user
             };
@@ -908,9 +707,7 @@
                     button.style.opacity = '1';
                 }, 2400);
 
-                window.location.href = '/site/create/LFFUN/INPHB?formule=' + encodeURIComponent(formule) +
-                    '&optionPrime=' + optionPrime +
-                    '&optionActive=' + optionActive;
+                window.location.href = '/site/create/LFFUN/' + user.idmembre + '?formule=' + encodeURIComponent(formule);
 
             } catch (e) {
                 console.error('❌ Erreur :', e);
@@ -920,6 +717,19 @@
 
         // Ouverture auto des détails pour la carte recommandée
         document.addEventListener('DOMContentLoaded', function () {
+            // Utilisateur depuis Blade
+            const user = @json($user);
+
+            let data = JSON.parse(sessionStorage.getItem('souscriptionData') || '{}');
+
+            if (!data.utilisateur) {
+                data.utilisateur = user;
+                sessionStorage.setItem('souscriptionData', JSON.stringify(data));
+                console.log('✅ Utilisateur sauvegardé dans la session :', data.utilisateur);
+            } else {
+                console.log('ℹ️ Utilisateur déjà présent dans la session :', data.utilisateur);
+            }
+
             const recommendedCard = document.querySelector('.card.recommended');
             if (recommendedCard) {
                 const trigger = recommendedCard.querySelector('.card-detail-trigger');

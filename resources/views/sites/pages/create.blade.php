@@ -97,6 +97,17 @@
 
 <body>
 
+    @php
+        $tok = Str::random(80);
+        $token = [
+            'token' => $tok,
+            'operation_type' => "E-SOUSCRIPTION",
+            'key_uuid' => $tok
+        ];
+        $keyUuid = $token['key_uuid'];
+        $operationType = $token['operation_type'];
+    @endphp
+
     <div class="container py-5 wrapper">
         <div class="card shadow">
             <div class="card-header text-center text-white"
@@ -130,6 +141,11 @@
                 <form id="contratFormFinal" class="mt-4 submitForm" >
                     @csrf
 
+                    <input type="hidden" id="otpGenerate" name="otpGenerate" value="">
+                    <input type="hidden" id="productData" name="productData" value="{{$product}}">
+                    <input type="hidden" id="productFormuleData" name="productFormuleData" value="{{$productFormule}}">
+                    <input type="hidden" id="tokGenerate" name="tokGenerate" value="{{ $tok }}">
+
                     <!-- Step 1 -->
                     <div class="step active step-block" data-step="1">
                         <h4 class="text-success">Étape 1 : Informations du Souscripteur</h4>
@@ -143,9 +159,9 @@
                     <div class="step step-block" data-step="2">
                         <h4 class="text-success">Étape 2 : Assuré</h4>
                         <div class="mb-3">
-                            @if ($codePartner === "DIRECTENTREPRISE")
+                            @if ($user->codepartenaire === "DIRECTENTREPRISE" && $product->CodeProduit === "LFFUN")
                                 @include('sites.pages.steps.directEnt.assureDirect')
-                            @elseif ($codePartner === "INPHB")
+                            @elseif ($user->codepartenaire === "INPHB" && $product->CodeProduit === "LFFUN")
                                 @include('sites.pages.steps.inphb.stepAssurer')
                             @else
                                 @include('sites.pages.steps.stepAssurer')
@@ -166,14 +182,13 @@
                     <div class="step step-block" data-step="4">
                         <h4 class="text-success">Étape 4 : Paiement</h4>
                         <div class="mb-3">
-                            @if ($codePartner === "DIRECTENTREPRISE")
+                            @if ($user->codepartenaire === "DIRECTENTREPRISE")
 
                                 @include('sites.pages.steps.directEnt.stepPaiementDirect')
-                            @elseif ($codePartner === "INPHB")
+                            @elseif ($user->codepartenaire === "INPHB" && $product->CodeProduit === "LFFUN")
                                 @include('sites.pages.steps.inphb.stepPaiement')
                             @else
                                 @include('sites.pages.steps.stepPaiement')
-
                             @endif
                         </div>
                     </div>
@@ -190,7 +205,7 @@
                     </div>
 
 
-                    <input type="hidden" id="otpGenerate" name="otpGenerate" value="">
+                   
 
 
                     <!-- Navigation -->
@@ -216,6 +231,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            
             const data = JSON.parse(sessionStorage.getItem('souscriptionData'));
 
             console.log('✅ ffffffffffffffffffffffffffffffffffffff :', data);
@@ -289,7 +305,7 @@
             if (souscriptionData) {
                 try {
                     const dataToSend = JSON.parse(souscriptionData);
-                console.log('Données de l\'adherent ajoutées au tableau:', dataToSend);
+                    console.log('Données de l\'adherent ajoutées au tableau:', dataToSend);
 
                     axios.post("{{ route('site.storeSessionContratData') }}", dataToSend, {
                         headers: {
@@ -544,121 +560,6 @@
         });
 
     </script>
-
-    {{-- <script>
-        class DataFetcher {
-            constructor(apiVilles, apiProfessions) {
-                this.apiVilles = apiVilles;
-                this.apiProfessions = apiProfessions;
-            }
-
-            init() {
-                document.addEventListener('DOMContentLoaded', () => {
-                    this.loadVilles();
-                    this.loadProfessions();
-                });
-            }
-
-            // Charger les villes et remplir les select correspondants
-            loadVilles() {
-                fetch(this.apiVilles)
-                    .then(response => response.json())
-                    .then(data => {
-                        const villeSelect = document.querySelector('.lieuresidence');
-                        const lieuSelect = document.querySelector('.lieunaissance');
-
-                        data.forEach(ville => {
-                            const optionVille = this.createOption(ville.MonLibelle);
-                            const optionLieu = this.createOption(ville.MonLibelle);
-
-                            villeSelect.appendChild(optionVille);
-                            lieuSelect.appendChild(optionLieu);
-                        });
-                    })
-                    .catch(error => console.error('Erreur chargement villes :', error));
-            }
-
-            // Charger les professions et remplir les select correspondants
-            loadProfessions() {
-                fetch(this.apiProfessions)
-                    .then(response => response.json())
-                    .then(data => {
-                        const professionSelects = document.querySelectorAll('.profession');
-
-                        professionSelects.forEach(select => {
-                            data.forEach(profession => {
-                                const option = this.createOption(profession.MonLibelle);
-                                select.appendChild(option);
-                            });
-                        });
-                    })
-                    .catch(error => console.error('Erreur chargement professions :', error));
-            }
-
-            // Créer une balise <option>
-            createOption(value) {
-                const option = document.createElement('option');
-                option.value = value;
-                option.textContent = value;
-                return option;
-            }
-        }
-
-        // Initialisation
-        const dataFetcher = new DataFetcher(
-            'https://api.yakoafricassur.com/enov/villes',
-            'https://api.yakoafricassur.com/enov/professions'
-        );
-        dataFetcher.init();
-    </script> --}}
-
-
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const countries = @json($detailCountries);
-            const phoneInput = document.getElementById('phoneInput');
-            const countryPrefixSelect = document.getElementById('countryPrefix');
-            const phoneInputGroup = document.getElementById('phoneInputGroup');
-
-            // Création du message de statut
-            const statusDiv = document.createElement('div');
-            statusDiv.id = 'prefix-status';
-            statusDiv.style.fontSize = '0.9em';
-            statusDiv.style.marginTop = '4px';
-            phoneInputGroup.insertAdjacentElement('afterend', statusDiv);
-
-            function detectCountryFromPhone(value) {
-                const cleanedValue = value.replace(/\s+/g, '').replace(/^00/, '+');
-                if (!cleanedValue.startsWith('+') && countryPrefixSelect.value == '') {
-                    statusDiv.innerHTML =
-                        `ℹ Entrez un numéro commençant par l'indicatif précédé de <code>+</code> ou <code>00</code>`;
-                    statusDiv.style.color = '#6c757d'; // gris
-                    // countryPrefixSelect.value = '';
-                    return;
-                }
-
-                const country = countries.find(c => cleanedValue.startsWith('+' + c.phone_international_prefix));
-
-                if (country) {
-                    const prefix = '+' + country.phone_international_prefix;
-                    phoneInput.value = cleanedValue.replace(prefix, '');
-                    countryPrefixSelect.value = country.phone_international_prefix;
-                    statusDiv.innerHTML = `✅ <strong>${country.name}</strong> détecté (<code>${prefix}</code>)`;
-                    statusDiv.style.color = '#198754'; // vert
-                } else if (!country && countryPrefixSelect.value == '') {
-                    statusDiv.innerHTML = `❌ Aucun pays trouvé pour cet indicatif`;
-                    statusDiv.style.color = '#dc3545'; // rouge
-                    countryPrefixSelect.value = '';
-                }
-            }
-
-            phoneInput.addEventListener('input', function() {
-                detectCountryFromPhone(phoneInput.value);
-            });
-
-
-        });
-    </script> --}}
 
 
 
@@ -1073,178 +974,6 @@
             });
         });
     </script>
-
-<script>
-    // async function loadCountries() {
-    //     const baseUrl = "https://apiotp.yakoafricassur.com/api/getAllCountries";
-    //     const response = await fetch(baseUrl);
-    //     const json = await response.json();
-    //     const countries = json.countries;
-
-    //     // Récupération de la session
-    //     const sessionData = sessionStorage.getItem('souscriptionData');
-    //     const souscription = sessionData ? JSON.parse(sessionData) : {};
-
-    //     let listToShow;
-
-    //     if (souscription?.utilisateur?.codepartenaire === "DIASPORA") {
-    //         // On filtre uniquement les pays de la liste fixe
-    //         const diasporaList = ["France", "Italy", "Netherlands", "Belgium", "Côte d'Ivoire"];
-    //         listToShow = countries.filter(c => diasporaList.includes(c.name));
-    //     } else {
-    //         // Tous les pays triés alphabétiquement
-    //         listToShow = countries.sort((a, b) => a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' }));
-    //     }
-
-    //     const $select = $(".apiCountry");
-
-    //     // On injecte les pays
-    //     listToShow.forEach(c => {
-    //         let option = new Option(c.name, c.country_code, false, false);
-    //         option.dataset.flag = c.flag;
-    //         option.dataset.prefix = c.phone_international_prefix ? "+" + c.phone_international_prefix : "";
-    //         $select.append(option);
-    //     });
-
-    //     // Initialisation Select2 avec drapeau + indicatif
-    //     $select.select2({
-    //         templateResult: formatCountry,
-    //         templateSelection: formatCountry,
-    //         placeholder: "Sélectionner un pays",
-    //         allowClear: true
-    //     });
-    // }
-
-    // Template d’affichage : flag + nom + indicatif
-    // function formatCountry(option) {
-    //     if (!option.id) return option.text;
-    //     let flag = $(option.element).data("flag") || "";
-    //     let prefix = $(option.element).data("prefix") || "";
-    //     return $(
-    //         `<span style="display:flex;align-items:center;gap:8px;">
-    //             <span>${flag}</span>
-    //             <span>${option.text} ${prefix ? "(" + prefix + ")" : ""}</span>
-    //         </span>`
-    //     );
-    // }
-
-    // document.addEventListener("DOMContentLoaded", loadCountries);
-</script>
-
-
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const countries = @json($detailCountries);
-
-            // Fonction pour créer le select pays
-            function createCountrySelect() {
-                const select = document.createElement('select');
-                select.className = "form-select form-select-sm country-select countryPrefix";
-                // select.required = true;
-
-                // Première option
-                const defaultOpt = document.createElement('option');
-                defaultOpt.value = "";
-                defaultOpt.selected = true;
-                defaultOpt.textContent = "🌍 Pays";
-                select.appendChild(defaultOpt);
-
-                // Ajouter les pays
-                countries.forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.phone_international_prefix;
-                    opt.textContent = `+${c.phone_international_prefix} ${c.flag}`;
-                    if (c.phone_international_prefix === "225") opt.selected = true; // Côte d'Ivoire par défaut
-                    select.appendChild(opt);
-                });
-
-                return select;
-            }
-
-            // Fonction de formatage
-            function formatNumber(number) {
-                const digits = number.replace(/\D/g, '');
-                return digits.replace(/(\d{2})(?=\d)/g, '$1 ').trim();
-            }
-
-            // Fonction de détection
-            function detectCountryFromPhone(input, value) {
-                const select = input.parentElement.querySelector('.countryPrefix');
-                const statusDiv = input.parentElement.querySelector('.prefix-status');
-                const cleanedValue = value.replace(/\s+/g, '').replace(/^00/, '+');
-
-                if (cleanedValue.startsWith('+')) {
-                    const country = countries.find(c => cleanedValue.startsWith('+' + c.phone_international_prefix));
-                    if (country) {
-                        const prefix = '+' + country.phone_international_prefix;
-                        const rawNumber = cleanedValue.replace(prefix, '');
-                        input.dataset.raw = rawNumber;
-                        input.value = formatNumber(rawNumber);
-                        if (select) select.value = country.phone_international_prefix;
-                        statusDiv.innerHTML = `✅ <strong>${country.name}</strong> détecté (<code>${prefix}</code>)`;
-                        statusDiv.style.color = '#198754';
-                        return;
-                    } else {
-                        statusDiv.innerHTML = `❌ Aucun pays trouvé pour cet indicatif`;
-                        statusDiv.style.color = '#dc3545';
-                        if (select) select.value = '';
-                        return;
-                    }
-                }
-
-                // Pas d’indicatif → utiliser le select actuel
-                input.dataset.raw = cleanedValue.replace(/\D/g, '');
-                input.value = formatNumber(input.dataset.raw);
-                statusDiv.innerHTML = `ℹ Entrez un numéro commençant par l'indicatif si vous voulez une détection automatique`;
-                statusDiv.style.color = '#6c757d';
-            }
-
-            // Appliquer à tous les <input type="tel">
-            document.querySelectorAll('input[type="tel"]').forEach(phoneInput => {
-                // Créer l’input-group si pas déjà présent
-                if (!phoneInput.closest('.input-group')) {
-                    const wrapper = document.createElement('div');
-                    wrapper.className = "input-group";
-                    phoneInput.parentNode.insertBefore(wrapper, phoneInput);
-                    wrapper.appendChild(createCountrySelect());
-                    wrapper.appendChild(phoneInput);
-                } else {
-                    // Ajouter le select si absent
-                    if (!phoneInput.parentElement.querySelector('.countryPrefix')) {
-                        phoneInput.parentElement.insertBefore(createCountrySelect(), phoneInput);
-                    }
-                }
-
-                // Ajouter le div status
-                let statusDiv = document.createElement('div');
-                statusDiv.className = 'prefix-status';
-                statusDiv.style.fontSize = '0.9em';
-                statusDiv.style.marginTop = '4px';
-                phoneInput.closest('.col-12, .col').appendChild(statusDiv);
-
-                // Event input
-                phoneInput.addEventListener('input', function() {
-                    detectCountryFromPhone(phoneInput, phoneInput.value);
-                });
-
-                // Nettoyer à la soumission
-                if (phoneInput.form) {
-                    phoneInput.form.addEventListener('submit', function() {
-                        if (phoneInput.dataset.raw) {
-                            phoneInput.value = phoneInput.dataset.raw;
-                        }
-                    });
-                }
-            });
-        });
-    </script> --}}
-
-
-
-
-
-
-
 
 </body>
 

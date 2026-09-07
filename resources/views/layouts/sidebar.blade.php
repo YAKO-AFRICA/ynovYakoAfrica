@@ -19,7 +19,7 @@
 
             @if ($partner != null && $partner->logo != null)
                 <a href="{{ route('shared.home')}}">
-                    <img src="{{ asset('logos/'. $codePartenaire . '.png') }}"
+                    <img src="{{ asset('root/images/logo_yako.jpg') }}"
                     style="min-height: 100%; min-width: 100%; background-color: #fff' : 'height: 100%; width: 100%;" 
                     class="logo-icon img-fluid"
                     alt="logo partenaire">
@@ -66,6 +66,13 @@
                             <i class='bx bx-home-alt'></i>
                         </div>
                         <div class="menu-title">Nouvelle proposition</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('site.generateLink')}}">
+                        <div class="parent-icon"><i class="lni lni-candy"></i>
+                        </div>
+                        <div class="menu-title">Generer un lien de souscription</div>
                     </a>
                 </li>
                 <li>

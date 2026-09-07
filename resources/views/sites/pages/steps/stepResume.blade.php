@@ -71,22 +71,34 @@
                 <div class="row">
                     <div class="col-6  col-xs-12 border-r">
                         <dl class="row">
-                            <dt class="col-xs-12 col-sm-6 col-md-6 col-lg-6">Produit:</dt>
-                            <dd class="col-xs-12 col-sm-6 col-md-6 col-lg-6">{{ $product->MonLibelle ?? 'null' }}
-                            </dd>
-
                             <dt class="col-xs-12 col-sm-6 col-md-6 col-lg-6">Prime principale:</dt>
-                            <dd class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="displayPrimePrincipale">-</dd>
+                            <dd class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="displayPrimePrincipale">0</dd>
+
+                            <dt class="col-xs-12 col-sm-6 col-md-6 col-lg-6">Surprime :</dt>
+                            <dd class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="displaySurprime">0</dd>
+
+                            <dt class="col-xs-12 col-sm-6 col-md-6 col-lg-6">Garantie complementaire :</dt>
+                            <dd class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="displaygarantieComplementaire">0</dd>
 
                             <dt class="col-xs-12 col-sm-6 col-md-6 col-lg-6">Frais d'adhésion:</dt>
-                            <dd class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="displayFraisAdhesion">--</dd>
+                            <dd class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="displayFraisAdhesion">0</dd>
 
-                            <dt class="col-xs-12 col-sm-6 col-md-6 col-lg-6">Capital désiré:</dt>
-                            <dd class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="displayCapital">--</dd>
+                            <dt class="col-xs-12 col-sm-6 col-md-6 col-lg-6">Prime finale periodique :</dt>
+                            <dd class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="displayPrimePeriodique">0</dd>
+
+                            
                         </dl>
                     </div>
                     <div class="col-6  col-xs-12">
                         <dl class="row">
+
+                            <dt class="col-xs-12 col-sm-6 col-md-6 col-lg-6">Capital désiré:</dt>
+                            <dd class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="displayCapital">0</dd>
+
+                            <dt class="col-xs-12 col-sm-6 col-md-6 col-lg-6">Produit:</dt>
+                            <dd class="col-xs-12 col-sm-6 col-md-6 col-lg-6">{{ $product->MonLibelle ?? 'null' }}
+                            </dd>
+
                             <dt class="col-xs-12 col-sm-6 col-md-6 col-lg-6">Mode paiement:</dt>
                             <dd class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="displayModePaiement">-</dd>
 
@@ -245,9 +257,12 @@
 
         // Contrat / Souscription
         document.getElementById('displayDateEffet').textContent = contrat.dateEffet || '--';
-        document.getElementById('displayPrimePrincipale').textContent = contrat.primepricipale || '--';
-        document.getElementById('displayFraisAdhesion').textContent = contrat.fraisAdhesion || '--';
-        document.getElementById('displayCapital').textContent = contrat.capital || '--';
+        document.getElementById('displayPrimePrincipale').textContent = contrat.primepricipale || 0;
+        document.getElementById('displaySurprime').textContent = contrat.surprime || 0;
+        document.getElementById('displaygarantieComplementaire').textContent = contrat.primeOptionelle || 0;
+        document.getElementById('displayPrimePeriodique').textContent = contrat.prime || 0;
+        document.getElementById('displayFraisAdhesion').textContent = contrat.fraisAdhesion || 0;
+        document.getElementById('displayCapital').textContent = contrat.capital || 0;
         document.getElementById('displayModePaiement').textContent = contrat.periodicite || '--';
         // document.getElementById('displayOrganisme').textContent = contrat.organisme || '--';
         // document.getElementById('displayAgence').textContent = contrat.agence || '--';
@@ -345,6 +360,216 @@
         subtree: true,
         attributeFilter: ['class']
     });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const step5 = document.querySelector('.step[data-step="5"]');
+
+    if (!step5) {
+        console.warn("⚠️ Étape 5 introuvable");
+        return;
+    }
+
+    let step5Traitee = false;
+
+    const observer = new MutationObserver(function () {
+
+        if (
+            step5.classList.contains('active') &&
+            !step5Traitee
+        ) {
+
+            step5Traitee = true;
+
+            alert("🚀 Étape 5 activée !");
+
+            // ==========================================
+            // RÉCUPÉRATION SESSION STORAGE
+            // ==========================================
+
+            let dataCOntrat = JSON.parse(
+                sessionStorage.getItem('souscriptionData') || '{}'
+            );
+
+            console.log(
+                "🚀 ÉTAPE 5 - Données récupérées :",
+                dataCOntrat
+            );
+
+            // ==========================================
+            // VÉRIFICATION CONTRAT DATA
+            // ==========================================
+
+            if (!dataCOntrat.contratData) {
+                dataCOntrat.contratData = {};
+            }
+
+            console.log(
+                "📌 contratData :",
+                dataCOntrat.contratData
+            );
+
+            // ==========================================
+            // PRODUIT / FORMULE
+            // ==========================================
+
+            const productFormule = @json($productFormule);
+
+            console.log(
+                "📦 Product formule :",
+                productFormule
+            );
+
+            // ==========================================
+            // PRIME PRINCIPALE
+            // ==========================================
+
+            const primeElement = document.getElementById('primepricipale');
+            const fraisElement = document.getElementById('fraisAdhesion');
+
+            const primepricipale = parseFloat(
+                primeElement?.value || 0
+            ) || 0;
+
+            const fraisAdhesion = parseFloat(
+                fraisElement?.value || 0
+            ) || 0;
+
+            const primeTotale = primepricipale + fraisAdhesion;
+
+            dataCOntrat.contratData.prime = primeTotale;
+            dataCOntrat.contratData.capital = 0;
+            dataCOntrat.contratData.primepricipale = primepricipale;
+            dataCOntrat.contratData.fraisAdhesion = fraisAdhesion;
+
+            console.log(
+                "💰 Prime principale :",
+                primepricipale
+            );
+
+            console.log(
+                "💰 Frais d'adhésion :",
+                fraisAdhesion
+            );
+
+            console.log(
+                "💰 Prime totale :",
+                primeTotale
+            );
+
+            // ==========================================
+            // FORMULE PRODUIT
+            // ==========================================
+
+            if (productFormule?.codeproduitformule) {
+
+                dataCOntrat.contratData.formuleProduit =
+                    productFormule.codeproduitformule;
+
+            } else {
+
+                console.warn(
+                    "⚠️ codeproduitformule introuvable"
+                );
+            }
+
+            console.log(
+                "💾 contratData avant sauvegarde :",
+                dataCOntrat.contratData
+            );
+
+            // ==========================================
+            // SAUVEGARDE SESSION STORAGE
+            // ==========================================
+
+            sessionStorage.setItem(
+                'souscriptionData',
+                JSON.stringify(dataCOntrat)
+            );
+
+            console.log(
+                "💾 souscriptionData sauvegardé :",
+                dataCOntrat
+            );
+
+            // ==========================================
+            // DONNÉES À ENVOYER AU SERVEUR
+            // ==========================================
+
+            const dataToSend = dataCOntrat;
+
+            console.log(
+                "📤 Données finales envoyées à Laravel :",
+                dataToSend
+            );
+
+            // ==========================================
+            // ENVOI AXIOS
+            // ==========================================
+
+            axios.post(
+                "{{ route('site.storeSessionContratData') }}",
+                dataToSend,
+                {
+                    headers: {
+                        'X-CSRF-TOKEN': document
+                            .querySelector('meta[name="csrf-token"]')
+                            .getAttribute('content'),
+
+                        'Content-Type': 'application/json'
+                    }
+                }
+            )
+            .then((response) => {
+
+                console.log(
+                    "📥 Réponse Laravel :",
+                    response.data
+                );
+
+                if (response.data.type === 'success') {
+
+                    console.log(
+                        '✅ Données session envoyées avec succès'
+                    );
+
+                } else {
+
+                    alert(
+                        response.data.message ||
+                        'Une erreur s\'est produite.'
+                    );
+                }
+
+            })
+            .catch((error) => {
+
+                console.error(
+                    "❌ Erreur lors de l'envoi à Laravel :",
+                    error
+                );
+
+                console.error(
+                    "❌ Réponse serveur :",
+                    error.response?.data
+                );
+
+            });
+
+            console.log(
+                "🚀🚀🚀 ÉTAPE 5 TRAITÉE 🚀🚀🚀"
+            );
+        }
+    });
+
+    observer.observe(step5, {
+        attributes: true,
+        attributeFilter: ['class']
+    });
+
+});
 </script>
 
 

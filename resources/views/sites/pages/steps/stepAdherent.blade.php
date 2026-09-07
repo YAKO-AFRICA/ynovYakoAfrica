@@ -189,7 +189,7 @@
             <input type="text" name="lieuresidence" class="form-control" id="lieuresidence" required>
         </div>
 
-        @if (in_array($codePartner, ["DIRECTENTREPRISE", "INPHB"]))
+        @if (in_array($user->codepartenaire, ["DIRECTENTREPRISE", "INPHB"]))
             <div class="col-12 col-lg-4">
                 <label for="justifResidenceAdh" class="form-label">Justificatif de résidence </label>
                 <input type="file" name="justifResidenceAdh" class="form-control" id="justifResidenceAdh" accept="application/pdf,image/jpeg,image/jpg,image/png">
@@ -347,121 +347,6 @@
         });
     </script>
 
-    {{-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-
-        const apiUrl = 'https://api.yakoafricassur.com/enov/villes';
-        const apiProfessions = 'https://api.yakoafricassur.com/enov/professions';
-
-        const villeSelect = document.getElementById('lieuresidence');
-        const lieuSelect = document.getElementById('lieunaissance');
-        const professionSelect = document.getElementById('profession');
-
-        // Désactiver uniquement les champs concernés
-        villeSelect.disabled = true;
-        lieuSelect.disabled = true;
-        professionSelect.disabled = true;
-
-        // =========================
-        // Chargement des villes
-        // =========================
-        fetch(apiUrl)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erreur lors du chargement des villes');
-                }
-
-                return response.json();
-            })
-            .then(data => {
-
-                data.sort((a, b) =>
-                    a.MonLibelle.localeCompare(
-                        b.MonLibelle,
-                        'fr',
-                        { sensitivity: 'base' }
-                    )
-                );
-
-                data.forEach(ville => {
-
-                    const optionVille = document.createElement('option');
-                    optionVille.value = ville.MonLibelle;
-                    optionVille.textContent = ville.MonLibelle;
-
-                    villeSelect.appendChild(optionVille);
-
-
-                    const optionLieu = document.createElement('option');
-                    optionLieu.value = ville.MonLibelle;
-                    optionLieu.textContent = ville.MonLibelle;
-
-                    lieuSelect.appendChild(optionLieu);
-                });
-
-                // Réactiver les champs
-                villeSelect.disabled = false;
-                lieuSelect.disabled = false;
-
-            })
-            .catch(error => {
-
-                console.error(error);
-
-                villeSelect.innerHTML =
-                    '<option value="">Impossible de charger les villes</option>';
-
-                lieuSelect.innerHTML =
-                    '<option value="">Impossible de charger les villes</option>';
-            });
-
-
-        // =========================
-        // Chargement des professions
-        // =========================
-        fetch(apiProfessions)
-            .then(response => {
-
-                if (!response.ok) {
-                    throw new Error('Erreur lors du chargement des professions');
-                }
-
-                return response.json();
-            })
-            .then(data => {
-
-                data.sort((a, b) =>
-                    a.MonLibelle.localeCompare(
-                        b.MonLibelle,
-                        'fr',
-                        { sensitivity: 'base' }
-                    )
-                );
-
-                data.forEach(profession => {
-
-                    const optionProfession = document.createElement('option');
-
-                    optionProfession.value = profession.MonLibelle;
-                    optionProfession.textContent = profession.MonLibelle;
-
-                    professionSelect.appendChild(optionProfession);
-                });
-
-                // Réactiver le select
-                professionSelect.disabled = false;
-
-            })
-            .catch(error => {
-
-                console.error(error);
-
-                professionSelect.innerHTML =
-                    '<option value="">Impossible de charger les professions</option>';
-            });
-
-    });
-    </script> --}}
 
 
     <script>
