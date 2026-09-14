@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="col-12 col-lg-6 text-end" id="modalAssurerOpen">
-        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#createAssurerModal">
+        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#createAssurerModal" disabled>
             <i class="fadeIn animated bx bx-plus"></i> Ajouter un(e) autre assuré(e)
         </button>
     </div>
@@ -147,7 +147,7 @@
             if (this.checked) {
                 const souscriptionData = getSouscriptionData();
                 const adherentData = souscriptionData.adherentData;
-                
+
                 if (!adherentData) {
                     swal.fire({
                         icon: 'error',
@@ -172,11 +172,11 @@
                     // Supprimer le souscripteur de la liste des assurés s'il y est
                     const numeropiece = souscriptionData.adherentData.numeropiece;
                     const index = (souscriptionData.assureData || []).findIndex(a => a.numeropiece === numeropiece);
-                    
+
                     if (index !== -1) {
                         souscriptionData.assureData.splice(index, 1);
                         saveSouscriptionData(souscriptionData);
-                        
+
                         // Supprimer visuellement du tableau
                         document.querySelector(`#tableAssuresBody tr[data-id="${numeropiece}"]`)?.remove();
                     }
@@ -250,15 +250,15 @@
         function initialiserTableauAssures() {
             const souscriptionData = getSouscriptionData();
             const assures = souscriptionData.assureData || [];
-            
+
             // Vider le tableau
             document.getElementById('tableAssuresBody').innerHTML = '';
-            
+
             // Remplir avec les assurés existants
             assures.forEach(assure => {
                 ajouterAssureDansTableau(assure);
             });
-            
+
             // Cocher "Oui" si le souscripteur est dans la liste des assurés
             if (souscriptionData.adherentData && assures.some(a => a.numeropiece === souscriptionData.adherentData.numeropiece)) {
                 radioOui.checked = true;
@@ -266,7 +266,7 @@
                 radioNon.checked = true;
             }
         }
-    
+
         initialiserTableauAssures();
     });
 
@@ -283,7 +283,7 @@
             souscriptionData.assureData = souscriptionData.assureData.filter(a => a.numeropiece !== id);
             sessionStorage.setItem('souscriptionData', JSON.stringify(souscriptionData));
         }
-        
+
         if (souscriptionData.simulationData?.type === "Individuel") {
             if (souscriptionData.assureData.length >= 1) {
                 modalAssurerOpen.classList.add("disabled");
@@ -298,8 +298,8 @@
             radioNon.checked = true;
         }
 
-        
-        
+
+
     }
 </script>
 

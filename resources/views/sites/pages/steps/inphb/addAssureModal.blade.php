@@ -17,7 +17,7 @@
 <div class="modal fade" id="createAssurerModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog">
         <div class="modal-content">
-            <form id="assurerForm">
+            <form id="assurerFormInphb">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalTitle">Ajouter un(e) assuré(e)</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -66,25 +66,27 @@
                             </select> --}}
                         </div>
 
-                        <!-- Filiation et Sexe -->
-                        <div class="col-12 col-lg-6">
-                            <label class="form-label">Filiation</label>
-                            {{-- <input type="text" name="assurerFiliation" id="assurerFiliation" class="form-control"> --}}
-                            <select id="assurerFiliation" class="form-select" name="assurerFiliation">
-                                <option selected value="" disabled>Sélectionner le lien de Parenté</option>
-                                @foreach ($filliations as $filliation)
-                                    <option value="{{ $filliation->MonLibelle }}">{{ $filliation->MonLibelle }}</option>
-                                @endforeach
-                            </select>
+                        <div class="col-12 col-lg-12 row">
+                            <!-- Filiation et Sexe -->
+                            <div class="col-12 col-lg-6">
+                                <label class="form-label">Lien de parenté <span class="text-danger">*</span></label>
+                                <select id="assurerFiliation" class="form-select" name="assurerFiliation" required>
+                                    <option selected value="" disabled>Sélectionner le lien de Parenté</option>
+                                    @foreach ($filliations as $filliation)
+                                        <option value="{{ $filliation->CodeFiliation }}">{{ $filliation->MonLibelle }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <label class="form-label">Sexe <span class="text-danger">*</span></label>
+                                <select class="form-select" name="assurerSexe" id="assurerSexe" required>
+                                    <option value="" disabled selected>Sélectionner</option>
+                                    <option value="M">Masculin</option>
+                                    <option value="F">Féminin</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-12 col-lg-6">
-                            <label class="form-label">Sexe <span class="text-danger">*</span></label>
-                            <select class="form-select" name="assurerSexe" id="assurerSexe" required>
-                                <option value="" disabled selected>Sélectionner</option>
-                                <option value="M">Masculin</option>
-                                <option value="F">Féminin</option>
-                            </select>
-                        </div>
+
 
                         <!-- Pièce d'identité -->
                         <div class="col-12 col-lg-6">
@@ -110,7 +112,7 @@
                                 <input type="text" name="assurerLieuresidence" id="assurerLieuresidence" class="form-control" required>
 
                             </div>
-                            @if ($codePartner == "DIRECTENTREPRISE")
+                            @if (in_array($codePartner, ['DIRECTENTREPRISE', 'INPHB']))
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <label for="justifResidence" class="form-label">Justificatif de résidence </label>
                                     <input type="file" name="justifResidence" class="form-control" id="justifResidence" accept="application/pdf,image/jpeg,image/jpg,image/png">
