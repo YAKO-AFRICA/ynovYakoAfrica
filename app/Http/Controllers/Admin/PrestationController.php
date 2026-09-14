@@ -89,16 +89,17 @@ class PrestationController extends Controller
 
      public function printFichePrestation()
     {
-        $prestation = TblPrestation::where('id', '1')->first();
+        $prestation = TblPrestation::where('id', '30')->first();
         // Génération de QR Code en base64
         $qrcode = base64_encode(QrCode::format('svg')->size(80)->generate("http://yakoafrica_live.test/espace-client/prestation/getInfoPrestation/1"));
 
 
         $imageUrl = env('SIGN_API') . "api/get-signature/" . $prestation->code . "/E-PRESTATION";
         if ($imageUrl != null || $imageUrl != '') {
-            $imageData = file_get_contents($imageUrl);
-            $base64Image = base64_encode($imageData);
-            $imageSrc = 'data:image/png;base64,' . $base64Image;
+            // $imageData = file_get_contents($imageUrl);
+            // $base64Image = base64_encode($imageData);
+            // $imageSrc = 'data:image/png;base64,' . $base64Image;
+            $imageSrc = '';
         } else {
             $imageSrc = '';
         }
