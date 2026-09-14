@@ -61,12 +61,49 @@ class PrestationController extends Controller
      * Show the form for creating a new resource.
      */
 
-    public function printFichePrestation()
+    // public function printFichePrestation()
+    // {
+    //     // $prestation = TblPrestation::where('id', $id)->first();
+    //     // Génération de QR Code en base64
+    //     $qrcode = base64_encode(QrCode::format('svg')->size(80)->generate("http://yakoafrica_live.test/espace-client/prestation/getInfoPrestation/1"));
+    //     $pdf = Pdf::loadView('prestations.fiches.prestationtest', compact('qrcode'))
+    //         ->setPaper('a4', 'portrait')
+    //         ->setOptions([
+    //             'isHtml5ParserEnabled' => true,
+    //             'isRemoteEnabled' => true, // Permet le chargement des ressources distantes si nécessaire
+    //             'margin-left' => 0,
+    //             'margin-right' => 0,
+    //             'margin-top' => 0,
+    //             'margin-bottom' => 0,
+    //         ]);
+
+    //     $fileName = 'Prestation.pdf';
+    //     return $pdf->stream($fileName);
+    //     // $PrestationDir = public_path('documents/prestations/');
+    //     // if (!is_dir($PrestationDir)) {
+    //     //     mkdir($PrestationDir, 0777, true);
+    //     // }
+    //     // $pdf->save($PrestationDir . $fileName);
+    //     // return view('prestations.fiches.prestation');
+    // }
+
+     public function printFichePrestation()
     {
-        // $prestation = TblPrestation::where('id', $id)->first();
+        $prestation = TblPrestation::where('id', '1')->first();
         // Génération de QR Code en base64
         $qrcode = base64_encode(QrCode::format('svg')->size(80)->generate("http://yakoafrica_live.test/espace-client/prestation/getInfoPrestation/1"));
-        $pdf = Pdf::loadView('prestations.fiches.prestationtest', compact('qrcode'))
+
+
+        $imageUrl = env('SIGN_API') . "api/get-signature/" . $prestation->code . "/E-PRESTATION";
+        if ($imageUrl != null || $imageUrl != '') {
+            $imageData = file_get_contents($imageUrl);
+            $base64Image = base64_encode($imageData);
+            $imageSrc = 'data:image/png;base64,' . $base64Image;
+        } else {
+            $imageSrc = '';
+        }
+
+        $pdf = Pdf::loadView('prestations.fiches.prestation', compact('qrcode', 'prestation', 'imageSrc'))
             ->setPaper('a4', 'portrait')
             ->setOptions([
                 'isHtml5ParserEnabled' => true,
@@ -77,15 +114,9 @@ class PrestationController extends Controller
                 'margin-bottom' => 0,
             ]);
 
-        $fileName = 'Prestation.pdf';
-        return $pdf->stream($fileName);
-        // $PrestationDir = public_path('documents/prestations/');
-        // if (!is_dir($PrestationDir)) {
-        //     mkdir($PrestationDir, 0777, true);
-        // }
-        // $pdf->save($PrestationDir . $fileName);
-        // return view('prestations.fiches.prestation');
+        return $pdf->stream('Prestation.pdf');
     }
+
     public function getInfoPrestation(string $id)
     {
         $prestation = TblPrestation::where('id', $id)->first();

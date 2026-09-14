@@ -56,7 +56,7 @@
         } 
         .section-prestation{
             display: inline-block;
-            padding: 10px 0;
+            padding: 8px 0;
             width: 100%;
         }
         
@@ -207,13 +207,14 @@
     <main class="main">   
         <section class="main-section" style="position: relative; height: 100%; width: 100%; overflow: hidden;">
            
-            <header class="banner" style="width: 100%; background-color: #ffffff; height: 95px; margin: 0px">
+            <header class="banner" style="width: 100%; background-color: #ffffff; height: 85px; margin: 0px">
                 <div class="left-section" style="float: right; height: 100%; width: 75%;">
                     <div class="yellow-bar" style="background-color: #f7b500; width: 100%; height: 50%;"></div>
                     <div class="green-bar-title"style="width: 100%; height: 50%; border: 1px solid #fff;">
                         <div class="green-bar" style="background-color: #006838; width: 35%; height: 100%;"></div>
                         <div class="center-section" style="float: left; width: 75%; height: 100%; padding: 10px 0; text-align: left;">
-                            <h4>FORMULAIRE DE DEMANDE DE PRESTATION</h4>
+                            <h4 style="text-align : center;">DEMANDE DE PRESTATION</h4>
+                            <h5 style="text-align : center;">Code : {{ $prestation->code ?? '.' }}</h5>
                         </div>
                     </div>
                 </div>
@@ -226,18 +227,20 @@
                 background: url('data:image/jpg;base64,{{ base64_encode(file_get_contents(public_path("root/images/logo-icon.png"))) }}') no-repeat center; 
                 background-size: contain; opacity: 0.1; z-index: 1;">
             </div>
-            <div class="content" style="padding: 0px 20px;">
+            
+
+            <div class="content" style="padding: 0px 15px;">
                 <section class="section-identification">
                     <h5>IDENTIFICATION DECLARANT</h5>
                     <div class="form-group">
                         <label for="nom" style="margin-right: 40px">Nom</label>
                         <input type="text" style="
                             margin-bottom: -7px;
-                            margin-top: 25px;
+                            margin-top: 20px;
                             width: 86%;
                             border: 1px solid #90C8A7;
-                            padding: 5px;
-                            font-size: 14px;
+                            padding: 4px;
+                            font-size: 13px;
                             border-radius: 3px;
                             background-color: #ffffff;" id="nom" value="{{ $prestation->nom ?? '.' }}" />
                     </div>
@@ -248,8 +251,8 @@
                             width: 86%;
                             margin-bottom: -7px;
                             border: 1px solid #90C8A7;
-                            padding: 5px;
-                            font-size: 14px;
+                            padding: 4px;
+                            font-size: 13px;
                             border-radius: 3px;
                             background-color: #ffffff;" name="prenom" value="{{ $prestation->prenom ?? '.' }}" />
                     </div>
@@ -260,8 +263,8 @@
                             width: 2%;
                             margin-bottom: -7px;
                             border: 1px solid #90C8A7;
-                            padding: 5px;
-                            font-size: 14px;
+                            padding: 4px;
+                            font-size: 13px;
                             text-align:center;
                             color: #F7A400;
                             border-radius: 3px;
@@ -272,8 +275,8 @@
                             width: 2%;
                             margin-bottom: -7px;
                             border: 1px solid #90C8A7;
-                            padding: 5px;
-                            font-size: 14px;
+                            padding: 4px;
+                            font-size: 13px;
                             color: #F7A400;
                             text-align:center;
                             border-radius: 3px;
@@ -285,8 +288,8 @@
                             width: 17%;
                             margin-bottom: -7px;
                             border: 1px solid #90C8A7;
-                            padding: 5px;
-                            font-size: 14px;
+                            padding: 4px;
+                            font-size: 13px;
                             border-radius: 3px;
                             background-color: #ffffff;" name="prenom" value="{{ $prestation->datenaissance ?? '.' }}" />&nbsp; &nbsp; &nbsp;
                         <label for="prenom">Lieu de naissance&nbsp;</label>
@@ -295,8 +298,8 @@
                             width: 17%;
                             margin-bottom: -7px;
                             border: 1px solid #90C8A7;
-                            padding: 5px;
-                            font-size: 14px;
+                            padding: 4px;
+                            font-size: 13px;
                             border-radius: 3px;
                             background-color: #ffffff;" name="prenom" value="{{ $prestation->lieunaissance ?? '.' }}" />
                     </div>
@@ -304,22 +307,22 @@
                         <label for="nom" style="margin-right: 10px">Téléphone</label>
                         <input type="text" style="
                             margin-bottom: -7px;
-                            margin-top: 25px;
+                            margin-top: 20px;
                             width: 31%;
                             border: 1px solid #90C8A7;
-                            padding: 5px;
-                            font-size: 14px;
+                            padding: 4px;
+                            font-size: 13px;
                             border-radius: 3px;
                             background-color: #ffffff;" id="nom" name="nom" value="{{ $prestation->cel ?? '.' }}" />&nbsp; &nbsp; &nbsp;
 
                         <label for="nom" style="margin-right: 55px">WhatsApp </label>
                         <input type="text" style="
                             margin-bottom: -7px;
-                            margin-top: 25px;
+                            margin-top: 20px;
                             width: 30%;
                             border: 1px solid #90C8A7;
-                            padding: 5px;
-                            font-size: 14px;
+                            padding: 4px;
+                            font-size: 13px;
                             border-radius: 3px;
                             background-color: #ffffff;" id="nom" name="nom" value="{{ $prestation->tel ?? '.' }}" />
                     </div>
@@ -330,8 +333,8 @@
                             width: 31%;
                             margin-bottom: -7px;
                             border: 1px solid #90C8A7;
-                            padding: 5px;
-                            font-size: 14px;
+                            padding: 4px;
+                            font-size: 13px;
                             border-radius: 3px;
                             background-color: #ffffff;" name="prenom" value="{{ $prestation->email ?? '.' }}" />&nbsp; &nbsp;&nbsp;&nbsp;
                         <label for="prenom" style="margin-right: 2px">Lieu de residence&nbsp;</label>
@@ -340,8 +343,8 @@
                             width: 30%;
                             margin-bottom: -7px;
                             border: 1px solid #90C8A7;
-                            padding: 5px;
-                            font-size: 14px;
+                            padding: 4px;
+                            font-size: 13px;
                             border-radius: 3px;
                             background-color: #ffffff;" name="prenom" value="{{ $prestation->lieuresidence ?? '.'}}" />
                     </div>
@@ -353,11 +356,11 @@
                             <label for="nom" style="margin-right: 4px">ID Contrat &nbsp;</label>
                             <input type="text" style="
                                 margin-bottom: -7px;
-                                margin-top: 25px;
+                                margin-top: 20px;
                                 width: 64%;
                                 border: 1px solid #90C8A7;
-                                padding: 5px;
-                                font-size: 14px;
+                                padding: 4px;
+                                font-size: 13px;
                                 border-radius: 3px;
                                 background-color: #ffffff;" id="nom" name="nom" value="{{ $prestation->idcontrat ?? '.'}}" />
 
@@ -366,28 +369,28 @@
                             <label for="nom" style="margin-right: 10px">Type de prestation</label>
                             <ul>
                                 <li style="margin-left: 50px">
-                                    <label for="prenom">Rachat partiel &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </label>&nbsp;
+                                    <label for="prenom">Rachat partiel* &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; </label>&nbsp;
                                     <input type="text" 
                                     style="
                                         width: 4%;
                                         margin-bottom: -7px;
                                         border: 1px solid #90C8A7;
-                                        padding: 5px;
-                                        font-size: 14px;
+                                        padding: 4px;
+                                        font-size: 13px;
                                         text-align:center;
                                         color: #F7A400;
                                         border-radius: 3px;
                                         background-color: #ffffff;" name="prenom" value="{{ $prestation->typeprestation === 'Rachat partiel' ? 'X' : '.' }}" />
                                 </li><br>
                                 <li style="margin-left: 50px">
-                                    <label for="prenom">Avance ou prêt &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;</label>&nbsp;
+                                    <label for="prenom">Avance ou prêt* &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;</label>&nbsp;
                                     <input type="text" 
                                     style="
                                         width: 4%;
                                         margin-bottom: -7px;
                                         border: 1px solid #90C8A7;
-                                        padding: 5px;
-                                        font-size: 14px;
+                                        padding: 4px;
+                                        font-size: 13px;
                                         text-align:center;
                                         color: #F7A400;
                                         border-radius: 3px;
@@ -400,8 +403,8 @@
                                         width: 4%;
                                         margin-bottom: -7px;
                                         border: 1px solid #90C8A7;
-                                        padding: 5px;
-                                        font-size: 14px;
+                                        padding: 4px;
+                                        font-size: 13px;
                                         text-align:center;
                                         color: #F7A400;
                                         border-radius: 3px;
@@ -414,13 +417,14 @@
                             <label for="nom" style="margin-right: 4px">Montant souhaité</label>
                             <input type="text" style="
                                 margin-bottom: -7px;
-                                margin-top: 25px;
+                                margin-top: 20px;
                                 width: 53%;
                                 border: 1px solid #90C8A7;
-                                padding: 5px;
-                                font-size: 14px;
+                                padding: 4px;
+                                font-size: 13px;
                                 border-radius: 3px;
                                 background-color: #ffffff;" id="nom" name="nom" value="{{ $prestation->montantSouhaite ?? '.' }}  FCFA" />
+                            <p style="font-size: 10px; color: #666; font-style: italic; margin-top: 3px; margin-bottom: 5px; font-weight: bold">*Cette opération est limitée à une (1) fois par an. Toute nouvelle demande ne sera recevable qu'à partir de la date anniversaire de la dernière opération effectuée.</p>
                         </div>
                     </div>
                     <div class="moyenPaiement">
@@ -439,6 +443,7 @@
                                 border-radius: 3px;
                                 background-color: #ffffff;" id="nom" name="" value="{{ $prestation->moyenPaiement === 'Mobile_Money' ? 'X' : '.' }}" />
                         </div>
+                        
                         <div class="form-group">
                             <ul>
                                 <li style="margin-left: 50px">
@@ -535,12 +540,12 @@
                         <div class="form-group">
                             <textarea name="" id="" style="
                             margin-bottom: -7px;
-                            margin-top: 25px;
+                            margin-top: 15px;
                             width: 100%;
                             padding: 5px;
                             text-align: justify;
                             border: 1px solid #90C8A7;
-                            height: 120px;
+                            height: 90px;
                             font-size: 12px;
                             border-radius: 3px;
                             background-color: #ffffff;" cols="30" rows="100">{{$prestation->msgClient ?? '.'}}</textarea>
@@ -548,12 +553,11 @@
                         </div>
                     </div>
                     @php
-                        $user = Auth::user()->idmembre ?? null;
-                        $membre = $user ? App\Models\Membre::where('idmembre', $user)->with('zone')->first() : null;
-                        $Signature = $prestation->docPrestation->where('idPrestation', $prestation->id)->where('type', 'Signature')->first();
+                        $user = $prestation->saisiepar;
+                        $membre = App\Models\Membre::where('idmembre', $user)->with('zone')->first();
                     @endphp
                     <div class="Signature">
-                        <h6>Signature du déclarant</h6><small><p style="font-size: 0.56em; margin-top: -98px; margin-left:130px">Contrôle éffectué par OTP du {{ ($prestation->moyenPaiement !== 'Virement_Bancaire') ? $prestation->otp->created_at->format('d/m/Y à H:i:s') : $prestation->created_at->format('d/m/Y à H:i:s') ?? '.' }}</p></small>
+                        <h6>Signature du déclarant</h6><small><p style="font-size: 0.56em; margin-top: -50px; margin-left:130px">Contrôle éffectué par OTP du {{ ($prestation->moyenPaiement !== 'Virement_Bancaire') ? $prestation->otp->created_at->format('d/m/Y à H:i:s') : $prestation->created_at->format('d/m/Y à H:i:s') ?? '.' }}</p></small>
                         <div class="form-group">
                             <label for="nom" style="margin-right: 24px">Fait à</label>
                             <input type="text" style="
@@ -564,7 +568,7 @@
                                 padding: 5px;
                                 font-size: 14px;
                                 border-radius: 3px;
-                                background-color: #ffffff;" id="nom" name="nom" value="{{Auth::check() && Auth::user()->membre ? (Auth::user()->membre->typ_membre !== 3 ? $membre->zone->libellezone : $prestation->lieuresidence ?? '.') : $prestation->lieuresidence ?? '.' }}" />
+                                background-color: #ffffff;" id="nom" name="nom" value="{{ $prestation->membre->typ_membre !== 3 ? $membre->zone->libellezone : $prestation->lieuresidence ?? '.' }}" />
                         </div>
                         <div class="form-group">
                             <label for="prenom">Le &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</label>&nbsp;
@@ -576,18 +580,21 @@
                                 padding: 5px;
                                 font-size: 14px;
                                 border-radius: 3px;
-                                background-color: #ffffff;" name="" value="{{ \Carbon\Carbon::parse($prestation->created_at)->translatedFormat('d F Y') }}" /> <br> <br>
+                                background-color: #ffffff;" name="" value="{{ \Carbon\Carbon::parse($prestation->created_at)->translatedFormat('d F Y') ?? '.' }}" /> <br> <br>
                             
                         </div>
                     </div>
-                    <label for="qrcode" style="position: absolute; top: 310px; left: 200px; max-height: 65px; max-width: 65px;">
+                    <label for="signature" style="position: absolute; top: 311px; left: 200px; max-height: 65px; max-width: 65px;">
+                        
                         @if($imageSrc != '')
-                            <img src="{{ $imageSrc }}" alt="Yako Africa Logo" style="height: 65px; width: 65px" class="logo">
+                            <img src="{{ $imageSrc }}" alt="Signature" style="height: 65px; width: 65px" class="logo">
                         @endif
                     </label>
                 </section>
             </div>
-            <section class="section-documents" style="background-color: #E7F0EB; padding: 10px 20px; height: 230px;">
+
+            <section class="section-documents" style="background-color: #E7F0EB; margin-top: 20px; padding: 10px 20px; height: 250px;">
+            <!-- <section class="section-documents" style="background-color: #E7F0EB; padding: 8px 15px; height: 160px;"> -->
                 <h5 style="color: #006838">Zone réservée à YAKO AFRICA</h5>
                 <div class="form-group" style="margin-top: 15px">
                     <label for="prenom" style="margin-right: 2px;">Nom et Prenoms &nbsp;</label>
@@ -600,7 +607,7 @@
                             font-size: 14px;
                             border-radius: 3px;
                             background-color: #ffffff;"
-                        value="{{ (optional($prestation->membre)->typ_membre !== 3) ? (optional($prestation->membre)->nom ?? '') . 'Demande en ligne' . (optional($prestation->membre)->prenom ?? '') : 'Demande en ligne' }}" />
+                        value="{{ (optional($prestation->membre)->typ_membre !== 3) ? (optional($prestation->membre)->nom ?? '') . ' ' . (optional($prestation->membre)->prenom ?? '') : 'Demande en ligne' }}" />
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 
                     <label for="prenom" style="margin-right: 2px;">Code Manager&nbsp;</label>
