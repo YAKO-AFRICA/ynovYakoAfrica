@@ -27,13 +27,13 @@
                                 Chèque
                             </label>
                         </div>
-                        {{-- <div class="form-check form-check-inline">
+                        <div class="form-check form-check-inline">
                             <input class="form-check-input" name="modepaiement" type="radio" value="Mobile_money"
                                 id="Mobile_money">
                             <label class="form-check-label" for="Mobile_money">
                                 Mobile money
                             </label>
-                        </div> --}}
+                        </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="modepaiement" type="radio"
                                 value="CARTE" id="carte_bancaire">
@@ -41,13 +41,13 @@
                                 Carte bancaire
                             </label>
                         </div>
-                        {{-- <div class="form-check form-check-inline">
+                        <div class="form-check form-check-inline">
                             <input class="form-check-input" name="modepaiement" type="radio"
                                 value="SOURCE" id="Prelevement_source">
                             <label class="form-check-label" for="Prelevement_source">
                                 Prélèvement à la source
                             </label>
-                        </div> --}}
+                        </div>
                     </div>
 
                     <div id="carte_mode" class="my-4 p-4 border rounded shadow-sm bg-light text-content-center text-center align-items-center" style="display: none;">

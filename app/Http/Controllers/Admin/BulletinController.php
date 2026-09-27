@@ -448,8 +448,14 @@ class BulletinController extends Controller
 
             $cguFile = public_path('root/cgu/CGLPREVO.pdf');
 
-
-        } elseif ($contrat->codeproduit == "LFFUN") {
+        } elseif ($contrat->codeproduit == "LFFUN" && $contrat->partenaire == "INPHB") {
+             $pdf = PDF::loadView('productions.components.bullettin.llfunBullInphb', [
+                    'contrat' => $contrat,
+                    'qrCodeBase64' => $qrCodeBase64,
+                    'imageSrc' => $imageSrc,
+                ]);
+                $cguFile = public_path('root/cgu/CGPLanggnant.pdf');
+        }elseif ($contrat->codeproduit == "LFFUN") {
 
             $pdf = PDF::loadView('productions.components.bullettin.llfunBull', [
                 'contrat' => $contrat,
@@ -465,7 +471,8 @@ class BulletinController extends Controller
                 'imageSrc' => $imageSrc,
             ]);
             $cguFile = public_path('root/cgu/cguPension.pdf');
-        } else {
+        } 
+        elseif ($contrat->codeproduit == "LPENSION") {
 
             $pdf = PDF::loadView('productions.components.bullettin.basicBulletin', [
                 'contrat' => $contrat,

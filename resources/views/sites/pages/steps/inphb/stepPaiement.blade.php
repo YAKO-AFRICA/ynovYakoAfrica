@@ -6,48 +6,54 @@
                 <div class="card-body">
                     <label for="" class="form-label">Je souhaite payer mes primes par : <span class="text-danger">*</span></label>
                     <div class="mb-3">
-                        <div class="form-check form-check-inline">
+                        <div class="form-check form-check-inline d-none">
                             <input class="form-check-input" name="modepaiement" type="radio" value="VIR"
                                 id="Virement_bancaire" required>
                             <label class="form-check-label" for="Virement_bancaire">
                                 Virement bancaire
                             </label>
                         </div>
-                        <div class="form-check form-check-inline">
+                        <div class="form-check form-check-inline d-none">
                             <input class="form-check-input" name="modepaiement" type="radio" value="ESP"
                                 id="Espece">
                             <label class="form-check-label" for="Espece">
                                 Espèce
                             </label>
                         </div>
-                        <div class="form-check form-check-inline">
+                        <div class="form-check form-check-inline d-none">
                             <input class="form-check-input" name="modepaiement" type="radio" value="CHK"
                                 id="Cheque">
                             <label class="form-check-label" for="Cheque">
                                 Chèque
                             </label>
                         </div>
-                        <div class="form-check form-check-inline">
+                        <div class="form-check form-check-inline d-none">
                             <input class="form-check-input" name="modepaiement" type="radio" value="Mobile_money"
                                 id="Mobile_money">
                             <label class="form-check-label" for="Mobile_money">
                                 Mobile money
                             </label>
                         </div>
-                        <div class="form-check form-check-inline">
+                        <div class="form-check form-check-inline d-none">
                             <input class="form-check-input" name="modepaiement" type="radio"
                                 value="CARTE" id="carte_bancaire">
                             <label class="form-check-label" for="carte_bancaire">
                                 Carte bancaire
                             </label>
                         </div>
-                        {{-- <div class="form-check form-check-inline">
+                        <div class="form-check form-check-inline">
                             <input class="form-check-input" name="modepaiement" type="radio"
-                                value="SOURCE" id="Prelevement_source">
-                            <label class="form-check-label" for="Prelevement_source">
+                                value="SOLDE" id="SOLDE">
+                            <label class="form-check-label" for="SOLDE">
                                 Prélèvement à la source
                             </label>
-                        </div> --}}
+                        </div>
+                    </div>
+
+                    <div class="mb-3" id="mode_solde" style="display: none;">
+                        <label for="matriculeEnseignant" class="form-label">Matricule de l'enseignant</label>
+                        <input type="text" class="form-control" id="matriculeEnseignant"
+                            name="numerocompte" placeholder="Saisissez le matricule">
                     </div>
 
                     <div id="carte_mode" class="my-4 p-4 border rounded shadow-sm bg-light text-content-center text-center align-items-center" style="display: none;">
@@ -122,7 +128,7 @@
                                     Mois
                                 </label>
                             </div>
-                            <div class="form-check form-check-inline">
+                            <div class="form-check form-check-inline d-none">
                                 <input class="form-check-input" name="periodicite" type="radio" value="A"
                                     id="Annee" readonly>
                                 <label class="form-check-label" for="Annee">
@@ -141,7 +147,7 @@
                                 <label for="primepricipale" class="form-label">Je souhaite payer une prime de
                                     :</label>
                                 <input type="number" class="form-control" id="primepricipale" value="0" name="primepricipale"
-                                    min="0" required readonly>
+                                    min="0" required  @if ($product->CodeProduit === "LFFUN") readonly @else focus @endif >
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="surprime" class="form-label">Surprime :</label>
@@ -153,11 +159,14 @@
                                 <input type="number" class="form-control" value="" id="fraisAdhesion" name="fraisAdhesion"
                                     min="0" readonly>
                             </div>
-                            <div class="col-12 mb-3">
-                                <label for="capital" class="form-label">Capital souscrit :</label>
-                                <input type="text" class="form-control" id="capital" value="999" name="capital" required readonly>
+                            @if ($product->CodeProduit === "LFFUN")
+                                 <div class="col-12 mb-3">
+                                    <label for="capital" class="form-label">Capital souscrit :</label>
+                                    <input type="text" class="form-control" id="capital" value="999" name="capital" required readonly>
 
-                            </div>
+                                </div>
+                            @endif
+                           
                             <div class="col-12 mb-3">
                                 <label for="duree" class="form-label">Durée de mes cotisations :</label>
                                 <input type="number" class="form-control" id="duree" value="" name="duree" min="0" readonly>
@@ -204,24 +213,40 @@
             const modeBancaire = document.getElementById('mode_bancaire');
             const modeMobile = document.getElementById('mode_mobile');
             const carteBancaire = document.getElementById('carte_mode');
+            const modeSolde = document.getElementById('mode_solde');
+            const matriculeEnseignant = document.getElementById('matriculeEnseignant');
 
             if (mode === 'VIR' || mode === 'SOURCE') {
                 modeBancaire.style.display = 'block';
                 modeMobile.style.display = 'none';
                 carteBancaire.style.display = 'none';
+                modeSolde.style.display = 'none';
+                matriculeEnseignant.required = false;
             } else if (mode === 'Mobile_money') {
                 modeBancaire.style.display = 'none';
                 modeMobile.style.display = 'block';
                 carteBancaire.style.display = 'none';
-            } else if(mode === 'CARTE') {
+                modeSolde.style.display = 'none';
+                matriculeEnseignant.required = false;
+            } else if (mode === 'CARTE') {
                 modeBancaire.style.display = 'none';
                 modeMobile.style.display = 'none';
                 carteBancaire.style.display = 'block';
-            }else {
+                modeSolde.style.display = 'none';
+                matriculeEnseignant.required = false;
+            } else if (mode === 'SOLDE') {
+                modeBancaire.style.display = 'none';
+                modeMobile.style.display = 'none';
+                carteBancaire.style.display = 'none';
+                modeSolde.style.display = 'block';
+                matriculeEnseignant.required = true;
+            } else {
                 // Pour ESP ou CHK, on masque tout
                 modeBancaire.style.display = 'none';
                 modeMobile.style.display = 'none';
                 carteBancaire.style.display = 'none';
+                modeSolde.style.display = 'none';
+                matriculeEnseignant.required = false;
             }
         }
 
@@ -239,6 +264,52 @@
             const data = JSON.parse(sessionStorage.getItem('souscriptionData') || '{}');
             const sim = data.simulationData || {};
             const contratData = data.contratData || {};
+            const dateNaissanceInput = document.getElementById('Date_naissance');
+            const dureeInput = document.getElementById('duree');
+
+            function calculateContributionDuration() {
+                const dateNaissance = dateNaissanceInput?.value || data.adherentData?.datenaissance;
+
+                if (!dateNaissance) {
+                    dureeInput.value = '';
+                    return '';
+                }
+
+                const naissance = new Date(`${dateNaissance}T00:00:00`);
+                const aujourdHui = new Date();
+
+                if (Number.isNaN(naissance.getTime()) || naissance > aujourdHui) {
+                    dureeInput.value = '';
+                    return '';
+                }
+
+                let age = aujourdHui.getFullYear() - naissance.getFullYear();
+                const anniversaireCetteAnnee = new Date(
+                    aujourdHui.getFullYear(),
+                    naissance.getMonth(),
+                    naissance.getDate()
+                );
+
+                if (aujourdHui < anniversaireCetteAnnee) {
+                    age--;
+                }
+
+                const duree = Math.max(0, 60 - age);
+                dureeInput.value = duree;
+                return duree;
+            }
+
+            function saveContributionDuration() {
+                const souscriptionData = JSON.parse(sessionStorage.getItem('souscriptionData') || '{}');
+                souscriptionData.contratData = souscriptionData.contratData || {};
+                souscriptionData.contratData.duree = calculateContributionDuration();
+                sessionStorage.setItem('souscriptionData', JSON.stringify(souscriptionData));
+            }
+
+            if (dateNaissanceInput) {
+                dateNaissanceInput.addEventListener('input', saveContributionDuration);
+                dateNaissanceInput.addEventListener('change', saveContributionDuration);
+            }
         
             console.log("donner de simulationvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv " )
             console.log(sim)
@@ -251,7 +322,7 @@
             document.getElementById('DateEffet').value = new Date().toISOString().split('T')[0];
             document.getElementById('primepricipale').value = contratData.primeTotal || '';
             document.getElementById('capital').value = sim.capital || '';
-            document.getElementById('duree').value = '1';
+            const duree = calculateContributionDuration();
 
 
             // Frais d'adhésion
@@ -266,6 +337,7 @@
             const numeroCompte = document.getElementById('numerocompte').value;
             const cleRib = document.getElementById('rib').value;
             const numMobile = document.getElementById('numMobile').value;
+            const matriculeEnseignant = document.getElementById('matriculeEnseignant').value;
 
             // Sauvegarder automatiquement dans souscriptionData.contratData
             if (!data.contratData) data.contratData = {};
@@ -275,13 +347,14 @@
                 primepricipale: contratData.primeTotal,
                 capital: sim.capital,
                 fraisAdhesion: '0',
-                duree: '1',
+                duree: duree,
                 modepaiement: modePaiement,
                 codebanque: codeBanque,
                 codeguichet: codeGuichet,
                 numerocompte: numeroCompte,
                 rib: cleRib,
                 numMobile: numMobile,
+                matriculeEnseignant: matriculeEnseignant,
                 tokGenerate: document.getElementById('tokGenerate').value
             });
             sessionStorage.setItem('souscriptionData', JSON.stringify(data));
@@ -289,7 +362,7 @@
 
         // Sauvegarde dynamique à chaque changement
         document.addEventListener('input', (e) => {
-            if (['periodicite', 'dateEffet', 'primepricipale', 'fraisAdhesion', 'capital', 'duree', 'modepaiement', 'codebanque', 'codeguichet', 'numerocompte', 'rib', 'numMobile'].includes(e.target.name)) {
+            if (['periodicite', 'dateEffet', 'primepricipale', 'fraisAdhesion', 'capital', 'duree', 'modepaiement', 'codebanque', 'codeguichet', 'numerocompte', 'rib', 'numMobile', 'matriculeEnseignant'].includes(e.target.name)) {
                 const data = JSON.parse(sessionStorage.getItem('souscriptionData') || '{}');
 
                 if (!data.contratData) data.contratData = {};

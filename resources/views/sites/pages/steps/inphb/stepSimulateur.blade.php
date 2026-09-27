@@ -613,7 +613,7 @@
         <!-- BANDEAU INFO -->
         <div class="info-banner">
             <i class="fas fa-circle-info"></i>
-            <div>Toutes les formules couvrent jusqu'à <strong>4 enfants</strong>. À partir du <strong>5ᵉ enfant</strong>, une prime supplémentaire de <strong>680 CFA/mois</strong> par enfant est appliquée.</div>
+            <div>Toutes les formules couvrent jusqu'à <strong>4 enfants</strong> <strong>Agés de 12 à 18 ans</strong>. À partir du <strong>5ᵉ enfant</strong>, une prime supplémentaire de <strong>680 CFA/mois</strong> par enfant est appliquée.</div>
         </div>
 
         <!-- COMPARATIF -->

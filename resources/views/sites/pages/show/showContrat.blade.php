@@ -529,6 +529,7 @@
                                                         @case('CHK') <i class='bx bx-credit-card me-1'></i> Chèque @break
                                                         @case('Mobile_money') <i class='bx bx-mobile-alt me-1'></i> Mobile money @break
                                                         @case('SOURCE') <i class='bx bx-credit-card-front me-1'></i> Prélèvement @break
+                                                        @case('SOLDE') <i class='bx bx-credit-card-front me-1'></i> SOLDE @break
                                                         @default --
                                                     @endswitch
                                                 </span>
@@ -554,6 +555,12 @@
                                             @if ($contrat->modepaiement === 'Mobile_money')
                                                 <div class="mb-3">
                                                     <span class="info-label d-block">N° Mobile</span>
+                                                    <span class="info-value">{{ $contrat->numerocompte ?? '--' }}</span>
+                                                </div>
+                                            @endif
+                                            @if ($contrat->modepaiement === 'SOLDE')
+                                                <div class="mb-3">
+                                                    <span class="info-label d-block">N° Matricule</span>
                                                     <span class="info-value">{{ $contrat->numerocompte ?? '--' }}</span>
                                                 </div>
                                             @endif

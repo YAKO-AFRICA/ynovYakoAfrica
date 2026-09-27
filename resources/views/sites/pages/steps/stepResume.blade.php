@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             step5Traitee = true;
 
-            alert("🚀 Étape 5 activée !");
+            // alert("🚀 Étape 5 activée !");
 
             // ==========================================
             // RÉCUPÉRATION SESSION STORAGE

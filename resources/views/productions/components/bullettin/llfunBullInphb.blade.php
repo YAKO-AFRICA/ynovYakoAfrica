@@ -5,19 +5,166 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Formulaire de souscription YAKO FRAIS FUNÉRAIRES MUTUELLE DES ENSEIGNANTS DE L’INPHB</title>
-</head>
-
-<body>
     <style>
+        @page {
+            size: A4 portrait;
+            margin: 5mm;
+        }
+
         input {
             font-size: 10px;
         }
-    </style>
 
-    <div class="container">
+        @media print {
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: Arial, sans-serif;
+                font-size: 8px;
+            }
+
+            .print-form {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            .print-form section {
+                page-break-inside: avoid;
+            }
+
+            .print-header img {
+                width: 70px !important;
+            }
+
+            .print-title {
+                height: 36px !important;
+                font-size: 9px !important;
+            }
+
+            .print-title h2 {
+                font-size: 12px !important;
+            }
+
+            .adherent-section {
+                min-height: 0 !important;
+                margin-top: 3px !important;
+                font-size: 8px !important;
+            }
+
+            .adherent-section h4,
+            .insured-section h4,
+            .beneficiary-section h4,
+            .coverage-section h4,
+            .payment-section h4 {
+                height: auto !important;
+                min-height: 16px;
+                margin-top: 0 !important;
+                margin-bottom: 0 !important;
+                padding: 2px 3px;
+                font-size: 9px !important;
+            }
+
+            .adherent-section .content-item {
+                min-height: 0 !important;
+                padding: 2px !important;
+                font-size: 8px !important;
+            }
+
+            .adherent-section p {
+                margin: 2px !important;
+            }
+
+            .insured-section,
+            .beneficiary-section,
+            .coverage-section {
+                margin-top: 4px !important;
+            }
+
+            .insured-table,
+            .beneficiary-table,
+            .coverage-table {
+                table-layout: fixed;
+                font-size: 7px !important;
+                line-height: 1.1;
+            }
+
+            .insured-table td,
+            .beneficiary-table td,
+            .coverage-table td {
+                width: auto !important;
+                padding: 1px !important;
+                overflow-wrap: anywhere;
+            }
+
+            .insured-table .assure-row {
+                height: 14px;
+            }
+
+            .payment-section {
+                margin-top: 2px !important;
+                font-size: 8px !important;
+            }
+
+            .payment-section .content-item {
+                height: auto !important;
+                min-height: 18px;
+                padding: 2px !important;
+                font-size: 8px !important;
+            }
+
+            .payment-section p {
+                margin: 0 !important;
+            }
+
+            .signature-date {
+                margin: 2px 0 !important;
+                font-size: 8px;
+            }
+
+            .signature-section {
+                margin-top: 2px !important;
+                font-size: 8px !important;
+            }
+
+            .signature-row {
+                gap: 4px !important;
+                padding: 0 !important;
+                font-size: 8px !important;
+            }
+
+            .subscriber-signature,
+            .company-signature {
+                min-height: 68px !important;
+                padding: 3px !important;
+                box-sizing: border-box;
+            }
+
+            .subscriber-signature span {
+                font-size: 7px !important;
+                line-height: 1.15;
+            }
+
+            .subscriber-signature img {
+                width: 75px !important;
+                height: 38px !important;
+                object-fit: contain;
+            }
+
+            .company-signature img {
+                width: 110px !important;
+                height: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container print-form">
 
         <section>
-            <div class="logo-Soutien" style="width: 100%; overflow: hidden;">
+            <div class="logo-Soutien print-header" style="width: 100%; overflow: hidden;">
 
                 <!-- Bloc gauche -->
                 <div style="width: 22%; float: left; text-align: center;">
@@ -26,8 +173,8 @@
 
                 <!-- Bloc centre -->
                 <div style="width: 75%; float: left; text-align: center;">
-                    <div style="width: 100%; font-size: 10px; font-weight: bold; text-align: center; background: #747171; color: #fff; height: 50px; display: flex; justify-content: center; align-items: center;">
-                        <h1 style="margin: 0;">FORMULAIRE DE SOUSCRIPTION YAKO FRAIS FUNÉRAIRES MUTUELLE DES ENSEIGNANTS DE L’INPHB</h1>
+                    <div class="print-title" style="width: 100%; font-size: 10px; font-weight: bold; text-align: center; background: #747171; color: #fff; height: 50px; display: flex; justify-content: center; align-items: center;">
+                        <h2 style="margin: 0;">FORMULAIRE DE SOUSCRIPTION YAKO FRAIS FUNÉRAIRES MUTUELLE DU PERSONNEL DE L’INPHB</h2>
                     </div>
                     <div style="width: 20%; font-size: 10px; font-weight: bold; text-align: center; display: flex; justify-content: center; align-items: center; border: 1px solid #747171;">
                         <strong style="margin: 0;">Option :</strong> <span style="margin: 0;">{{ $contrat->Formule ?? 'Individuel' }}</span>
@@ -48,7 +195,7 @@
         </section>
 
 
-        <section style="margin-top: 10px; font-size: 12px; min-height: 100px">
+        <section class="adherent-section" style="margin-top: 10px; font-size: 12px; min-height: 100px">
             <div class="contentt" style="padding: 0; margin: 0">
                 <h4 style="background: #747171; color: #fff; width: 100%; height: 25px; margin-bottom:0 ; font-size: 14px ; justify-content: center; align-items: center; display: flex">1. Informations de l'adherent / Assuré principal</h4>
 
@@ -97,13 +244,13 @@
             </div>
         </section>
 
-        <section style="margin-top: 70px">
+        <section class="insured-section" style="margin-top: 70px">
             <div class="content-item" style="width: 100%; border: 1px solid #000; font-size: 12px;">
                 <h4 style="background: #747171; color: #fff; width: 100%; height: 25px; margin: 0; font-size: 14px;">2. Informations des assurés</h4>
 
-                <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; margin: 0">
+                <table class="insured-table" style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; margin: 0">
                     <thead>
-                        <tr>
+                        <tr class="assure-row">
                             <td style=" border: 1px solid #000; color: #000">NOM & PRÉNOMS</td>
                             <td style=" border: 1px solid #000; color: #000">DATE DE NAISSANCE</td>
                             <td style=" border: 1px solid #000; color: #000">LIEU DE NAISSANCE</td>
@@ -113,24 +260,34 @@
                     </thead>
                     <tbody>
                         @foreach ($contrat->assures as $assure)
-                        <tr>
+                        <tr class="assure-row">
                             <td style="width: 50%; border: 1px solid #000;">{{ $assure->nom ?? '' }} {{ $assure->prenom ?? ''}}</td>
                             <td style="width: 50%; border: 1px solid #000;">{{ $assure->datenaissance ?? '' }}</td>
                             <td style="width: 50%; border: 1px solid #000;">{{ $assure->lieuresidence ?? '' }}</td>
                             <td style="width: 50%; border: 1px solid #000;">{{ $assure->mobile ?? $assure->telephone ?? '' }}</td>
                             <td style="width: 50%; border: 1px solid #000;">{{ $assure->filiation ?? '' }}</td>
                         </tr>
+
                         @endforeach
+                        @for ($i = $contrat->assures->count(); $i < 8; $i++)
+                        <tr class="assure-row">
+                            <td style="border: 1px solid #000;">&nbsp;</td>
+                            <td style="border: 1px solid #000;">&nbsp;</td>
+                            <td style="border: 1px solid #000;">&nbsp;</td>
+                            <td style="border: 1px solid #000;">&nbsp;</td>
+                            <td style="border: 1px solid #000;">&nbsp;</td>
+                        </tr>
+                        @endfor
                     </tbody>
 
                 </table>
             </div>
         </section>
-        <section style="margin-top: 15px">
+        <section class="beneficiary-section" style="margin-top: 15px">
             <div class="content-item" style="width: 100%; border: 1px solid #000; font-size: 12px;">
                 <h4 style="background: #747171; color: #fff; width: 100%; height: 25px; margin: 0; font-size: 14px;">4. Informations des beneficiaires</h4>
 
-                <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; margin: 0">
+                <table class="beneficiary-table" style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; margin: 0">
                     <thead>
                         <tr>
                             <td style=" border: 1px solid #000; color: #000">NOM & PRÉNOMS</td>
@@ -155,11 +312,11 @@
                 </table>
             </div>
         </section>
-        <section style="margin-top: 15px">
+        <section class="coverage-section" style="margin-top: 15px">
             <div class="content-item" style="width: 100%; border: 1px solid #000; font-size: 12px;">
                 <h4 style="background: #747171; color: #fff; width: 100%; height: 25px; margin: 0; font-size: 14px;">3. Couverture souhaitée</h4>
 
-                <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; margin: 0">
+                <table class="coverage-table" style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; margin: 0">
                     <thead>
                         <tr>
                             <td style=" border: 1px solid #000;">Choix Capital</td>
@@ -197,7 +354,7 @@
 
 
 
-        <section style="font-size: 12px !important">
+        <section class="payment-section" style="font-size: 12px !important">
 
             <h4 style="background: #747171; color: #fff; width: 100%; height: 25px; margin-top: 40px; font-size: 14px">5. Paiement des primes :</h4>
 
@@ -243,13 +400,13 @@
 
         </section>
 
-        <p style="box-sizing: border-box; margin-bottom: 0; margin-top: -15px">
+        <p class="signature-date" style="box-sizing: border-box; margin-bottom: 0; margin-top: -15px">
             Fait le {{ Carbon\Carbon::parse($contrat->saisiele)->format('d/m/Y') ?? '................................................' }}
         </p>
 
-        <section style="font-size: 12px !important; box-sizing: border-box; margin-top: 20px ; width: 100%">
+        <section class="signature-section" style="font-size: 12px !important; box-sizing: border-box; margin-top: 20px ; width: 100%">
 
-            <div class="row" style="
+            <div class="row signature-row" style="
                 display: flex;
                 justify-content: space-between;
                 padding: 1rem;
@@ -258,7 +415,7 @@
                 gap: 1rem;
                 font-size: 12px;">
 
-                <div style="width: 60%; float: left; min-height: 160px ; border: 1px solid #000; padding: 2px">
+                <div class="subscriber-signature" style="width: 60%; float: left; min-height: 130px ; border: 1px solid #000; padding: 2px">
                     <strong>
                         Signature du souscripteur
                     </strong> <br>
@@ -283,7 +440,7 @@
 
                     <muted>(Précedée de la mention LU et APPROUVE)</muted>
                 </div> --}}
-                <div style="width: 35%; float: right; min-height: 160px; border: 1px solid #000; padding: 2px">
+                <div class="company-signature" style="width: 35%; float: right; min-height: 160px; border: 1px solid #000; padding: 2px">
                     <div class="sign-yako" style="margin: 0; box-sizing: border-box ">
                         <span>Reservé à YAKO AFRICA Assurances Vie</span>
 

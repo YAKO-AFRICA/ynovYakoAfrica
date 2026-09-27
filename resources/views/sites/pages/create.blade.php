@@ -148,7 +148,7 @@
 
                     <!-- Step 1 -->
                     <div class="step active step-block" data-step="1">
-                        <h4 class="text-success">Étape 1 : Informations du Souscripteur</h4>
+                        <h4 class="text-success">Étape 1 : Informations de l'adherent</h4>
                         <div>
                             {{-- <H1>TEST</H1> --}}
                             @include('sites.pages.steps.stepAdherent')
@@ -185,7 +185,7 @@
                             @if ($user->codepartenaire === "DIRECTENTREPRISE")
 
                                 @include('sites.pages.steps.directEnt.stepPaiementDirect')
-                            @elseif ($user->codepartenaire === "INPHB" && $product->CodeProduit === "LFFUN")
+                            @elseif ($user->codepartenaire === "INPHB" && $product->CodeProduit === "LFFUN" || $product->CodeProduit === "LPENSION")
                                 @include('sites.pages.steps.inphb.stepPaiement')
                             @else
                                 @include('sites.pages.steps.stepPaiement')

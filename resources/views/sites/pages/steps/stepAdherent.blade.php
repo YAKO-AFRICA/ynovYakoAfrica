@@ -344,6 +344,10 @@
                     dateInput.classList.remove('is-invalid');
                 }
             });
+
+            // document.getElementById('duree').value = userAge;
+
+
         });
     </script>
 

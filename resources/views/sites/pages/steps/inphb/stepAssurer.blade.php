@@ -185,11 +185,16 @@
                                 <input type="text" name="assurerLieuresidence" id="assurerLieuresidence"
                                     class="form-control" required>
                             </div>
-                            @if (in_array($codePartner, ['DIRECTENTREPRISE', 'INPHB']))
+                            @if (in_array($codePartner, ['DIRECTENTREPRISE']))
                                 <div class="col-sm-12 col-md-6 col-lg-4">
                                     <label for="justifResidence" class="form-label">Justificatif de résidence </label>
                                     <input type="file" name="justifResidence" class="form-control"
                                         id="justifResidence" accept="application/pdf,image/jpeg,image/jpg,image/png">
+                                </div>
+                            @elseif($codePartner == 'INPHB')
+                                <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <label for="pieceAssureFile" class="form-label">Pièce d'identité <span class="text-danger">*</span></label>
+                                    <input type="file" name="pieceAssureFile" class="form-control" id="pieceAssureFile" required accept="application/pdf,image/jpeg,image/jpg,image/png">
                                 </div>
                             @else
                                 <div class="col-sm-12 col-md-6 col-lg-4">
@@ -454,7 +459,7 @@
             <strong>${regles.label}</strong><br>
             Assuré principal obligatoire : ${regles.capitalAssurePrincipal.toLocaleString('fr-FR')} FCFA &nbsp;|&nbsp;
             1 conjoint(e) max : ${regles.capitalConjoint.toLocaleString('fr-FR')} FCFA &nbsp;|&nbsp;
-            4 enfants inclus puis ${SURPRIME_PAR_ENFANT} FCFA/enfant supplémentaire (${regles.capitalEnfant.toLocaleString('fr-FR')} FCFA/enfant) &nbsp;|&nbsp;
+            4 enfants (agés de 12 à 18 ans)  inclus puis ${SURPRIME_PAR_ENFANT} FCFA/enfant supplémentaire (${regles.capitalEnfant.toLocaleString('fr-FR')} FCFA/enfant) &nbsp;|&nbsp;
             ${regles.maxAscendants} ascendant(s) maximum (${regles.capitalAscendant.toLocaleString('fr-FR')} FCFA/ascendant)
         `;
         }
